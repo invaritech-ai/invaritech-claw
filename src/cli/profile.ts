@@ -66,7 +66,7 @@ function resolveProfileStateDir(
   homedir: () => string,
 ): string {
   const suffix = normalizeLowercaseStringOrEmpty(profile) === "default" ? "" : `-${profile}`;
-  return path.join(resolveRequiredHomeDir(env as NodeJS.ProcessEnv, homedir), `.openclaw${suffix}`);
+  return path.join(resolveRequiredHomeDir(env as NodeJS.ProcessEnv, homedir), `.iclaw${suffix}`);
 }
 
 export function applyCliProfileEnv(params: {
@@ -82,19 +82,19 @@ export function applyCliProfileEnv(params: {
   }
 
   // Convenience only: fill defaults, never override explicit env values.
-  env.OPENCLAW_PROFILE = profile;
+  env.ICLAW_PROFILE = profile;
 
-  const existingStateDir = normalizeOptionalString(env.OPENCLAW_STATE_DIR);
+  const existingStateDir = normalizeOptionalString(env.ICLAW_STATE_DIR);
   const stateDir = existingStateDir || resolveProfileStateDir(profile, env, homedir);
   if (!existingStateDir) {
-    env.OPENCLAW_STATE_DIR = stateDir;
+    env.ICLAW_STATE_DIR = stateDir;
   }
 
-  if (!normalizeOptionalString(env.OPENCLAW_CONFIG_PATH)) {
-    env.OPENCLAW_CONFIG_PATH = path.join(stateDir, "openclaw.json");
+  if (!normalizeOptionalString(env.ICLAW_CONFIG_PATH)) {
+    env.ICLAW_CONFIG_PATH = path.join(stateDir, "iclaw.json");
   }
 
-  if (profile === "dev" && !env.OPENCLAW_GATEWAY_PORT?.trim()) {
-    env.OPENCLAW_GATEWAY_PORT = "19001";
+  if (profile === "dev" && !env.ICLAW_GATEWAY_PORT?.trim()) {
+    env.ICLAW_GATEWAY_PORT = "19001";
   }
 }

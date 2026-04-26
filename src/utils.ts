@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { resolveStateDir } from "./config/paths.js";
 import {
   resolveEffectiveHomeDir,
   resolveHomeRelativePath,
@@ -137,24 +138,15 @@ export function resolveConfigDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
 ): string {
-  const override = env.OPENCLAW_STATE_DIR?.trim();
+  const override = env.ICLAW_STATE_DIR?.trim();
   if (override) {
     return resolveUserPath(override, env, homedir);
   }
-  const configPath = env.OPENCLAW_CONFIG_PATH?.trim();
+  const configPath = env.ICLAW_CONFIG_PATH?.trim();
   if (configPath) {
     return path.dirname(resolveUserPath(configPath, env, homedir));
   }
-  const newDir = path.join(resolveRequiredHomeDir(env, homedir), ".openclaw");
-  try {
-    const hasNew = fs.existsSync(newDir);
-    if (hasNew) {
-      return newDir;
-    }
-  } catch {
-    // best-effort
-  }
-  return newDir;
+  return resolveStateDir(env, homedir);
 }
 
 export function resolveHomeDir(): string | undefined {
@@ -166,9 +158,9 @@ function resolveHomeDisplayPrefix(): { home: string; prefix: string } | undefine
   if (!home) {
     return undefined;
   }
-  const explicitHome = process.env.OPENCLAW_HOME?.trim();
+  const explicitHome = process.env.ICLAW_HOME?.trim();
   if (explicitHome) {
-    return { home, prefix: "$OPENCLAW_HOME" };
+    return { home, prefix: "$ICLAW_HOME" };
   }
   return { home, prefix: "~" };
 }
@@ -210,5 +202,5 @@ export function displayString(input: string): string {
   return shortenHomeInString(input);
 }
 
-// Configuration root; can be overridden via OPENCLAW_STATE_DIR.
+// Configuration root; can be overridden via ICLAW_STATE_DIR.
 export const CONFIG_DIR = resolveConfigDir();
