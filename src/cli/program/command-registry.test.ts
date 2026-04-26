@@ -82,7 +82,7 @@ describe("command-registry", () => {
     expect(names).toContain("tasks");
     expect(names).not.toContain("agent");
     expect(names).not.toContain("status");
-    expect(names).not.toContain("doctor");
+    expect(names).toContain("doctor");
   });
 
   it("registerCoreCliByName resolves agents to the agent entry", async () => {

@@ -33,7 +33,7 @@ const coreCliCommandCatalog = defineCommandDescriptorCatalog([
   {
     name: "doctor",
     description: "Health checks + quick fixes for the gateway and channels",
-    hasSubcommands: false,
+    hasSubcommands: true,
   },
   {
     name: "dashboard",

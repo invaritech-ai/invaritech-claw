@@ -9,14 +9,33 @@ import { theme } from "../../terminal/theme.js";
 import { runCommandWithRuntime } from "../cli-utils.js";
 
 export function registerMaintenanceCommands(program: Command) {
-  program
+  const doctor = program
     .command("doctor")
     .description("Health checks + quick fixes for the gateway and channels")
     .addHelpText(
       "after",
       () =>
         `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/doctor", "docs.openclaw.ai/cli/doctor")}\n`,
+    );
+
+  doctor
+    .command("migrate-from-openclaw")
+    .description("Copy ~/.openclaw to ~/.iclaw and rename openclaw.json → iclaw.json")
+    .option(
+      "--force",
+      "Overwrite non-empty ~/.iclaw or resolve iclaw.json vs openclaw.json conflict (destructive)",
+      false,
     )
+    .action(async (opts) => {
+      await runCommandWithRuntime(defaultRuntime, async () => {
+        const { doctorMigrateFromOpenClaw } =
+          await import("../../commands/doctor-migrate-from-openclaw.js");
+        await doctorMigrateFromOpenClaw(defaultRuntime, { force: Boolean(opts.force) });
+        defaultRuntime.exit(0);
+      });
+    });
+
+  doctor
     .option("--no-workspace-suggestions", "Disable workspace memory system suggestions", false)
     .option("--yes", "Accept defaults without prompting", false)
     .option("--repair", "Apply recommended repairs without prompting", false)
