@@ -17,7 +17,7 @@ const repoRoot = process.cwd();
 const tmpHome = mkdtempSync(path.join(os.tmpdir(), "openclaw-startup-memory-"));
 const tmpDir = process.env.TMPDIR || process.env.TEMP || process.env.TMP || os.tmpdir();
 const rssHookPath = path.join(tmpHome, "measure-rss.mjs");
-const MAX_RSS_MARKER = "__OPENCLAW_MAX_RSS_KB__=";
+const MAX_RSS_MARKER = "__ICLAW_MAX_RSS_KB__=";
 
 writeFileSync(
   rssHookPath,
@@ -41,23 +41,23 @@ const cases = [
   {
     id: "help",
     label: "--help",
-    args: ["openclaw.mjs", "--help"],
-    limitMb: Number(process.env.OPENCLAW_STARTUP_MEMORY_HELP_MB ?? DEFAULT_LIMITS_MB.help),
+    args: ["iclaw.mjs", "--help"],
+    limitMb: Number(process.env.ICLAW_STARTUP_MEMORY_HELP_MB ?? DEFAULT_LIMITS_MB.help),
   },
   {
     id: "statusJson",
     label: "status --json",
-    args: ["openclaw.mjs", "status", "--json"],
+    args: ["iclaw.mjs", "status", "--json"],
     limitMb: Number(
-      process.env.OPENCLAW_STARTUP_MEMORY_STATUS_JSON_MB ?? DEFAULT_LIMITS_MB.statusJson,
+      process.env.ICLAW_STARTUP_MEMORY_STATUS_JSON_MB ?? DEFAULT_LIMITS_MB.statusJson,
     ),
   },
   {
     id: "gatewayStatus",
     label: "gateway status",
-    args: ["openclaw.mjs", "gateway", "status"],
+    args: ["iclaw.mjs", "gateway", "status"],
     limitMb: Number(
-      process.env.OPENCLAW_STARTUP_MEMORY_GATEWAY_STATUS_MB ?? DEFAULT_LIMITS_MB.gatewayStatus,
+      process.env.ICLAW_STARTUP_MEMORY_GATEWAY_STATUS_MB ?? DEFAULT_LIMITS_MB.gatewayStatus,
     ),
   },
 ];
@@ -127,7 +127,7 @@ function buildBenchEnv() {
   }
   // Keep the benchmark on a single process so RSS reflects the actual command
   // path rather than the warning-suppression respawn wrapper.
-  env.OPENCLAW_NO_RESPAWN = "1";
+  env.ICLAW_NO_RESPAWN = "1";
 
   return env;
 }

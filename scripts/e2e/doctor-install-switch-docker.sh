@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-image.sh"
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-doctor-install-switch-e2e" OPENCLAW_DOCTOR_INSTALL_SWITCH_E2E_IMAGE)"
+IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-doctor-install-switch-e2e" ICLAW_DOCTOR_INSTALL_SWITCH_E2E_IMAGE)"
 
 docker_e2e_build_or_reuse "$IMAGE_NAME" doctor-switch
 
@@ -87,7 +87,7 @@ LOGINCTL
   fi
 
 	  npm_bin="/tmp/npm-prefix/bin/openclaw"
-	  npm_root="/tmp/npm-prefix/lib/node_modules/openclaw"
+	  npm_root="/tmp/npm-prefix/lib/node_modules/iclaw"
 	  if [ -f "$npm_root/dist/index.mjs" ]; then
 	    npm_entry="$npm_root/dist/index.mjs"
 	  else
@@ -99,7 +99,7 @@ LOGINCTL
 	  else
 	    git_entry="/app/dist/index.js"
 	  fi
-	  git_cli="/app/openclaw.mjs"
+	  git_cli="/app/iclaw.mjs"
 
   assert_entrypoint() {
     local unit_path="$1"

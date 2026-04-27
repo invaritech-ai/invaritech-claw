@@ -3,10 +3,10 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$ROOT_DIR/scripts/lib/live-docker-auth.sh"
-IMAGE_NAME="${OPENCLAW_IMAGE:-openclaw:local}"
-LIVE_IMAGE_NAME="${OPENCLAW_LIVE_IMAGE:-${IMAGE_NAME}-live}"
-PROFILE_FILE="${OPENCLAW_PROFILE_FILE:-$HOME/.profile}"
-DOCKER_USER="${OPENCLAW_DOCKER_USER:-node}"
+IMAGE_NAME="${ICLAW_IMAGE:-openclaw:local}"
+LIVE_IMAGE_NAME="${ICLAW_LIVE_IMAGE:-${IMAGE_NAME}-live}"
+PROFILE_FILE="${ICLAW_PROFILE_FILE:-$HOME/.profile}"
+DOCKER_USER="${ICLAW_DOCKER_USER:-node}"
 DOCKER_AUTH_PRESTAGED=0
 
 openclaw_live_truthy() {
@@ -29,17 +29,17 @@ cleanup_temp_dirs() {
 }
 trap cleanup_temp_dirs EXIT
 
-if openclaw_live_truthy "${OPENCLAW_DOCKER_PROFILE_ENV_ONLY:-}"; then
+if openclaw_live_truthy "${ICLAW_DOCKER_PROFILE_ENV_ONLY:-}"; then
   CONFIG_DIR="$(mktemp -d)"
   WORKSPACE_DIR="$(mktemp -d)"
   TEMP_DIRS+=("$CONFIG_DIR" "$WORKSPACE_DIR")
-  OPENCLAW_DOCKER_AUTH_DIRS=none
+  ICLAW_DOCKER_AUTH_DIRS=none
 else
-  CONFIG_DIR="${OPENCLAW_CONFIG_DIR:-$HOME/.openclaw}"
-  WORKSPACE_DIR="${OPENCLAW_WORKSPACE_DIR:-$HOME/.openclaw/workspace}"
+  CONFIG_DIR="${ICLAW_CONFIG_DIR:-$HOME/.openclaw}"
+  WORKSPACE_DIR="${ICLAW_WORKSPACE_DIR:-$HOME/.openclaw/workspace}"
 fi
-if [[ -n "${OPENCLAW_DOCKER_CACHE_HOME_DIR:-}" ]]; then
-  CACHE_HOME_DIR="${OPENCLAW_DOCKER_CACHE_HOME_DIR}"
+if [[ -n "${ICLAW_DOCKER_CACHE_HOME_DIR:-}" ]]; then
+  CACHE_HOME_DIR="${ICLAW_DOCKER_CACHE_HOME_DIR}"
 elif [[ "${CI:-}" == "true" || "${GITHUB_ACTIONS:-}" == "true" ]]; then
   CACHE_HOME_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/openclaw-docker-cache.XXXXXX")"
   TEMP_DIRS+=("$CACHE_HOME_DIR")
@@ -61,7 +61,7 @@ fi
 
 AUTH_DIRS=()
 AUTH_FILES=()
-if [[ -n "${OPENCLAW_DOCKER_AUTH_DIRS:-}" ]]; then
+if [[ -n "${ICLAW_DOCKER_AUTH_DIRS:-}" ]]; then
   while IFS= read -r auth_dir; do
     [[ -n "$auth_dir" ]] || continue
     AUTH_DIRS+=("$auth_dir")
@@ -70,14 +70,14 @@ if [[ -n "${OPENCLAW_DOCKER_AUTH_DIRS:-}" ]]; then
     [[ -n "$auth_file" ]] || continue
     AUTH_FILES+=("$auth_file")
   done < <(openclaw_live_collect_auth_files)
-elif [[ -n "${OPENCLAW_LIVE_PROVIDERS:-}" || -n "${OPENCLAW_LIVE_GATEWAY_PROVIDERS:-}" ]]; then
+elif [[ -n "${ICLAW_LIVE_PROVIDERS:-}" || -n "${ICLAW_LIVE_GATEWAY_PROVIDERS:-}" ]]; then
   while IFS= read -r auth_dir; do
     [[ -n "$auth_dir" ]] || continue
     AUTH_DIRS+=("$auth_dir")
   done < <(
     {
-      openclaw_live_collect_auth_dirs_from_csv "${OPENCLAW_LIVE_PROVIDERS:-}"
-      openclaw_live_collect_auth_dirs_from_csv "${OPENCLAW_LIVE_GATEWAY_PROVIDERS:-}"
+      openclaw_live_collect_auth_dirs_from_csv "${ICLAW_LIVE_PROVIDERS:-}"
+      openclaw_live_collect_auth_dirs_from_csv "${ICLAW_LIVE_GATEWAY_PROVIDERS:-}"
     } | awk '!seen[$0]++'
   )
   while IFS= read -r auth_file; do
@@ -85,8 +85,8 @@ elif [[ -n "${OPENCLAW_LIVE_PROVIDERS:-}" || -n "${OPENCLAW_LIVE_GATEWAY_PROVIDE
     AUTH_FILES+=("$auth_file")
   done < <(
     {
-      openclaw_live_collect_auth_files_from_csv "${OPENCLAW_LIVE_PROVIDERS:-}"
-      openclaw_live_collect_auth_files_from_csv "${OPENCLAW_LIVE_GATEWAY_PROVIDERS:-}"
+      openclaw_live_collect_auth_files_from_csv "${ICLAW_LIVE_PROVIDERS:-}"
+      openclaw_live_collect_auth_files_from_csv "${ICLAW_LIVE_GATEWAY_PROVIDERS:-}"
     } | awk '!seen[$0]++'
   )
 else
@@ -142,9 +142,9 @@ export NPM_CONFIG_CACHE="${NPM_CONFIG_CACHE:-$XDG_CACHE_HOME/npm}"
 export npm_config_cache="$NPM_CONFIG_CACHE"
 mkdir -p "$XDG_CACHE_HOME" "$COREPACK_HOME" "$NPM_CONFIG_CACHE"
 chmod 700 "$XDG_CACHE_HOME" "$COREPACK_HOME" "$NPM_CONFIG_CACHE" || true
-if [ "${OPENCLAW_DOCKER_AUTH_PRESTAGED:-0}" != "1" ]; then
-  IFS=',' read -r -a auth_dirs <<<"${OPENCLAW_DOCKER_AUTH_DIRS_RESOLVED:-}"
-  IFS=',' read -r -a auth_files <<<"${OPENCLAW_DOCKER_AUTH_FILES_RESOLVED:-}"
+if [ "${ICLAW_DOCKER_AUTH_PRESTAGED:-0}" != "1" ]; then
+  IFS=',' read -r -a auth_dirs <<<"${ICLAW_DOCKER_AUTH_DIRS_RESOLVED:-}"
+  IFS=',' read -r -a auth_files <<<"${ICLAW_DOCKER_AUTH_FILES_RESOLVED:-}"
   if ((${#auth_dirs[@]} > 0)); then
     for auth_dir in "${auth_dirs[@]}"; do
       [ -n "$auth_dir" ] || continue
@@ -184,7 +184,7 @@ EOF
 
 echo "==> Run live model tests (profile keys)"
 echo "==> Target: src/agents/models.profiles.live.test.ts"
-echo "==> Profile env only: ${OPENCLAW_DOCKER_PROFILE_ENV_ONLY:-0}"
+echo "==> Profile env only: ${ICLAW_DOCKER_PROFILE_ENV_ONLY:-0}"
 echo "==> External auth dirs: ${AUTH_DIRS_CSV:-none}"
 echo "==> External auth files: ${AUTH_FILES_CSV:-none}"
 DOCKER_RUN_ARGS=(docker run --rm -t \
@@ -193,20 +193,20 @@ DOCKER_RUN_ARGS=(docker run --rm -t \
   -e COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
   -e HOME=/home/node \
   -e NODE_OPTIONS=--disable-warning=ExperimentalWarning \
-  -e OPENCLAW_SKIP_CHANNELS=1 \
-  -e OPENCLAW_SUPPRESS_NOTES=1 \
-  -e OPENCLAW_DOCKER_AUTH_PRESTAGED="$DOCKER_AUTH_PRESTAGED" \
-  -e OPENCLAW_DOCKER_AUTH_DIRS_RESOLVED="$AUTH_DIRS_CSV" \
-  -e OPENCLAW_DOCKER_AUTH_FILES_RESOLVED="$AUTH_FILES_CSV" \
-  -e OPENCLAW_LIVE_TEST=1 \
-  -e OPENCLAW_LIVE_MODELS="${OPENCLAW_LIVE_MODELS:-modern}" \
-  -e OPENCLAW_LIVE_PROVIDERS="${OPENCLAW_LIVE_PROVIDERS:-}" \
-  -e OPENCLAW_LIVE_MAX_MODELS="${OPENCLAW_LIVE_MAX_MODELS:-12}" \
-  -e OPENCLAW_LIVE_MODEL_TIMEOUT_MS="${OPENCLAW_LIVE_MODEL_TIMEOUT_MS:-}" \
-  -e OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS="${OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS:-}" \
-  -e OPENCLAW_LIVE_GATEWAY_MODELS="${OPENCLAW_LIVE_GATEWAY_MODELS:-}" \
-  -e OPENCLAW_LIVE_GATEWAY_PROVIDERS="${OPENCLAW_LIVE_GATEWAY_PROVIDERS:-}" \
-  -e OPENCLAW_LIVE_GATEWAY_MAX_MODELS="${OPENCLAW_LIVE_GATEWAY_MAX_MODELS:-}")
+  -e ICLAW_SKIP_CHANNELS=1 \
+  -e ICLAW_SUPPRESS_NOTES=1 \
+  -e ICLAW_DOCKER_AUTH_PRESTAGED="$DOCKER_AUTH_PRESTAGED" \
+  -e ICLAW_DOCKER_AUTH_DIRS_RESOLVED="$AUTH_DIRS_CSV" \
+  -e ICLAW_DOCKER_AUTH_FILES_RESOLVED="$AUTH_FILES_CSV" \
+  -e ICLAW_LIVE_TEST=1 \
+  -e ICLAW_LIVE_MODELS="${ICLAW_LIVE_MODELS:-modern}" \
+  -e ICLAW_LIVE_PROVIDERS="${ICLAW_LIVE_PROVIDERS:-}" \
+  -e ICLAW_LIVE_MAX_MODELS="${ICLAW_LIVE_MAX_MODELS:-12}" \
+  -e ICLAW_LIVE_MODEL_TIMEOUT_MS="${ICLAW_LIVE_MODEL_TIMEOUT_MS:-}" \
+  -e ICLAW_LIVE_REQUIRE_PROFILE_KEYS="${ICLAW_LIVE_REQUIRE_PROFILE_KEYS:-}" \
+  -e ICLAW_LIVE_GATEWAY_MODELS="${ICLAW_LIVE_GATEWAY_MODELS:-}" \
+  -e ICLAW_LIVE_GATEWAY_PROVIDERS="${ICLAW_LIVE_GATEWAY_PROVIDERS:-}" \
+  -e ICLAW_LIVE_GATEWAY_MAX_MODELS="${ICLAW_LIVE_GATEWAY_MAX_MODELS:-}")
 openclaw_live_append_array DOCKER_RUN_ARGS DOCKER_HOME_MOUNT
 DOCKER_RUN_ARGS+=(\
   -v "$CACHE_HOME_DIR":/home/node/.cache \

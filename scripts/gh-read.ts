@@ -3,10 +3,10 @@ import { createPrivateKey, createSign } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
-const APP_ID_ENV = "OPENCLAW_GH_READ_APP_ID";
-const KEY_FILE_ENV = "OPENCLAW_GH_READ_PRIVATE_KEY_FILE";
-const INSTALLATION_ID_ENV = "OPENCLAW_GH_READ_INSTALLATION_ID";
-const PERMISSIONS_ENV = "OPENCLAW_GH_READ_PERMISSIONS";
+const APP_ID_ENV = "ICLAW_GH_READ_APP_ID";
+const KEY_FILE_ENV = "ICLAW_GH_READ_PRIVATE_KEY_FILE";
+const INSTALLATION_ID_ENV = "ICLAW_GH_READ_INSTALLATION_ID";
+const PERMISSIONS_ENV = "ICLAW_GH_READ_PERMISSIONS";
 const API_VERSION = "2022-11-28";
 const DEFAULT_READ_PERMISSION_KEYS = [
   "actions",
@@ -227,7 +227,7 @@ async function createInstallationToken(
 async function main() {
   if (process.argv.length <= 2) {
     fail(
-      "usage: scripts/gh-read <gh args...>\nset OPENCLAW_GH_READ_APP_ID and OPENCLAW_GH_READ_PRIVATE_KEY_FILE first",
+      "usage: scripts/gh-read <gh args...>\nset ICLAW_GH_READ_APP_ID and ICLAW_GH_READ_PRIVATE_KEY_FILE first",
     );
   }
 

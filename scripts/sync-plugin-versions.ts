@@ -19,14 +19,14 @@ type PackageJson = {
   };
 };
 
-const OPENCLAW_VERSION_RANGE_RE = /^>=\d{4}\.\d{1,2}\.\d{1,2}(?:[-.][^"\s]+)?$/u;
+const ICLAW_VERSION_RANGE_RE = /^>=\d{4}\.\d{1,2}\.\d{1,2}(?:[-.][^"\s]+)?$/u;
 
 function syncOpenClawDependencyRange(
   deps: Record<string, string> | undefined,
   targetVersion: string,
 ): boolean {
   const current = deps?.openclaw;
-  if (!current || current === "workspace:*" || !OPENCLAW_VERSION_RANGE_RE.test(current)) {
+  if (!current || current === "workspace:*" || !ICLAW_VERSION_RANGE_RE.test(current)) {
     return false;
   }
   const next = `>=${targetVersion}`;
@@ -40,7 +40,7 @@ function syncOpenClawDependencyRange(
 function syncPluginApiVersion(pkg: PackageJson, targetVersion: string): boolean {
   const compat = pkg.openclaw?.compat;
   const current = compat?.pluginApi;
-  if (!current || !OPENCLAW_VERSION_RANGE_RE.test(current)) {
+  if (!current || !ICLAW_VERSION_RANGE_RE.test(current)) {
     return false;
   }
   const next = `>=${targetVersion}`;

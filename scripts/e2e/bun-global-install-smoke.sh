@@ -3,10 +3,10 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 BUN_BIN="${BUN_BIN:-bun}"
-HOST_BUILD="${OPENCLAW_BUN_GLOBAL_SMOKE_HOST_BUILD:-1}"
-DIST_IMAGE="${OPENCLAW_BUN_GLOBAL_SMOKE_DIST_IMAGE:-}"
-PACKAGE_TGZ="${OPENCLAW_BUN_GLOBAL_SMOKE_PACKAGE_TGZ:-}"
-COMMAND_TIMEOUT_MS="${OPENCLAW_BUN_GLOBAL_SMOKE_TIMEOUT_MS:-180000}"
+HOST_BUILD="${ICLAW_BUN_GLOBAL_SMOKE_HOST_BUILD:-1}"
+DIST_IMAGE="${ICLAW_BUN_GLOBAL_SMOKE_DIST_IMAGE:-}"
+PACKAGE_TGZ="${ICLAW_BUN_GLOBAL_SMOKE_PACKAGE_TGZ:-}"
+COMMAND_TIMEOUT_MS="${ICLAW_BUN_GLOBAL_SMOKE_TIMEOUT_MS:-180000}"
 SMOKE_DIR=""
 PACK_DIR=""
 
@@ -71,7 +71,7 @@ restore_dist_from_image() {
 resolve_package_tgz() {
   if [ -n "$PACKAGE_TGZ" ]; then
     if [ ! -f "$PACKAGE_TGZ" ]; then
-      echo "OPENCLAW_BUN_GLOBAL_SMOKE_PACKAGE_TGZ does not exist: $PACKAGE_TGZ" >&2
+      echo "ICLAW_BUN_GLOBAL_SMOKE_PACKAGE_TGZ does not exist: $PACKAGE_TGZ" >&2
       exit 1
     fi
     PACKAGE_TGZ="$(cd "$(dirname "$PACKAGE_TGZ")" && pwd)/$(basename "$PACKAGE_TGZ")"
@@ -84,11 +84,11 @@ resolve_package_tgz() {
     echo "==> Build host package artifacts"
     pnpm build
   else
-    echo "==> Skipping host build (OPENCLAW_BUN_GLOBAL_SMOKE_HOST_BUILD=0)"
+    echo "==> Skipping host build (ICLAW_BUN_GLOBAL_SMOKE_HOST_BUILD=0)"
   fi
 
   if [ ! -d "$ROOT_DIR/dist" ]; then
-    echo "dist/ is missing; run pnpm build or set OPENCLAW_BUN_GLOBAL_SMOKE_DIST_IMAGE" >&2
+    echo "dist/ is missing; run pnpm build or set ICLAW_BUN_GLOBAL_SMOKE_DIST_IMAGE" >&2
     exit 1
   fi
 
@@ -136,8 +136,8 @@ main() {
   export HOME="$SMOKE_DIR/home"
   export BUN_INSTALL="$HOME/.bun"
   export XDG_CACHE_HOME="$SMOKE_DIR/cache"
-  export OPENCLAW_NO_ONBOARD=1
-  export OPENCLAW_DISABLE_UPDATE_CHECK=1
+  export ICLAW_NO_ONBOARD=1
+  export ICLAW_DISABLE_UPDATE_CHECK=1
   export NO_COLOR=1
   mkdir -p "$HOME" "$BUN_INSTALL/bin" "$XDG_CACHE_HOME"
   export PATH="$BUN_INSTALL/bin:$(dirname "$(command -v node)"):$PATH"
@@ -163,8 +163,8 @@ main() {
   echo "==> OpenClaw image providers through Bun global install"
   local providers_json
   providers_json="$(run_with_timeout "$COMMAND_TIMEOUT_MS" "$openclaw_bin" infer image providers --json)"
-  OPENCLAW_IMAGE_PROVIDERS_JSON="$providers_json" node - <<'NODE'
-const raw = process.env.OPENCLAW_IMAGE_PROVIDERS_JSON ?? "";
+  ICLAW_IMAGE_PROVIDERS_JSON="$providers_json" node - <<'NODE'
+const raw = process.env.ICLAW_IMAGE_PROVIDERS_JSON ?? "";
 let parsed;
 try {
   parsed = JSON.parse(raw);

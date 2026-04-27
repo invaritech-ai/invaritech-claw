@@ -340,7 +340,7 @@ export async function connectMcpClient(params: {
   const transport = new StdioClientTransport({
     command: "node",
     args: [
-      "/app/openclaw.mjs",
+      "/app/iclaw.mjs",
       "mcp",
       "serve",
       "--url",
@@ -353,8 +353,8 @@ export async function connectMcpClient(params: {
     cwd: "/app",
     env: {
       ...process.env,
-      OPENCLAW_ALLOW_INSECURE_PRIVATE_WS: "1",
-      OPENCLAW_STATE_DIR: "/tmp/openclaw-mcp-client",
+      ICLAW_ALLOW_INSECURE_PRIVATE_WS: "1",
+      ICLAW_STATE_DIR: "/tmp/openclaw-mcp-client",
     },
     stderr: "pipe",
   });

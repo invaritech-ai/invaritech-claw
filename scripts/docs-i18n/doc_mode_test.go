@@ -381,7 +381,7 @@ func TestTranslateDocBodyChunkedFallsBackToSmallerChunks(t *testing.T) {
 		"",
 	}, "\n")
 
-	t.Setenv("OPENCLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
+	t.Setenv("ICLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
 	translated, err := translateDocBodyChunked(context.Background(), docChunkTranslator{}, "help/faq.md", body, "en", "zh-CN")
 	if err != nil {
 		t.Fatalf("translateDocBodyChunked returned error: %v", err)
@@ -425,7 +425,7 @@ func TestTranslateDocBodyChunkedFallsBackToMaskedTranslateForLeafValidationFailu
 		"",
 	}, "\n")
 
-	t.Setenv("OPENCLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
+	t.Setenv("ICLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
 	translated, err := translateDocBodyChunked(
 		context.Background(),
 		docLeafFallbackTranslator{},
@@ -483,7 +483,7 @@ func TestTranslateDocBodyChunkedSplitsOnProtocolTokenLeakage(t *testing.T) {
 		"",
 	}, "\n")
 
-	t.Setenv("OPENCLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
+	t.Setenv("ICLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
 	translated, err := translateDocBodyChunked(context.Background(), docProtocolLeakTranslator{}, "gateway/configuration-reference.md", body, "en", "zh-CN")
 	if err != nil {
 		t.Fatalf("translateDocBodyChunked returned error: %v", err)
@@ -499,7 +499,7 @@ func TestTranslateDocBodyChunkedSplitsOnProtocolTokenLeakage(t *testing.T) {
 func TestTranslateDocBodyChunkedStripsUppercaseBodyWrapper(t *testing.T) {
 	body := "Regular paragraph.\n"
 
-	t.Setenv("OPENCLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
+	t.Setenv("ICLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
 	translated, err := translateDocBodyChunked(context.Background(), uppercaseWrapperTranslator{}, "gateway/configuration-reference.md", body, "en", "zh-CN")
 	if err != nil {
 		t.Fatalf("translateDocBodyChunked returned error: %v", err)
@@ -608,8 +608,8 @@ func TestTranslateDocBodyChunkedPreSplitsOversizedPromptBudget(t *testing.T) {
 		"",
 	}, "\n")
 
-	t.Setenv("OPENCLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
-	t.Setenv("OPENCLAW_DOCS_I18N_DOC_CHUNK_PROMPT_BUDGET", "60")
+	t.Setenv("ICLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
+	t.Setenv("ICLAW_DOCS_I18N_DOC_CHUNK_PROMPT_BUDGET", "60")
 
 	translator := &docPromptBudgetTranslator{}
 	translated, err := translateDocBodyChunked(
@@ -644,7 +644,7 @@ func TestTranslateDocBodyChunkedSplitsOversizedSingletonBlock(t *testing.T) {
 		"",
 	}, "\n")
 
-	t.Setenv("OPENCLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "24")
+	t.Setenv("ICLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "24")
 	translator := &oversizedBlockTranslator{}
 	translated, err := translateDocBodyChunked(context.Background(), translator, "gateway/configuration-reference.md", body, "en", "zh-CN")
 	if err != nil {
@@ -672,8 +672,8 @@ func TestTranslateDocBodyChunkedSplitsSingletonBlockWhenPromptBudgetExceeded(t *
 		t.Fatalf("test setup expected combined singleton prompt cost to exceed budget; cost=%d budget=%d", estimateDocPromptCost(body), budget)
 	}
 
-	t.Setenv("OPENCLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
-	t.Setenv("OPENCLAW_DOCS_I18N_DOC_CHUNK_PROMPT_BUDGET", strconv.Itoa(budget))
+	t.Setenv("ICLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
+	t.Setenv("ICLAW_DOCS_I18N_DOC_CHUNK_PROMPT_BUDGET", strconv.Itoa(budget))
 	translator := &oversizedBlockTranslator{}
 	translated, err := translateDocBodyChunked(context.Background(), translator, "gateway/configuration-reference.md", body, "en", "zh-CN")
 	if err != nil {
@@ -704,7 +704,7 @@ func TestTranslateDocBodyChunkedSplitsOversizedFenceBeforeTrailingProse(t *testi
 		"",
 	}, "\n")
 
-	t.Setenv("OPENCLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "24")
+	t.Setenv("ICLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "24")
 	translator := &oversizedBlockTranslator{}
 	translated, err := translateDocBodyChunked(context.Background(), translator, "gateway/configuration-reference.md", body, "en", "zh-CN")
 	if err != nil {
@@ -736,8 +736,8 @@ func TestTranslateDocBodyChunkedRetriesSingletonFenceAfterValidationFailure(t *t
 		"",
 	}, "\n")
 
-	t.Setenv("OPENCLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
-	t.Setenv("OPENCLAW_DOCS_I18N_DOC_CHUNK_PROMPT_BUDGET", "4096")
+	t.Setenv("ICLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
+	t.Setenv("ICLAW_DOCS_I18N_DOC_CHUNK_PROMPT_BUDGET", "4096")
 
 	translator := &singletonFenceRetryTranslator{}
 	translated, err := translateDocBodyChunked(context.Background(), translator, "gateway/configuration-reference.md", body, "en", "zh-CN")
@@ -765,7 +765,7 @@ func TestTranslateDocBodyChunkedRetriesSingletonFenceAfterValidationFailure(t *t
 func TestTranslateDocBodyChunkedUnwrapsTaggedLeafProtocolLeakage(t *testing.T) {
 	body := "# Fly.io Deployment\n\n"
 
-	t.Setenv("OPENCLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
+	t.Setenv("ICLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
 	translated, err := translateDocBodyChunked(
 		context.Background(),
 		docWrappedLeafTranslator{},
@@ -788,7 +788,7 @@ func TestTranslateDocBodyChunkedUnwrapsTaggedLeafProtocolLeakage(t *testing.T) {
 func TestTranslateDocBodyChunkedFallsBackForComponentLeafValidationFailure(t *testing.T) {
 	body := "  <Accordion title=\"Can I use Claude Max subscription without an API key?\">\n    Yes.\n\n"
 
-	t.Setenv("OPENCLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
+	t.Setenv("ICLAW_DOCS_I18N_DOC_CHUNK_MAX_BYTES", "4096")
 	translated, err := translateDocBodyChunked(
 		context.Background(),
 		docComponentLeafFallbackTranslator{},

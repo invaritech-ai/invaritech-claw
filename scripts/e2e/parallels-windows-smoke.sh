@@ -44,7 +44,7 @@ BUILD_LOCK_DIR="${TMPDIR:-/tmp}/openclaw-parallels-build.lock"
 TIMEOUT_SNAPSHOT_S=240
 TIMEOUT_GIT_SETUP_S=1200
 TIMEOUT_INSTALL_S=420
-TIMEOUT_UPDATE_S="${OPENCLAW_PARALLELS_WINDOWS_UPDATE_TIMEOUT_S:-1200}"
+TIMEOUT_UPDATE_S="${ICLAW_PARALLELS_WINDOWS_UPDATE_TIMEOUT_S:-1200}"
 TIMEOUT_UPDATE_POLL_GRACE_S=60
 TIMEOUT_VERIFY_S=120
 TIMEOUT_ONBOARD_S=600
@@ -877,7 +877,7 @@ release_build_lock() {
 ensure_current_build() {
   local head build_commit rc lock_owned
   lock_owned=0
-  if [[ "${OPENCLAW_PARALLELS_BUILD_LOCK_HELD:-0}" != "1" ]]; then
+  if [[ "${ICLAW_PARALLELS_BUILD_LOCK_HELD:-0}" != "1" ]]; then
     acquire_build_lock
     lock_owned=1
   fi
@@ -975,7 +975,7 @@ pack_main_tgz() {
   acquire_build_lock
   set +e
   {
-    OPENCLAW_PARALLELS_BUILD_LOCK_HELD=1 ensure_current_build &&
+    ICLAW_PARALLELS_BUILD_LOCK_HELD=1 ensure_current_build &&
       write_package_dist_inventory &&
       short_head="$(git rev-parse --short HEAD)" &&
       pkg="$(
@@ -1647,7 +1647,7 @@ try {
   $env:npm_config_ignore_scripts = 'true'
   $openclaw = Join-Path $env:APPDATA 'npm\openclaw.cmd'
   $gitRoot = Join-Path $env:USERPROFILE 'openclaw'
-  $gitEntry = Join-Path $gitRoot 'openclaw.mjs'
+  $gitEntry = Join-Path $gitRoot 'iclaw.mjs'
 
   Remove-Item $LogPath, $DonePath -Force -ErrorAction SilentlyContinue
   Write-ProgressLog 'update.start'
@@ -1908,7 +1908,7 @@ $busy = Get-CimInstance Win32_Process |
 if ($busy) {
   throw 'dev update still has active npm/pnpm/openclaw processes'
 }
-$gitEntry = Join-Path $env:USERPROFILE 'openclaw\openclaw.mjs'
+$gitEntry = Join-Path $env:USERPROFILE 'openclaw\iclaw.mjs'
 if (-not (Test-Path $gitEntry)) {
   throw "git entry missing after transport loss: $gitEntry"
 }
@@ -2190,7 +2190,7 @@ verify_dev_channel_update() {
     guest_powershell "$(cat <<'EOF'
 $portableGit = Join-Path (Join-Path (Join-Path $env:LOCALAPPDATA 'OpenClaw\deps') 'portable-git') ''
 $env:PATH = "$portableGit\cmd;$portableGit\mingw64\bin;$portableGit\usr\bin;$env:PATH"
-$gitEntry = Join-Path (Join-Path $env:USERPROFILE 'openclaw') 'openclaw.mjs'
+$gitEntry = Join-Path (Join-Path $env:USERPROFILE 'openclaw') 'iclaw.mjs'
 if (-not (Test-Path $gitEntry)) {
   throw "git entry missing: $gitEntry"
 }

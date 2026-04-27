@@ -187,16 +187,13 @@ export function readRunnerOverrideEnv(env = process.env) {
   return {
     varUbuntuRunner: preferNonEmptyEnv(
       env.VAR_UBUNTU_RUNNER,
-      env.OPENCLAW_RELEASE_CHECKS_UBUNTU_RUNNER,
+      env.ICLAW_RELEASE_CHECKS_UBUNTU_RUNNER,
     ),
     varWindowsRunner: preferNonEmptyEnv(
       env.VAR_WINDOWS_RUNNER,
-      env.OPENCLAW_RELEASE_CHECKS_WINDOWS_RUNNER,
+      env.ICLAW_RELEASE_CHECKS_WINDOWS_RUNNER,
     ),
-    varMacosRunner: preferNonEmptyEnv(
-      env.VAR_MACOS_RUNNER,
-      env.OPENCLAW_RELEASE_CHECKS_MACOS_RUNNER,
-    ),
+    varMacosRunner: preferNonEmptyEnv(env.VAR_MACOS_RUNNER, env.ICLAW_RELEASE_CHECKS_MACOS_RUNNER),
   };
 }
 
@@ -288,8 +285,8 @@ async function main(argv) {
 
   const summary = {
     platform: process.platform,
-    runnerOs: process.env.OPENCLAW_RELEASE_CHECK_OS ?? "",
-    runnerLabel: process.env.OPENCLAW_RELEASE_CHECK_RUNNER ?? "",
+    runnerOs: process.env.ICLAW_RELEASE_CHECK_OS ?? "",
+    runnerLabel: process.env.ICLAW_RELEASE_CHECK_RUNNER ?? "",
     provider,
     mode,
     suite,
@@ -947,7 +944,7 @@ async function runDevUpdateSuite(params) {
       args: ["update", "--channel", "dev", "--yes", "--json"],
       env: {
         ...buildRealUpdateEnv(env),
-        OPENCLAW_UPDATE_DEV_TARGET_REF: verificationRef,
+        ICLAW_UPDATE_DEV_TARGET_REF: verificationRef,
       },
       cwd: lane.homeDir,
       logPath: join(params.logsDir, "dev-update.log"),
@@ -1100,11 +1097,11 @@ function buildLaneEnv(lane, providerMeta, providerSecretValue) {
     USERPROFILE: lane.homeDir,
     APPDATA: lane.appDataDir,
     LOCALAPPDATA: join(lane.homeDir, "AppData", "Local"),
-    OPENCLAW_HOME: lane.homeDir,
-    OPENCLAW_STATE_DIR: lane.stateDir,
-    OPENCLAW_CONFIG_PATH: join(lane.stateDir, "openclaw.json"),
-    OPENCLAW_DISABLE_BONJOUR: "1",
-    OPENCLAW_DISABLE_BUNDLED_PLUGIN_POSTINSTALL: "1",
+    ICLAW_HOME: lane.homeDir,
+    ICLAW_STATE_DIR: lane.stateDir,
+    ICLAW_CONFIG_PATH: join(lane.stateDir, "openclaw.json"),
+    ICLAW_DISABLE_BONJOUR: "1",
+    ICLAW_DISABLE_BUNDLED_PLUGIN_POSTINSTALL: "1",
     NPM_CONFIG_PREFIX: lane.prefixDir,
     PATH: `${binDirForPrefix(lane.prefixDir)}${process.platform === "win32" ? ";" : ":"}${process.env.PATH ?? ""}`,
     [providerMeta.secretEnv]: providerSecretValue,
@@ -1120,12 +1117,12 @@ function buildInstallerEnv(lane, providerMeta, providerSecretValue) {
     USERPROFILE: lane.homeDir,
     APPDATA: lane.appDataDir,
     LOCALAPPDATA: localAppData,
-    OPENCLAW_HOME: lane.homeDir,
-    OPENCLAW_STATE_DIR: lane.stateDir,
-    OPENCLAW_CONFIG_PATH: join(lane.stateDir, "openclaw.json"),
-    OPENCLAW_DISABLE_BONJOUR: "1",
-    OPENCLAW_NO_ONBOARD: "1",
-    OPENCLAW_NO_PROMPT: "1",
+    ICLAW_HOME: lane.homeDir,
+    ICLAW_STATE_DIR: lane.stateDir,
+    ICLAW_CONFIG_PATH: join(lane.stateDir, "openclaw.json"),
+    ICLAW_DISABLE_BONJOUR: "1",
+    ICLAW_NO_ONBOARD: "1",
+    ICLAW_NO_PROMPT: "1",
     CI: "1",
     NODE_OPTIONS: "--max-old-space-size=6144",
     [providerMeta.secretEnv]: providerSecretValue,
@@ -1181,7 +1178,7 @@ export function shouldSkipInstallerDaemonHealthCheck(platform = process.platform
 
 export function buildRealUpdateEnv(env) {
   const updateEnv = { ...env };
-  delete updateEnv.OPENCLAW_DISABLE_BUNDLED_PLUGIN_POSTINSTALL;
+  delete updateEnv.ICLAW_DISABLE_BUNDLED_PLUGIN_POSTINSTALL;
   return updateEnv;
 }
 
@@ -1389,7 +1386,7 @@ if ($commandPath -match '(?i)\\.ps1$') {
   }
 }
 $version = (& $commandPath --version 2>&1 | Out-String).Trim()
-Write-Output "__OPENCLAW_PATH__=$commandPath"
+Write-Output "__ICLAW_PATH__=$commandPath"
 Write-Output $version
 if ('${expectedNeedle}'.Length -gt 0 -and $version -notmatch [regex]::Escape('${expectedNeedle}')) {
   throw "version mismatch: expected substring ${expectedNeedle}"
@@ -1451,7 +1448,7 @@ async function verifyFreshShellCommand(params) {
       timeoutMs: 2 * 60 * 1000,
     });
     const cliPath = normalizeWindowsInstalledCliPath(
-      parseMarkerLine(result.stdout, "__OPENCLAW_PATH__="),
+      parseMarkerLine(result.stdout, "__ICLAW_PATH__="),
     );
     if (!cliPath) {
       throw new Error("Failed to resolve installed openclaw path from fresh Windows shell.");
@@ -1466,7 +1463,7 @@ async function verifyFreshShellCommand(params) {
     "set -euo pipefail",
     'if [ -f "$HOME/.bashrc" ]; then . "$HOME/.bashrc"; fi',
     "command -v openclaw >/dev/null 2>&1",
-    'printf "__OPENCLAW_PATH__=%s\\n" "$(command -v openclaw)"',
+    'printf "__ICLAW_PATH__=%s\\n" "$(command -v openclaw)"',
     "openclaw --version",
   ].join("\n");
   const result = await runPosixShellScript(script, {
@@ -1475,7 +1472,7 @@ async function verifyFreshShellCommand(params) {
     logPath: params.logPath,
     timeoutMs: 2 * 60 * 1000,
   });
-  const cliPath = parseMarkerLine(result.stdout, "__OPENCLAW_PATH__=");
+  const cliPath = parseMarkerLine(result.stdout, "__ICLAW_PATH__=");
   const versionOutput = `${result.stdout}\n${result.stderr}`.trim();
   if (!cliPath) {
     throw new Error("Failed to resolve installed openclaw path from fresh POSIX shell.");
@@ -2016,11 +2013,11 @@ async function waitForInstalledDiscordReadback(params) {
 
 async function maybeRunDiscordRoundtrip(params) {
   const token =
-    process.env.OPENCLAW_DISCORD_SMOKE_BOT_TOKEN?.trim() ||
+    process.env.ICLAW_DISCORD_SMOKE_BOT_TOKEN?.trim() ||
     process.env.DISCORD_BOT_TOKEN?.trim() ||
     "";
-  const guildId = process.env.OPENCLAW_DISCORD_SMOKE_GUILD_ID?.trim() || "";
-  const channelId = process.env.OPENCLAW_DISCORD_SMOKE_CHANNEL_ID?.trim() || "";
+  const guildId = process.env.ICLAW_DISCORD_SMOKE_GUILD_ID?.trim() || "";
+  const channelId = process.env.ICLAW_DISCORD_SMOKE_CHANNEL_ID?.trim() || "";
   if (!token || !guildId || !channelId) {
     return "skipped-missing-config";
   }
@@ -2163,7 +2160,7 @@ async function runBundledPluginPostinstall(params) {
   const installEnv = {
     ...params.env,
   };
-  delete installEnv.OPENCLAW_DISABLE_BUNDLED_PLUGIN_POSTINSTALL;
+  delete installEnv.ICLAW_DISABLE_BUNDLED_PLUGIN_POSTINSTALL;
   delete installEnv.NPM_CONFIG_PREFIX;
   delete installEnv.npm_config_global;
   delete installEnv.npm_config_location;
@@ -2637,7 +2634,7 @@ function installedPackageRoot(prefixDir) {
 }
 
 function installedEntryPath(prefixDir) {
-  return join(installedPackageRoot(prefixDir), "openclaw.mjs");
+  return join(installedPackageRoot(prefixDir), "iclaw.mjs");
 }
 
 function npmShimPath(prefixDir) {

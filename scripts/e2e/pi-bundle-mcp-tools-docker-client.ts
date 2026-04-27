@@ -62,7 +62,7 @@ function applyPolicy(params: {
 
 async function main() {
   const stateDir =
-    process.env.OPENCLAW_STATE_DIR?.trim() ||
+    process.env.ICLAW_STATE_DIR?.trim() ||
     path.join(os.tmpdir(), `openclaw-pi-bundle-mcp-${process.pid}`);
   const probeDir = path.join(stateDir, "pi-bundle-mcp-tools");
   const serverPath = path.join(probeDir, "probe-server.mjs");

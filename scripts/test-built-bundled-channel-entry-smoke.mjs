@@ -9,17 +9,17 @@ import { installProcessWarningFilter } from "./process-warning-filter.mjs";
 
 installProcessWarningFilter();
 
-process.env.OPENCLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK ??= "1";
+process.env.ICLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK ??= "1";
 
 const { packageRoot } = parsePackageRootArg(
   process.argv.slice(2),
-  "OPENCLAW_BUNDLED_CHANNEL_SMOKE_ROOT",
+  "ICLAW_BUNDLED_CHANNEL_SMOKE_ROOT",
 );
 const distExtensionsRoot = path.join(packageRoot, "dist", "extensions");
-const installedLayoutEnv = "OPENCLAW_BUNDLED_CHANNEL_SMOKE_INSTALLED_LAYOUT";
+const installedLayoutEnv = "ICLAW_BUNDLED_CHANNEL_SMOKE_INSTALLED_LAYOUT";
 
 function packageRootLooksInstalled(root) {
-  return root.replaceAll("\\", "/").endsWith("/node_modules/openclaw");
+  return root.replaceAll("\\", "/").endsWith("/node_modules/iclaw");
 }
 
 function smokeInInstalledLayoutIfNeeded() {

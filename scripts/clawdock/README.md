@@ -151,11 +151,11 @@ The Docker setup uses three config files on the host. The container never stores
 
 ### Config Files
 
-| File                        | Purpose                                          | Examples                                                            |
-| --------------------------- | ------------------------------------------------ | ------------------------------------------------------------------- |
-| `<project>/.env`            | **Docker infra** — image, ports, gateway token   | `OPENCLAW_GATEWAY_TOKEN`, `OPENCLAW_IMAGE`, `OPENCLAW_GATEWAY_PORT` |
-| `~/.openclaw/.env`          | **Secrets** — API keys and bot tokens            | `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `TELEGRAM_BOT_TOKEN`         |
-| `~/.openclaw/openclaw.json` | **Behavior config** — models, channels, policies | Model selection, WhatsApp allowlists, agent settings                |
+| File                        | Purpose                                          | Examples                                                    |
+| --------------------------- | ------------------------------------------------ | ----------------------------------------------------------- |
+| `<project>/.env`            | **Docker infra** — image, ports, gateway token   | `ICLAW_GATEWAY_TOKEN`, `ICLAW_IMAGE`, `ICLAW_GATEWAY_PORT`  |
+| `~/.openclaw/.env`          | **Secrets** — API keys and bot tokens            | `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `TELEGRAM_BOT_TOKEN` |
+| `~/.openclaw/openclaw.json` | **Behavior config** — models, channels, policies | Model selection, WhatsApp allowlists, agent settings        |
 
 **Do NOT** put API keys or bot tokens in `openclaw.json`. Use `~/.openclaw/.env` for all secrets.
 
@@ -181,8 +181,8 @@ See `.env.example` for all supported keys.
 
 The `Dockerfile` supports two optional build args:
 
-- `OPENCLAW_DOCKER_APT_PACKAGES` — extra apt packages to install (e.g. `ffmpeg`)
-- `OPENCLAW_INSTALL_BROWSER=1` — pre-install Chromium for browser automation (adds ~300MB, but skips the 60-90s Playwright install on each container start)
+- `ICLAW_DOCKER_APT_PACKAGES` — extra apt packages to install (e.g. `ffmpeg`)
+- `ICLAW_INSTALL_BROWSER=1` — pre-install Chromium for browser automation (adds ~300MB, but skips the 60-90s Playwright install on each container start)
 
 ### How It Works in Docker
 
@@ -190,8 +190,8 @@ The `Dockerfile` supports two optional build args:
 
 ```yaml
 volumes:
-  - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
-  - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
+  - ${ICLAW_CONFIG_DIR}:/home/node/.openclaw
+  - ${ICLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
 ```
 
 This means:
@@ -214,13 +214,13 @@ TELEGRAM_BOT_TOKEN=123456:ABCDEF...
 ### Example `<project>/.env`
 
 ```bash
-OPENCLAW_CONFIG_DIR=/Users/you/.openclaw
-OPENCLAW_WORKSPACE_DIR=/Users/you/.openclaw/workspace
-OPENCLAW_GATEWAY_PORT=18789
-OPENCLAW_BRIDGE_PORT=18790
-OPENCLAW_GATEWAY_BIND=lan
-OPENCLAW_GATEWAY_TOKEN=<generated-by-docker-setup>
-OPENCLAW_IMAGE=openclaw:local
+ICLAW_CONFIG_DIR=/Users/you/.openclaw
+ICLAW_WORKSPACE_DIR=/Users/you/.openclaw/workspace
+ICLAW_GATEWAY_PORT=18789
+ICLAW_BRIDGE_PORT=18790
+ICLAW_GATEWAY_BIND=lan
+ICLAW_GATEWAY_TOKEN=<generated-by-docker-setup>
+ICLAW_IMAGE=openclaw:local
 ```
 
 ### Env Precedence
@@ -231,7 +231,7 @@ OpenClaw loads env vars in this order (highest wins, never overrides existing):
 2. **`.env` in CWD** — project root `.env` (Docker infra vars)
 3. **`~/.openclaw/.env`** — global secrets (API keys, bot tokens)
 4. **`openclaw.json` `env` block** — inline vars, applied only if still missing
-5. **Shell env import** — optional login-shell scrape (`OPENCLAW_LOAD_SHELL_ENV=1`)
+5. **Shell env import** — optional login-shell scrape (`ICLAW_LOAD_SHELL_ENV=1`)
 
 ## Common Workflows
 

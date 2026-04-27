@@ -39,9 +39,9 @@ openclaw_live_link_runtime_tree() {
   ln -s /app/node_modules "$dest_dir/node_modules"
   ln -s /app/dist "$dest_dir/dist"
   if [ -d /app/dist-runtime/extensions ]; then
-    export OPENCLAW_BUNDLED_PLUGINS_DIR=/app/dist-runtime/extensions
+    export ICLAW_BUNDLED_PLUGINS_DIR=/app/dist-runtime/extensions
   elif [ -d /app/dist/extensions ]; then
-    export OPENCLAW_BUNDLED_PLUGINS_DIR=/app/dist/extensions
+    export ICLAW_BUNDLED_PLUGINS_DIR=/app/dist/extensions
   fi
 }
 
@@ -75,12 +75,12 @@ openclaw_live_stage_state_dir() {
     fi
   fi
 
-  export OPENCLAW_STATE_DIR="$dest_dir"
-  export OPENCLAW_CONFIG_PATH="$dest_dir/openclaw.json"
+  export ICLAW_STATE_DIR="$dest_dir"
+  export ICLAW_CONFIG_PATH="$dest_dir/openclaw.json"
 }
 
 openclaw_live_prepare_staged_config() {
-  if [ ! -f "${OPENCLAW_CONFIG_PATH:-}" ]; then
+  if [ ! -f "${ICLAW_CONFIG_PATH:-}" ]; then
     return 0
   fi
 

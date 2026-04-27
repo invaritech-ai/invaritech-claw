@@ -1,12 +1,12 @@
 import fs from "node:fs";
 import http from "node:http";
 
-const port = Number(process.env.MOCK_PORT ?? process.env.OPENCLAW_MOCK_OPENAI_PORT);
-const successMarker = process.env.SUCCESS_MARKER ?? "OPENCLAW_E2E_OK";
+const port = Number(process.env.MOCK_PORT ?? process.env.ICLAW_MOCK_OPENAI_PORT);
+const successMarker = process.env.SUCCESS_MARKER ?? "ICLAW_E2E_OK";
 const requestLog = process.env.MOCK_REQUEST_LOG;
 
 if (!Number.isInteger(port) || port <= 0) {
-  throw new Error("missing valid MOCK_PORT or OPENCLAW_MOCK_OPENAI_PORT");
+  throw new Error("missing valid MOCK_PORT or ICLAW_MOCK_OPENAI_PORT");
 }
 
 function readBody(req) {

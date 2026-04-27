@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const codexRepo = process.env.OPENCLAW_CODEX_REPO
-  ? path.resolve(process.env.OPENCLAW_CODEX_REPO)
+const codexRepo = process.env.ICLAW_CODEX_REPO
+  ? path.resolve(process.env.ICLAW_CODEX_REPO)
   : path.resolve(process.cwd(), "../codex");
 const schemaRoot = path.join(codexRepo, "codex-rs/app-server-protocol/schema/typescript");
 const sourceSchemaRoot = path.join(codexRepo, "codex-rs/app-server-protocol/schema");

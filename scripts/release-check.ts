@@ -228,7 +228,7 @@ export function createPackedBundledPluginPostinstallEnv(
 ): NodeJS.ProcessEnv {
   return {
     ...env,
-    OPENCLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
+    ICLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
   };
 }
 
@@ -271,9 +271,9 @@ export function createPackedCliSmokeEnv(
     AWS_EC2_METADATA_DISABLED: "true",
     AWS_SHARED_CREDENTIALS_FILE: homeDir ? join(homeDir, ".aws", "credentials") : undefined,
     AWS_CONFIG_FILE: homeDir ? join(homeDir, ".aws", "config") : undefined,
-    OPENCLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
-    OPENCLAW_NO_ONBOARD: "1",
-    OPENCLAW_SUPPRESS_NOTES: "1",
+    ICLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
+    ICLAW_NO_ONBOARD: "1",
+    ICLAW_SUPPRESS_NOTES: "1",
     ...overrides,
   };
 }
@@ -420,7 +420,7 @@ function runPackedBundledPluginActivationSmoke(packageRoot: string, tmpRoot: str
   const homeDir = join(tmpRoot, "activation-home");
   mkdirSync(homeDir, { recursive: true });
   writePackedBundledPluginActivationConfig(homeDir);
-  execFileSync(process.execPath, [join(packageRoot, "openclaw.mjs"), "plugins", "doctor"], {
+  execFileSync(process.execPath, [join(packageRoot, "iclaw.mjs"), "plugins", "doctor"], {
     cwd: packageRoot,
     stdio: "inherit",
     env: createPackedCliSmokeEnv(process.env, {
@@ -443,7 +443,7 @@ function runPackedCliSmoke(params: {
   const binaryPath = resolveInstalledBinaryPath(params.prefixDir);
   const env = createPackedCliSmokeEnv(process.env, {
     HOME: params.homeDir,
-    OPENCLAW_STATE_DIR: params.stateDir,
+    ICLAW_STATE_DIR: params.stateDir,
     OPENAI_API_KEY: "sk-openclaw-release-check",
   });
   const windowsRoot = env.SystemRoot ?? env.WINDIR ?? "C:\\Windows";
@@ -507,23 +507,23 @@ function runPackedBundledChannelEntrySmoke(): void {
         stdio: "inherit",
         env: {
           ...process.env,
-          OPENCLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
+          ICLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
         },
       },
     );
 
     execFileSync(
       process.execPath,
-      [join(packageRoot, "openclaw.mjs"), "completion", "--write-state"],
+      [join(packageRoot, "iclaw.mjs"), "completion", "--write-state"],
       {
         cwd: packageRoot,
         stdio: "inherit",
         env: {
           ...process.env,
           HOME: homeDir,
-          OPENCLAW_STATE_DIR: stateDir,
-          OPENCLAW_SUPPRESS_NOTES: "1",
-          OPENCLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
+          ICLAW_STATE_DIR: stateDir,
+          ICLAW_SUPPRESS_NOTES: "1",
+          ICLAW_DISABLE_BUNDLED_ENTRY_SOURCE_FALLBACK: "1",
         },
       },
     );

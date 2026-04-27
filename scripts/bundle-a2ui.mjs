@@ -174,9 +174,9 @@ async function main() {
       console.log("A2UI sources missing; keeping prebuilt bundle.");
       return;
     }
-    if (process.env.OPENCLAW_SPARSE_PROFILE || process.env.OPENCLAW_A2UI_SKIP_MISSING === "1") {
+    if (process.env.ICLAW_SPARSE_PROFILE || process.env.ICLAW_A2UI_SKIP_MISSING === "1") {
       console.error(
-        "A2UI sources missing; skipping bundle because OPENCLAW_A2UI_SKIP_MISSING=1 or OPENCLAW_SPARSE_PROFILE is set.",
+        "A2UI sources missing; skipping bundle because ICLAW_A2UI_SKIP_MISSING=1 or ICLAW_SPARSE_PROFILE is set.",
       );
       return;
     }

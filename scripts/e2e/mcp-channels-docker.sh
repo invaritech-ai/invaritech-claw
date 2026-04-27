@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-image.sh"
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-mcp-channels-e2e" OPENCLAW_IMAGE)"
+IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-mcp-channels-e2e" ICLAW_IMAGE)"
 PORT="18789"
 TOKEN="mcp-e2e-$(date +%s)-$$"
 CONTAINER_NAME="openclaw-mcp-e2e-$$"
@@ -21,16 +21,16 @@ echo "Running in-container gateway + MCP smoke..."
 set +e
 docker run --rm \
   --name "$CONTAINER_NAME" \
-  -e "OPENCLAW_GATEWAY_TOKEN=$TOKEN" \
-  -e "OPENCLAW_SKIP_CHANNELS=1" \
-  -e "OPENCLAW_SKIP_GMAIL_WATCHER=1" \
-  -e "OPENCLAW_SKIP_CRON=1" \
-  -e "OPENCLAW_SKIP_CANVAS_HOST=1" \
-  -e "OPENCLAW_STATE_DIR=/tmp/openclaw-state" \
-  -e "OPENCLAW_CONFIG_PATH=/tmp/openclaw-state/openclaw.json" \
+  -e "ICLAW_GATEWAY_TOKEN=$TOKEN" \
+  -e "ICLAW_SKIP_CHANNELS=1" \
+  -e "ICLAW_SKIP_GMAIL_WATCHER=1" \
+  -e "ICLAW_SKIP_CRON=1" \
+  -e "ICLAW_SKIP_CANVAS_HOST=1" \
+  -e "ICLAW_STATE_DIR=/tmp/openclaw-state" \
+  -e "ICLAW_CONFIG_PATH=/tmp/openclaw-state/openclaw.json" \
   -e "GW_URL=ws://127.0.0.1:$PORT" \
   -e "GW_TOKEN=$TOKEN" \
-  -e "OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1" \
+  -e "ICLAW_ALLOW_INSECURE_PRIVATE_WS=1" \
   "$IMAGE_NAME" \
   bash -lc "set -euo pipefail
     entry=dist/index.mjs

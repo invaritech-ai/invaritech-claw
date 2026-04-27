@@ -8,7 +8,7 @@ import { formatErrorMessage } from "./lib/error-format.mjs";
 export function parseArgs(argv) {
   const args = {
     mode: "",
-    outputDir: process.env.OPENCLAW_VITEST_PROFILE_DIR?.trim() || "",
+    outputDir: process.env.ICLAW_VITEST_PROFILE_DIR?.trim() || "",
   };
 
   for (let i = 0; i < argv.length; i += 1) {

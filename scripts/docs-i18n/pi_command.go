@@ -13,10 +13,10 @@ import (
 )
 
 const (
-	envDocsPiExecutable     = "OPENCLAW_DOCS_I18N_PI_EXECUTABLE"
-	envDocsPiArgs           = "OPENCLAW_DOCS_I18N_PI_ARGS"
-	envDocsPiPackageVersion = "OPENCLAW_DOCS_I18N_PI_PACKAGE_VERSION"
-	envDocsPiOmitProvider   = "OPENCLAW_DOCS_I18N_PI_OMIT_PROVIDER"
+	envDocsPiExecutable     = "ICLAW_DOCS_I18N_PI_EXECUTABLE"
+	envDocsPiArgs           = "ICLAW_DOCS_I18N_PI_ARGS"
+	envDocsPiPackageVersion = "ICLAW_DOCS_I18N_PI_PACKAGE_VERSION"
+	envDocsPiOmitProvider   = "ICLAW_DOCS_I18N_PI_OMIT_PROVIDER"
 	defaultPiPackageVersion = "0.58.3"
 )
 

@@ -3,18 +3,18 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$ROOT_DIR/scripts/lib/live-docker-auth.sh"
-IMAGE_NAME="${OPENCLAW_IMAGE:-openclaw:local}"
-LIVE_IMAGE_NAME="${OPENCLAW_LIVE_IMAGE:-${IMAGE_NAME}-live}"
-CONFIG_DIR="${OPENCLAW_CONFIG_DIR:-$HOME/.openclaw}"
-WORKSPACE_DIR="${OPENCLAW_WORKSPACE_DIR:-$HOME/.openclaw/workspace}"
-PROFILE_FILE="${OPENCLAW_PROFILE_FILE:-$HOME/.profile}"
-DEFAULT_PROVIDER="${OPENCLAW_DOCKER_CLI_BACKEND_PROVIDER:-claude-cli}"
-CLI_MODEL="${OPENCLAW_LIVE_CLI_BACKEND_MODEL:-}"
+IMAGE_NAME="${ICLAW_IMAGE:-openclaw:local}"
+LIVE_IMAGE_NAME="${ICLAW_LIVE_IMAGE:-${IMAGE_NAME}-live}"
+CONFIG_DIR="${ICLAW_CONFIG_DIR:-$HOME/.openclaw}"
+WORKSPACE_DIR="${ICLAW_WORKSPACE_DIR:-$HOME/.openclaw/workspace}"
+PROFILE_FILE="${ICLAW_PROFILE_FILE:-$HOME/.profile}"
+DEFAULT_PROVIDER="${ICLAW_DOCKER_CLI_BACKEND_PROVIDER:-claude-cli}"
+CLI_MODEL="${ICLAW_LIVE_CLI_BACKEND_MODEL:-}"
 CLI_PROVIDER="${CLI_MODEL%%/*}"
-CLI_DISABLE_MCP_CONFIG="${OPENCLAW_LIVE_CLI_BACKEND_DISABLE_MCP_CONFIG:-}"
-CLI_AUTH_MODE="${OPENCLAW_LIVE_CLI_BACKEND_AUTH:-auto}"
+CLI_DISABLE_MCP_CONFIG="${ICLAW_LIVE_CLI_BACKEND_DISABLE_MCP_CONFIG:-}"
+CLI_AUTH_MODE="${ICLAW_LIVE_CLI_BACKEND_AUTH:-auto}"
 TEMP_DIRS=()
-DOCKER_USER="${OPENCLAW_DOCKER_USER:-node}"
+DOCKER_USER="${ICLAW_DOCKER_USER:-node}"
 DOCKER_HOME_MOUNT=()
 DOCKER_EXTRA_ENV_FILES=()
 DOCKER_AUTH_PRESTAGED=0
@@ -22,7 +22,7 @@ DOCKER_AUTH_PRESTAGED=0
 if [[ -z "$CLI_PROVIDER" || "$CLI_PROVIDER" == "$CLI_MODEL" ]]; then
   CLI_PROVIDER="$DEFAULT_PROVIDER"
 fi
-CLI_USE_CI_SAFE_CODEX_CONFIG="${OPENCLAW_LIVE_CLI_BACKEND_USE_CI_SAFE_CODEX_CONFIG:-}"
+CLI_USE_CI_SAFE_CODEX_CONFIG="${ICLAW_LIVE_CLI_BACKEND_USE_CI_SAFE_CODEX_CONFIG:-}"
 if [[ -z "$CLI_USE_CI_SAFE_CODEX_CONFIG" ]]; then
   if [[ "$CLI_PROVIDER" == "codex-cli" ]]; then
     CLI_USE_CI_SAFE_CODEX_CONFIG="1"
@@ -35,19 +35,19 @@ case "$CLI_AUTH_MODE" in
   auto | api-key | subscription)
     ;;
   *)
-    echo "ERROR: OPENCLAW_LIVE_CLI_BACKEND_AUTH must be one of: auto, api-key, subscription." >&2
+    echo "ERROR: ICLAW_LIVE_CLI_BACKEND_AUTH must be one of: auto, api-key, subscription." >&2
     exit 1
     ;;
 esac
 
 if [[ "$CLI_AUTH_MODE" == "subscription" && "$CLI_PROVIDER" != "claude-cli" ]]; then
-  echo "ERROR: OPENCLAW_LIVE_CLI_BACKEND_AUTH=subscription is only supported for claude-cli." >&2
+  echo "ERROR: ICLAW_LIVE_CLI_BACKEND_AUTH=subscription is only supported for claude-cli." >&2
   exit 1
 fi
 
 if [[ "$CLI_AUTH_MODE" == "api-key" && "$CLI_PROVIDER" == "codex-cli" ]]; then
   if [[ -z "${OPENAI_API_KEY:-}" ]]; then
-    echo "ERROR: OPENCLAW_LIVE_CLI_BACKEND_AUTH=api-key for codex-cli requires OPENAI_API_KEY." >&2
+    echo "ERROR: ICLAW_LIVE_CLI_BACKEND_AUTH=api-key for codex-cli requires OPENAI_API_KEY." >&2
     exit 1
   fi
 fi
@@ -81,16 +81,16 @@ cleanup_temp_dirs() {
 }
 trap cleanup_temp_dirs EXIT
 
-if [[ -n "${OPENCLAW_DOCKER_CLI_TOOLS_DIR:-}" ]]; then
-  CLI_TOOLS_DIR="${OPENCLAW_DOCKER_CLI_TOOLS_DIR}"
+if [[ -n "${ICLAW_DOCKER_CLI_TOOLS_DIR:-}" ]]; then
+  CLI_TOOLS_DIR="${ICLAW_DOCKER_CLI_TOOLS_DIR}"
 elif [[ "${CI:-}" == "true" || "${GITHUB_ACTIONS:-}" == "true" ]]; then
   CLI_TOOLS_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/openclaw-docker-cli-tools.XXXXXX")"
   TEMP_DIRS+=("$CLI_TOOLS_DIR")
 else
   CLI_TOOLS_DIR="$HOME/.cache/openclaw/docker-cli-tools"
 fi
-if [[ -n "${OPENCLAW_DOCKER_CACHE_HOME_DIR:-}" ]]; then
-  CACHE_HOME_DIR="${OPENCLAW_DOCKER_CACHE_HOME_DIR}"
+if [[ -n "${ICLAW_DOCKER_CACHE_HOME_DIR:-}" ]]; then
+  CACHE_HOME_DIR="${ICLAW_DOCKER_CACHE_HOME_DIR}"
 elif [[ "${CI:-}" == "true" || "${GITHUB_ACTIONS:-}" == "true" ]]; then
   CACHE_HOME_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/openclaw-docker-cache.XXXXXX")"
   TEMP_DIRS+=("$CACHE_HOME_DIR")
@@ -136,25 +136,25 @@ if [[ "$CLI_PROVIDER" == "claude-cli" && "$CLI_AUTH_MODE" == "subscription" ]]; 
     echo "  - CLAUDE_CODE_OAUTH_TOKEN from 'claude setup-token'." >&2
     exit 1
   fi
-  if [[ -z "${OPENCLAW_LIVE_CLI_BACKEND_PRESERVE_ENV:-}" ]]; then
+  if [[ -z "${ICLAW_LIVE_CLI_BACKEND_PRESERVE_ENV:-}" ]]; then
     if [[ "$CLAUDE_SUBSCRIPTION_AUTH_SOURCE" == "env-token" ]]; then
-      export OPENCLAW_LIVE_CLI_BACKEND_PRESERVE_ENV='["CLAUDE_CODE_OAUTH_TOKEN"]'
+      export ICLAW_LIVE_CLI_BACKEND_PRESERVE_ENV='["CLAUDE_CODE_OAUTH_TOKEN"]'
     else
-      export OPENCLAW_LIVE_CLI_BACKEND_PRESERVE_ENV="[]"
+      export ICLAW_LIVE_CLI_BACKEND_PRESERVE_ENV="[]"
     fi
   fi
-  if [[ "$OPENCLAW_LIVE_CLI_BACKEND_PRESERVE_ENV" == *ANTHROPIC_API_KEY* ]]; then
+  if [[ "$ICLAW_LIVE_CLI_BACKEND_PRESERVE_ENV" == *ANTHROPIC_API_KEY* ]]; then
     echo "ERROR: subscription auth smoke must not preserve Anthropic API-key env vars." >&2
     exit 1
   fi
-  if [[ "$CLAUDE_SUBSCRIPTION_AUTH_SOURCE" == "env-token" && "$OPENCLAW_LIVE_CLI_BACKEND_PRESERVE_ENV" != *CLAUDE_CODE_OAUTH_TOKEN* ]]; then
+  if [[ "$CLAUDE_SUBSCRIPTION_AUTH_SOURCE" == "env-token" && "$ICLAW_LIVE_CLI_BACKEND_PRESERVE_ENV" != *CLAUDE_CODE_OAUTH_TOKEN* ]]; then
     echo "ERROR: CLAUDE_CODE_OAUTH_TOKEN subscription smoke must preserve CLAUDE_CODE_OAUTH_TOKEN for the Gateway child process." >&2
     exit 1
   fi
-  export OPENCLAW_LIVE_CLI_BACKEND_MODEL_SWITCH_PROBE="${OPENCLAW_LIVE_CLI_BACKEND_MODEL_SWITCH_PROBE:-0}"
-  export OPENCLAW_LIVE_CLI_BACKEND_RESUME_PROBE="${OPENCLAW_LIVE_CLI_BACKEND_RESUME_PROBE:-1}"
-  export OPENCLAW_LIVE_CLI_BACKEND_IMAGE_PROBE="${OPENCLAW_LIVE_CLI_BACKEND_IMAGE_PROBE:-0}"
-  export OPENCLAW_LIVE_CLI_BACKEND_MCP_PROBE="${OPENCLAW_LIVE_CLI_BACKEND_MCP_PROBE:-0}"
+  export ICLAW_LIVE_CLI_BACKEND_MODEL_SWITCH_PROBE="${ICLAW_LIVE_CLI_BACKEND_MODEL_SWITCH_PROBE:-0}"
+  export ICLAW_LIVE_CLI_BACKEND_RESUME_PROBE="${ICLAW_LIVE_CLI_BACKEND_RESUME_PROBE:-1}"
+  export ICLAW_LIVE_CLI_BACKEND_IMAGE_PROBE="${ICLAW_LIVE_CLI_BACKEND_IMAGE_PROBE:-0}"
+  export ICLAW_LIVE_CLI_BACKEND_MCP_PROBE="${ICLAW_LIVE_CLI_BACKEND_MCP_PROBE:-0}"
 fi
 
 PROFILE_MOUNT=()
@@ -166,7 +166,7 @@ AUTH_DIRS=()
 AUTH_FILES=()
 if [[ "$CLI_AUTH_MODE" == "api-key" && "$CLI_PROVIDER" == "codex-cli" ]]; then
   AUTH_FILES+=(".codex/config.toml")
-elif [[ -n "${OPENCLAW_DOCKER_AUTH_DIRS:-}" ]]; then
+elif [[ -n "${ICLAW_DOCKER_AUTH_DIRS:-}" ]]; then
   while IFS= read -r auth_dir; do
     [[ -n "$auth_dir" ]] || continue
     AUTH_DIRS+=("$auth_dir")
@@ -231,9 +231,9 @@ export npm_config_cache="$NPM_CONFIG_CACHE"
 mkdir -p "$NPM_CONFIG_PREFIX" "$XDG_CACHE_HOME" "$COREPACK_HOME" "$NPM_CONFIG_CACHE"
 chmod 700 "$XDG_CACHE_HOME" "$COREPACK_HOME" "$NPM_CONFIG_CACHE" || true
 export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
-if [ "${OPENCLAW_DOCKER_AUTH_PRESTAGED:-0}" != "1" ]; then
-  IFS=',' read -r -a auth_dirs <<<"${OPENCLAW_DOCKER_AUTH_DIRS_RESOLVED:-}"
-  IFS=',' read -r -a auth_files <<<"${OPENCLAW_DOCKER_AUTH_FILES_RESOLVED:-}"
+if [ "${ICLAW_DOCKER_AUTH_PRESTAGED:-0}" != "1" ]; then
+  IFS=',' read -r -a auth_dirs <<<"${ICLAW_DOCKER_AUTH_DIRS_RESOLVED:-}"
+  IFS=',' read -r -a auth_files <<<"${ICLAW_DOCKER_AUTH_FILES_RESOLVED:-}"
   if ((${#auth_dirs[@]} > 0)); then
     for auth_dir in "${auth_dirs[@]}"; do
       [ -n "$auth_dir" ] || continue
@@ -255,19 +255,19 @@ if [ "${OPENCLAW_DOCKER_AUTH_PRESTAGED:-0}" != "1" ]; then
     done
   fi
 fi
-provider="${OPENCLAW_DOCKER_CLI_BACKEND_PROVIDER:-claude-cli}"
-default_command="${OPENCLAW_DOCKER_CLI_BACKEND_COMMAND_DEFAULT:-}"
-docker_package="${OPENCLAW_DOCKER_CLI_BACKEND_NPM_PACKAGE:-}"
-binary_name="${OPENCLAW_DOCKER_CLI_BACKEND_BINARY_NAME:-}"
-if [ "$provider" = "codex-cli" ] && [ "${OPENCLAW_LIVE_CLI_BACKEND_AUTH:-auto}" != "api-key" ]; then
+provider="${ICLAW_DOCKER_CLI_BACKEND_PROVIDER:-claude-cli}"
+default_command="${ICLAW_DOCKER_CLI_BACKEND_COMMAND_DEFAULT:-}"
+docker_package="${ICLAW_DOCKER_CLI_BACKEND_NPM_PACKAGE:-}"
+binary_name="${ICLAW_DOCKER_CLI_BACKEND_BINARY_NAME:-}"
+if [ "$provider" = "codex-cli" ] && [ "${ICLAW_LIVE_CLI_BACKEND_AUTH:-auto}" != "api-key" ]; then
   unset OPENAI_API_KEY
   unset OPENAI_BASE_URL
 fi
 if [ -z "$binary_name" ] && [ -n "$default_command" ]; then
   binary_name="$(basename "$default_command")"
 fi
-if [ -z "${OPENCLAW_LIVE_CLI_BACKEND_COMMAND:-}" ] && [ -n "$binary_name" ]; then
-  export OPENCLAW_LIVE_CLI_BACKEND_COMMAND="$NPM_CONFIG_PREFIX/bin/$binary_name"
+if [ -z "${ICLAW_LIVE_CLI_BACKEND_COMMAND:-}" ] && [ -n "$binary_name" ]; then
+  export ICLAW_LIVE_CLI_BACKEND_COMMAND="$NPM_CONFIG_PREFIX/bin/$binary_name"
 fi
 package_has_explicit_version() {
   case "$1" in
@@ -279,24 +279,24 @@ package_has_explicit_version() {
     *) return 1 ;;
   esac
 }
-if [ -n "${OPENCLAW_LIVE_CLI_BACKEND_COMMAND:-}" ] && [ ! -x "${OPENCLAW_LIVE_CLI_BACKEND_COMMAND}" ] && [ -n "$docker_package" ]; then
+if [ -n "${ICLAW_LIVE_CLI_BACKEND_COMMAND:-}" ] && [ ! -x "${ICLAW_LIVE_CLI_BACKEND_COMMAND}" ] && [ -n "$docker_package" ]; then
   npm install -g "$docker_package"
 elif [ -n "$docker_package" ] && package_has_explicit_version "$docker_package"; then
   npm install -g "$docker_package"
 fi
-if [ "$provider" = "codex-cli" ] && [ "${OPENCLAW_LIVE_CLI_BACKEND_AUTH:-auto}" = "api-key" ]; then
-  codex_login_command="${OPENCLAW_LIVE_CLI_BACKEND_COMMAND:-$NPM_CONFIG_PREFIX/bin/codex}"
+if [ "$provider" = "codex-cli" ] && [ "${ICLAW_LIVE_CLI_BACKEND_AUTH:-auto}" = "api-key" ]; then
+  codex_login_command="${ICLAW_LIVE_CLI_BACKEND_COMMAND:-$NPM_CONFIG_PREFIX/bin/codex}"
   if [ ! -x "$codex_login_command" ] && [ -x "$NPM_CONFIG_PREFIX/bin/codex" ]; then
     codex_login_command="$NPM_CONFIG_PREFIX/bin/codex"
   fi
   printf '%s\n' "$OPENAI_API_KEY" | "$codex_login_command" login --with-api-key >/dev/null
 fi
-if [ -n "${OPENCLAW_LIVE_CLI_BACKEND_COMMAND:-}" ] && [ -x "${OPENCLAW_LIVE_CLI_BACKEND_COMMAND}" ]; then
-  echo "==> CLI backend binary: ${OPENCLAW_LIVE_CLI_BACKEND_COMMAND}"
-  "${OPENCLAW_LIVE_CLI_BACKEND_COMMAND}" -V || "${OPENCLAW_LIVE_CLI_BACKEND_COMMAND}" --version || true
+if [ -n "${ICLAW_LIVE_CLI_BACKEND_COMMAND:-}" ] && [ -x "${ICLAW_LIVE_CLI_BACKEND_COMMAND}" ]; then
+  echo "==> CLI backend binary: ${ICLAW_LIVE_CLI_BACKEND_COMMAND}"
+  "${ICLAW_LIVE_CLI_BACKEND_COMMAND}" -V || "${ICLAW_LIVE_CLI_BACKEND_COMMAND}" --version || true
 fi
 if [ "$provider" = "claude-cli" ]; then
-  auth_mode="${OPENCLAW_LIVE_CLI_BACKEND_AUTH:-auto}"
+  auth_mode="${ICLAW_LIVE_CLI_BACKEND_AUTH:-auto}"
   if [ "$auth_mode" = "subscription" ]; then
     unset ANTHROPIC_API_KEY
     unset ANTHROPIC_API_KEY_OLD
@@ -328,18 +328,18 @@ NODE
     cat > "$NPM_CONFIG_PREFIX/bin/claude" <<WRAP
 #!/usr/bin/env bash
 script_dir="\$(CDPATH= cd -- "\$(dirname -- "\$0")" && pwd)"
-if [ -n "\${OPENCLAW_LIVE_CLI_BACKEND_ANTHROPIC_API_KEY:-}" ]; then
-  export ANTHROPIC_API_KEY="\${OPENCLAW_LIVE_CLI_BACKEND_ANTHROPIC_API_KEY}"
+if [ -n "\${ICLAW_LIVE_CLI_BACKEND_ANTHROPIC_API_KEY:-}" ]; then
+  export ANTHROPIC_API_KEY="\${ICLAW_LIVE_CLI_BACKEND_ANTHROPIC_API_KEY}"
 fi
-if [ -n "\${OPENCLAW_LIVE_CLI_BACKEND_ANTHROPIC_API_KEY_OLD:-}" ]; then
-  export ANTHROPIC_API_KEY_OLD="\${OPENCLAW_LIVE_CLI_BACKEND_ANTHROPIC_API_KEY_OLD}"
+if [ -n "\${ICLAW_LIVE_CLI_BACKEND_ANTHROPIC_API_KEY_OLD:-}" ]; then
+  export ANTHROPIC_API_KEY_OLD="\${ICLAW_LIVE_CLI_BACKEND_ANTHROPIC_API_KEY_OLD}"
 fi
 exec "\$script_dir/claude-real" "\$@"
 WRAP
     chmod +x "$NPM_CONFIG_PREFIX/bin/claude"
   fi
-  if [ -z "${OPENCLAW_LIVE_CLI_BACKEND_PRESERVE_ENV:-}" ]; then
-    export OPENCLAW_LIVE_CLI_BACKEND_PRESERVE_ENV='["ANTHROPIC_API_KEY","ANTHROPIC_API_KEY_OLD"]'
+  if [ -z "${ICLAW_LIVE_CLI_BACKEND_PRESERVE_ENV:-}" ]; then
+    export ICLAW_LIVE_CLI_BACKEND_PRESERVE_ENV='["ANTHROPIC_API_KEY","ANTHROPIC_API_KEY_OLD"]'
   fi
   if [ "$auth_mode" = "subscription" ]; then
     claude --version
@@ -379,14 +379,14 @@ openclaw_live_link_runtime_tree "$tmp_dir"
 openclaw_live_stage_state_dir "$tmp_dir/.openclaw-state"
 openclaw_live_prepare_staged_config
 cd "$tmp_dir"
-if [ "${OPENCLAW_LIVE_CLI_BACKEND_USE_CI_SAFE_CODEX_CONFIG:-0}" = "1" ]; then
+if [ "${ICLAW_LIVE_CLI_BACKEND_USE_CI_SAFE_CODEX_CONFIG:-0}" = "1" ]; then
   node --import tsx /src/scripts/prepare-codex-ci-config.ts "$HOME/.codex/config.toml" "$tmp_dir"
 fi
 pnpm test:live src/gateway/gateway-cli-backend.live.test.ts
 EOF
 
-if [[ "${OPENCLAW_SKIP_DOCKER_BUILD:-}" == "1" ]]; then
-  echo "==> Reuse live-test image: $LIVE_IMAGE_NAME (OPENCLAW_SKIP_DOCKER_BUILD=1)"
+if [[ "${ICLAW_SKIP_DOCKER_BUILD:-}" == "1" ]]; then
+  echo "==> Reuse live-test image: $LIVE_IMAGE_NAME (ICLAW_SKIP_DOCKER_BUILD=1)"
 else
   "$ROOT_DIR/scripts/test-live-build-docker.sh"
 fi
@@ -405,7 +405,7 @@ fi
 echo "==> External auth dirs: ${AUTH_DIRS_CSV:-none}"
 echo "==> External auth files: ${AUTH_FILES_CSV:-none}"
 DOCKER_AUTH_ENV=(
-  -e OPENCLAW_LIVE_CLI_BACKEND_AUTH="$CLI_AUTH_MODE"
+  -e ICLAW_LIVE_CLI_BACKEND_AUTH="$CLI_AUTH_MODE"
 )
 if [[ "$CLI_PROVIDER" == "codex-cli" && "$CLI_AUTH_MODE" == "api-key" ]]; then
   docker_env_dir="$(mktemp -d "${RUNNER_TEMP:-/tmp}/openclaw-cli-backend-env.XXXXXX")"
@@ -421,15 +421,15 @@ if [[ "$CLI_PROVIDER" == "codex-cli" && "$CLI_AUTH_MODE" == "api-key" ]]; then
 elif [[ "$CLI_PROVIDER" == "claude-cli" && "$CLI_AUTH_MODE" == "subscription" ]]; then
   DOCKER_AUTH_ENV+=(
     -e CLAUDE_CODE_OAUTH_TOKEN="${CLAUDE_CODE_OAUTH_TOKEN:-}"
-    -e OPENCLAW_LIVE_CLI_BACKEND_PRESERVE_ENV="$OPENCLAW_LIVE_CLI_BACKEND_PRESERVE_ENV"
+    -e ICLAW_LIVE_CLI_BACKEND_PRESERVE_ENV="$ICLAW_LIVE_CLI_BACKEND_PRESERVE_ENV"
   )
 else
   DOCKER_AUTH_ENV+=(
     -e ANTHROPIC_API_KEY
     -e ANTHROPIC_API_KEY_OLD
-    -e OPENCLAW_LIVE_CLI_BACKEND_ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY:-}"
-    -e OPENCLAW_LIVE_CLI_BACKEND_ANTHROPIC_API_KEY_OLD="${ANTHROPIC_API_KEY_OLD:-}"
-    -e OPENCLAW_LIVE_CLI_BACKEND_PRESERVE_ENV="${OPENCLAW_LIVE_CLI_BACKEND_PRESERVE_ENV:-}"
+    -e ICLAW_LIVE_CLI_BACKEND_ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY:-}"
+    -e ICLAW_LIVE_CLI_BACKEND_ANTHROPIC_API_KEY_OLD="${ANTHROPIC_API_KEY_OLD:-}"
+    -e ICLAW_LIVE_CLI_BACKEND_PRESERVE_ENV="${ICLAW_LIVE_CLI_BACKEND_PRESERVE_ENV:-}"
   )
 fi
 
@@ -439,33 +439,33 @@ DOCKER_RUN_ARGS=(docker run --rm -t \
   -e COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
   -e HOME=/home/node \
   -e NODE_OPTIONS=--disable-warning=ExperimentalWarning \
-  -e OPENCLAW_SKIP_CHANNELS=1 \
-  -e OPENCLAW_VITEST_FS_MODULE_CACHE=0 \
-  -e OPENCLAW_DOCKER_AUTH_PRESTAGED="$DOCKER_AUTH_PRESTAGED" \
-  -e OPENCLAW_DOCKER_AUTH_DIRS_RESOLVED="$AUTH_DIRS_CSV" \
-  -e OPENCLAW_DOCKER_AUTH_FILES_RESOLVED="$AUTH_FILES_CSV" \
-  -e OPENCLAW_LIVE_CLI_BACKEND_USE_CI_SAFE_CODEX_CONFIG="$CLI_USE_CI_SAFE_CODEX_CONFIG" \
-  -e OPENCLAW_DOCKER_CLI_BACKEND_PROVIDER="$CLI_PROVIDER" \
-  -e OPENCLAW_DOCKER_CLI_BACKEND_COMMAND_DEFAULT="$CLI_DEFAULT_COMMAND" \
-  -e OPENCLAW_DOCKER_CLI_BACKEND_NPM_PACKAGE="$CLI_DOCKER_NPM_PACKAGE" \
-  -e OPENCLAW_DOCKER_CLI_BACKEND_BINARY_NAME="$CLI_DOCKER_BINARY_NAME" \
-  -e OPENCLAW_LIVE_TEST=1 \
-  -e OPENCLAW_LIVE_CLI_BACKEND=1 \
-  -e OPENCLAW_LIVE_CLI_BACKEND_DEBUG="${OPENCLAW_LIVE_CLI_BACKEND_DEBUG:-}" \
-  -e OPENCLAW_CLI_BACKEND_LOG_OUTPUT="${OPENCLAW_CLI_BACKEND_LOG_OUTPUT:-}" \
-  -e OPENCLAW_LIVE_CLI_BACKEND_MODEL="$CLI_MODEL" \
-  -e OPENCLAW_LIVE_CLI_BACKEND_COMMAND="${OPENCLAW_LIVE_CLI_BACKEND_COMMAND:-}" \
-  -e OPENCLAW_LIVE_CLI_BACKEND_ARGS="${OPENCLAW_LIVE_CLI_BACKEND_ARGS:-}" \
-  -e OPENCLAW_LIVE_CLI_BACKEND_RESUME_ARGS="${OPENCLAW_LIVE_CLI_BACKEND_RESUME_ARGS:-}" \
-  -e OPENCLAW_LIVE_CLI_BACKEND_CLEAR_ENV="${OPENCLAW_LIVE_CLI_BACKEND_CLEAR_ENV:-}" \
-  -e OPENCLAW_LIVE_CLI_BACKEND_DISABLE_MCP_CONFIG="$CLI_DISABLE_MCP_CONFIG" \
-  -e OPENCLAW_LIVE_CLI_BACKEND_RESUME_PROBE="${OPENCLAW_LIVE_CLI_BACKEND_RESUME_PROBE:-}" \
-  -e OPENCLAW_LIVE_CLI_BACKEND_MODEL_SWITCH_PROBE="${OPENCLAW_LIVE_CLI_BACKEND_MODEL_SWITCH_PROBE:-}" \
-  -e OPENCLAW_LIVE_CLI_BACKEND_IMAGE_PROBE="${OPENCLAW_LIVE_CLI_BACKEND_IMAGE_PROBE:-}" \
-  -e OPENCLAW_LIVE_CLI_BACKEND_MCP_PROBE="${OPENCLAW_LIVE_CLI_BACKEND_MCP_PROBE:-}" \
-  -e OPENCLAW_LIVE_CLI_BACKEND_MCP_SCHEMA_PROBE="${OPENCLAW_LIVE_CLI_BACKEND_MCP_SCHEMA_PROBE:-}" \
-  -e OPENCLAW_LIVE_CLI_BACKEND_IMAGE_ARG="${OPENCLAW_LIVE_CLI_BACKEND_IMAGE_ARG:-}" \
-  -e OPENCLAW_LIVE_CLI_BACKEND_IMAGE_MODE="${OPENCLAW_LIVE_CLI_BACKEND_IMAGE_MODE:-}")
+  -e ICLAW_SKIP_CHANNELS=1 \
+  -e ICLAW_VITEST_FS_MODULE_CACHE=0 \
+  -e ICLAW_DOCKER_AUTH_PRESTAGED="$DOCKER_AUTH_PRESTAGED" \
+  -e ICLAW_DOCKER_AUTH_DIRS_RESOLVED="$AUTH_DIRS_CSV" \
+  -e ICLAW_DOCKER_AUTH_FILES_RESOLVED="$AUTH_FILES_CSV" \
+  -e ICLAW_LIVE_CLI_BACKEND_USE_CI_SAFE_CODEX_CONFIG="$CLI_USE_CI_SAFE_CODEX_CONFIG" \
+  -e ICLAW_DOCKER_CLI_BACKEND_PROVIDER="$CLI_PROVIDER" \
+  -e ICLAW_DOCKER_CLI_BACKEND_COMMAND_DEFAULT="$CLI_DEFAULT_COMMAND" \
+  -e ICLAW_DOCKER_CLI_BACKEND_NPM_PACKAGE="$CLI_DOCKER_NPM_PACKAGE" \
+  -e ICLAW_DOCKER_CLI_BACKEND_BINARY_NAME="$CLI_DOCKER_BINARY_NAME" \
+  -e ICLAW_LIVE_TEST=1 \
+  -e ICLAW_LIVE_CLI_BACKEND=1 \
+  -e ICLAW_LIVE_CLI_BACKEND_DEBUG="${ICLAW_LIVE_CLI_BACKEND_DEBUG:-}" \
+  -e ICLAW_CLI_BACKEND_LOG_OUTPUT="${ICLAW_CLI_BACKEND_LOG_OUTPUT:-}" \
+  -e ICLAW_LIVE_CLI_BACKEND_MODEL="$CLI_MODEL" \
+  -e ICLAW_LIVE_CLI_BACKEND_COMMAND="${ICLAW_LIVE_CLI_BACKEND_COMMAND:-}" \
+  -e ICLAW_LIVE_CLI_BACKEND_ARGS="${ICLAW_LIVE_CLI_BACKEND_ARGS:-}" \
+  -e ICLAW_LIVE_CLI_BACKEND_RESUME_ARGS="${ICLAW_LIVE_CLI_BACKEND_RESUME_ARGS:-}" \
+  -e ICLAW_LIVE_CLI_BACKEND_CLEAR_ENV="${ICLAW_LIVE_CLI_BACKEND_CLEAR_ENV:-}" \
+  -e ICLAW_LIVE_CLI_BACKEND_DISABLE_MCP_CONFIG="$CLI_DISABLE_MCP_CONFIG" \
+  -e ICLAW_LIVE_CLI_BACKEND_RESUME_PROBE="${ICLAW_LIVE_CLI_BACKEND_RESUME_PROBE:-}" \
+  -e ICLAW_LIVE_CLI_BACKEND_MODEL_SWITCH_PROBE="${ICLAW_LIVE_CLI_BACKEND_MODEL_SWITCH_PROBE:-}" \
+  -e ICLAW_LIVE_CLI_BACKEND_IMAGE_PROBE="${ICLAW_LIVE_CLI_BACKEND_IMAGE_PROBE:-}" \
+  -e ICLAW_LIVE_CLI_BACKEND_MCP_PROBE="${ICLAW_LIVE_CLI_BACKEND_MCP_PROBE:-}" \
+  -e ICLAW_LIVE_CLI_BACKEND_MCP_SCHEMA_PROBE="${ICLAW_LIVE_CLI_BACKEND_MCP_SCHEMA_PROBE:-}" \
+  -e ICLAW_LIVE_CLI_BACKEND_IMAGE_ARG="${ICLAW_LIVE_CLI_BACKEND_IMAGE_ARG:-}" \
+  -e ICLAW_LIVE_CLI_BACKEND_IMAGE_MODE="${ICLAW_LIVE_CLI_BACKEND_IMAGE_MODE:-}")
 openclaw_live_append_array DOCKER_RUN_ARGS DOCKER_HOME_MOUNT
 openclaw_live_append_array DOCKER_RUN_ARGS DOCKER_EXTRA_ENV_FILES
 DOCKER_RUN_ARGS+=(\

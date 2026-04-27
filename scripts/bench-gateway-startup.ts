@@ -92,13 +92,13 @@ const GATEWAY_CASES: readonly GatewayBenchCase[] = [
   {
     id: "skipChannels",
     name: "gateway, skip channels",
-    env: { OPENCLAW_SKIP_CHANNELS: "1" },
+    env: { ICLAW_SKIP_CHANNELS: "1" },
     config: BASE_CONFIG,
   },
   {
     id: "oneInternalHook",
     name: "gateway, one configured internal hook",
-    env: { OPENCLAW_SKIP_CHANNELS: "1" },
+    env: { ICLAW_SKIP_CHANNELS: "1" },
     config: {
       ...BASE_CONFIG,
       hooks: {
@@ -113,7 +113,7 @@ const GATEWAY_CASES: readonly GatewayBenchCase[] = [
   {
     id: "allInternalHooks",
     name: "gateway, all internal hooks",
-    env: { OPENCLAW_SKIP_CHANNELS: "1" },
+    env: { ICLAW_SKIP_CHANNELS: "1" },
     config: {
       ...BASE_CONFIG,
       hooks: {
@@ -126,7 +126,7 @@ const GATEWAY_CASES: readonly GatewayBenchCase[] = [
   {
     id: "fiftyPlugins",
     name: "gateway, 50 manifest plugins",
-    env: { OPENCLAW_SKIP_CHANNELS: "1" },
+    env: { ICLAW_SKIP_CHANNELS: "1" },
     pluginCount: 50,
     config: BASE_CONFIG,
   },
@@ -395,13 +395,13 @@ function sanitizedEnv(
     TMPDIR: process.env.TMPDIR,
     USER: process.env.USER ?? "openclaw-bench",
     npm_config_update_notifier: "false",
-    OPENCLAW_CONFIG: configPath,
-    OPENCLAW_CONFIG_PATH: configPath,
-    OPENCLAW_GATEWAY_STARTUP_TRACE: "1",
-    OPENCLAW_HOME: root,
-    OPENCLAW_LOCAL_CHECK: "0",
-    OPENCLAW_STATE_DIR: path.join(root, "state"),
-    OPENCLAW_TEST_DISABLE_UPDATE_CHECK: "1",
+    ICLAW_CONFIG: configPath,
+    ICLAW_CONFIG_PATH: configPath,
+    ICLAW_GATEWAY_STARTUP_TRACE: "1",
+    ICLAW_HOME: root,
+    ICLAW_LOCAL_CHECK: "0",
+    ICLAW_STATE_DIR: path.join(root, "state"),
+    ICLAW_TEST_DISABLE_UPDATE_CHECK: "1",
     ...benchCase.env,
   };
   return env;

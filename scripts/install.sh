@@ -74,7 +74,7 @@ run_remote_bash() {
     /bin/bash "$tmp"
 }
 
-GUM_VERSION="${OPENCLAW_GUM_VERSION:-0.17.0}"
+GUM_VERSION="${ICLAW_GUM_VERSION:-0.17.0}"
 GUM=""
 GUM_STATUS="skipped"
 GUM_REASON=""
@@ -354,7 +354,7 @@ show_install_plan() {
     ui_section "Install plan"
     ui_kv "OS" "$OS"
     ui_kv "Install method" "$INSTALL_METHOD"
-    ui_kv "Requested version" "$OPENCLAW_VERSION"
+    ui_kv "Requested version" "$ICLAW_VERSION"
     if [[ "$USE_BETA" == "1" ]]; then
         ui_kv "Beta channel" "enabled"
     fi
@@ -517,7 +517,7 @@ cleanup_openclaw_bin_conflict() {
     if [[ -L "$bin_path" ]]; then
         local target=""
         target="$(readlink "$bin_path" 2>/dev/null || true)"
-        if [[ "$target" == *"/node_modules/openclaw/"* ]]; then
+        if [[ "$target" == *"/node_modules/iclaw/"* ]]; then
             rm -f "$bin_path"
             ui_info "Removed stale openclaw symlink at ${bin_path}"
             return 0
@@ -947,9 +947,9 @@ pick_tagline() {
         echo "$DEFAULT_TAGLINE"
         return
     fi
-    if [[ -n "${OPENCLAW_TAGLINE_INDEX:-}" ]]; then
-        if [[ "${OPENCLAW_TAGLINE_INDEX}" =~ ^[0-9]+$ ]]; then
-            local idx=$((OPENCLAW_TAGLINE_INDEX % count))
+    if [[ -n "${ICLAW_TAGLINE_INDEX:-}" ]]; then
+        if [[ "${ICLAW_TAGLINE_INDEX}" =~ ^[0-9]+$ ]]; then
+            local idx=$((ICLAW_TAGLINE_INDEX % count))
             echo "${TAGLINES[$idx]}"
             return
         fi
@@ -960,21 +960,21 @@ pick_tagline() {
 
 TAGLINE=$(pick_tagline)
 
-NO_ONBOARD=${OPENCLAW_NO_ONBOARD:-0}
-NO_PROMPT=${OPENCLAW_NO_PROMPT:-0}
-DRY_RUN=${OPENCLAW_DRY_RUN:-0}
-INSTALL_METHOD=${OPENCLAW_INSTALL_METHOD:-}
-OPENCLAW_VERSION=${OPENCLAW_VERSION:-latest}
-USE_BETA=${OPENCLAW_BETA:-0}
+NO_ONBOARD=${ICLAW_NO_ONBOARD:-0}
+NO_PROMPT=${ICLAW_NO_PROMPT:-0}
+DRY_RUN=${ICLAW_DRY_RUN:-0}
+INSTALL_METHOD=${ICLAW_INSTALL_METHOD:-}
+ICLAW_VERSION=${ICLAW_VERSION:-latest}
+USE_BETA=${ICLAW_BETA:-0}
 GIT_DIR_DEFAULT="${HOME}/openclaw"
-GIT_DIR=${OPENCLAW_GIT_DIR:-$GIT_DIR_DEFAULT}
-GIT_UPDATE=${OPENCLAW_GIT_UPDATE:-1}
+GIT_DIR=${ICLAW_GIT_DIR:-$GIT_DIR_DEFAULT}
+GIT_UPDATE=${ICLAW_GIT_UPDATE:-1}
 SHARP_IGNORE_GLOBAL_LIBVIPS="${SHARP_IGNORE_GLOBAL_LIBVIPS:-1}"
-NPM_LOGLEVEL="${OPENCLAW_NPM_LOGLEVEL:-error}"
+NPM_LOGLEVEL="${ICLAW_NPM_LOGLEVEL:-error}"
 NPM_SILENT_FLAG="--silent"
-VERBOSE="${OPENCLAW_VERBOSE:-0}"
-VERIFY_INSTALL="${OPENCLAW_VERIFY_INSTALL:-0}"
-OPENCLAW_BIN=""
+VERBOSE="${ICLAW_VERBOSE:-0}"
+VERIFY_INSTALL="${ICLAW_VERIFY_INSTALL:-0}"
+ICLAW_BIN=""
 PNPM_CMD=()
 HELP=0
 
@@ -1001,17 +1001,17 @@ Options:
   --help, -h                            Show this help
 
 Environment variables:
-  OPENCLAW_INSTALL_METHOD=git|npm
-  OPENCLAW_VERSION=latest|next|main|<semver>|<spec>
-  OPENCLAW_BETA=0|1
-  OPENCLAW_GIT_DIR=...
-  OPENCLAW_GIT_UPDATE=0|1
-  OPENCLAW_NO_PROMPT=1
-  OPENCLAW_VERIFY_INSTALL=1
-  OPENCLAW_DRY_RUN=1
-  OPENCLAW_NO_ONBOARD=1
-  OPENCLAW_VERBOSE=1
-  OPENCLAW_NPM_LOGLEVEL=error|warn|notice  Default: error (hide npm deprecation noise)
+  ICLAW_INSTALL_METHOD=git|npm
+  ICLAW_VERSION=latest|next|main|<semver>|<spec>
+  ICLAW_BETA=0|1
+  ICLAW_GIT_DIR=...
+  ICLAW_GIT_UPDATE=0|1
+  ICLAW_NO_PROMPT=1
+  ICLAW_VERIFY_INSTALL=1
+  ICLAW_DRY_RUN=1
+  ICLAW_NO_ONBOARD=1
+  ICLAW_VERBOSE=1
+  ICLAW_NPM_LOGLEVEL=error|warn|notice  Default: error (hide npm deprecation noise)
   SHARP_IGNORE_GLOBAL_LIBVIPS=0|1    Default: 1 (avoid sharp building against global libvips)
 
 Examples:
@@ -1059,7 +1059,7 @@ parse_args() {
                 shift 2
                 ;;
             --version)
-                OPENCLAW_VERSION="$2"
+                ICLAW_VERSION="$2"
                 shift 2
                 ;;
             --beta)
@@ -1994,30 +1994,30 @@ install_openclaw() {
         local beta_version=""
         beta_version="$(resolve_beta_version || true)"
         if [[ -n "$beta_version" ]]; then
-            OPENCLAW_VERSION="$beta_version"
+            ICLAW_VERSION="$beta_version"
             ui_info "Beta tag detected (${beta_version})"
             package_name="openclaw"
         else
-            OPENCLAW_VERSION="latest"
+            ICLAW_VERSION="latest"
             ui_info "No beta tag found; using latest"
         fi
     fi
 
-    if [[ -z "${OPENCLAW_VERSION}" ]]; then
-        OPENCLAW_VERSION="latest"
+    if [[ -z "${ICLAW_VERSION}" ]]; then
+        ICLAW_VERSION="latest"
     fi
 
     local resolved_version=""
-    if can_resolve_registry_package_version "${OPENCLAW_VERSION}"; then
-        resolved_version="$(npm view "${package_name}@${OPENCLAW_VERSION}" version 2>/dev/null || true)"
+    if can_resolve_registry_package_version "${ICLAW_VERSION}"; then
+        resolved_version="$(npm view "${package_name}@${ICLAW_VERSION}" version 2>/dev/null || true)"
     fi
     if [[ -n "$resolved_version" ]]; then
         ui_info "Installing OpenClaw v${resolved_version}"
     else
-        ui_info "Installing OpenClaw (${OPENCLAW_VERSION})"
+        ui_info "Installing OpenClaw (${ICLAW_VERSION})"
     fi
     local install_spec=""
-    install_spec="$(resolve_package_install_spec "${package_name}" "${OPENCLAW_VERSION}")"
+    install_spec="$(resolve_package_install_spec "${package_name}" "${ICLAW_VERSION}")"
 
     if ! install_openclaw_npm "${install_spec}"; then
         ui_warn "npm install failed; retrying"
@@ -2025,7 +2025,7 @@ install_openclaw() {
         install_openclaw_npm "${install_spec}"
     fi
 
-    if [[ "${OPENCLAW_VERSION}" == "latest" && "${package_name}" == "openclaw" ]]; then
+    if [[ "${ICLAW_VERSION}" == "latest" && "${package_name}" == "openclaw" ]]; then
         if ! resolve_openclaw_bin &> /dev/null; then
             ui_warn "npm install openclaw@latest failed; retrying openclaw@next"
             cleanup_npm_openclaw_paths
@@ -2041,7 +2041,7 @@ install_openclaw() {
 # Run doctor for migrations (safe, non-interactive)
 run_doctor() {
     ui_info "Running doctor to migrate settings"
-    local claw="${OPENCLAW_BIN:-}"
+    local claw="${ICLAW_BIN:-}"
     if [[ -z "$claw" ]]; then
         claw="$(resolve_openclaw_bin || true)"
     fi
@@ -2055,7 +2055,7 @@ run_doctor() {
 }
 
 maybe_open_dashboard() {
-    local claw="${OPENCLAW_BIN:-}"
+    local claw="${ICLAW_BIN:-}"
     if [[ -z "$claw" ]]; then
         claw="$(resolve_openclaw_bin || true)"
     fi
@@ -2069,7 +2069,7 @@ maybe_open_dashboard() {
 }
 
 resolve_workspace_dir() {
-    local profile="${OPENCLAW_PROFILE:-default}"
+    local profile="${ICLAW_PROFILE:-default}"
     if [[ "${profile}" != "default" ]]; then
         echo "${HOME}/.openclaw/workspace-${profile}"
     else
@@ -2082,7 +2082,7 @@ run_bootstrap_onboarding_if_needed() {
         return
     fi
 
-    local config_path="${OPENCLAW_CONFIG_PATH:-$HOME/.openclaw/openclaw.json}"
+    local config_path="${ICLAW_CONFIG_PATH:-$HOME/.openclaw/openclaw.json}"
     if [[ -f "${config_path}" || -f "$HOME/.clawdbot/clawdbot.json" ]]; then
         return
     fi
@@ -2101,7 +2101,7 @@ run_bootstrap_onboarding_if_needed() {
     fi
 
     ui_info "BOOTSTRAP.md found; starting onboarding"
-    local claw="${OPENCLAW_BIN:-}"
+    local claw="${ICLAW_BIN:-}"
     if [[ -z "$claw" ]]; then
         claw="$(resolve_openclaw_bin || true)"
     fi
@@ -2148,7 +2148,7 @@ fi
 resolve_openclaw_version() {
     local version=""
     local raw_version_output=""
-    local claw="${OPENCLAW_BIN:-}"
+    local claw="${ICLAW_BIN:-}"
     if [[ -z "$claw" ]] && command -v openclaw &> /dev/null; then
         claw="$(command -v openclaw)"
     fi
@@ -2197,7 +2197,7 @@ try {
 }
 
 refresh_gateway_service_if_loaded() {
-    local claw="${OPENCLAW_BIN:-}"
+    local claw="${ICLAW_BIN:-}"
     if [[ -z "$claw" ]]; then
         claw="$(resolve_openclaw_bin || true)"
     fi
@@ -2233,7 +2233,7 @@ verify_installation() {
     fi
 
     ui_stage "Verifying installation"
-    local claw="${OPENCLAW_BIN:-}"
+    local claw="${ICLAW_BIN:-}"
     if [[ -z "$claw" ]]; then
         claw="$(resolve_openclaw_bin || true)"
     fi
@@ -2286,7 +2286,7 @@ main() {
                     ;;
                 *)
                     ui_error "no install method selected"
-                    echo "Re-run with: --install-method git|npm (or set OPENCLAW_INSTALL_METHOD)."
+                    echo "Re-run with: --install-method git|npm (or set ICLAW_INSTALL_METHOD)."
                     exit 2
                     ;;
             esac
@@ -2370,7 +2370,7 @@ main() {
 
     ui_stage "Finalizing setup"
 
-    OPENCLAW_BIN="$(resolve_openclaw_bin || true)"
+    ICLAW_BIN="$(resolve_openclaw_bin || true)"
 
     # PATH warning: installs can succeed while the user's login shell still lacks npm's global bin dir.
     local npm_bin=""
@@ -2462,7 +2462,7 @@ main() {
     elif [[ "$is_upgrade" == "true" ]]; then
         ui_info "Upgrade complete"
         if [[ -r /dev/tty && -w /dev/tty ]]; then
-            local claw="${OPENCLAW_BIN:-}"
+            local claw="${ICLAW_BIN:-}"
             if [[ -z "$claw" ]]; then
                 claw="$(resolve_openclaw_bin || true)"
             fi
@@ -2478,13 +2478,13 @@ main() {
             ui_info "Running openclaw doctor"
             local doctor_ok=0
             if (( ${#doctor_args[@]} )); then
-                OPENCLAW_UPDATE_IN_PROGRESS=1 "$claw" doctor "${doctor_args[@]}" </dev/null && doctor_ok=1
+                ICLAW_UPDATE_IN_PROGRESS=1 "$claw" doctor "${doctor_args[@]}" </dev/null && doctor_ok=1
             else
-                OPENCLAW_UPDATE_IN_PROGRESS=1 "$claw" doctor </dev/tty && doctor_ok=1
+                ICLAW_UPDATE_IN_PROGRESS=1 "$claw" doctor </dev/tty && doctor_ok=1
             fi
             if (( doctor_ok )); then
                 ui_info "Updating plugins"
-                OPENCLAW_UPDATE_IN_PROGRESS=1 "$claw" plugins update --all || true
+                ICLAW_UPDATE_IN_PROGRESS=1 "$claw" plugins update --all || true
             else
                 ui_warn "Doctor failed; skipping plugin updates"
             fi
@@ -2495,7 +2495,7 @@ main() {
         if [[ "$NO_ONBOARD" == "1" || "$skip_onboard" == "true" ]]; then
             ui_info "Skipping onboard (requested); run openclaw onboard later"
         else
-            local config_path="${OPENCLAW_CONFIG_PATH:-$HOME/.openclaw/openclaw.json}"
+            local config_path="${ICLAW_CONFIG_PATH:-$HOME/.openclaw/openclaw.json}"
             if [[ -f "${config_path}" || -f "$HOME/.clawdbot/clawdbot.json" ]]; then
                 ui_info "Config already present; running doctor"
                 run_doctor
@@ -2506,7 +2506,7 @@ main() {
             ui_info "Starting setup"
             echo ""
             if [[ -r /dev/tty && -w /dev/tty ]]; then
-                local claw="${OPENCLAW_BIN:-}"
+                local claw="${ICLAW_BIN:-}"
                 if [[ -z "$claw" ]]; then
                     claw="$(resolve_openclaw_bin || true)"
                 fi
@@ -2524,7 +2524,7 @@ main() {
     fi
 
     if command -v openclaw &> /dev/null; then
-        local claw="${OPENCLAW_BIN:-}"
+        local claw="${ICLAW_BIN:-}"
         if [[ -z "$claw" ]]; then
             claw="$(resolve_openclaw_bin || true)"
         fi
@@ -2533,7 +2533,7 @@ main() {
                 ui_info "Gateway daemon detected; would restart (openclaw daemon restart)"
             else
                 ui_info "Gateway daemon detected; restarting"
-                if OPENCLAW_UPDATE_IN_PROGRESS=1 "$claw" daemon restart >/dev/null 2>&1; then
+                if ICLAW_UPDATE_IN_PROGRESS=1 "$claw" daemon restart >/dev/null 2>&1; then
                     ui_success "Gateway restarted"
                 else
                     ui_warn "Gateway restart failed; try: openclaw daemon restart"
@@ -2553,7 +2553,7 @@ main() {
     show_footer_links
 }
 
-if [[ "${OPENCLAW_INSTALL_SH_NO_RUN:-0}" != "1" ]]; then
+if [[ "${ICLAW_INSTALL_SH_NO_RUN:-0}" != "1" ]]; then
     parse_args "$@"
     configure_verbose
     main

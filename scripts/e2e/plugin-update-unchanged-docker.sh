@@ -4,16 +4,16 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-image.sh"
 
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-plugin-update-e2e" OPENCLAW_PLUGIN_UPDATE_E2E_IMAGE)"
-SKIP_BUILD="${OPENCLAW_PLUGIN_UPDATE_E2E_SKIP_BUILD:-0}"
+IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-plugin-update-e2e" ICLAW_PLUGIN_UPDATE_E2E_IMAGE)"
+SKIP_BUILD="${ICLAW_PLUGIN_UPDATE_E2E_SKIP_BUILD:-0}"
 
 docker_e2e_build_or_reuse "$IMAGE_NAME" plugin-update "$ROOT_DIR/scripts/e2e/Dockerfile" "$ROOT_DIR" "" "$SKIP_BUILD"
 
 echo "Running unchanged plugin update smoke..."
 docker run --rm \
   -e COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
-  -e OPENCLAW_SKIP_CHANNELS=1 \
-  -e OPENCLAW_SKIP_PROVIDERS=1 \
+  -e ICLAW_SKIP_CHANNELS=1 \
+  -e ICLAW_SKIP_PROVIDERS=1 \
   "$IMAGE_NAME" \
   bash -lc "set -euo pipefail
 entry=dist/index.mjs

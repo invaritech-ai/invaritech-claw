@@ -163,7 +163,7 @@ _clawdock_read_env_token() {
     return 1
   fi
   local raw
-  raw=$(sed -n 's/^OPENCLAW_GATEWAY_TOKEN=//p' "${CLAWDOCK_DIR}/.env" | head -n 1)
+  raw=$(sed -n 's/^ICLAW_GATEWAY_TOKEN=//p' "${CLAWDOCK_DIR}/.env" | head -n 1)
   if [[ -z "$raw" ]]; then
     return 1
   fi
@@ -260,7 +260,7 @@ clawdock-workspace() {
 # Container Access
 clawdock-shell() {
   _clawdock_compose exec openclaw-gateway \
-    bash -c 'echo "alias openclaw=\"./openclaw.mjs\"" > /tmp/.bashrc_openclaw && bash --rcfile /tmp/.bashrc_openclaw'
+    bash -c 'echo "alias openclaw=\"./iclaw.mjs\"" > /tmp/.bashrc_openclaw && bash --rcfile /tmp/.bashrc_openclaw'
 }
 
 clawdock-exec() {
@@ -316,7 +316,7 @@ clawdock-health() {
     echo "   Check: ${CLAWDOCK_DIR}/.env"
     return 1
   fi
-  _clawdock_compose exec -e "OPENCLAW_GATEWAY_TOKEN=$token" openclaw-gateway \
+  _clawdock_compose exec -e "ICLAW_GATEWAY_TOKEN=$token" openclaw-gateway \
     node dist/index.js health
 }
 
@@ -341,12 +341,12 @@ clawdock-fix-token() {
   echo "📝 Setting token: ${token:0:20}..."
 
   _clawdock_compose exec -e "TOKEN=$token" openclaw-gateway \
-    bash -c './openclaw.mjs config set gateway.remote.token "$TOKEN" && ./openclaw.mjs config set gateway.auth.token "$TOKEN"' 2>&1 | _clawdock_filter_warnings
+    bash -c './iclaw.mjs config set gateway.remote.token "$TOKEN" && ./iclaw.mjs config set gateway.auth.token "$TOKEN"' 2>&1 | _clawdock_filter_warnings
 
   echo "🔍 Verifying token was saved..."
   local saved_token
   saved_token=$(_clawdock_compose exec openclaw-gateway \
-    bash -c "./openclaw.mjs config get gateway.remote.token 2>/dev/null" 2>&1 | _clawdock_filter_warnings | tr -d '\r\n' | head -c 64)
+    bash -c "./iclaw.mjs config get gateway.remote.token 2>/dev/null" 2>&1 | _clawdock_filter_warnings | tr -d '\r\n' | head -c 64)
 
   if [[ "$saved_token" == "$token" ]]; then
     echo "✅ Token saved correctly!"

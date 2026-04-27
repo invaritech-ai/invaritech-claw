@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-image.sh"
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-pi-bundle-mcp-tools-e2e" OPENCLAW_IMAGE)"
+IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-pi-bundle-mcp-tools-e2e" ICLAW_IMAGE)"
 CONTAINER_NAME="openclaw-pi-bundle-mcp-tools-e2e-$$"
 RUN_LOG="$(mktemp -t openclaw-pi-bundle-mcp-tools-log.XXXXXX)"
 
@@ -19,7 +19,7 @@ echo "Running in-container Pi bundle MCP tool availability smoke..."
 set +e
 docker run --rm \
   --name "$CONTAINER_NAME" \
-  -e "OPENCLAW_STATE_DIR=/tmp/openclaw-state" \
+  -e "ICLAW_STATE_DIR=/tmp/openclaw-state" \
   "$IMAGE_NAME" \
   bash -lc "set -euo pipefail
     node --import tsx scripts/e2e/pi-bundle-mcp-tools-docker-client.ts

@@ -44,8 +44,8 @@ async function runShard(shard) {
     stdio: "inherit",
     env: {
       ...process.env,
-      OPENCLAW_OXLINT_SKIP_LOCK: "1",
-      OPENCLAW_OXLINT_SKIP_PREPARE: "1",
+      ICLAW_OXLINT_SKIP_LOCK: "1",
+      ICLAW_OXLINT_SKIP_PREPARE: "1",
     },
   });
 

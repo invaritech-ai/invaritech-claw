@@ -115,8 +115,8 @@ const registry = loadOpenClawPlugins({
   workspaceDir: tempRoot,
   env: {
     ...process.env,
-    OPENCLAW_BUNDLED_PLUGINS_DIR: path.join(tempRoot, "dist-runtime", "extensions"),
-    OPENCLAW_DISABLE_PLUGIN_DISCOVERY_CACHE: "1",
+    ICLAW_BUNDLED_PLUGINS_DIR: path.join(tempRoot, "dist-runtime", "extensions"),
+    ICLAW_DISABLE_PLUGIN_DISCOVERY_CACHE: "1",
   },
   config: {
     plugins: {

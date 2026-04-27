@@ -34,7 +34,7 @@ UPDATE_EXPECTED_NEEDLE=""
 API_KEY_VALUE=""
 PROGRESS_INTERVAL_S=15
 PROGRESS_STALE_S=60
-TIMEOUT_UPDATE_S="${OPENCLAW_PARALLELS_NPM_UPDATE_TIMEOUT_S:-1200}"
+TIMEOUT_UPDATE_S="${ICLAW_PARALLELS_NPM_UPDATE_TIMEOUT_S:-1200}"
 TIMEOUT_UPDATE_POLL_GRACE_S=60
 
 child_job_running() {
@@ -679,7 +679,7 @@ function Invoke-OpenClawUpdateWithTimeout {
 
   $updateJob = Start-Job -ScriptBlock {
     param([string]$Path, [string]$Target)
-    $env:OPENCLAW_DISABLE_BUNDLED_PLUGINS = '1'
+    $env:ICLAW_DISABLE_BUNDLED_PLUGINS = '1'
     $output = & $Path update --tag $Target --yes --json *>&1
     [pscustomobject]@{
       ExitCode = $LASTEXITCODE
@@ -734,7 +734,7 @@ function Start-GatewayRunFallback {
 }
 
 function Complete-WorkspaceSetup {
-  $workspace = $env:OPENCLAW_WORKSPACE_DIR
+  $workspace = $env:ICLAW_WORKSPACE_DIR
   if (-not $workspace) {
     $workspace = Join-Path $env:USERPROFILE '.openclaw\workspace'
   }
@@ -960,7 +960,7 @@ if [ "\$gateway_ready" != "1" ]; then
   echo "gateway did not become RPC-ready after transport recovery" >&2
   exit 1
 fi
-workspace="\${OPENCLAW_WORKSPACE_DIR:-\$HOME/.openclaw/workspace}"
+workspace="\${ICLAW_WORKSPACE_DIR:-\$HOME/.openclaw/workspace}"
 mkdir -p "\$workspace/.openclaw"
 cat > "\$workspace/IDENTITY.md" <<'IDENTITY_EOF'
 # Identity
@@ -1107,7 +1107,7 @@ if (-not \$gatewayReady) {
 \$providerValue = [Text.Encoding]::UTF8.GetString(\$providerBytes)
 Set-Item -Path ('Env:' + '$API_KEY_ENV') -Value \$providerValue
 & \$openclaw models set '$MODEL_ID'
-\$workspace = \$env:OPENCLAW_WORKSPACE_DIR
+\$workspace = \$env:ICLAW_WORKSPACE_DIR
 if (-not \$workspace) {
   \$workspace = Join-Path \$env:USERPROFILE '.openclaw\\workspace'
 }
@@ -1434,10 +1434,10 @@ fs.writeFileSync(configPath, JSON.stringify(config, null, 2) + "\\n");
 JS
 }
 stop_openclaw_gateway_processes() {
-  OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 /opt/homebrew/bin/openclaw gateway stop >/dev/null 2>&1 || true
+  ICLAW_DISABLE_BUNDLED_PLUGINS=1 /opt/homebrew/bin/openclaw gateway stop >/dev/null 2>&1 || true
   /usr/bin/pkill -9 -f openclaw-gateway || true
   /usr/bin/pkill -9 -f 'openclaw gateway run' || true
-  /usr/bin/pkill -9 -f 'openclaw.mjs gateway' || true
+  /usr/bin/pkill -9 -f 'iclaw.mjs gateway' || true
   for pid in \$(/usr/sbin/lsof -tiTCP:18789 -sTCP:LISTEN 2>/dev/null || true); do
     /bin/kill -9 "\$pid" 2>/dev/null || true
   done
@@ -1446,7 +1446,7 @@ stop_openclaw_gateway_processes() {
 # host can observe new plugin metadata mid-update and abort config validation.
 scrub_future_plugin_entries
 stop_openclaw_gateway_processes
-OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 /opt/homebrew/bin/openclaw update --tag "$update_target" --yes --json
+ICLAW_DISABLE_BUNDLED_PLUGINS=1 /opt/homebrew/bin/openclaw update --tag "$update_target" --yes --json
 # Same-guest npm upgrades can leave the old gateway process holding the old
 # bundled plugin host version. Stop it before post-update config commands.
 stop_openclaw_gateway_processes
@@ -1491,7 +1491,7 @@ if [ "\$gateway_ready" != "1" ]; then
   tail -n 120 /tmp/openclaw-parallels-npm-update-macos-gateway.log 2>/dev/null || true
 fi
 /opt/homebrew/bin/openclaw gateway status --deep --require-rpc
-workspace="\${OPENCLAW_WORKSPACE_DIR:-\$HOME/.openclaw/workspace}"
+workspace="\${ICLAW_WORKSPACE_DIR:-\$HOME/.openclaw/workspace}"
 mkdir -p "\$workspace/.openclaw"
 cat > "\$workspace/IDENTITY.md" <<'IDENTITY_EOF'
 # Identity
@@ -1560,10 +1560,10 @@ fs.writeFileSync(configPath, JSON.stringify(config, null, 2) + "\\n");
 JS
 }
 stop_openclaw_gateway_processes() {
-  OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 openclaw gateway stop >/dev/null 2>&1 || true
+  ICLAW_DISABLE_BUNDLED_PLUGINS=1 openclaw gateway stop >/dev/null 2>&1 || true
   pkill -9 -f openclaw-gateway || true
   pkill -9 -f 'openclaw gateway run' || true
-  pkill -9 -f 'openclaw.mjs gateway' || true
+  pkill -9 -f 'iclaw.mjs gateway' || true
   if command -v fuser >/dev/null 2>&1; then
     fuser -k 18789/tcp >/dev/null 2>&1 || true
   fi
@@ -1577,7 +1577,7 @@ stop_openclaw_gateway_processes() {
 # the old host can observe new plugin metadata mid-update and abort validation.
 scrub_future_plugin_entries
 stop_openclaw_gateway_processes
-OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 openclaw update --tag "$update_target" --yes --json
+ICLAW_DISABLE_BUNDLED_PLUGINS=1 openclaw update --tag "$update_target" --yes --json
 # The fresh Linux lane starts a manual gateway; stop the old process before
 # post-update config validation sees mixed old-host/new-plugin metadata.
 stop_openclaw_gateway_processes
@@ -1594,7 +1594,7 @@ if [ -n "$expected_needle" ]; then
 fi
 openclaw update status --json
 openclaw models set "$MODEL_ID"
-workspace="\${OPENCLAW_WORKSPACE_DIR:-\$HOME/.openclaw/workspace}"
+workspace="\${ICLAW_WORKSPACE_DIR:-\$HOME/.openclaw/workspace}"
 mkdir -p "\$workspace/.openclaw"
 cat > "\$workspace/IDENTITY.md" <<'IDENTITY_EOF'
 # Identity

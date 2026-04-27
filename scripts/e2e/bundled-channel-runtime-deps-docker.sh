@@ -4,25 +4,25 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-image.sh"
 
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-bundled-channel-deps-e2e" OPENCLAW_BUNDLED_CHANNEL_DEPS_E2E_IMAGE)"
-UPDATE_BASELINE_VERSION="${OPENCLAW_BUNDLED_CHANNEL_UPDATE_BASELINE_VERSION:-2026.4.20}"
-DOCKER_TARGET="${OPENCLAW_BUNDLED_CHANNEL_DOCKER_TARGET:-e2e-runner}"
-HOST_BUILD="${OPENCLAW_BUNDLED_CHANNEL_HOST_BUILD:-1}"
-PACKAGE_TGZ="${OPENCLAW_BUNDLED_CHANNEL_PACKAGE_TGZ:-}"
-RUN_CHANNEL_SCENARIOS="${OPENCLAW_BUNDLED_CHANNEL_SCENARIOS:-1}"
-RUN_UPDATE_SCENARIO="${OPENCLAW_BUNDLED_CHANNEL_UPDATE_SCENARIO:-1}"
-RUN_ROOT_OWNED_SCENARIO="${OPENCLAW_BUNDLED_CHANNEL_ROOT_OWNED_SCENARIO:-1}"
-RUN_SETUP_ENTRY_SCENARIO="${OPENCLAW_BUNDLED_CHANNEL_SETUP_ENTRY_SCENARIO:-1}"
-RUN_LOAD_FAILURE_SCENARIO="${OPENCLAW_BUNDLED_CHANNEL_LOAD_FAILURE_SCENARIO:-1}"
-RUN_DISABLED_CONFIG_SCENARIO="${OPENCLAW_BUNDLED_CHANNEL_DISABLED_CONFIG_SCENARIO:-1}"
-CHANNEL_ONLY="${OPENCLAW_BUNDLED_CHANNEL_ONLY:-}"
+IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-bundled-channel-deps-e2e" ICLAW_BUNDLED_CHANNEL_DEPS_E2E_IMAGE)"
+UPDATE_BASELINE_VERSION="${ICLAW_BUNDLED_CHANNEL_UPDATE_BASELINE_VERSION:-2026.4.20}"
+DOCKER_TARGET="${ICLAW_BUNDLED_CHANNEL_DOCKER_TARGET:-e2e-runner}"
+HOST_BUILD="${ICLAW_BUNDLED_CHANNEL_HOST_BUILD:-1}"
+PACKAGE_TGZ="${ICLAW_BUNDLED_CHANNEL_PACKAGE_TGZ:-}"
+RUN_CHANNEL_SCENARIOS="${ICLAW_BUNDLED_CHANNEL_SCENARIOS:-1}"
+RUN_UPDATE_SCENARIO="${ICLAW_BUNDLED_CHANNEL_UPDATE_SCENARIO:-1}"
+RUN_ROOT_OWNED_SCENARIO="${ICLAW_BUNDLED_CHANNEL_ROOT_OWNED_SCENARIO:-1}"
+RUN_SETUP_ENTRY_SCENARIO="${ICLAW_BUNDLED_CHANNEL_SETUP_ENTRY_SCENARIO:-1}"
+RUN_LOAD_FAILURE_SCENARIO="${ICLAW_BUNDLED_CHANNEL_LOAD_FAILURE_SCENARIO:-1}"
+RUN_DISABLED_CONFIG_SCENARIO="${ICLAW_BUNDLED_CHANNEL_DISABLED_CONFIG_SCENARIO:-1}"
+CHANNEL_ONLY="${ICLAW_BUNDLED_CHANNEL_ONLY:-}"
 
 docker_e2e_build_or_reuse "$IMAGE_NAME" bundled-channel-deps "$ROOT_DIR/scripts/e2e/Dockerfile" "$ROOT_DIR" "$DOCKER_TARGET"
 
 prepare_package_tgz() {
   if [ -n "$PACKAGE_TGZ" ]; then
     if [ ! -f "$PACKAGE_TGZ" ]; then
-      echo "OPENCLAW_BUNDLED_CHANNEL_PACKAGE_TGZ does not exist: $PACKAGE_TGZ" >&2
+      echo "ICLAW_BUNDLED_CHANNEL_PACKAGE_TGZ does not exist: $PACKAGE_TGZ" >&2
       exit 1
     fi
     PACKAGE_TGZ="$(cd "$(dirname "$PACKAGE_TGZ")" && pwd)/$(basename "$PACKAGE_TGZ")"
@@ -33,7 +33,7 @@ prepare_package_tgz() {
     echo "Building host package artifacts..."
     run_logged bundled-channel-deps-host-build pnpm build
   else
-    echo "Skipping host build (OPENCLAW_BUNDLED_CHANNEL_HOST_BUILD=0)"
+    echo "Skipping host build (ICLAW_BUNDLED_CHANNEL_HOST_BUILD=0)"
   fi
 
   echo "Writing package inventory and packing once..."
@@ -51,7 +51,7 @@ prepare_package_tgz() {
 
 prepare_package_tgz
 DOCKER_PACKAGE_TGZ="/tmp/openclaw-current.tgz"
-PACKAGE_DOCKER_ARGS=(-v "$PACKAGE_TGZ:$DOCKER_PACKAGE_TGZ:ro" -e "OPENCLAW_CURRENT_PACKAGE_TGZ=$DOCKER_PACKAGE_TGZ")
+PACKAGE_DOCKER_ARGS=(-v "$PACKAGE_TGZ:$DOCKER_PACKAGE_TGZ:ro" -e "ICLAW_CURRENT_PACKAGE_TGZ=$DOCKER_PACKAGE_TGZ")
 
 run_channel_scenario() {
   local channel="$1"
@@ -62,8 +62,8 @@ run_channel_scenario() {
   echo "Running bundled $channel runtime deps Docker E2E..."
   if ! docker run --rm \
     -e COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
-    -e OPENCLAW_CHANNEL_UNDER_TEST="$channel" \
-    -e OPENCLAW_DEP_SENTINEL="$dep_sentinel" \
+    -e ICLAW_CHANNEL_UNDER_TEST="$channel" \
+    -e ICLAW_DEP_SENTINEL="$dep_sentinel" \
     "${PACKAGE_DOCKER_ARGS[@]}" \
     -i "$IMAGE_NAME" bash -s >"$run_log" 2>&1 <<'EOF'
 set -euo pipefail
@@ -72,12 +72,12 @@ export HOME="$(mktemp -d "/tmp/openclaw-bundled-channel-deps.XXXXXX")"
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
 export OPENAI_API_KEY="sk-openclaw-bundled-channel-deps-e2e"
-export OPENCLAW_NO_ONBOARD=1
+export ICLAW_NO_ONBOARD=1
 
 TOKEN="bundled-channel-deps-token"
 PORT="18789"
-CHANNEL="${OPENCLAW_CHANNEL_UNDER_TEST:?missing OPENCLAW_CHANNEL_UNDER_TEST}"
-DEP_SENTINEL="${OPENCLAW_DEP_SENTINEL:?missing OPENCLAW_DEP_SENTINEL}"
+CHANNEL="${ICLAW_CHANNEL_UNDER_TEST:?missing ICLAW_CHANNEL_UNDER_TEST}"
+DEP_SENTINEL="${ICLAW_DEP_SENTINEL:?missing ICLAW_DEP_SENTINEL}"
 gateway_pid=""
 
 terminate_gateways() {
@@ -115,7 +115,7 @@ cleanup() {
 trap cleanup EXIT
 
 echo "Installing mounted OpenClaw package..."
-package_tgz="${OPENCLAW_CURRENT_PACKAGE_TGZ:?missing OPENCLAW_CURRENT_PACKAGE_TGZ}"
+package_tgz="${ICLAW_CURRENT_PACKAGE_TGZ:?missing ICLAW_CURRENT_PACKAGE_TGZ}"
 npm install -g "$package_tgz" --no-fund --no-audit >/tmp/openclaw-install.log 2>&1
 
 command -v openclaw >/dev/null
@@ -256,7 +256,7 @@ start_gateway() {
   local skip_sidecars="${2:-0}"
   : >"$log_file"
   if [ "$skip_sidecars" = "1" ]; then
-    OPENCLAW_SKIP_CHANNELS=1 OPENCLAW_SKIP_PROVIDERS=1 \
+    ICLAW_SKIP_CHANNELS=1 ICLAW_SKIP_PROVIDERS=1 \
       openclaw gateway --port "$PORT" --bind loopback --allow-unconfigured >"$log_file" 2>&1 &
   else
     openclaw gateway --port "$PORT" --bind loopback --allow-unconfigured >"$log_file" 2>&1 &
@@ -455,8 +455,8 @@ set -euo pipefail
 
 export HOME="/root"
 export OPENAI_API_KEY="sk-openclaw-bundled-channel-root-owned-e2e"
-export OPENCLAW_NO_ONBOARD=1
-export OPENCLAW_PLUGIN_STAGE_DIR="/var/lib/openclaw/plugin-runtime-deps"
+export ICLAW_NO_ONBOARD=1
+export ICLAW_PLUGIN_STAGE_DIR="/var/lib/openclaw/plugin-runtime-deps"
 
 TOKEN="bundled-channel-root-owned-token"
 PORT="18791"
@@ -477,14 +477,14 @@ cleanup() {
 trap cleanup EXIT
 
 echo "Installing mounted OpenClaw package into root-owned global npm..."
-package_tgz="${OPENCLAW_CURRENT_PACKAGE_TGZ:?missing OPENCLAW_CURRENT_PACKAGE_TGZ}"
+package_tgz="${ICLAW_CURRENT_PACKAGE_TGZ:?missing ICLAW_CURRENT_PACKAGE_TGZ}"
 npm install -g "$package_tgz" --no-fund --no-audit >/tmp/openclaw-root-owned-install.log 2>&1
 
 root="$(package_root)"
 test -d "$root/dist/extensions/$CHANNEL"
 rm -rf "$root/dist/extensions/$CHANNEL/node_modules"
 chmod -R a-w "$root"
-mkdir -p "$OPENCLAW_PLUGIN_STAGE_DIR" /home/appuser/.openclaw
+mkdir -p "$ICLAW_PLUGIN_STAGE_DIR" /home/appuser/.openclaw
 chown -R appuser:appuser /home/appuser/.openclaw /var/lib/openclaw
 
 if runuser -u appuser -- test -w "$root"; then
@@ -539,8 +539,8 @@ start_gateway() {
   runuser -u appuser -- env \
     HOME=/home/appuser \
     OPENAI_API_KEY="$OPENAI_API_KEY" \
-    OPENCLAW_NO_ONBOARD=1 \
-    OPENCLAW_PLUGIN_STAGE_DIR="$OPENCLAW_PLUGIN_STAGE_DIR" \
+    ICLAW_NO_ONBOARD=1 \
+    ICLAW_PLUGIN_STAGE_DIR="$ICLAW_PLUGIN_STAGE_DIR" \
     npm_config_cache=/tmp/openclaw-root-owned-npm-cache \
     bash -c 'openclaw gateway --port "$1" --bind loopback --allow-unconfigured >"$2" 2>&1' \
     bash "$PORT" "$log_file" &
@@ -583,9 +583,9 @@ if [ -e "$root/dist/extensions/$CHANNEL/node_modules/$DEP_SENTINEL/package.json"
   find "$root/dist/extensions/$CHANNEL/node_modules" -maxdepth 4 -type f | sort | head -80 >&2 || true
   exit 1
 fi
-if ! find "$OPENCLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -path "*/node_modules/$DEP_SENTINEL/package.json" -type f | grep -q .; then
+if ! find "$ICLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -path "*/node_modules/$DEP_SENTINEL/package.json" -type f | grep -q .; then
   echo "missing external staged dependency sentinel for $DEP_SENTINEL" >&2
-  find "$OPENCLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -type f | sort | head -120 >&2 || true
+  find "$ICLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -type f | sort | head -120 >&2 || true
   cat /tmp/openclaw-root-owned-gateway.log >&2
   exit 1
 fi
@@ -594,9 +594,9 @@ if [ -e "$root/dist/extensions/node_modules/openclaw/package.json" ]; then
   find "$root/dist/extensions/node_modules/openclaw" -maxdepth 4 -type f | sort | head -80 >&2 || true
   exit 1
 fi
-if ! find "$OPENCLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -path "*/dist/extensions/node_modules/openclaw/package.json" -type f | grep -q .; then
+if ! find "$ICLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -path "*/dist/extensions/node_modules/openclaw/package.json" -type f | grep -q .; then
   echo "missing external staged openclaw/plugin-sdk alias" >&2
-  find "$OPENCLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -type f | sort | head -120 >&2 || true
+  find "$ICLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -type f | sort | head -120 >&2 || true
   cat /tmp/openclaw-root-owned-gateway.log >&2
   exit 1
 fi
@@ -632,9 +632,9 @@ set -euo pipefail
 export HOME="$(mktemp -d "/tmp/openclaw-bundled-channel-setup-entry.XXXXXX")"
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
-export OPENCLAW_NO_ONBOARD=1
-export OPENCLAW_PLUGIN_STAGE_DIR="$HOME/.openclaw/plugin-runtime-deps"
-mkdir -p "$OPENCLAW_PLUGIN_STAGE_DIR"
+export ICLAW_NO_ONBOARD=1
+export ICLAW_PLUGIN_STAGE_DIR="$HOME/.openclaw/plugin-runtime-deps"
+mkdir -p "$ICLAW_PLUGIN_STAGE_DIR"
 
 declare -A SETUP_ENTRY_DEP_SENTINELS=(
   [feishu]="@larksuiteoapi/node-sdk"
@@ -646,7 +646,7 @@ package_root() {
 }
 
 echo "Installing mounted OpenClaw package..."
-package_tgz="${OPENCLAW_CURRENT_PACKAGE_TGZ:?missing OPENCLAW_CURRENT_PACKAGE_TGZ}"
+package_tgz="${ICLAW_CURRENT_PACKAGE_TGZ:?missing ICLAW_CURRENT_PACKAGE_TGZ}"
 npm install -g "$package_tgz" --no-fund --no-audit >/tmp/openclaw-setup-entry-install.log 2>&1
 
 root="$(package_root)"
@@ -708,22 +708,22 @@ for channel in "${!SETUP_ENTRY_DEP_SENTINELS[@]}"; do
     echo "setup-entry discovery installed $channel deps into bundled plugin tree before channel configuration" >&2
     exit 1
   fi
-  if find "$OPENCLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -path "*/node_modules/$dep_sentinel/package.json" -type f | grep -q .; then
+  if find "$ICLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -path "*/node_modules/$dep_sentinel/package.json" -type f | grep -q .; then
     echo "setup-entry discovery installed $channel external staged deps before channel configuration" >&2
-    find "$OPENCLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -type f | sort | head -160 >&2 || true
+    find "$ICLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -type f | sort | head -160 >&2 || true
     exit 1
   fi
 done
 
 echo "Running packaged guided WhatsApp setup; runtime deps should be staged before finalize..."
-OPENCLAW_PACKAGE_ROOT="$root" node --input-type=module - <<'NODE'
+ICLAW_PACKAGE_ROOT="$root" node --input-type=module - <<'NODE'
 import path from "node:path";
 import { readdir } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 
-const root = process.env.OPENCLAW_PACKAGE_ROOT;
+const root = process.env.ICLAW_PACKAGE_ROOT;
 if (!root) {
-  throw new Error("missing OPENCLAW_PACKAGE_ROOT");
+  throw new Error("missing ICLAW_PACKAGE_ROOT");
 }
 const distDir = path.join(root, "dist");
 const onboardChannelFiles = (await readdir(distDir))
@@ -805,9 +805,9 @@ if [ -e "$root/dist/extensions/whatsapp/node_modules/@whiskeysockets/baileys/pac
   echo "expected guided WhatsApp setup deps to be installed externally, not into bundled plugin tree" >&2
   exit 1
 fi
-if ! find "$OPENCLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -path "*/node_modules/@whiskeysockets/baileys/package.json" -type f | grep -q .; then
+if ! find "$ICLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -path "*/node_modules/@whiskeysockets/baileys/package.json" -type f | grep -q .; then
   echo "guided WhatsApp setup did not stage @whiskeysockets/baileys before finalize" >&2
-  find "$OPENCLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -type f | sort | head -160 >&2 || true
+  find "$ICLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -type f | sort | head -160 >&2 || true
   exit 1
 fi
 
@@ -849,10 +849,10 @@ for channel in "${!SETUP_ENTRY_DEP_SENTINELS[@]}"; do
     echo "expected configured $channel deps to be installed externally, not into bundled plugin tree" >&2
     exit 1
   fi
-  if ! find "$OPENCLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -path "*/node_modules/$dep_sentinel/package.json" -type f | grep -q .; then
+  if ! find "$ICLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -path "*/node_modules/$dep_sentinel/package.json" -type f | grep -q .; then
     echo "missing external staged dependency sentinel for configured $channel: $dep_sentinel" >&2
     cat /tmp/openclaw-setup-entry-doctor.log >&2
-    find "$OPENCLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -type f | sort | head -160 >&2 || true
+    find "$ICLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -type f | sort | head -160 >&2 || true
     exit 1
   fi
 done
@@ -883,9 +883,9 @@ set -euo pipefail
 export HOME="$(mktemp -d "/tmp/openclaw-bundled-channel-disabled-config.XXXXXX")"
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
-export OPENCLAW_NO_ONBOARD=1
-export OPENCLAW_PLUGIN_STAGE_DIR="$HOME/.openclaw/plugin-runtime-deps"
-mkdir -p "$OPENCLAW_PLUGIN_STAGE_DIR"
+export ICLAW_NO_ONBOARD=1
+export ICLAW_PLUGIN_STAGE_DIR="$HOME/.openclaw/plugin-runtime-deps"
+mkdir -p "$ICLAW_PLUGIN_STAGE_DIR"
 
 package_root() {
   printf "%s/openclaw" "$(npm root -g)"
@@ -904,15 +904,15 @@ assert_dep_absent_everywhere() {
       exit 1
     fi
   done
-  if find "$OPENCLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -path "*/node_modules/$dep_path/package.json" -type f | grep -q .; then
+  if find "$ICLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -path "*/node_modules/$dep_path/package.json" -type f | grep -q .; then
     echo "disabled $channel unexpectedly staged $dep_path externally" >&2
-    find "$OPENCLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -type f | sort | head -160 >&2 || true
+    find "$ICLAW_PLUGIN_STAGE_DIR" -maxdepth 12 -type f | sort | head -160 >&2 || true
     exit 1
   fi
 }
 
 echo "Installing mounted OpenClaw package..."
-package_tgz="${OPENCLAW_CURRENT_PACKAGE_TGZ:?missing OPENCLAW_CURRENT_PACKAGE_TGZ}"
+package_tgz="${ICLAW_CURRENT_PACKAGE_TGZ:?missing ICLAW_CURRENT_PACKAGE_TGZ}"
 npm install -g "$package_tgz" --no-fund --no-audit >/tmp/openclaw-disabled-config-install.log 2>&1
 
 root="$(package_root)"
@@ -994,7 +994,7 @@ run_update_scenario() {
   echo "Running bundled channel runtime deps Docker update E2E..."
   if ! docker run --rm \
     -e COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
-    -e OPENCLAW_BUNDLED_CHANNEL_UPDATE_BASELINE_VERSION="$UPDATE_BASELINE_VERSION" \
+    -e ICLAW_BUNDLED_CHANNEL_UPDATE_BASELINE_VERSION="$UPDATE_BASELINE_VERSION" \
     "${PACKAGE_DOCKER_ARGS[@]}" \
     -i "$IMAGE_NAME" bash -s >"$run_log" 2>&1 <<'EOF'
 set -euo pipefail
@@ -1003,8 +1003,8 @@ export HOME="$(mktemp -d "/tmp/openclaw-bundled-channel-update.XXXXXX")"
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
 export OPENAI_API_KEY="sk-openclaw-bundled-channel-update-e2e"
-export OPENCLAW_NO_ONBOARD=1
-export OPENCLAW_UPDATE_PACKAGE_SPEC=""
+export ICLAW_NO_ONBOARD=1
+export ICLAW_UPDATE_PACKAGE_SPEC=""
 
 TOKEN="bundled-channel-update-token"
 PORT="18790"
@@ -1013,7 +1013,7 @@ package_root() {
   printf "%s/openclaw" "$(npm root -g)"
 }
 
-package_tgz="${OPENCLAW_CURRENT_PACKAGE_TGZ:?missing OPENCLAW_CURRENT_PACKAGE_TGZ}"
+package_tgz="${ICLAW_CURRENT_PACKAGE_TGZ:?missing ICLAW_CURRENT_PACKAGE_TGZ}"
 update_target="file:$package_tgz"
 candidate_version="$(node - <<'NODE' "$package_tgz"
 const { execFileSync } = require("node:child_process");
@@ -1271,7 +1271,7 @@ assert_dep_available telegram grammy
 echo "Mutating installed package: remove Telegram deps, then update-mode doctor repairs them..."
 remove_runtime_dep telegram grammy
 assert_no_dep_available telegram grammy
-if ! OPENCLAW_UPDATE_IN_PROGRESS=1 openclaw doctor --non-interactive >/tmp/openclaw-update-mode-doctor.log 2>&1; then
+if ! ICLAW_UPDATE_IN_PROGRESS=1 openclaw doctor --non-interactive >/tmp/openclaw-update-mode-doctor.log 2>&1; then
   echo "update-mode doctor failed while repairing Telegram deps" >&2
   cat /tmp/openclaw-update-mode-doctor.log >&2
   exit 1
@@ -1348,14 +1348,14 @@ set -euo pipefail
 export HOME="$(mktemp -d "/tmp/openclaw-bundled-channel-load-failure.XXXXXX")"
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
-export OPENCLAW_NO_ONBOARD=1
+export ICLAW_NO_ONBOARD=1
 
 package_root() {
   printf "%s/openclaw" "$(npm root -g)"
 }
 
 echo "Installing mounted OpenClaw package..."
-package_tgz="${OPENCLAW_CURRENT_PACKAGE_TGZ:?missing OPENCLAW_CURRENT_PACKAGE_TGZ}"
+package_tgz="${ICLAW_CURRENT_PACKAGE_TGZ:?missing ICLAW_CURRENT_PACKAGE_TGZ}"
 npm install -g "$package_tgz" --no-fund --no-audit >/tmp/openclaw-load-failure-install.log 2>&1
 
 root="$(package_root)"
@@ -1418,7 +1418,7 @@ JS
 echo "Loading synthetic failing bundled channel through packaged loader..."
 (
   cd "$root"
-  OPENCLAW_BUNDLED_PLUGINS_DIR="$root/dist/extensions" node --input-type=module - <<'NODE'
+  ICLAW_BUNDLED_PLUGINS_DIR="$root/dist/extensions" node --input-type=module - <<'NODE'
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -1490,7 +1490,7 @@ EOF
 }
 
 if [ "$RUN_CHANNEL_SCENARIOS" != "0" ]; then
-  IFS=',' read -r -a CHANNEL_SCENARIOS <<<"${OPENCLAW_BUNDLED_CHANNELS:-${CHANNEL_ONLY:-telegram,discord,slack,feishu,memory-lancedb}}"
+  IFS=',' read -r -a CHANNEL_SCENARIOS <<<"${ICLAW_BUNDLED_CHANNELS:-${CHANNEL_ONLY:-telegram,discord,slack,feishu,memory-lancedb}}"
   for channel_scenario in "${CHANNEL_SCENARIOS[@]}"; do
     channel_scenario="${channel_scenario//[[:space:]]/}"
     [ -n "$channel_scenario" ] || continue
@@ -1501,7 +1501,7 @@ if [ "$RUN_CHANNEL_SCENARIOS" != "0" ]; then
       feishu) run_channel_scenario feishu @larksuiteoapi/node-sdk ;;
       memory-lancedb) run_channel_scenario memory-lancedb @lancedb/lancedb ;;
       *)
-        echo "Unsupported OPENCLAW_BUNDLED_CHANNELS entry: $channel_scenario" >&2
+        echo "Unsupported ICLAW_BUNDLED_CHANNELS entry: $channel_scenario" >&2
         exit 1
         ;;
     esac

@@ -30,8 +30,8 @@ DISCORD_CHANNEL_ID=""
 SNAPSHOT_ID=""
 SNAPSHOT_STATE=""
 SNAPSHOT_NAME=""
-GUEST_OPENCLAW_BIN="/opt/homebrew/bin/openclaw"
-GUEST_OPENCLAW_ENTRY="/opt/homebrew/lib/node_modules/openclaw/openclaw.mjs"
+GUEST_ICLAW_BIN="/opt/homebrew/bin/openclaw"
+GUEST_ICLAW_ENTRY="/opt/homebrew/lib/node_modules/iclaw/iclaw.mjs"
 GUEST_NODE_BIN="/opt/homebrew/bin/node"
 GUEST_NPM_BIN="/opt/homebrew/bin/npm"
 GUEST_CURRENT_USER=""
@@ -48,7 +48,7 @@ BUILD_LOCK_DIR="${TMPDIR:-/tmp}/openclaw-parallels-build.lock"
 TIMEOUT_INSTALL_SITE_S=420
 TIMEOUT_INSTALL_TGZ_S=420
 TIMEOUT_INSTALL_REGISTRY_S=420
-TIMEOUT_UPDATE_DEV_S="${OPENCLAW_PARALLELS_MACOS_UPDATE_DEV_TIMEOUT_S:-1200}"
+TIMEOUT_UPDATE_DEV_S="${ICLAW_PARALLELS_MACOS_UPDATE_DEV_TIMEOUT_S:-1200}"
 TIMEOUT_VERIFY_S=60
 TIMEOUT_ONBOARD_S=180
 TIMEOUT_GATEWAY_S=180
@@ -716,7 +716,7 @@ resolve_guest_current_user_home() {
 resolve_guest_git_openclaw_entry() {
   local guest_home
   guest_home="$(resolve_guest_current_user_home)"
-  printf '%s/openclaw/openclaw.mjs\n' "$guest_home"
+  printf '%s/iclaw/iclaw.mjs\n' "$guest_home"
 }
 
 guest_current_user_cli() {
@@ -746,25 +746,25 @@ if {$mode eq "current-user"} {
 }
 
 spawn {*}$cmd
-send -- "printf '__OPENCLAW_READY__\\n'\r"
-expect "__OPENCLAW_READY__"
+send -- "printf '__ICLAW_READY__\\n'\r"
+expect "__ICLAW_READY__"
 log_user 0
 send -- "export PS1='' PROMPT='' PROMPT2='' RPROMPT=''\r"
 send -- "stty -echo\r"
 
-send -- "cat >/tmp/openclaw-prl.sh <<'__OPENCLAW_SCRIPT__'\r"
+send -- "cat >/tmp/openclaw-prl.sh <<'__ICLAW_SCRIPT__'\r"
 send -- $script
 if {![string match "*\n" $script]} {
   send -- "\r"
 }
-send -- "__OPENCLAW_SCRIPT__\r"
-send -- "/bin/bash /tmp/openclaw-prl.sh; rc=\$?; rm -f /tmp/openclaw-prl.sh; printf '__OPENCLAW_RC__:%s\\n' \"\$rc\"; exit \"\$rc\"\r"
+send -- "__ICLAW_SCRIPT__\r"
+send -- "/bin/bash /tmp/openclaw-prl.sh; rc=\$?; rm -f /tmp/openclaw-prl.sh; printf '__ICLAW_RC__:%s\\n' \"\$rc\"; exit \"\$rc\"\r"
 log_user 1
 
 set rc 1
 set saw_rc 0
 expect {
-  -re {__OPENCLAW_RC__:(-?[0-9]+)} {
+  -re {__ICLAW_RC__:(-?[0-9]+)} {
     set rc $expect_out(1,string)
     set saw_rc 1
   }
@@ -875,7 +875,7 @@ if not path.exists():
 markers = [
     line.strip()
     for line in path.read_text(encoding="utf-8", errors="replace").splitlines()
-    if line.startswith("__OPENCLAW_RC__:")
+    if line.startswith("__ICLAW_RC__:")
 ]
 if not markers:
     raise SystemExit(1)
@@ -944,15 +944,15 @@ status=0
   cd "\$HOME"
   $script
 ) || status=\$?
-printf '__OPENCLAW_RC__:%s\n' "\$status"
+printf '__ICLAW_RC__:%s\n' "\$status"
 printf '%s\n' "\$status" > "$done_path"
 exit "\$status"
 EOF
 )"
   write_runner_cmd="/bin/rm -f $(shell_quote "$runner_path")"$'\n'
-  write_runner_cmd+="cat > $(shell_quote "$runner_path") <<'__OPENCLAW_RUNNER__'"$'\n'
+  write_runner_cmd+="cat > $(shell_quote "$runner_path") <<'__ICLAW_RUNNER__'"$'\n'
   write_runner_cmd+="$runner_body"$'\n'
-  write_runner_cmd+="__OPENCLAW_RUNNER__"$'\n'
+  write_runner_cmd+="__ICLAW_RUNNER__"$'\n'
   write_runner_cmd+="/bin/chmod +x $(shell_quote "$runner_path")"$'\n'
   write_runner_cmd+="(/bin/bash $(shell_quote "$runner_path") > $(shell_quote "$log_path") 2>&1 < /dev/null & printf '%s\n' \"\$!\" > $(shell_quote "$runner_pid_path")) >/dev/null 2>&1"
   guest_current_user_sh "$write_runner_cmd"
@@ -977,7 +977,7 @@ if not path.exists():
     raise SystemExit(1)
 
 text = path.read_text(encoding="utf-8", errors="replace")
-matches = re.findall(r"^__OPENCLAW_RC__:(-?\d+)$", text, flags=re.MULTILINE)
+matches = re.findall(r"^__ICLAW_RC__:(-?\d+)$", text, flags=re.MULTILINE)
 if not matches:
     raise SystemExit(1)
 print(matches[-1])
@@ -1070,10 +1070,10 @@ install_latest_release() {
   version_to_install="${INSTALL_VERSION:-$LATEST_VERSION}"
   version_arg_q=" --version $(shell_quote "$version_to_install")"
   guest_current_user_sh "$(cat <<EOF
-export OPENCLAW_NO_ONBOARD=1
+export ICLAW_NO_ONBOARD=1
 curl -fsSL $install_url_q -o /tmp/openclaw-install.sh
 bash /tmp/openclaw-install.sh${version_arg_q}
-$GUEST_OPENCLAW_BIN --version
+$GUEST_ICLAW_BIN --version
 EOF
 )"
 }
@@ -1103,7 +1103,7 @@ repair_legacy_dev_source_checkout_if_needed() {
   local bootstrap_bin update_root update_entry
   bootstrap_bin="/tmp/openclaw-smoke-pnpm-bootstrap/node_modules/.bin"
   update_root="$(resolve_guest_current_user_home)/openclaw"
-  update_entry="$update_root/openclaw.mjs"
+  update_entry="$update_root/iclaw.mjs"
   if guest_current_user_exec /bin/test -e "$update_root/.git"; then
     return 0
   fi
@@ -1141,7 +1141,7 @@ run_dev_channel_update() {
 rm -rf $(shell_quote "$update_root")
 export PATH=$(shell_quote "$bootstrap_bin:$GUEST_EXEC_PATH")
 /usr/bin/env NODE_OPTIONS=--max-old-space-size=4096 \
-  $GUEST_NODE_BIN $GUEST_OPENCLAW_ENTRY update --channel dev --yes --json
+  $GUEST_NODE_BIN $GUEST_ICLAW_ENTRY update --channel dev --yes --json
 EOF
 )" "$update_log" "$update_done" "$TIMEOUT_UPDATE_DEV_S" "$update_runner"
   update_rc=$?
@@ -1152,14 +1152,14 @@ EOF
   fi
   repair_legacy_dev_source_checkout_if_needed
   printf 'update-dev: git-version\n'
-  guest_current_user_exec "$GUEST_NODE_BIN" "$GUEST_OPENCLAW_ENTRY" --version
+  guest_current_user_exec "$GUEST_NODE_BIN" "$GUEST_ICLAW_ENTRY" --version
   printf 'update-dev: git-status\n'
-  guest_current_user_exec "$GUEST_NODE_BIN" "$GUEST_OPENCLAW_ENTRY" update status --json
+  guest_current_user_exec "$GUEST_NODE_BIN" "$GUEST_ICLAW_ENTRY" update status --json
 }
 
 verify_dev_channel_update() {
   local status_json
-  status_json="$(guest_current_user_exec "$GUEST_NODE_BIN" "$GUEST_OPENCLAW_ENTRY" update status --json)"
+  status_json="$(guest_current_user_exec "$GUEST_NODE_BIN" "$GUEST_ICLAW_ENTRY" update status --json)"
   printf '%s\n' "$status_json"
   printf '%s\n' "$status_json" | grep -F '"installKind": "git"'
   printf '%s\n' "$status_json" | grep -F '"value": "dev"'
@@ -1170,7 +1170,7 @@ verify_version_contains() {
   local needle="$1"
   local version
   version="$(
-    guest_current_user_exec "$GUEST_OPENCLAW_BIN" --version 2>&1
+    guest_current_user_exec "$GUEST_ICLAW_BIN" --version 2>&1
   )"
   printf '%s\n' "$version"
   case "$version" in
@@ -1214,7 +1214,7 @@ pack_main_tgz() {
   acquire_build_lock
   set +e
   {
-    OPENCLAW_PARALLELS_BUILD_LOCK_HELD=1 ensure_current_build &&
+    ICLAW_PARALLELS_BUILD_LOCK_HELD=1 ensure_current_build &&
       write_package_dist_inventory &&
       stage_pack_runtime_deps &&
       short_head="$(git rev-parse --short HEAD)" &&
@@ -1264,7 +1264,7 @@ release_build_lock() {
 ensure_current_build() {
   local head build_commit rc lock_owned
   lock_owned=0
-  if [[ "${OPENCLAW_PARALLELS_BUILD_LOCK_HELD:-0}" != "1" ]]; then
+  if [[ "${ICLAW_PARALLELS_BUILD_LOCK_HELD:-0}" != "1" ]]; then
     acquire_build_lock
     lock_owned=1
   fi
@@ -1391,7 +1391,7 @@ run_ref_onboard() {
   fi
   guest_current_user_cli \
     /usr/bin/env "$API_KEY_ENV=$API_KEY_VALUE" \
-    "$GUEST_OPENCLAW_BIN" onboard \
+    "$GUEST_ICLAW_BIN" onboard \
     --non-interactive \
     --mode local \
     --auth-choice "$AUTH_CHOICE" \
@@ -1421,17 +1421,17 @@ set -euo pipefail
 trap '' HUP
 /usr/bin/pkill -f 'openclaw.*gateway run' >/dev/null 2>&1 || true
 /usr/bin/pkill -f 'openclaw-gateway' >/dev/null 2>&1 || true
-/usr/bin/pkill -f 'openclaw.mjs gateway' >/dev/null 2>&1 || true
+/usr/bin/pkill -f 'iclaw.mjs gateway' >/dev/null 2>&1 || true
 /usr/bin/env \\
   HOME=$(shell_quote "$guest_home") \\
   USER=$(shell_quote "$GUEST_CURRENT_USER") \\
   LOGNAME=$(shell_quote "$GUEST_CURRENT_USER") \\
   PATH=$(shell_quote "$GUEST_EXEC_PATH") \\
   $(shell_quote "$API_KEY_ENV=$API_KEY_VALUE") \\
-  OPENCLAW_HOME=$(shell_quote "$guest_home") \\
-  OPENCLAW_STATE_DIR=$(shell_quote "$guest_home/.openclaw") \\
-  OPENCLAW_CONFIG_PATH=$(shell_quote "$guest_home/.openclaw/openclaw.json") \\
-  $(shell_quote "$GUEST_NODE_BIN") $(shell_quote "$GUEST_OPENCLAW_ENTRY") gateway run --bind loopback --port 18789 --force \\
+  ICLAW_HOME=$(shell_quote "$guest_home") \\
+  ICLAW_STATE_DIR=$(shell_quote "$guest_home/.openclaw") \\
+  ICLAW_CONFIG_PATH=$(shell_quote "$guest_home/.openclaw/openclaw.json") \\
+  $(shell_quote "$GUEST_NODE_BIN") $(shell_quote "$GUEST_ICLAW_ENTRY") gateway run --bind loopback --port 18789 --force \\
   < /dev/null >$(shell_quote "$guest_gateway_log") 2>&1 &
 gateway_pid="\$!"
 printf 'guest gateway pid %s\n' "\$gateway_pid"
@@ -1453,7 +1453,7 @@ EOF
 verify_gateway() {
   local attempt
   for attempt in 1 2 3 4; do
-    if guest_current_user_exec "$GUEST_OPENCLAW_BIN" gateway status --deep --require-rpc --timeout 5000; then
+    if guest_current_user_exec "$GUEST_ICLAW_BIN" gateway status --deep --require-rpc --timeout 5000; then
       return 0
     fi
     if (( attempt < 4 )); then
@@ -1465,19 +1465,19 @@ verify_gateway() {
 }
 
 show_gateway_status_compat() {
-  if guest_current_user_exec "$GUEST_OPENCLAW_BIN" gateway status --help | grep -Fq -- "--require-rpc"; then
-    guest_current_user_exec "$GUEST_OPENCLAW_BIN" gateway status --deep --require-rpc
+  if guest_current_user_exec "$GUEST_ICLAW_BIN" gateway status --help | grep -Fq -- "--require-rpc"; then
+    guest_current_user_exec "$GUEST_ICLAW_BIN" gateway status --deep --require-rpc
     return
   fi
-  guest_current_user_exec "$GUEST_OPENCLAW_BIN" gateway status --deep
+  guest_current_user_exec "$GUEST_ICLAW_BIN" gateway status --deep
 }
 
 verify_turn() {
-  guest_current_user_exec "$GUEST_NODE_BIN" "$GUEST_OPENCLAW_ENTRY" models set "$MODEL_ID"
+  guest_current_user_exec "$GUEST_NODE_BIN" "$GUEST_ICLAW_ENTRY" models set "$MODEL_ID"
   guest_current_user_sh "$(cat <<EOF
 export PATH=$(shell_quote "$GUEST_EXEC_PATH")
 exec /usr/bin/env $(shell_quote "$API_KEY_ENV=$API_KEY_VALUE") \
-  $(shell_quote "$GUEST_NODE_BIN") $(shell_quote "$GUEST_OPENCLAW_ENTRY") agent \
+  $(shell_quote "$GUEST_NODE_BIN") $(shell_quote "$GUEST_ICLAW_ENTRY") agent \
   --agent main \
   --message $(shell_quote "Reply with exact ASCII text OK only.") \
   --json
@@ -1488,7 +1488,7 @@ EOF
 resolve_dashboard_url() {
   local dashboard_url
   dashboard_url="$(
-    guest_current_user_cli "$GUEST_OPENCLAW_BIN" dashboard --no-open \
+    guest_current_user_cli "$GUEST_ICLAW_BIN" dashboard --no-open \
       | awk '/^Dashboard URL: / { sub(/^Dashboard URL: /, ""); print; exit }'
   )"
   dashboard_url="${dashboard_url//$'\r'/}"
@@ -1594,26 +1594,26 @@ print(
 PY
   )"
   script="$(cat <<EOF
-cat >/tmp/openclaw-discord-token <<'__OPENCLAW_TOKEN__'
+cat >/tmp/openclaw-discord-token <<'__ICLAW_TOKEN__'
 $DISCORD_TOKEN_VALUE
-__OPENCLAW_TOKEN__
-cat >/tmp/openclaw-discord-guilds.json <<'__OPENCLAW_GUILDS__'
+__ICLAW_TOKEN__
+cat >/tmp/openclaw-discord-guilds.json <<'__ICLAW_GUILDS__'
 $guilds_json
-__OPENCLAW_GUILDS__
+__ICLAW_GUILDS__
 token="\$(tr -d '\n' </tmp/openclaw-discord-token)"
 guilds_json="\$(cat /tmp/openclaw-discord-guilds.json)"
-$GUEST_NODE_BIN $GUEST_OPENCLAW_ENTRY config set channels.discord.token "\$token"
-$GUEST_NODE_BIN $GUEST_OPENCLAW_ENTRY config set channels.discord.enabled true
-$GUEST_NODE_BIN $GUEST_OPENCLAW_ENTRY config set channels.discord.groupPolicy allowlist
-$GUEST_NODE_BIN $GUEST_OPENCLAW_ENTRY config set channels.discord.guilds "\$guilds_json" --strict-json
-$GUEST_NODE_BIN $GUEST_OPENCLAW_ENTRY gateway restart
+$GUEST_NODE_BIN $GUEST_ICLAW_ENTRY config set channels.discord.token "\$token"
+$GUEST_NODE_BIN $GUEST_ICLAW_ENTRY config set channels.discord.enabled true
+$GUEST_NODE_BIN $GUEST_ICLAW_ENTRY config set channels.discord.groupPolicy allowlist
+$GUEST_NODE_BIN $GUEST_ICLAW_ENTRY config set channels.discord.guilds "\$guilds_json" --strict-json
+$GUEST_NODE_BIN $GUEST_ICLAW_ENTRY gateway restart
 for _ in 1 2 3 4 5 6 7 8; do
-  if $GUEST_NODE_BIN $GUEST_OPENCLAW_ENTRY gateway status --deep --require-rpc >/dev/null 2>&1; then
+  if $GUEST_NODE_BIN $GUEST_ICLAW_ENTRY gateway status --deep --require-rpc >/dev/null 2>&1; then
     break
   fi
   sleep 2
 done
-$GUEST_NODE_BIN $GUEST_OPENCLAW_ENTRY channels status --probe --json
+$GUEST_NODE_BIN $GUEST_ICLAW_ENTRY channels status --probe --json
 rm -f /tmp/openclaw-discord-token /tmp/openclaw-discord-guilds.json
 EOF
 )"
@@ -1706,7 +1706,7 @@ wait_for_guest_discord_readback() {
     set +e
     response="$(
       guest_current_user_exec \
-      "$GUEST_OPENCLAW_BIN" \
+      "$GUEST_ICLAW_BIN" \
       message read \
       --channel discord \
       --target "channel:$DISCORD_CHANNEL_ID" \
@@ -1739,7 +1739,7 @@ run_discord_roundtrip_smoke() {
 
   printf 'discord: guest-send\n'
   guest_current_user_exec \
-    "$GUEST_OPENCLAW_BIN" \
+    "$GUEST_ICLAW_BIN" \
     message send \
     --channel discord \
     --target "channel:$DISCORD_CHANNEL_ID" \

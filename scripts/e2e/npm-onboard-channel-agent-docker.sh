@@ -4,16 +4,16 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-image.sh"
 
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-npm-onboard-channel-agent-e2e" OPENCLAW_NPM_ONBOARD_E2E_IMAGE)"
-DOCKER_TARGET="${OPENCLAW_NPM_ONBOARD_DOCKER_TARGET:-e2e-runner}"
-HOST_BUILD="${OPENCLAW_NPM_ONBOARD_HOST_BUILD:-1}"
-PACKAGE_TGZ="${OPENCLAW_NPM_ONBOARD_PACKAGE_TGZ:-}"
-CHANNEL="${OPENCLAW_NPM_ONBOARD_CHANNEL:-telegram}"
+IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-npm-onboard-channel-agent-e2e" ICLAW_NPM_ONBOARD_E2E_IMAGE)"
+DOCKER_TARGET="${ICLAW_NPM_ONBOARD_DOCKER_TARGET:-e2e-runner}"
+HOST_BUILD="${ICLAW_NPM_ONBOARD_HOST_BUILD:-1}"
+PACKAGE_TGZ="${ICLAW_NPM_ONBOARD_PACKAGE_TGZ:-}"
+CHANNEL="${ICLAW_NPM_ONBOARD_CHANNEL:-telegram}"
 
 case "$CHANNEL" in
   telegram | discord) ;;
   *)
-    echo "OPENCLAW_NPM_ONBOARD_CHANNEL must be telegram or discord, got: $CHANNEL" >&2
+    echo "ICLAW_NPM_ONBOARD_CHANNEL must be telegram or discord, got: $CHANNEL" >&2
     exit 1
     ;;
 esac
@@ -23,7 +23,7 @@ docker_e2e_build_or_reuse "$IMAGE_NAME" npm-onboard-channel-agent "$ROOT_DIR/scr
 prepare_package_tgz() {
   if [ -n "$PACKAGE_TGZ" ]; then
     if [ ! -f "$PACKAGE_TGZ" ]; then
-      echo "OPENCLAW_NPM_ONBOARD_PACKAGE_TGZ does not exist: $PACKAGE_TGZ" >&2
+      echo "ICLAW_NPM_ONBOARD_PACKAGE_TGZ does not exist: $PACKAGE_TGZ" >&2
       exit 1
     fi
     PACKAGE_TGZ="$(cd "$(dirname "$PACKAGE_TGZ")" && pwd)/$(basename "$PACKAGE_TGZ")"
@@ -34,7 +34,7 @@ prepare_package_tgz() {
     echo "Building host package artifacts..."
     run_logged npm-onboard-channel-agent-host-build pnpm build
   else
-    echo "Skipping host build (OPENCLAW_NPM_ONBOARD_HOST_BUILD=0)"
+    echo "Skipping host build (ICLAW_NPM_ONBOARD_HOST_BUILD=0)"
   fi
 
   echo "Writing package inventory and packing once..."
@@ -58,8 +58,8 @@ run_log="$(mktemp "${TMPDIR:-/tmp}/openclaw-npm-onboard-channel-agent.XXXXXX")"
 echo "Running npm tarball onboard/channel/agent Docker E2E ($CHANNEL)..."
 if ! docker run --rm \
   -e COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
-  -e OPENCLAW_NPM_ONBOARD_CHANNEL="$CHANNEL" \
-  -e OPENCLAW_CURRENT_PACKAGE_TGZ="$DOCKER_PACKAGE_TGZ" \
+  -e ICLAW_NPM_ONBOARD_CHANNEL="$CHANNEL" \
+  -e ICLAW_CURRENT_PACKAGE_TGZ="$DOCKER_PACKAGE_TGZ" \
   -v "$PACKAGE_TGZ:$DOCKER_PACKAGE_TGZ:ro" \
   -i "$IMAGE_NAME" bash -s >"$run_log" 2>&1 <<'EOF'
 set -euo pipefail
@@ -68,12 +68,12 @@ export HOME="$(mktemp -d "/tmp/openclaw-npm-onboard.XXXXXX")"
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
 export OPENAI_API_KEY="sk-openclaw-npm-onboard-e2e"
-export OPENCLAW_GATEWAY_TOKEN="npm-onboard-channel-agent-token"
+export ICLAW_GATEWAY_TOKEN="npm-onboard-channel-agent-token"
 
-CHANNEL="${OPENCLAW_NPM_ONBOARD_CHANNEL:?missing OPENCLAW_NPM_ONBOARD_CHANNEL}"
+CHANNEL="${ICLAW_NPM_ONBOARD_CHANNEL:?missing ICLAW_NPM_ONBOARD_CHANNEL}"
 PORT="18789"
 MOCK_PORT="44080"
-SUCCESS_MARKER="OPENCLAW_AGENT_E2E_OK_ASSISTANT"
+SUCCESS_MARKER="ICLAW_AGENT_E2E_OK_ASSISTANT"
 MOCK_REQUEST_LOG="/tmp/openclaw-mock-openai-requests.jsonl"
 mock_pid=""
 
@@ -122,7 +122,7 @@ dump_debug_logs() {
 trap 'status=$?; dump_debug_logs "$status"; exit "$status"' ERR
 
 echo "Installing mounted OpenClaw package..."
-package_tgz="${OPENCLAW_CURRENT_PACKAGE_TGZ:?missing OPENCLAW_CURRENT_PACKAGE_TGZ}"
+package_tgz="${ICLAW_CURRENT_PACKAGE_TGZ:?missing ICLAW_CURRENT_PACKAGE_TGZ}"
 npm install -g "$package_tgz" --no-fund --no-audit >/tmp/openclaw-install.log 2>&1
 
 command -v openclaw >/dev/null

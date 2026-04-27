@@ -484,7 +484,7 @@ release_build_lock() {
 ensure_current_build() {
   local head build_commit rc lock_owned
   lock_owned=0
-  if [[ "${OPENCLAW_PARALLELS_BUILD_LOCK_HELD:-0}" != "1" ]]; then
+  if [[ "${ICLAW_PARALLELS_BUILD_LOCK_HELD:-0}" != "1" ]]; then
     acquire_build_lock
     lock_owned=1
   fi
@@ -542,7 +542,7 @@ pack_main_tgz() {
   acquire_build_lock
   set +e
   {
-    OPENCLAW_PARALLELS_BUILD_LOCK_HELD=1 ensure_current_build &&
+    ICLAW_PARALLELS_BUILD_LOCK_HELD=1 ensure_current_build &&
       write_package_dist_inventory &&
       short_head="$(git rev-parse --short HEAD)" &&
       pkg="$(
@@ -604,9 +604,9 @@ start_server() {
 install_latest_release() {
   guest_exec curl -fsSL "$INSTALL_URL" -o /tmp/openclaw-install.sh
   if [[ -n "$INSTALL_VERSION" ]]; then
-    guest_exec /usr/bin/env OPENCLAW_NO_ONBOARD=1 bash /tmp/openclaw-install.sh --version "$INSTALL_VERSION" --no-onboard
+    guest_exec /usr/bin/env ICLAW_NO_ONBOARD=1 bash /tmp/openclaw-install.sh --version "$INSTALL_VERSION" --no-onboard
   else
-    guest_exec /usr/bin/env OPENCLAW_NO_ONBOARD=1 bash /tmp/openclaw-install.sh --no-onboard
+    guest_exec /usr/bin/env ICLAW_NO_ONBOARD=1 bash /tmp/openclaw-install.sh --no-onboard
   fi
   guest_exec openclaw --version
 }
@@ -722,7 +722,7 @@ start_gateway_background() {
   cmd="$(cat <<EOF
 pkill -f "openclaw gateway run" >/dev/null 2>&1 || true
 rm -f /tmp/openclaw-parallels-linux-gateway.log
-setsid sh -lc 'exec env OPENCLAW_HOME=/root OPENCLAW_STATE_DIR=/root/.openclaw OPENCLAW_CONFIG_PATH=/root/.openclaw/openclaw.json ${API_KEY_ENV}=${api_key_value_q} openclaw gateway run --bind loopback --port 18789 --force >/tmp/openclaw-parallels-linux-gateway.log 2>&1' >/dev/null 2>&1 < /dev/null &
+setsid sh -lc 'exec env ICLAW_HOME=/root ICLAW_STATE_DIR=/root/.openclaw ICLAW_CONFIG_PATH=/root/.openclaw/openclaw.json ${API_KEY_ENV}=${api_key_value_q} openclaw gateway run --bind loopback --port 18789 --force >/tmp/openclaw-parallels-linux-gateway.log 2>&1' >/dev/null 2>&1 < /dev/null &
 EOF
 )"
   guest_exec bash -lc "$cmd"
