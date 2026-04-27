@@ -11,24 +11,8 @@ const REPO = process.cwd();
 const OLD_PREFIX = `OPEN${"CLAW_"}`;
 const NEW_PREFIX = "ICLAW_";
 
-const ROOTS = [
-  "src",
-  "scripts",
-  "test",
-  "extensions",
-  "packages",
-  "apps",
-  "ui",
-  ".github",
-  "docs",
-];
-const SKIP_DIR = new Set([
-  "node_modules",
-  "dist",
-  ".git",
-  ".artifacts",
-  "coverage",
-]);
+const ROOTS = ["src", "scripts", "test", "extensions", "packages", "apps", "ui", ".github", "docs"];
+const SKIP_DIR = new Set(["node_modules", "dist", ".git", ".artifacts", "coverage"]);
 const EXT = new Set([
   ".ts",
   ".tsx",
@@ -74,7 +58,10 @@ const EXTRA_FILES = [
   "appcast.xml",
 ];
 
-const SKIP_BASENAMES = new Set(["rename-openclaw-env-prefix.mjs", "rename-openclaw-env-prefix-fs.mjs"]);
+const SKIP_BASENAMES = new Set([
+  "rename-openclaw-env-prefix.mjs",
+  "rename-openclaw-env-prefix-fs.mjs",
+]);
 
 function walk(dir, out) {
   let names;
