@@ -77,7 +77,7 @@ If you skip it, you can enable or change `x_search` later in config.
 ```
 
 **Environment alternative:** set `XAI_API_KEY` in the Gateway environment.
-For a gateway install, put it in `~/.openclaw/.env`.
+For a gateway install, put it in `~/.iclaw/.env`.
 
 ## How it works
 

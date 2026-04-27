@@ -140,7 +140,7 @@ Password-based setup (token is cached after login):
 }
 ```
 
-Matrix stores cached credentials in `~/.openclaw/credentials/matrix/`.
+Matrix stores cached credentials in `~/.iclaw/credentials/matrix/`.
 The default account uses `credentials.json`; named accounts use `credentials-<account>.json`.
 When cached credentials exist there, OpenClaw treats Matrix as configured for setup, doctor, and channel-status discovery even if current auth is not set directly in config.
 
@@ -401,7 +401,7 @@ openclaw matrix devices prune-stale
   <Accordion title="Crypto store">
     Matrix E2EE uses the official `matrix-js-sdk` Rust crypto path with `fake-indexeddb` as the IndexedDB shim. Crypto state persists to `crypto-idb-snapshot.json` (restrictive file permissions).
 
-    Encrypted runtime state lives under `~/.openclaw/matrix/accounts/<account>/<homeserver>__<user>/<token-hash>/` and includes the sync store, crypto store, recovery key, IDB snapshot, thread bindings, and startup verification state. When the token changes but the account identity stays the same, OpenClaw reuses the best existing root so prior state remains visible.
+    Encrypted runtime state lives under `~/.iclaw/matrix/accounts/<account>/<homeserver>__<user>/<token-hash>/` and includes the sync store, crypto store, recovery key, IDB snapshot, thread bindings, and startup verification state. When the token changes but the account identity stays the same, OpenClaw reuses the best existing root so prior state remains visible.
 
   </Accordion>
 </AccordionGroup>

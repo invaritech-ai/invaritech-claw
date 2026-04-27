@@ -473,7 +473,7 @@ If the flag is on and split-sends still arrive as two turns, check each layer:
 1. **Config actually loaded.**
 
    ```
-   grep coalesceSameSenderDms ~/.openclaw/openclaw.json
+   grep coalesceSameSenderDms ~/.iclaw/iclaw.json
    ```
 
    Then `openclaw gateway restart` — the flag is read at debouncer-registry creation.
@@ -486,7 +486,7 @@ If the flag is on and split-sends still arrive as two turns, check each layer:
 
    Measure the gap between the `"Dump"`-style text dispatch and the `"https://..."; Attachments:` dispatch that follows. Raise `messages.inbound.byChannel.bluebubbles` to comfortably cover that gap.
 
-3. **Session JSONL timestamps ≠ webhook arrival.** Session event timestamps (`~/.openclaw/agents/<id>/sessions/*.jsonl`) reflect when the gateway hands a message to the agent, **not** when the webhook arrived. A queued-second message tagged `[Queued messages while agent was busy]` means the first turn was still running when the second webhook arrived — the coalesce bucket had already flushed. Tune the window against the BB server log, not the session log.
+3. **Session JSONL timestamps ≠ webhook arrival.** Session event timestamps (`~/.iclaw/agents/<id>/sessions/*.jsonl`) reflect when the gateway hands a message to the agent, **not** when the webhook arrived. A queued-second message tagged `[Queued messages while agent was busy]` means the first turn was still running when the second webhook arrived — the coalesce bucket had already flushed. Tune the window against the BB server log, not the session log.
 
 4. **Memory pressure slowing reply dispatch.** On smaller machines (8 GB), agent turns can take long enough that the coalesce bucket flushes before the reply completes, and the URL lands as a queued second turn. Check `memory_pressure` and `ps -o rss -p $(pgrep openclaw-gateway)`; if the gateway is over ~500 MB RSS and the compressor is active, close other heavy processes or bump to a larger host.
 

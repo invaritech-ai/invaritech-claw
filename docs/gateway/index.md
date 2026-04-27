@@ -28,9 +28,9 @@ Use this page for day-1 startup and day-2 operations of the Gateway service.
   <Step title="Start the Gateway">
 
 ```bash
-openclaw gateway --port 18789
+openclaw gateway --port 32768
 # debug/trace mirrored to stdio
-openclaw gateway --port 18789 --verbose
+openclaw gateway --port 32768 --verbose
 # force-kill listener on selected port, then start
 openclaw gateway --force
 ```
@@ -109,7 +109,7 @@ All of these run on the main Gateway port and use the same trusted operator auth
 
 | Setting      | Resolution order                                           |
 | ------------ | ---------------------------------------------------------- |
-| Gateway port | `--port` → `ICLAW_GATEWAY_PORT` → `gateway.port` → `18789` |
+| Gateway port | `--port` → `ICLAW_GATEWAY_PORT` → `gateway.port` → `32768` |
 | Bind mode    | CLI/override → `gateway.bind` → `loopback`                 |
 
 ### Hot reload modes
@@ -170,8 +170,8 @@ Checklist per instance:
 Example:
 
 ```bash
-ICLAW_CONFIG_PATH=~/.openclaw/a.json ICLAW_STATE_DIR=~/.openclaw-a openclaw gateway --port 19001
-ICLAW_CONFIG_PATH=~/.openclaw/b.json ICLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
+ICLAW_CONFIG_PATH=~/.iclaw/a.json ICLAW_STATE_DIR=~/.iclaw-a openclaw gateway --port 19001
+ICLAW_CONFIG_PATH=~/.iclaw/b.json ICLAW_STATE_DIR=~/.iclaw-b openclaw gateway --port 19002
 ```
 
 Detailed setup: [/gateway/multiple-gateways](/gateway/multiple-gateways).
@@ -182,10 +182,10 @@ Preferred: Tailscale/VPN.
 Fallback: SSH tunnel.
 
 ```bash
-ssh -N -L 18789:127.0.0.1:18789 user@host
+ssh -N -L 32768:127.0.0.1:32768 user@host
 ```
 
-Then connect clients locally to `ws://127.0.0.1:18789`.
+Then connect clients locally to `ws://127.0.0.1:32768`.
 
 <Warning>
 SSH tunnels do not bypass gateway auth. For shared-secret auth, clients still
@@ -236,7 +236,7 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=/usr/local/bin/openclaw gateway --port 18789
+ExecStart=/usr/local/bin/openclaw gateway --port 32768
 Restart=always
 RestartSec=5
 TimeoutStopSec=30

@@ -8,7 +8,7 @@ title: "Web"
 
 The Gateway serves a small **browser Control UI** (Vite + Lit) from the same port as the Gateway WebSocket:
 
-- default: `http://<host>:18789/`
+- default: `http://<host>:32768/`
 - optional prefix: set `gateway.controlUi.basePath` (e.g. `/openclaw`)
 
 Capabilities live in [Control UI](/web/control-ui).
@@ -78,7 +78,7 @@ openclaw gateway
 
 Open:
 
-- `http://<tailscale-ip>:18789/` (or your configured `gateway.controlUi.basePath`)
+- `http://<tailscale-ip>:32768/` (or your configured `gateway.controlUi.basePath`)
 
 ### Public internet (Funnel)
 

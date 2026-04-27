@@ -14,7 +14,7 @@ This repo supports “remote over SSH” by keeping a single Gateway (the master
 
 ## The core idea
 
-- The Gateway WebSocket binds to **loopback** on your configured port (defaults to 18789).
+- The Gateway WebSocket binds to **loopback** on your configured port (defaults to 32768).
 - For remote use, you forward that loopback port over SSH (or use a tailnet/VPN and tunnel less).
 
 ## Common VPN/tailnet setups (where the agent lives)
@@ -71,15 +71,15 @@ Notes:
 Create a local tunnel to the remote Gateway WS:
 
 ```bash
-ssh -N -L 18789:127.0.0.1:18789 user@host
+ssh -N -L 32768:127.0.0.1:32768 user@host
 ```
 
 With the tunnel up:
 
-- `openclaw health` and `openclaw status --deep` now reach the remote gateway via `ws://127.0.0.1:18789`.
+- `openclaw health` and `openclaw status --deep` now reach the remote gateway via `ws://127.0.0.1:32768`.
 - `openclaw gateway status`, `openclaw gateway health`, `openclaw gateway probe`, and `openclaw gateway call` can also target the forwarded URL via `--url` when needed.
 
-Note: replace `18789` with your configured `gateway.port` (or `--port`/`ICLAW_GATEWAY_PORT`).
+Note: replace `32768` with your configured `gateway.port` (or `--port`/`ICLAW_GATEWAY_PORT`).
 Note: when you pass `--url`, the CLI does not fall back to config or environment credentials.
 Include `--token` or `--password` explicitly. Missing explicit credentials is an error.
 
@@ -92,14 +92,14 @@ You can persist a remote target so CLI commands use it by default:
   gateway: {
     mode: "remote",
     remote: {
-      url: "ws://127.0.0.1:18789",
+      url: "ws://127.0.0.1:32768",
       token: "your-token",
     },
   },
 }
 ```
 
-When the gateway is loopback-only, keep the URL at `ws://127.0.0.1:18789` and open the SSH tunnel first.
+When the gateway is loopback-only, keep the URL at `ws://127.0.0.1:32768` and open the SSH tunnel first.
 
 ## Credential precedence
 
@@ -123,7 +123,7 @@ Gateway credential resolution follows one shared contract across call/probe/stat
 
 WebChat no longer uses a separate HTTP port. The SwiftUI chat UI connects directly to the Gateway WebSocket.
 
-- Forward `18789` over SSH (see above), then connect clients to `ws://127.0.0.1:18789`.
+- Forward `32768` over SSH (see above), then connect clients to `ws://127.0.0.1:32768`.
 - On macOS, prefer the app’s “Remote over SSH” mode, which manages the tunnel automatically.
 
 ## macOS app "Remote over SSH"
@@ -139,7 +139,7 @@ Short version: **keep the Gateway loopback-only** unless you’re sure you need 
 - **Loopback + SSH/Tailscale Serve** is the safest default (no public exposure).
 - Plaintext `ws://` is loopback-only by default. For trusted private networks,
   set `ICLAW_ALLOW_INSECURE_PRIVATE_WS=1` on the client process as
-  break-glass. There is no `openclaw.json` equivalent; this must be process
+  break-glass. There is no `iclaw.json` equivalent; this must be process
   environment for the client making the WebSocket connection.
 - **Non-loopback binds** (`lan`/`tailnet`/`custom`, or `auto` when loopback is unavailable) must use gateway auth: token, password, or an identity-aware reverse proxy with `gateway.auth.mode: "trusted-proxy"`.
 - `gateway.remote.token` / `.password` are client credential sources. They do **not** configure server auth by themselves.
@@ -169,7 +169,7 @@ Edit `~/.ssh/config`:
 Host remote-gateway
     HostName <REMOTE_IP>
     User <REMOTE_USER>
-    LocalForward 18789 127.0.0.1:18789
+    LocalForward 32768 127.0.0.1:32768
     IdentityFile ~/.ssh/id_rsa
 ```
 
@@ -230,7 +230,7 @@ Check if the tunnel is running:
 
 ```bash
 ps aux | grep "ssh -N remote-gateway" | grep -v grep
-lsof -i :18789
+lsof -i :32768
 ```
 
 Restart the tunnel:
@@ -247,7 +247,7 @@ launchctl bootout gui/$UID/ai.openclaw.ssh-tunnel
 
 | Config entry                         | What it does                                                 |
 | ------------------------------------ | ------------------------------------------------------------ |
-| `LocalForward 18789 127.0.0.1:18789` | Forwards local port 18789 to remote port 18789               |
+| `LocalForward 32768 127.0.0.1:32768` | Forwards local port 32768 to remote port 32768               |
 | `ssh -N`                             | SSH without executing remote commands (port-forwarding only) |
 | `KeepAlive`                          | Automatically restarts the tunnel if it crashes              |
 | `RunAtLoad`                          | Starts the tunnel when the LaunchAgent loads at login        |

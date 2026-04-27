@@ -251,7 +251,7 @@ Look for:
 
 Common signatures:
 
-- `Gateway start blocked: set gateway.mode=local` or `existing config is missing gateway.mode` → local gateway mode is not enabled, or the config file was clobbered and lost `gateway.mode`. Fix: set `gateway.mode="local"` in your config, or re-run `openclaw onboard --mode local` / `openclaw setup` to restamp the expected local-mode config. If you are running OpenClaw via Podman, the default config path is `~/.openclaw/openclaw.json`.
+- `Gateway start blocked: set gateway.mode=local` or `existing config is missing gateway.mode` → local gateway mode is not enabled, or the config file was clobbered and lost `gateway.mode`. Fix: set `gateway.mode="local"` in your config, or re-run `openclaw onboard --mode local` / `openclaw setup` to restamp the expected local-mode config. If you are running OpenClaw via Podman, the default config path is `~/.iclaw/iclaw.json`.
 - `refusing to bind gateway ... without auth` → non-loopback bind without a valid gateway auth path (token/password, or trusted-proxy where configured).
 - `another gateway instance is already listening` / `EADDRINUSE` → port conflict.
 - `Other gateway-like services detected (best effort)` → stale or parallel launchd/systemd/schtasks units exist. Most setups should keep one gateway per machine; if you do need more than one, isolate ports + config/state/workspace. See [/gateway#multiple-gateways-same-host](/gateway#multiple-gateways-same-host).
@@ -264,7 +264,7 @@ Related:
 
 ## Gateway restored last-known-good config
 
-Use this when the Gateway starts, but logs say it restored `openclaw.json`.
+Use this when the Gateway starts, but logs say it restored `iclaw.json`.
 
 ```bash
 openclaw logs --follow
@@ -278,7 +278,7 @@ Look for:
 - `Config auto-restored from last-known-good`
 - `gateway: invalid config was restored from last-known-good backup`
 - `config reload restored last-known-good config after invalid-config`
-- A timestamped `openclaw.json.clobbered.*` file beside the active config
+- A timestamped `iclaw.json.clobbered.*` file beside the active config
 - A main-agent system event that starts with `Config recovery warning`
 
 What happened:

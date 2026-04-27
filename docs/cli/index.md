@@ -34,8 +34,8 @@ apply across the CLI.
 
 | Flag                    | Purpose                                                               |
 | ----------------------- | --------------------------------------------------------------------- |
-| `--dev`                 | Isolate state under `~/.openclaw-dev` and shift default ports         |
-| `--profile <name>`      | Isolate state under `~/.openclaw-<name>`                              |
+| `--dev`                 | Isolate state under `~/.iclaw-dev` and shift default ports            |
+| `--profile <name>`      | Isolate state under `~/.iclaw-<name>`                                 |
 | `--container <name>`    | Target a named container for execution                                |
 | `--no-color`            | Disable ANSI colors (`NO_COLOR=1` is also respected)                  |
 | `--update`              | Shorthand for [`openclaw update`](/cli/update) (source installs only) |

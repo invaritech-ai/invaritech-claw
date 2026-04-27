@@ -176,7 +176,7 @@ Compare my gateway auth config with the docs and suggest the smallest fix.
 
 Tips:
 
-- Prefer `openclaw config set` or `openclaw configure` over hand-editing `openclaw.json`.
+- Prefer `openclaw config set` or `openclaw configure` over hand-editing `iclaw.json`.
 - `openclaw docs "<query>"` searches the live docs index from the same machine.
 - `openclaw config validate --json` is useful when you want structured schema and SecretRef/resolvability errors.
 
@@ -238,6 +238,6 @@ No output after sending a message:
 ## Related
 
 - [Control UI](/web/control-ui) — web-based control interface
-- [Config](/cli/config) — inspect, validate, and edit `openclaw.json`
+- [Config](/cli/config) — inspect, validate, and edit `iclaw.json`
 - [Doctor](/cli/doctor) — guided repair and migration checks
 - [CLI Reference](/cli) — full CLI command reference

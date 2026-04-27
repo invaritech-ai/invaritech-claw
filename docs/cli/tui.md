@@ -33,7 +33,7 @@ Notes:
 openclaw chat
 openclaw tui --local
 openclaw tui
-openclaw tui --url ws://127.0.0.1:18789 --token <token>
+openclaw tui --url ws://127.0.0.1:32768 --token <token>
 openclaw tui --session main --deliver
 openclaw chat --message "Compare my config to the docs and tell me what to fix"
 # when run inside an agent workspace, infers that agent automatically

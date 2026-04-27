@@ -476,7 +476,7 @@ Think of the suites as “increasing realism” (and increasing flakiness/cost):
   - Costs money / uses rate limits
   - Prefer running narrowed subsets instead of “everything”
 - Live runs source `~/.profile` to pick up missing API keys.
-- By default, live runs still isolate `HOME` and copy config/auth material into a temp test home so unit fixtures cannot mutate your real `~/.openclaw`.
+- By default, live runs still isolate `HOME` and copy config/auth material into a temp test home so unit fixtures cannot mutate your real `~/.iclaw`.
 - Set `ICLAW_LIVE_USE_REAL_HOME=1` only when you intentionally need live tests to use your real home directory.
 - `pnpm test:live` now defaults to a quieter mode: it keeps `[live] ...` progress output, but suppresses the extra `~/.profile` notice and mutes gateway bootstrap logs/Bonjour chatter. Set `ICLAW_LIVE_TEST_QUIET=0` if you want the full startup logs back.
 - API key rotation (provider-specific): set `*_API_KEYS` with comma/semicolon format or `*_API_KEY_1`, `*_API_KEY_2` (for example `OPENAI_API_KEYS`, `ANTHROPIC_API_KEYS`, `GEMINI_API_KEYS`) or per-live override via `ICLAW_LIVE_*_KEY`; tests retry on rate limit responses.
@@ -598,8 +598,8 @@ Manual ACP plain-language thread smoke (not CI):
 
 Useful env vars:
 
-- `ICLAW_CONFIG_DIR=...` (default: `~/.openclaw`) mounted to `/home/node/.openclaw`
-- `ICLAW_WORKSPACE_DIR=...` (default: `~/.openclaw/workspace`) mounted to `/home/node/.openclaw/workspace`
+- `ICLAW_CONFIG_DIR=...` (default: `~/.iclaw`) mounted to `/home/node/.openclaw`
+- `ICLAW_WORKSPACE_DIR=...` (default: `~/.iclaw/workspace`) mounted to `/home/node/.openclaw/workspace`
 - `ICLAW_PROFILE_FILE=...` (default: `~/.profile`) mounted to `/home/node/.profile` and sourced before running tests
 - `ICLAW_DOCKER_PROFILE_ENV_ONLY=1` to verify only env vars sourced from `ICLAW_PROFILE_FILE`, using temporary config/workspace dirs and no external CLI auth mounts
 - `ICLAW_DOCKER_CLI_TOOLS_DIR=...` (default: `~/.cache/openclaw/docker-cli-tools`) mounted to `/home/node/.npm-global` for cached CLI installs inside Docker

@@ -8,7 +8,7 @@ title: "Control UI"
 
 The Control UI is a small **Vite + Lit** single-page app served by the Gateway:
 
-- default: `http://<host>:18789/`
+- default: `http://<host>:32768/`
 - optional prefix: set `gateway.controlUi.basePath` (e.g. `/openclaw`)
 
 It speaks **directly to the Gateway WebSocket** on the same port.
@@ -17,7 +17,7 @@ It speaks **directly to the Gateway WebSocket** on the same port.
 
 If the Gateway is running on the same computer, open:
 
-- [http://127.0.0.1:18789/](http://127.0.0.1:18789/) (or [http://localhost:18789/](http://localhost:18789/))
+- [http://127.0.0.1:32768/](http://127.0.0.1:32768/) (or [http://localhost:32768/](http://localhost:32768/))
 
 If the page fails to load, start the Gateway first: `openclaw gateway`.
 
@@ -119,7 +119,7 @@ locale picker lives in the Gateway Access card, not under Appearance.
 - Skills: status, enable/disable, install, API key updates (`skills.*`)
 - Nodes: list + caps (`node.list`)
 - Exec approvals: edit gateway or node allowlists + ask policy for `exec host=gateway/node` (`exec.approvals.*`)
-- Config: view/edit `~/.openclaw/openclaw.json` (`config.get`, `config.set`)
+- Config: view/edit `~/.iclaw/iclaw.json` (`config.get`, `config.set`)
 - Config: apply + restart with validation (`config.apply`) and wake the last active session
 - Config writes include a base-hash guard to prevent clobbering concurrent edits
 - Config writes (`config.set`/`config.apply`/`config.patch`) also preflight active SecretRef resolution for refs in the submitted config payload; unresolved active submitted refs are rejected before write
@@ -248,7 +248,7 @@ openclaw gateway --bind tailnet --token "$(openssl rand -hex 32)"
 
 Then open:
 
-- `http://<tailscale-ip>:18789/` (or your configured `gateway.controlUi.basePath`)
+- `http://<tailscale-ip>:32768/` (or your configured `gateway.controlUi.basePath`)
 
 Paste the matching shared secret into the UI settings (sent as
 `connect.params.auth.token` or `connect.params.auth.password`).
@@ -268,7 +268,7 @@ Documented exceptions:
 **Recommended fix:** use HTTPS (Tailscale Serve) or open the UI locally:
 
 - `https://<magicdns>/` (Serve)
-- `http://127.0.0.1:18789/` (on the gateway host)
+- `http://127.0.0.1:32768/` (on the gateway host)
 
 **Insecure-auth toggle behavior:**
 
@@ -356,7 +356,7 @@ For local development (separate dev server):
 pnpm ui:dev
 ```
 
-Then point the UI at your Gateway WS URL (e.g. `ws://127.0.0.1:18789`).
+Then point the UI at your Gateway WS URL (e.g. `ws://127.0.0.1:32768`).
 
 ## Debugging/testing: dev server + remote Gateway
 
@@ -368,13 +368,13 @@ locally but the Gateway runs elsewhere.
 2. Open a URL like:
 
 ```text
-http://localhost:5173/?gatewayUrl=ws://<gateway-host>:18789
+http://localhost:5173/?gatewayUrl=ws://<gateway-host>:32768
 ```
 
 Optional one-time auth (if needed):
 
 ```text
-http://localhost:5173/?gatewayUrl=wss://<gateway-host>:18789#token=<gateway-token>
+http://localhost:5173/?gatewayUrl=wss://<gateway-host>:32768#token=<gateway-token>
 ```
 
 Notes:

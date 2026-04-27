@@ -60,7 +60,7 @@ Docker is **optional**. Use it only if you want a containerized gateway or to va
   </Step>
 
   <Step title="Open the Control UI">
-    Open `http://127.0.0.1:18789/` in your browser and paste the configured
+    Open `http://127.0.0.1:32768/` in your browser and paste the configured
     shared secret into Settings. The setup script writes a token to `.env` by
     default; if you switch the container config to password auth, use that
     password instead.
@@ -101,7 +101,7 @@ docker build -t openclaw:local -f Dockerfile .
 docker compose run --rm --no-deps --entrypoint node openclaw-gateway \
   dist/index.js onboard --mode local --no-install-daemon
 docker compose run --rm --no-deps --entrypoint node openclaw-gateway \
-  dist/index.js config set --batch-json '[{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"lan"},{"path":"gateway.controlUi.allowedOrigins","value":["http://localhost:18789","http://127.0.0.1:18789"]}]'
+  dist/index.js config set --batch-json '[{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"lan"},{"path":"gateway.controlUi.allowedOrigins","value":["http://localhost:32768","http://127.0.0.1:32768"]}]'
 docker compose up -d openclaw-gateway
 ```
 
@@ -137,8 +137,8 @@ The setup script accepts these optional environment variables:
 Container probe endpoints (no auth required):
 
 ```bash
-curl -fsS http://127.0.0.1:18789/healthz   # liveness
-curl -fsS http://127.0.0.1:18789/readyz     # readiness
+curl -fsS http://127.0.0.1:32768/healthz   # liveness
+curl -fsS http://127.0.0.1:32768/readyz     # readiness
 ```
 
 The Docker image includes a built-in `HEALTHCHECK` that pings `/healthz`.
@@ -154,7 +154,7 @@ docker compose exec openclaw-gateway node dist/index.js health --token "$ICLAW_G
 ### LAN vs loopback
 
 `scripts/docker/setup.sh` defaults `ICLAW_GATEWAY_BIND=lan` so host access to
-`http://127.0.0.1:18789` works with Docker port publishing.
+`http://127.0.0.1:32768` works with Docker port publishing.
 
 - `lan` (default): host browser and host CLI can reach the published gateway port.
 - `loopback`: only processes inside the container network namespace can reach
@@ -173,7 +173,7 @@ survive container replacement.
 
 That mounted config directory is where OpenClaw keeps:
 
-- `openclaw.json` for behavior config
+- `iclaw.json` for behavior config
 - `agents/<agentId>/agent/auth-profiles.json` for stored provider OAuth/API-key auth
 - `.env` for env-backed runtime secrets such as `ICLAW_GATEWAY_TOKEN`
 
@@ -390,7 +390,7 @@ scripts/sandbox-setup.sh
 
     ```bash
     docker compose run --rm openclaw-cli config set --batch-json '[{"path":"gateway.mode","value":"local"},{"path":"gateway.bind","value":"lan"}]'
-    docker compose run --rm openclaw-cli devices list --url ws://127.0.0.1:18789
+    docker compose run --rm openclaw-cli devices list --url ws://127.0.0.1:32768
     ```
 
   </Accordion>

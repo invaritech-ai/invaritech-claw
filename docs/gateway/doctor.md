@@ -51,7 +51,7 @@ Scan system services for extra gateway installs (launchd/systemd/schtasks).
 If you want to review changes before writing, open the config file first:
 
 ```bash
-cat ~/.openclaw/openclaw.json
+cat ~/.iclaw/iclaw.json
 ```
 
 ## What it does (summary)
@@ -81,7 +81,7 @@ cat ~/.openclaw/openclaw.json
 - Channel status warnings (probed from the running gateway).
 - Supervisor config audit (launchd/systemd/schtasks) with optional repair.
 - Gateway runtime best-practice checks (Node vs Bun, version-manager paths).
-- Gateway port collision diagnostics (default `18789`).
+- Gateway port collision diagnostics (default `32768`).
 - Security warnings for open DM policies.
 - Gateway auth checks for local token mode (offers token generation when no token source exists; does not overwrite token SecretRef configs).
 - Device pairing trouble detection (pending first-time pair requests, pending role/scope upgrades, stale local device-token cache drift, and paired-record auth drift).
@@ -153,7 +153,7 @@ Doctor will:
 
 - Explain which legacy keys were found.
 - Show the migration it applied.
-- Rewrite `~/.openclaw/openclaw.json` with the updated schema.
+- Rewrite `~/.iclaw/iclaw.json` with the updated schema.
 
 The Gateway also auto-runs doctor migrations on startup when it detects a
 legacy config format, so stale configs are repaired without manual intervention.
@@ -261,12 +261,12 @@ trigger this warning.
 Doctor can migrate older on-disk layouts into the current structure:
 
 - Sessions store + transcripts:
-  - from `~/.openclaw/sessions/` to `~/.openclaw/agents/<agentId>/sessions/`
+  - from `~/.iclaw/sessions/` to `~/.iclaw/agents/<agentId>/sessions/`
 - Agent dir:
-  - from `~/.openclaw/agent/` to `~/.openclaw/agents/<agentId>/agent/`
+  - from `~/.iclaw/agent/` to `~/.iclaw/agents/<agentId>/agent/`
 - WhatsApp auth state (Baileys):
-  - from legacy `~/.openclaw/credentials/*.json` (except `oauth.json`)
-  - to `~/.openclaw/credentials/whatsapp/<accountId>/...` (default account id: `default`)
+  - from legacy `~/.openclaw/credentials/*.json` (except `oauth.json`) (and equivalent under your resolved state dir)
+  - to `~/.iclaw/credentials/whatsapp/<accountId>/...` (default account id: `default`)
 
 These migrations are best-effort and idempotent; doctor will emit warnings when
 it leaves any legacy folders behind as backups. The Gateway/CLI also auto-migrates
@@ -289,7 +289,7 @@ without duplicating the data.
 
 ### 3b) Legacy cron store migrations
 
-Doctor also checks the cron job store (`~/.openclaw/cron/jobs.json` by default,
+Doctor also checks the cron job store (`~/.iclaw/cron/jobs.json` by default,
 or `cron.store` when overridden) for old job shapes that the scheduler still
 accepts for compatibility.
 
@@ -339,12 +339,12 @@ Doctor checks:
   transcript files.
 - **Main session “1-line JSONL”**: flags when the main transcript has only one
   line (history is not accumulating).
-- **Multiple state dirs**: warns when multiple `~/.openclaw` folders exist across
+- **Multiple state dirs**: warns when multiple `~/.iclaw` folders exist across
   home directories or when `ICLAW_STATE_DIR` points elsewhere (history can
   split between installs).
 - **Remote mode reminder**: if `gateway.mode=remote`, doctor reminds you to run
   it on the remote host (the state lives there).
-- **Config file permissions**: warns if `~/.openclaw/openclaw.json` is
+- **Config file permissions**: warns if `~/.iclaw/iclaw.json` is
   group/world readable and offers to tighten to `600`.
 
 ### 5) Model auth health (OAuth expiry)
@@ -550,7 +550,7 @@ Notes:
 
 Doctor inspects the service runtime (PID, last exit status) and warns when the
 service is installed but not actually running. It also checks for port collisions
-on the gateway port (default `18789`) and reports likely causes (gateway already
+on the gateway port (default `32768`) and reports likely causes (gateway already
 running, SSH tunnel).
 
 ### 17) Gateway runtime best practices

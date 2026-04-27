@@ -8,7 +8,7 @@ title: "Setup"
 
 # `openclaw setup`
 
-Initialize `~/.openclaw/openclaw.json` and the agent workspace.
+Initialize `~/.iclaw/iclaw.json` and the agent workspace.
 
 Related:
 
@@ -19,9 +19,9 @@ Related:
 
 ```bash
 openclaw setup
-openclaw setup --workspace ~/.openclaw/workspace
+openclaw setup --workspace ~/.iclaw/workspace
 openclaw setup --wizard
-openclaw setup --non-interactive --mode remote --remote-url wss://gateway-host:18789 --remote-token <token>
+openclaw setup --non-interactive --mode remote --remote-url wss://gateway-host:32768 --remote-token <token>
 ```
 
 ## Options

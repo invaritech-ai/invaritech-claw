@@ -78,7 +78,7 @@ Gateway -> Node Service (WS)
 Security + ask + allowlist are stored locally on the Mac in:
 
 ```
-~/.openclaw/exec-approvals.json
+~/.iclaw/exec-approvals.json
 ```
 
 Example:
@@ -152,7 +152,7 @@ sessions and credentials.
 Prefer a local non-synced state path such as:
 
 ```bash
-ICLAW_STATE_DIR=~/.openclaw
+ICLAW_STATE_DIR=~/.iclaw
 ```
 
 If `openclaw doctor` detects state under:
@@ -206,7 +206,7 @@ components can talk to a remote Gateway as if it were on localhost.
 ### Control tunnel (Gateway WebSocket port)
 
 - **Purpose:** health checks, status, Web Chat, config, and other control-plane calls.
-- **Local port:** the Gateway port (default `18789`), always stable.
+- **Local port:** the Gateway port (default `32768`), always stable.
 - **Remote port:** the same Gateway port on the remote host.
 - **Behavior:** no random local port; the app reuses an existing healthy tunnel
   or restarts it if needed.

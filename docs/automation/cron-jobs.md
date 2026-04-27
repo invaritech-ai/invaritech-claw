@@ -34,8 +34,8 @@ openclaw cron runs --id <job-id>
 ## How cron works
 
 - Cron runs **inside the Gateway** process (not inside the model).
-- Job definitions persist at `~/.openclaw/cron/jobs.json` so restarts do not lose schedules.
-- Runtime execution state persists next to it in `~/.openclaw/cron/jobs-state.json`. If you track cron definitions in git, track `jobs.json` and gitignore `jobs-state.json`.
+- Job definitions persist at `~/.iclaw/cron/jobs.json` so restarts do not lose schedules.
+- Runtime execution state persists next to it in `~/.iclaw/cron/jobs-state.json`. If you track cron definitions in git, track `jobs.json` and gitignore `jobs-state.json`.
 - After the split, older OpenClaw versions can read `jobs.json` but may treat jobs as fresh because runtime fields now live in `jobs-state.json`.
 - All cron executions create [background task](/automation/tasks) records.
 - One-shot jobs (`--at`) auto-delete after success by default.
@@ -218,7 +218,7 @@ Query-string tokens are rejected.
 Enqueue a system event for the main session:
 
 ```bash
-curl -X POST http://127.0.0.1:18789/hooks/wake \
+curl -X POST http://127.0.0.1:32768/hooks/wake \
   -H 'Authorization: Bearer SECRET' \
   -H 'Content-Type: application/json' \
   -d '{"text":"New email received","mode":"now"}'
@@ -232,7 +232,7 @@ curl -X POST http://127.0.0.1:18789/hooks/wake \
 Run an isolated agent turn:
 
 ```bash
-curl -X POST http://127.0.0.1:18789/hooks/agent \
+curl -X POST http://127.0.0.1:32768/hooks/agent \
   -H 'Authorization: Bearer SECRET' \
   -H 'Content-Type: application/json' \
   -d '{"message":"Summarize inbox","name":"Email","model":"openai/gpt-5.4"}'
@@ -359,7 +359,7 @@ Model override note:
 {
   cron: {
     enabled: true,
-    store: "~/.openclaw/cron/jobs.json",
+    store: "~/.iclaw/cron/jobs.json",
     maxConcurrentRuns: 1,
     retry: {
       maxAttempts: 3,

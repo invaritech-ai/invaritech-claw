@@ -22,7 +22,7 @@ Check which engine is active:
 ```bash
 openclaw doctor
 # or inspect config directly:
-cat ~/.openclaw/openclaw.json | jq '.plugins.slots.contextEngine'
+cat ~/.iclaw/iclaw.json | jq '.plugins.slots.contextEngine'
 ```
 
 ### Installing a context engine plugin
@@ -41,7 +41,7 @@ openclaw plugins install -l ./my-context-engine
 Then enable the plugin and select it as the active engine in your config:
 
 ```json5
-// openclaw.json
+// iclaw.json
 {
   plugins: {
     slots: {

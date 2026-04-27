@@ -22,10 +22,10 @@ Pricing varies by machine type and region; pick the smallest VM that fits your w
 - Create a Compute Engine VM
 - Install Docker (isolated app runtime)
 - Start the OpenClaw Gateway in Docker
-- Persist `~/.openclaw` + `~/.openclaw/workspace` on the host (survives restarts/rebuilds)
+- Persist `~/.iclaw` + `~/.iclaw/workspace` on the host (survives restarts/rebuilds)
 - Access the Control UI from your laptop via an SSH tunnel
 
-That mounted `~/.openclaw` state includes `openclaw.json`, per-agent
+That mounted `~/.iclaw` state includes `iclaw.json`, per-agent
 `agents/<agentId>/agent/auth-profiles.json`, and `.env`.
 
 The Gateway can be accessed via:
@@ -202,8 +202,8 @@ For the generic Docker flow, see [Docker](/install/docker).
     All long-lived state must live on the host.
 
     ```bash
-    mkdir -p ~/.openclaw
-    mkdir -p ~/.openclaw/workspace
+    mkdir -p ~/.iclaw
+    mkdir -p ~/.iclaw/workspace
     ```
 
   </Step>
@@ -215,7 +215,7 @@ For the generic Docker flow, see [Docker](/install/docker).
     ICLAW_IMAGE=openclaw:latest
     ICLAW_GATEWAY_TOKEN=
     ICLAW_GATEWAY_BIND=lan
-    ICLAW_GATEWAY_PORT=18789
+    ICLAW_GATEWAY_PORT=32768
 
     ICLAW_CONFIG_DIR=/home/$USER/.openclaw
     ICLAW_WORKSPACE_DIR=/home/$USER/.openclaw/workspace
@@ -237,7 +237,7 @@ For the generic Docker flow, see [Docker](/install/docker).
 
     This `.env` file is for container/runtime env such as `ICLAW_GATEWAY_TOKEN`.
     Stored provider OAuth/API-key auth lives in the mounted
-    `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`.
+    `~/.iclaw/agents/<agentId>/agent/auth-profiles.json`.
 
   </Step>
 
@@ -268,7 +268,7 @@ For the generic Docker flow, see [Docker](/install/docker).
         ports:
           # Recommended: keep the Gateway loopback-only on the VM; access via SSH tunnel.
           # To expose it publicly, remove the `127.0.0.1:` prefix and firewall accordingly.
-          - "127.0.0.1:${ICLAW_GATEWAY_PORT}:18789"
+          - "127.0.0.1:${ICLAW_GATEWAY_PORT}:32768"
         command:
           [
             "node",
@@ -302,10 +302,10 @@ For the generic Docker flow, see [Docker](/install/docker).
     When binding to LAN (`ICLAW_GATEWAY_BIND=lan`), configure a trusted browser origin before continuing:
 
     ```bash
-    docker compose run --rm openclaw-cli config set gateway.controlUi.allowedOrigins '["http://127.0.0.1:18789"]' --strict-json
+    docker compose run --rm openclaw-cli config set gateway.controlUi.allowedOrigins '["http://127.0.0.1:32768"]' --strict-json
     ```
 
-    If you changed the gateway port, replace `18789` with your configured port.
+    If you changed the gateway port, replace `32768` with your configured port.
 
   </Step>
 
@@ -313,12 +313,12 @@ For the generic Docker flow, see [Docker](/install/docker).
     Create an SSH tunnel to forward the Gateway port:
 
     ```bash
-    gcloud compute ssh openclaw-gateway --zone=us-central1-a -- -L 18789:127.0.0.1:18789
+    gcloud compute ssh openclaw-gateway --zone=us-central1-a -- -L 32768:127.0.0.1:32768
     ```
 
     Open in your browser:
 
-    `http://127.0.0.1:18789/`
+    `http://127.0.0.1:32768/`
 
     Reprint a clean dashboard link:
 

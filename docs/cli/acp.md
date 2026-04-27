@@ -82,10 +82,10 @@ Quick rule:
 openclaw acp
 
 # Remote Gateway
-openclaw acp --url wss://gateway-host:18789 --token <token>
+openclaw acp --url wss://gateway-host:32768 --token <token>
 
 # Remote Gateway (token from file)
-openclaw acp --url wss://gateway-host:18789 --token-file ~/.openclaw/gateway.token
+openclaw acp --url wss://gateway-host:32768 --token-file ~/.iclaw/gateway.token
 
 # Attach to an existing session key
 openclaw acp --session agent:main:main
@@ -106,7 +106,7 @@ It spawns the ACP bridge and lets you type prompts interactively.
 openclaw acp client
 
 # Point the spawned bridge at a remote Gateway
-openclaw acp client --server-args --url wss://gateway-host:18789 --token-file ~/.openclaw/gateway.token
+openclaw acp client --server-args --url wss://gateway-host:32768 --token-file ~/.iclaw/gateway.token
 
 # Override the server command (default: openclaw)
 openclaw acp client --server "node" --server-args iclaw.mjs acp --url ws://127.0.0.1:19001
@@ -132,16 +132,16 @@ it to drive an OpenClaw Gateway session.
 Example config (persisted):
 
 ```bash
-openclaw config set gateway.remote.url wss://gateway-host:18789
+openclaw config set gateway.remote.url wss://gateway-host:32768
 openclaw config set gateway.remote.token <token>
 ```
 
 Example direct run (no config write):
 
 ```bash
-openclaw acp --url wss://gateway-host:18789 --token <token>
+openclaw acp --url wss://gateway-host:32768 --token <token>
 # preferred for local process safety
-openclaw acp --url wss://gateway-host:18789 --token-file ~/.openclaw/gateway.token
+openclaw acp --url wss://gateway-host:32768 --token-file ~/.iclaw/gateway.token
 ```
 
 ## Selecting agents
@@ -200,7 +200,7 @@ time, override the `openclaw` agent command in `~/.acpx/config.json`:
 {
   "agents": {
     "openclaw": {
-      "command": "env ICLAW_HIDE_BANNER=1 ICLAW_SUPPRESS_NOTES=1 openclaw acp --url ws://127.0.0.1:18789 --token-file ~/.openclaw/gateway.token --session agent:main:main"
+      "command": "env ICLAW_HIDE_BANNER=1 ICLAW_SUPPRESS_NOTES=1 openclaw acp --url ws://127.0.0.1:32768 --token-file ~/.iclaw/gateway.token --session agent:main:main"
     }
   }
 }
@@ -244,7 +244,7 @@ To target a specific Gateway or agent:
       "args": [
         "acp",
         "--url",
-        "wss://gateway-host:18789",
+        "wss://gateway-host:32768",
         "--token",
         "<token>",
         "--session",

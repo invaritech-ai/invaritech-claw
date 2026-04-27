@@ -17,7 +17,7 @@ gating (unless elevated is set to `full`, which skips approvals).
 Effective policy is the **stricter** of `tools.exec.*` and approvals defaults;
 if an approvals field is omitted, the `tools.exec` value is used. Host exec
 also uses local approvals state on that machine — a host-local `ask: "always"`
-in `~/.openclaw/exec-approvals.json` keeps prompting even if session or config
+in `~/.iclaw/exec-approvals.json` keeps prompting even if session or config
 defaults request `ask: "on-miss"`.
 </Note>
 
@@ -71,7 +71,7 @@ macOS split:
 
 Approvals live in a local JSON file on the execution host:
 
-`~/.openclaw/exec-approvals.json`
+`~/.iclaw/exec-approvals.json`
 
 Example schema:
 
@@ -79,7 +79,7 @@ Example schema:
 {
   "version": 1,
   "socket": {
-    "path": "~/.openclaw/exec-approvals.sock",
+    "path": "~/.iclaw/exec-approvals.sock",
     "token": "base64url-token"
   },
   "defaults": {
@@ -113,7 +113,7 @@ Example schema:
 If you want host exec to run without approval prompts, you must open **both** policy layers:
 
 - requested exec policy in OpenClaw config (`tools.exec.*`)
-- host-local approvals policy in `~/.openclaw/exec-approvals.json`
+- host-local approvals policy in `~/.iclaw/exec-approvals.json`
 
 This is now the default host behavior unless you tighten it explicitly:
 
@@ -169,7 +169,7 @@ openclaw exec-policy preset yolo
 That local shortcut updates both:
 
 - local `tools.exec.host/security/ask`
-- local `~/.openclaw/exec-approvals.json` defaults
+- local `~/.iclaw/exec-approvals.json` defaults
 
 It is intentionally local-only. If you need to change gateway-host or node-host approvals
 remotely, continue using `openclaw approvals set --gateway` or
@@ -296,7 +296,7 @@ per pattern so you can keep the list tidy.
 The target selector chooses **Gateway** (local approvals) or a **Node**. Nodes
 must advertise `system.execApprovals.get/set` (macOS app or headless node host).
 If a node does not advertise exec approvals yet, edit its local
-`~/.openclaw/exec-approvals.json` directly.
+`~/.iclaw/exec-approvals.json` directly.
 
 CLI: `openclaw approvals` supports gateway or node editing (see [Approvals CLI](/cli/approvals)).
 

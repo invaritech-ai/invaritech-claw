@@ -135,7 +135,7 @@ WhatsApp runs through the gateway's web channel (Baileys Web). It starts automat
         default: {},
         personal: {},
         biz: {
-          // authDir: "~/.openclaw/credentials/whatsapp/biz",
+          // authDir: "~/.iclaw/credentials/whatsapp/biz",
         },
       },
     },
@@ -849,7 +849,7 @@ Include your own number in `allowFrom` to enable self-chat mode (ignores native 
 - Override native skill registration per channel with `channels.<provider>.commands.nativeSkills`.
 - `channels.telegram.customCommands` adds extra Telegram bot menu entries.
 - `bash: true` enables `! <cmd>` for host shell. Requires `tools.elevated.enabled` and sender in `tools.elevated.allowFrom.<channel>`.
-- `config: true` enables `/config` (reads/writes `openclaw.json`). For gateway `chat.send` clients, persistent `/config set|unset` writes also require `operator.admin`; read-only `/config show` stays available to normal write-scoped operator clients.
+- `config: true` enables `/config` (reads/writes `iclaw.json`). For gateway `chat.send` clients, persistent `/config set|unset` writes also require `operator.admin`; read-only `/config show` stays available to normal write-scoped operator clients.
 - `mcp: true` enables `/mcp` for OpenClaw-managed MCP server config under `mcp.servers`.
 - `plugins: true` enables `/plugins` for plugin discovery, install, and enable/disable controls.
 - `channels.<provider>.configWrites` gates config mutations per channel (default: true).

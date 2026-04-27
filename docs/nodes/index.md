@@ -62,7 +62,7 @@ forwards `exec` calls to the **node host** when `host=node` is selected.
 
 - **Gateway host**: receives messages, runs the model, routes tool calls.
 - **Node host**: executes `system.run`/`system.which` on the node machine.
-- **Approvals**: enforced on the node host via `~/.openclaw/exec-approvals.json`.
+- **Approvals**: enforced on the node host via `~/.iclaw/exec-approvals.json`.
 
 Approval note:
 
@@ -78,7 +78,7 @@ Approval note:
 On the node machine:
 
 ```bash
-openclaw node run --host <gateway-host> --port 18789 --display-name "Build Node"
+openclaw node run --host <gateway-host> --port 32768 --display-name "Build Node"
 ```
 
 ### Remote gateway via SSH tunnel (loopback bind)
@@ -90,8 +90,8 @@ node host at the local end of the tunnel.
 Example (node host -> gateway host):
 
 ```bash
-# Terminal A (keep running): forward local 18790 -> gateway 127.0.0.1:18789
-ssh -N -L 18790:127.0.0.1:18789 user@gateway-host
+# Terminal A (keep running): forward local 18790 -> gateway 127.0.0.1:32768
+ssh -N -L 18790:127.0.0.1:32768 user@gateway-host
 
 # Terminal B: export the gateway token and connect through the tunnel
 export ICLAW_GATEWAY_TOKEN="<gateway-token>"
@@ -111,7 +111,7 @@ Notes:
 ### Start a node host (service)
 
 ```bash
-openclaw node install --host <gateway-host> --port 18789 --display-name "Build Node"
+openclaw node install --host <gateway-host> --port 32768 --display-name "Build Node"
 openclaw node restart
 ```
 
@@ -130,7 +130,7 @@ and approve the current `requestId`.
 
 Naming options:
 
-- `--display-name` on `openclaw node run` / `openclaw node install` (persists in `~/.openclaw/node.json` on the node).
+- `--display-name` on `openclaw node run` / `openclaw node install` (persists in `~/.iclaw/node.json` on the node).
 - `openclaw nodes rename --node <id|name|ip> --name "Build Node"` (gateway override).
 
 ### Allowlist the commands
@@ -142,7 +142,7 @@ openclaw approvals allowlist add --node <id|name|ip> "/usr/bin/uname"
 openclaw approvals allowlist add --node <id|name|ip> "/usr/bin/sw_vers"
 ```
 
-Approvals live on the node host at `~/.openclaw/exec-approvals.json`.
+Approvals live on the node host at `~/.iclaw/exec-approvals.json`.
 
 ### Point exec at the node
 
@@ -346,7 +346,7 @@ Notes:
 - Node hosts ignore `PATH` overrides and strip dangerous startup/shell keys (`DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`). If you need extra PATH entries, configure the node host service environment (or install tools in standard locations) instead of passing `PATH` via `--env`.
 - On macOS node mode, `system.run` is gated by exec approvals in the macOS app (Settings → Exec approvals).
   Ask/allowlist/full behave the same as the headless node host; denied prompts return `SYSTEM_RUN_DENIED`.
-- On headless node host, `system.run` is gated by exec approvals (`~/.openclaw/exec-approvals.json`).
+- On headless node host, `system.run` is gated by exec approvals (`~/.iclaw/exec-approvals.json`).
 
 ## Exec node binding
 
@@ -386,14 +386,14 @@ or for running a minimal node alongside a server.
 Start it:
 
 ```bash
-openclaw node run --host <gateway-host> --port 18789
+openclaw node run --host <gateway-host> --port 32768
 ```
 
 Notes:
 
 - Pairing is still required (the Gateway will show a device pairing prompt).
-- The node host stores its node id, token, display name, and gateway connection info in `~/.openclaw/node.json`.
-- Exec approvals are enforced locally via `~/.openclaw/exec-approvals.json`
+- The node host stores its node id, token, display name, and gateway connection info in `~/.iclaw/node.json`.
+- Exec approvals are enforced locally via `~/.iclaw/exec-approvals.json`
   (see [Exec approvals](/tools/exec-approvals)).
 - On macOS, the headless node host executes `system.run` locally by default. Set
   `ICLAW_NODE_EXEC_HOST=app` to route `system.run` through the companion app exec host; add

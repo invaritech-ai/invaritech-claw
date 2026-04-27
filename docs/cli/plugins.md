@@ -68,7 +68,7 @@ openclaw plugins install <plugin> --marketplace https://github.com/<owner>/<repo
 Bare package names are checked against ClawHub first, then npm. Security note:
 treat plugin installs like running code. Prefer pinned versions.
 
-If your `plugins` section is backed by a single-file `$include`, `plugins install/update/enable/disable/uninstall` write through to that included file and leave `openclaw.json` untouched. Root includes, include arrays, and includes with sibling overrides fail closed instead of flattening. See [Config includes](/gateway/configuration) for the supported shapes.
+If your `plugins` section is backed by a single-file `$include`, `plugins install/update/enable/disable/uninstall` write through to that included file and leave `iclaw.json` untouched. Root includes, include arrays, and includes with sibling overrides fail closed instead of flattening. See [Config includes](/gateway/configuration) for the supported shapes.
 
 If config is invalid, `plugins install` normally fails closed and tells you to
 run `openclaw doctor --fix` first. The only documented exception is a narrow
@@ -276,7 +276,7 @@ you want to move it back to the registry's default release line.
 Before a live npm update, OpenClaw checks the installed package version against
 the npm registry metadata. If the installed version and recorded artifact
 identity already match the resolved target, the update is skipped without
-downloading, reinstalling, or rewriting `openclaw.json`.
+downloading, reinstalling, or rewriting `iclaw.json`.
 
 When a stored integrity hash exists and the fetched artifact hash changes,
 OpenClaw treats that as npm artifact drift. The interactive

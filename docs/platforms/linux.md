@@ -17,8 +17,8 @@ Native Linux companion apps are planned. Contributions are welcome if you want t
 1. Install Node 24 (recommended; Node 22 LTS, currently `22.14+`, still works for compatibility)
 2. `npm i -g openclaw@latest`
 3. `openclaw onboard --install-daemon`
-4. From your laptop: `ssh -N -L 18789:127.0.0.1:18789 <user>@<host>`
-5. Open `http://127.0.0.1:18789/` and authenticate with the configured shared secret (token by default; password if you set `gateway.auth.mode: "password"`)
+4. From your laptop: `ssh -N -L 32768:127.0.0.1:32768 <user>@<host>`
+5. Open `http://127.0.0.1:32768/` and authenticate with the configured shared secret (token by default; password if you set `gateway.auth.mode: "password"`)
 
 Full Linux server guide: [Linux Server](/vps). Step-by-step VPS example: [exe.dev](/install/exe-dev)
 
@@ -80,7 +80,7 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=/usr/local/bin/openclaw gateway --port 18789
+ExecStart=/usr/local/bin/openclaw gateway --port 32768
 Restart=always
 RestartSec=5
 TimeoutStopSec=30

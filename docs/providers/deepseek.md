@@ -62,7 +62,7 @@ read_when:
 
 <Warning>
 If the Gateway runs as a daemon (launchd/systemd), make sure `DEEPSEEK_API_KEY`
-is available to that process (for example, in `~/.openclaw/.env` or via
+is available to that process (for example, in `~/.iclaw/.env` or via
 `env.shellEnv`).
 </Warning>
 

@@ -67,7 +67,7 @@ Notes:
 ## If the command is missing
 
 If `openclaw browser` is an unknown command, check `plugins.allow` in
-`~/.openclaw/openclaw.json`.
+`~/.iclaw/iclaw.json`.
 
 When `plugins.allow` is present, the bundled browser plugin must be listed
 explicitly:

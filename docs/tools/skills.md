@@ -14,14 +14,14 @@ OpenClaw loads skills from these sources:
 
 1. **Extra skill folders**: configured with `skills.load.extraDirs`
 2. **Bundled skills**: shipped with the install (npm package or OpenClaw.app)
-3. **Managed/local skills**: `~/.openclaw/skills`
+3. **Managed/local skills**: `~/.iclaw/skills`
 4. **Personal agent skills**: `~/.agents/skills`
 5. **Project agent skills**: `<workspace>/.agents/skills`
 6. **Workspace skills**: `<workspace>/skills`
 
 If a skill name conflicts, precedence is:
 
-`<workspace>/skills` (highest) → `<workspace>/.agents/skills` → `~/.agents/skills` → `~/.openclaw/skills` → bundled skills → `skills.load.extraDirs` (lowest)
+`<workspace>/skills` (highest) → `<workspace>/.agents/skills` → `~/.agents/skills` → `~/.iclaw/skills` → bundled skills → `skills.load.extraDirs` (lowest)
 
 ## Per-agent vs shared skills
 
@@ -32,7 +32,7 @@ In **multi-agent** setups, each agent has its own workspace. That means:
   that workspace before the normal workspace `skills/` folder.
 - **Personal agent skills** live in `~/.agents/skills` and apply across
   workspaces on that machine.
-- **Shared skills** live in `~/.openclaw/skills` (managed/local) and are visible
+- **Shared skills** live in `~/.iclaw/skills` (managed/local) and are visible
   to **all agents** on the same machine.
 - **Shared folders** can also be added via `skills.load.extraDirs` (lowest
   precedence) if you want a common skills pack used by multiple agents.
@@ -195,7 +195,7 @@ Fields under `metadata.openclaw`:
 - `requires.bins` — list; each must exist on `PATH`.
 - `requires.anyBins` — list; at least one must exist on `PATH`.
 - `requires.env` — list; env var must exist **or** be provided in config.
-- `requires.config` — list of `openclaw.json` paths that must be truthy.
+- `requires.config` — list of `iclaw.json` paths that must be truthy.
 - `primaryEnv` — env var name associated with `skills.entries.<name>.apiKey`.
 - `install` — optional array of installer specs used by the macOS Skills UI (brew/node/go/uv/download).
 
@@ -241,7 +241,7 @@ Notes:
 - If multiple installers are listed, the gateway picks a **single** preferred option (brew when available, otherwise node).
 - If all installers are `download`, OpenClaw lists each entry so you can see the available artifacts.
 - Installer specs can include `os: ["darwin"|"linux"|"win32"]` to filter options by platform.
-- Node installs honor `skills.install.nodeManager` in `openclaw.json` (default: npm; options: npm/pnpm/yarn/bun).
+- Node installs honor `skills.install.nodeManager` in `iclaw.json` (default: npm; options: npm/pnpm/yarn/bun).
   This only affects **skill installs**; the Gateway runtime should still be Node
   (Bun is not recommended for WhatsApp/Telegram).
 - Gateway-backed installer selection is preference-driven, not node-only:
@@ -251,12 +251,12 @@ Notes:
 - If every install spec is `download`, OpenClaw surfaces all download options
   instead of collapsing to one preferred installer.
 - Go installs: if `go` is missing and `brew` is available, the gateway installs Go via Homebrew first and sets `GOBIN` to Homebrew’s `bin` when possible.
-- Download installs: `url` (required), `archive` (`tar.gz` | `tar.bz2` | `zip`), `extract` (default: auto when archive detected), `stripComponents`, `targetDir` (default: `~/.openclaw/tools/<skillKey>`).
+- Download installs: `url` (required), `archive` (`tar.gz` | `tar.bz2` | `zip`), `extract` (default: auto when archive detected), `stripComponents`, `targetDir` (default: `~/.iclaw/tools/<skillKey>`).
 
 If no `metadata.openclaw` is present, the skill is always eligible (unless
 disabled in config or blocked by `skills.allowBundled` for bundled skills).
 
-## Config overrides (`~/.openclaw/openclaw.json`)
+## Config overrides (`~/.iclaw/iclaw.json`)
 
 Bundled/managed skills can be toggled and supplied with env values:
 
@@ -378,7 +378,7 @@ Notes:
 ## Managed skills lifecycle
 
 OpenClaw ships a baseline set of skills as **bundled skills** as part of the
-install (npm package or OpenClaw.app). `~/.openclaw/skills` exists for local
+install (npm package or OpenClaw.app). `~/.iclaw/skills` exists for local
 overrides (for example, pinning/patching a skill without changing the bundled
 copy). Workspace skills are user-owned and override both on name conflicts.
 

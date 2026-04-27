@@ -108,7 +108,7 @@ docker compose logs -f openclaw-gateway
 Expected output:
 
 ```
-[gateway] listening on ws://0.0.0.0:18789
+[gateway] listening on ws://0.0.0.0:32768
 ```
 
 ## What persists where
@@ -118,7 +118,7 @@ All long-lived state must survive restarts, rebuilds, and reboots.
 
 | Component           | Location                          | Persistence mechanism  | Notes                                                         |
 | ------------------- | --------------------------------- | ---------------------- | ------------------------------------------------------------- |
-| Gateway config      | `/home/node/.openclaw/`           | Host volume mount      | Includes `openclaw.json`, `.env`                              |
+| Gateway config      | `/home/node/.openclaw/`           | Host volume mount      | Includes `iclaw.json`, `.env`                                 |
 | Model auth profiles | `/home/node/.openclaw/agents/`    | Host volume mount      | `agents/<agentId>/agent/auth-profiles.json` (OAuth, API keys) |
 | Skill configs       | `/home/node/.openclaw/skills/`    | Host volume mount      | Skill-level state                                             |
 | Agent workspace     | `/home/node/.openclaw/workspace/` | Host volume mount      | Code and agent artifacts                                      |

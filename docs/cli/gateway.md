@@ -35,7 +35,7 @@ openclaw gateway run
 
 Notes:
 
-- By default, the Gateway refuses to start unless `gateway.mode=local` is set in `~/.openclaw/openclaw.json`. Use `--allow-unconfigured` for ad-hoc/dev runs.
+- By default, the Gateway refuses to start unless `gateway.mode=local` is set in `~/.iclaw/iclaw.json`. Use `--allow-unconfigured` for ad-hoc/dev runs.
 - `openclaw onboard --mode local` and `openclaw setup` are expected to write `gateway.mode=local`. If the file exists but `gateway.mode` is missing, treat that as a broken or clobbered config and repair it instead of assuming local mode implicitly.
 - If the file exists and `gateway.mode` is missing, the Gateway treats that as suspicious config damage and refuses to “guess local” for you.
 - Binding beyond loopback without auth is blocked (safety guardrail).
@@ -44,7 +44,7 @@ Notes:
 
 ### Options
 
-- `--port <port>`: WebSocket port (default comes from config/env; usually `18789`).
+- `--port <port>`: WebSocket port (default comes from config/env; usually `32768`).
 - `--bind <loopback|lan|tailnet|auto|custom>`: listener bind mode.
 - `--auth <token|password>`: auth mode override.
 - `--token <token>`: token override (also sets `ICLAW_GATEWAY_TOKEN` for the process).
@@ -92,7 +92,7 @@ Pass `--token` or `--password` explicitly. Missing explicit credentials is an er
 ### `gateway health`
 
 ```bash
-openclaw gateway health --url ws://127.0.0.1:18789
+openclaw gateway health --url ws://127.0.0.1:32768
 ```
 
 The HTTP `/healthz` endpoint is a liveness probe: it returns once the server can answer HTTP. The HTTP `/readyz` endpoint is stricter and stays red while startup sidecars, channels, or configured hooks are still settling.
@@ -135,7 +135,7 @@ Options:
 Notes:
 
 - Records keep operational metadata: event names, counts, byte sizes, memory readings, queue/session state, channel/plugin names, and redacted session summaries. They do not keep chat text, webhook bodies, tool outputs, raw request or response bodies, tokens, cookies, secret values, hostnames, or raw session ids. Set `diagnostics.enabled: false` to disable the recorder entirely.
-- On fatal Gateway exits, shutdown timeouts, and restart startup failures, OpenClaw writes the same diagnostic snapshot to `~/.openclaw/logs/stability/openclaw-stability-*.json` when the recorder has events. Inspect the newest bundle with `openclaw gateway stability --bundle latest`; `--limit`, `--type`, and `--since-seq` also apply to bundle output.
+- On fatal Gateway exits, shutdown timeouts, and restart startup failures, OpenClaw writes the same diagnostic snapshot to `~/.iclaw/logs/stability/openclaw-stability-*.json` when the recorder has events. Inspect the newest bundle with `openclaw gateway stability --bundle latest`; `--limit`, `--type`, and `--since-seq` also apply to bundle output.
 
 ### `gateway diagnostics export`
 
@@ -339,7 +339,7 @@ Wide-Area discovery records include (TXT):
 
 - `role` (gateway role hint)
 - `transport` (transport hint, e.g. `gateway`)
-- `gatewayPort` (WebSocket port, usually `18789`)
+- `gatewayPort` (WebSocket port, usually `32768`)
 - `sshPort` (optional; clients default SSH targets to `22` when it is absent)
 - `tailnetDns` (MagicDNS hostname, when available)
 - `gatewayTls` / `gatewayTlsSha256` (TLS enabled + cert fingerprint)

@@ -190,7 +190,7 @@ OpenClaw ships with the pi‑ai catalog. These providers require **no**
   - Enable: `openclaw plugins enable google`
   - Login: `openclaw models auth login --provider google-gemini-cli --set-default`
   - Default model: `google-gemini-cli/gemini-3-flash-preview`
-  - Note: you do **not** paste a client id or secret into `openclaw.json`. The CLI login flow stores
+  - Note: you do **not** paste a client id or secret into `iclaw.json`. The CLI login flow stores
     tokens in auth profiles on the gateway host.
   - If requests fail after login, set `GOOGLE_CLOUD_PROJECT` or `GOOGLE_CLOUD_PROJECT_ID` on the gateway host.
   - Gemini CLI JSON replies are parsed from `response`; usage falls back to

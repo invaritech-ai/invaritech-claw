@@ -29,7 +29,7 @@ Shelley, [exe.dev](https://exe.dev)'s agent, can install OpenClaw instantly with
 prompt. The prompt used is as below:
 
 ```
-Set up OpenClaw (https://docs.openclaw.ai/install) on this VM. Use the non-interactive and accept-risk flags for openclaw onboarding. Add the supplied auth or token as needed. Configure nginx to forward from the default port 18789 to the root location on the default enabled site config, making sure to enable Websocket support. Pairing is done by "openclaw devices list" and "openclaw devices approve <request id>". Make sure the dashboard shows that OpenClaw's health is OK. exe.dev handles forwarding from port 8000 to port 80/443 and HTTPS for us, so the final "reachable" should be <vm-name>.exe.xyz, without port specification.
+Set up OpenClaw (https://docs.openclaw.ai/install) on this VM. Use the non-interactive and accept-risk flags for openclaw onboarding. Add the supplied auth or token as needed. Configure nginx to forward from the default port 32768 to the root location on the default enabled site config, making sure to enable Websocket support. Pairing is done by "openclaw devices list" and "openclaw devices approve <request id>". Make sure the dashboard shows that OpenClaw's health is OK. exe.dev handles forwarding from port 8000 to port 80/443 and HTTPS for us, so the final "reachable" should be <vm-name>.exe.xyz, without port specification.
 ```
 
 ## Manual installation
@@ -48,9 +48,9 @@ Then connect:
 ssh <vm-name>.exe.xyz
 ```
 
-Tip: keep this VM **stateful**. OpenClaw stores `openclaw.json`, per-agent
+Tip: keep this VM **stateful**. OpenClaw stores `iclaw.json`, per-agent
 `auth-profiles.json`, sessions, and channel/provider state under
-`~/.openclaw/`, plus the workspace under `~/.openclaw/workspace/`.
+`~/.iclaw/`, plus the workspace under `~/.iclaw/workspace/`.
 
 ## 2) Install prerequisites (on the VM)
 
@@ -81,7 +81,7 @@ server {
     server_name _;
 
     location / {
-        proxy_pass http://127.0.0.1:18789;
+        proxy_pass http://127.0.0.1:32768;
         proxy_http_version 1.1;
 
         # WebSocket support

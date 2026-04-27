@@ -7,8 +7,8 @@ read_when:
 title: "Configuration"
 ---
 
-OpenClaw reads an optional <Tooltip tip="JSON5 supports comments and trailing commas">**JSON5**</Tooltip> config from `~/.openclaw/openclaw.json`.
-The active config path must be a regular file. Symlinked `openclaw.json`
+OpenClaw reads an optional <Tooltip tip="JSON5 supports comments and trailing commas">**JSON5**</Tooltip> config from `~/.iclaw/iclaw.json`.
+The active config path must be a regular file. Symlinked `iclaw.json`
 layouts are unsupported for OpenClaw-owned writes; an atomic write may replace
 the path instead of preserving the symlink. If you keep config outside the
 default state directory, point `ICLAW_CONFIG_PATH` directly at the real file.
@@ -28,9 +28,9 @@ See the [full reference](/gateway/configuration-reference) for every available f
 ## Minimal config
 
 ```json5
-// ~/.openclaw/openclaw.json
+// ~/.iclaw/iclaw.json
 {
-  agents: { defaults: { workspace: "~/.openclaw/workspace" } },
+  agents: { defaults: { workspace: "~/.iclaw/workspace" } },
   channels: { whatsapp: { allowFrom: ["+15555550123"] } },
 }
 ```
@@ -52,7 +52,7 @@ See the [full reference](/gateway/configuration-reference) for every available f
     ```
   </Tab>
   <Tab title="Control UI">
-    Open [http://127.0.0.1:18789](http://127.0.0.1:18789) and use the **Config** tab.
+    Open [http://127.0.0.1:32768](http://127.0.0.1:32768) and use the **Config** tab.
     The Control UI renders a form from the live config schema, including field
     `title` / `description` docs metadata plus plugin and channel schemas when
     available, with a **Raw JSON** editor as an escape hatch. For drill-down
@@ -60,7 +60,7 @@ See the [full reference](/gateway/configuration-reference) for every available f
     fetch one path-scoped schema node plus immediate child summaries.
   </Tab>
   <Tab title="Direct edit">
-    Edit `~/.openclaw/openclaw.json` directly. The Gateway watches the file and applies changes automatically (see [hot reload](#config-hot-reload)).
+    Edit `~/.iclaw/iclaw.json` directly. The Gateway watches the file and applies changes automatically (see [hot reload](#config-hot-reload)).
   </Tab>
 </Tabs>
 
@@ -85,7 +85,7 @@ When validation fails:
 - Run `openclaw doctor --fix` (or `--yes`) to apply repairs
 
 The Gateway keeps a trusted last-known-good copy after each successful startup.
-If `openclaw.json` later fails validation (or drops `gateway.mode`, shrinks
+If `iclaw.json` later fails validation (or drops `gateway.mode`, shrinks
 sharply, or has a stray log line prepended), OpenClaw preserves the broken file
 as `.clobbered.*`, restores the last-known-good copy, and logs the recovery
 reason. The next agent turn also receives a system-event warning so the main
@@ -306,7 +306,7 @@ is skipped when a candidate contains redacted secret placeholders such as `***`.
   </Accordion>
 
   <Accordion title="Enable relay-backed push for official iOS builds">
-    Relay-backed push is configured in `openclaw.json`.
+    Relay-backed push is configured in `iclaw.json`.
 
     Set this in gateway config:
 
@@ -448,8 +448,8 @@ is skipped when a candidate contains redacted secret placeholders such as `***`.
     {
       agents: {
         list: [
-          { id: "home", default: true, workspace: "~/.openclaw/workspace-home" },
-          { id: "work", workspace: "~/.openclaw/workspace-work" },
+          { id: "home", default: true, workspace: "~/.iclaw/workspace-home" },
+          { id: "work", workspace: "~/.iclaw/workspace-work" },
         ],
       },
       bindings: [
@@ -467,9 +467,9 @@ is skipped when a candidate contains redacted secret placeholders such as `***`.
     Use `$include` to organize large configs:
 
     ```json5
-    // ~/.openclaw/openclaw.json
+    // ~/.iclaw/iclaw.json
     {
-      gateway: { port: 18789 },
+      gateway: { port: 32768 },
       agents: { $include: "./agents.json5" },
       broadcast: {
         $include: ["./clients/a.json5", "./clients/b.json5"],
@@ -484,7 +484,7 @@ is skipped when a candidate contains redacted secret placeholders such as `***`.
     - **Relative paths**: resolved relative to the including file
     - **OpenClaw-owned writes**: when a write changes only one top-level section
       backed by a single-file include such as `plugins: { $include: "./plugins.json5" }`,
-      OpenClaw updates that included file and leaves `openclaw.json` intact
+      OpenClaw updates that included file and leaves `iclaw.json` intact
     - **Unsupported write-through**: root includes, include arrays, and includes
       with sibling overrides fail closed for OpenClaw-owned writes instead of
       flattening the config
@@ -495,7 +495,7 @@ is skipped when a candidate contains redacted secret placeholders such as `***`.
 
 ## Config hot reload
 
-The Gateway watches `~/.openclaw/openclaw.json` and applies changes automatically — no manual restart needed for most settings.
+The Gateway watches `~/.iclaw/iclaw.json` and applies changes automatically — no manual restart needed for most settings.
 
 Direct file edits are treated as untrusted until they validate. The watcher waits
 for editor temp-write/rename churn to settle, reads the final file, and rejects
@@ -506,7 +506,7 @@ and saved as `.rejected.*` for inspection.
 
 If you see `Config auto-restored from last-known-good` or
 `config reload restored last-known-good config` in logs, inspect the matching
-`.clobbered.*` file next to `openclaw.json`, fix the rejected payload, then run
+`.clobbered.*` file next to `iclaw.json`, fix the rejected payload, then run
 `openclaw config validate`. See [Gateway troubleshooting](/gateway/troubleshooting#gateway-restored-last-known-good-config)
 for the recovery checklist.
 
@@ -592,7 +592,7 @@ config already exists.
 OpenClaw reads env vars from the parent process plus:
 
 - `.env` from the current working directory (if present)
-- `~/.openclaw/.env` (global fallback)
+- `~/.iclaw/.env` (global fallback)
 
 Neither file overrides existing env vars. You can also set inline env vars in config:
 

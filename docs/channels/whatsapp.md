@@ -419,9 +419,9 @@ Behavior notes:
   </Accordion>
 
   <Accordion title="Credential paths and legacy compatibility">
-    - current auth path: `~/.openclaw/credentials/whatsapp/<accountId>/creds.json`
+    - current auth path: `~/.iclaw/credentials/whatsapp/<accountId>/creds.json`
     - backup file: `creds.json.bak`
-    - legacy default auth in `~/.openclaw/credentials/` is still recognized/migrated for default-account flows
+    - legacy default auth in `~/.iclaw/credentials/` is still recognized/migrated for default-account flows
   </Accordion>
 
   <Accordion title="Logout behavior">
@@ -483,7 +483,7 @@ Behavior notes:
     - `groupAllowFrom` / `allowFrom`
     - `groups` allowlist entries
     - mention gating (`requireMention` + mention patterns)
-    - duplicate keys in `openclaw.json` (JSON5): later entries override earlier ones, so keep a single `groupPolicy` per scope
+    - duplicate keys in `iclaw.json` (JSON5): later entries override earlier ones, so keep a single `groupPolicy` per scope
 
   </Accordion>
 

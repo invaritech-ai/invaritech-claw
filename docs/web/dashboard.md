@@ -10,7 +10,7 @@ The Gateway dashboard is the browser Control UI served at `/` by default
 
 Quick open (local Gateway):
 
-- [http://127.0.0.1:18789/](http://127.0.0.1:18789/) (or [http://localhost:18789/](http://localhost:18789/))
+- [http://127.0.0.1:32768/](http://127.0.0.1:32768/) (or [http://localhost:32768/](http://localhost:32768/))
 
 Key references:
 
@@ -42,7 +42,7 @@ Prefer localhost, Tailscale Serve, or an SSH tunnel.
 
 ## Auth basics (local vs remote)
 
-- **Localhost**: open `http://127.0.0.1:18789/`.
+- **Localhost**: open `http://127.0.0.1:32768/`.
 - **Shared-secret token source**: `gateway.auth.token` (or
   `ICLAW_GATEWAY_TOKEN`); `openclaw dashboard` can pass it via URL fragment
   for one-time bootstrap, and the Control UI keeps it in sessionStorage for the
@@ -73,7 +73,7 @@ Prefer localhost, Tailscale Serve, or an SSH tunnel.
 
 ## If you see "unauthorized" / 1008
 
-- Ensure the gateway is reachable (local: `openclaw status`; remote: SSH tunnel `ssh -N -L 18789:127.0.0.1:18789 user@host` then open `http://127.0.0.1:18789/`).
+- Ensure the gateway is reachable (local: `openclaw status`; remote: SSH tunnel `ssh -N -L 32768:127.0.0.1:32768 user@host` then open `http://127.0.0.1:32768/`).
 - For `AUTH_TOKEN_MISMATCH`, clients may do one trusted retry with a cached device token when the gateway returns retry hints. That cached-token retry reuses the token's cached approved scopes; explicit `deviceToken` / explicit `scopes` callers keep their requested scope set. If auth still fails after that retry, resolve token drift manually.
 - Outside that retry path, connect auth precedence is explicit shared token/password first, then explicit `deviceToken`, then stored device token, then bootstrap token.
 - On the async Tailscale Serve Control UI path, failed attempts for the same

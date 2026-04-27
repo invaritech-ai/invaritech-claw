@@ -112,7 +112,7 @@ read_when:
 
     - Non-loopback binds (`--bind lan`) require a valid gateway auth path. This Fly.io example uses `ICLAW_GATEWAY_TOKEN`, but `gateway.auth.password` or a correctly configured non-loopback `trusted-proxy` deployment also satisfy the requirement.
     - Treat these tokens like passwords.
-    - **Prefer env vars over config file** for all API keys and tokens. This keeps secrets out of `openclaw.json` where they could be accidentally exposed or logged.
+    - **Prefer env vars over config file** for all API keys and tokens. This keeps secrets out of `iclaw.json` where they could be accidentally exposed or logged.
 
   </Step>
 
@@ -150,7 +150,7 @@ read_when:
 
     ```bash
     mkdir -p /data
-    cat > /data/openclaw.json << 'EOF'
+    cat > /data/iclaw.json << 'EOF'
     {
       "agents": {
         "defaults": {
@@ -200,7 +200,7 @@ read_when:
     EOF
     ```
 
-    **Note:** With `ICLAW_STATE_DIR=/data`, the config path is `/data/openclaw.json`.
+    **Note:** With `ICLAW_STATE_DIR=/data`, the config path is `/data/iclaw.json`.
 
     **Note:** The Discord token can come from either:
 
@@ -299,12 +299,12 @@ The lock file is at `/data/gateway.*.lock` (not in a subdirectory).
 
 ### Config Not Being Read
 
-`--allow-unconfigured` only bypasses the startup guard. It does not create or repair `/data/openclaw.json`, so make sure your real config exists and includes `gateway.mode="local"` when you want a normal local gateway start.
+`--allow-unconfigured` only bypasses the startup guard. It does not create or repair `/data/iclaw.json`, so make sure your real config exists and includes `gateway.mode="local"` when you want a normal local gateway start.
 
 Verify the config exists:
 
 ```bash
-fly ssh console --command "cat /data/openclaw.json"
+fly ssh console --command "cat /data/iclaw.json"
 ```
 
 ### Writing Config via SSH
@@ -313,17 +313,17 @@ The `fly ssh console -C` command doesn't support shell redirection. To write a c
 
 ```bash
 # Use echo + tee (pipe from local to remote)
-echo '{"your":"config"}' | fly ssh console -C "tee /data/openclaw.json"
+echo '{"your":"config"}' | fly ssh console -C "tee /data/iclaw.json"
 
 # Or use sftp
 fly sftp shell
-> put /local/path/config.json /data/openclaw.json
+> put /local/path/config.json /data/iclaw.json
 ```
 
 **Note:** `fly sftp` may fail if the file already exists. Delete first:
 
 ```bash
-fly ssh console --command "rm /data/openclaw.json"
+fly ssh console --command "rm /data/iclaw.json"
 ```
 
 ### State Not Persisting

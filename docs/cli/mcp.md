@@ -107,10 +107,10 @@ This gives MCP clients one place to:
 openclaw mcp serve
 
 # Remote Gateway
-openclaw mcp serve --url wss://gateway-host:18789 --token-file ~/.openclaw/gateway.token
+openclaw mcp serve --url wss://gateway-host:32768 --token-file ~/.iclaw/gateway.token
 
 # Remote Gateway with password auth
-openclaw mcp serve --url wss://gateway-host:18789 --password-file ~/.openclaw/gateway.password
+openclaw mcp serve --url wss://gateway-host:32768 --password-file ~/.iclaw/gateway.password
 
 # Enable verbose bridge logs
 openclaw mcp serve --verbose
@@ -259,7 +259,7 @@ Example stdio client config:
         "mcp",
         "serve",
         "--url",
-        "wss://gateway-host:18789",
+        "wss://gateway-host:32768",
         "--token-file",
         "/path/to/gateway.token"
       ]

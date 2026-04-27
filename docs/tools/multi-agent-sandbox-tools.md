@@ -16,7 +16,7 @@ examples.
 - **Elevated exec**: see [Elevated Mode](/tools/elevated).
 
 Auth is per-agent: each agent reads from its own `agentDir` auth store at
-`~/.openclaw/agents/<agentId>/agent/auth-profiles.json`.
+`~/.iclaw/agents/<agentId>/agent/auth-profiles.json`.
 Credentials are **not** shared between agents. Never reuse `agentDir` across agents.
 If you want to share creds, copy `auth-profiles.json` into the other agent's `agentDir`.
 
@@ -34,13 +34,13 @@ If you want to share creds, copy `auth-profiles.json` into the other agent's `ag
         "id": "main",
         "default": true,
         "name": "Personal Assistant",
-        "workspace": "~/.openclaw/workspace",
+        "workspace": "~/.iclaw/workspace",
         "sandbox": { "mode": "off" }
       },
       {
         "id": "family",
         "name": "Family Bot",
-        "workspace": "~/.openclaw/workspace-family",
+        "workspace": "~/.iclaw/workspace-family",
         "sandbox": {
           "mode": "all",
           "scope": "agent"
@@ -83,12 +83,12 @@ If you want to share creds, copy `auth-profiles.json` into the other agent's `ag
     "list": [
       {
         "id": "personal",
-        "workspace": "~/.openclaw/workspace-personal",
+        "workspace": "~/.iclaw/workspace-personal",
         "sandbox": { "mode": "off" }
       },
       {
         "id": "work",
-        "workspace": "~/.openclaw/workspace-work",
+        "workspace": "~/.iclaw/workspace-work",
         "sandbox": {
           "mode": "all",
           "scope": "shared",
@@ -143,14 +143,14 @@ If you want to share creds, copy `auth-profiles.json` into the other agent's `ag
     "list": [
       {
         "id": "main",
-        "workspace": "~/.openclaw/workspace",
+        "workspace": "~/.iclaw/workspace",
         "sandbox": {
           "mode": "off" // Override: main never sandboxed
         }
       },
       {
         "id": "public",
-        "workspace": "~/.openclaw/workspace-public",
+        "workspace": "~/.iclaw/workspace-public",
         "sandbox": {
           "mode": "all", // Override: public always sandboxed
           "scope": "agent"
@@ -221,7 +221,7 @@ Per-agent elevated overrides (`agents.list[].tools.elevated`) can further restri
 {
   "agents": {
     "defaults": {
-      "workspace": "~/.openclaw/workspace",
+      "workspace": "~/.iclaw/workspace",
       "sandbox": {
         "mode": "non-main"
       }
@@ -247,7 +247,7 @@ Per-agent elevated overrides (`agents.list[].tools.elevated`) can further restri
       {
         "id": "main",
         "default": true,
-        "workspace": "~/.openclaw/workspace",
+        "workspace": "~/.iclaw/workspace",
         "sandbox": { "mode": "off" }
       }
     ]

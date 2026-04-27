@@ -729,7 +729,7 @@ Uploaded files are stored in a `/OpenClawShared/` folder in the configured Share
 OpenClaw sends Teams polls as Adaptive Cards (there is no native Teams poll API).
 
 - CLI: `openclaw message poll --channel msteams --target conversation:<id> ...`
-- Votes are recorded by the gateway in `~/.openclaw/msteams-polls.json`.
+- Votes are recorded by the gateway in `~/.iclaw/msteams-polls.json`.
 - The gateway must stay online to record votes.
 - Polls do not auto-post result summaries yet (inspect the store file if needed).
 

@@ -7,7 +7,7 @@ title: "Config"
 
 # `openclaw config`
 
-Config helpers for non-interactive edits in `openclaw.json`: get/set/unset/file/schema/validate
+Config helpers for non-interactive edits in `iclaw.json`: get/set/unset/file/schema/validate
 values by path and print the active config file. Run without a subcommand to
 open the configure wizard (same as `openclaw configure`).
 
@@ -49,7 +49,7 @@ openclaw config validate --json
 
 ### `config schema`
 
-Print the generated JSON schema for `openclaw.json` to stdout as JSON.
+Print the generated JSON schema for `iclaw.json` to stdout as JSON.
 
 What it includes:
 
@@ -234,7 +234,7 @@ openclaw config set secrets.providers.vault \
 
 ## Dry run
 
-Use `--dry-run` to validate changes without writing `openclaw.json`.
+Use `--dry-run` to validate changes without writing `iclaw.json`.
 
 ```bash
 openclaw config set channels.discord.token \
@@ -309,7 +309,7 @@ Success example:
 {
   "ok": true,
   "operations": 1,
-  "configPath": "~/.openclaw/openclaw.json",
+  "configPath": "~/.iclaw/iclaw.json",
   "inputModes": ["builder"],
   "checks": {
     "schema": false,
@@ -327,7 +327,7 @@ Failure example:
 {
   "ok": false,
   "operations": 1,
-  "configPath": "~/.openclaw/openclaw.json",
+  "configPath": "~/.iclaw/iclaw.json",
   "inputModes": ["builder"],
   "checks": {
     "schema": false,
@@ -359,8 +359,8 @@ If dry-run fails:
 `openclaw config set` and other OpenClaw-owned config writers validate the full
 post-change config before committing it to disk. If the new payload fails schema
 validation or looks like a destructive clobber, the active config is left alone
-and the rejected payload is saved beside it as `openclaw.json.rejected.*`.
-The active config path must be a regular file. Symlinked `openclaw.json`
+and the rejected payload is saved beside it as `iclaw.json.rejected.*`.
+The active config path must be a regular file. Symlinked `iclaw.json`
 layouts are unsupported for writes; use `ICLAW_CONFIG_PATH` to point directly
 at the real file instead.
 

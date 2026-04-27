@@ -271,7 +271,7 @@ Put config under `plugins.entries.memory-wiki.config`:
         config: {
           vaultMode: "isolated",
           vault: {
-            path: "~/.openclaw/wiki/main",
+            path: "~/.iclaw/wiki/main",
             renderMode: "obsidian",
           },
           obsidian: {

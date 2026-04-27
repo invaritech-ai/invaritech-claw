@@ -124,7 +124,7 @@ Need the full install and dev setup? See [Getting Started](/start/getting-starte
 
 Open the browser Control UI after the Gateway starts.
 
-- Local default: [http://127.0.0.1:18789/](http://127.0.0.1:18789/)
+- Local default: [http://127.0.0.1:32768/](http://127.0.0.1:32768/)
 - Remote access: [Web surfaces](/web) and [Tailscale](/gateway/tailscale)
 
 <p align="center">
@@ -133,7 +133,7 @@ Open the browser Control UI after the Gateway starts.
 
 ## Configuration (optional)
 
-Config lives at `~/.openclaw/openclaw.json`.
+Config lives at `~/.iclaw/iclaw.json`.
 
 - If you **do nothing**, OpenClaw uses the bundled Pi binary in RPC mode with per-sender sessions.
 - If you want to lock it down, start with `channels.whatsapp.allowFrom` and (for groups) mention rules.

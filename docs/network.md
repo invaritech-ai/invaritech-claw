@@ -16,7 +16,7 @@ devices across localhost, LAN, and tailnet.
 
 Most operations flow through the Gateway (`openclaw gateway`), a single long-running process that owns channel connections and the WebSocket control plane.
 
-- **Loopback first**: the Gateway WS defaults to `ws://127.0.0.1:18789`.
+- **Loopback first**: the Gateway WS defaults to `ws://127.0.0.1:32768`.
   Non-loopback binds require a valid gateway auth path: shared-secret
   token/password auth, or a correctly configured non-loopback
   `trusted-proxy` deployment.

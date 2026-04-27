@@ -18,7 +18,7 @@ conceptual overviews, see:
 - [Active Memory](/concepts/active-memory) -- enabling the memory sub-agent for interactive sessions
 
 All memory search settings live under `agents.defaults.memorySearch` in
-`openclaw.json` unless noted otherwise.
+`iclaw.json` unless noted otherwise.
 
 If you are looking for the **active memory** feature toggle and sub-agent config,
 that lives under `plugins.entries.active-memory` instead of `memorySearch`.
@@ -380,10 +380,10 @@ similarity automatically.
 
 ## Index storage
 
-| Key                   | Type     | Default                               | Description                                 |
-| --------------------- | -------- | ------------------------------------- | ------------------------------------------- |
-| `store.path`          | `string` | `~/.openclaw/memory/{agentId}.sqlite` | Index location (supports `{agentId}` token) |
-| `store.fts.tokenizer` | `string` | `unicode61`                           | FTS5 tokenizer (`unicode61` or `trigram`)   |
+| Key                   | Type     | Default                            | Description                                 |
+| --------------------- | -------- | ---------------------------------- | ------------------------------------------- |
+| `store.path`          | `string` | `~/.iclaw/memory/{agentId}.sqlite` | Index location (supports `{agentId}` token) |
+| `store.fts.tokenizer` | `string` | `unicode61`                        | FTS5 tokenizer (`unicode61` or `trigram`)   |
 
 ---
 

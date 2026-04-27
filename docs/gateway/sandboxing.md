@@ -85,7 +85,7 @@ isolation is determined by Docker namespaces.
 **Docker-out-of-Docker (DooD) Constraints**:
 If you deploy the OpenClaw Gateway itself as a Docker container, it orchestrates sibling sandbox containers using the host's Docker socket (DooD). This introduces a specific path mapping constraint:
 
-- **Config Requires Host Paths**: The `openclaw.json` `workspace` configuration MUST contain the **Host's absolute path** (e.g. `/home/user/.openclaw/workspaces`), not the internal Gateway container path. When OpenClaw asks the Docker daemon to spawn a sandbox, the daemon evaluates paths relative to the Host OS namespace, not the Gateway namespace.
+- **Config Requires Host Paths**: The `iclaw.json` `workspace` configuration MUST contain the **Host's absolute path** (e.g. `/home/user/.openclaw/workspaces`), not the internal Gateway container path. When OpenClaw asks the Docker daemon to spawn a sandbox, the daemon evaluates paths relative to the Host OS namespace, not the Gateway namespace.
 - **FS Bridge Parity (Identical Volume Map)**: The OpenClaw Gateway native process also writes heartbeat and bridge files to the `workspace` directory. Because the Gateway evaluates the exact same string (the host path) from within its own containerized environment, the Gateway deployment MUST include an identical volume map linking the host namespace natively (`-v /home/user/.openclaw:/home/user/.openclaw`).
 
 If you map paths internally without absolute host parity, OpenClaw natively throws an `EACCES` permission error attempting to write its heartbeat inside the container environment because the fully qualified path string doesn't exist natively.
@@ -273,7 +273,7 @@ because the local workspace remains canonical anyway.
 
 `agents.defaults.sandbox.workspaceAccess` controls **what the sandbox can see**:
 
-- `"none"` (default): tools see a sandbox workspace under `~/.openclaw/sandboxes`.
+- `"none"` (default): tools see a sandbox workspace under `~/.iclaw/sandboxes`.
 - `"ro"`: mounts the agent workspace read-only at `/agent` (disables `write`/`edit`/`apply_patch`).
 - `"rw"`: mounts the agent workspace read/write at `/workspace`.
 

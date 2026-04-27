@@ -51,13 +51,13 @@ Disable it on the node if needed:
 ## Run (foreground)
 
 ```bash
-openclaw node run --host <gateway-host> --port 18789
+openclaw node run --host <gateway-host> --port 32768
 ```
 
 Options:
 
 - `--host <host>`: Gateway WebSocket host (default: `127.0.0.1`)
-- `--port <port>`: Gateway WebSocket port (default: `18789`)
+- `--port <port>`: Gateway WebSocket port (default: `32768`)
 - `--tls`: Use TLS for the gateway connection
 - `--tls-fingerprint <sha256>`: Expected TLS certificate fingerprint (sha256)
 - `--node-id <id>`: Override node id (clears pairing token)
@@ -77,7 +77,7 @@ Options:
 For a node connecting to a non-loopback `ws://` Gateway on a trusted private
 network, set `ICLAW_ALLOW_INSECURE_PRIVATE_WS=1`. Without it, node startup
 fails closed and asks you to use `wss://`, an SSH tunnel, or Tailscale.
-This is a process-environment opt-in, not an `openclaw.json` config key.
+This is a process-environment opt-in, not an `iclaw.json` config key.
 `openclaw node install` persists it into the supervised node service when it is
 present in the install command environment.
 
@@ -86,13 +86,13 @@ present in the install command environment.
 Install a headless node host as a user service.
 
 ```bash
-openclaw node install --host <gateway-host> --port 18789
+openclaw node install --host <gateway-host> --port 32768
 ```
 
 Options:
 
 - `--host <host>`: Gateway WebSocket host (default: `127.0.0.1`)
-- `--port <port>`: Gateway WebSocket port (default: `18789`)
+- `--port <port>`: Gateway WebSocket port (default: `32768`)
 - `--tls`: Use TLS for the gateway connection
 - `--tls-fingerprint <sha256>`: Expected TLS certificate fingerprint (sha256)
 - `--node-id <id>`: Override node id (clears pairing token)
@@ -128,13 +128,13 @@ the previous pending request is superseded and a new `requestId` is created.
 Run `openclaw devices list` again before approval.
 
 The node host stores its node id, token, display name, and gateway connection info in
-`~/.openclaw/node.json`.
+`~/.iclaw/node.json`.
 
 ## Exec approvals
 
 `system.run` is gated by local exec approvals:
 
-- `~/.openclaw/exec-approvals.json`
+- `~/.iclaw/exec-approvals.json`
 - [Exec approvals](/tools/exec-approvals)
 - `openclaw approvals --node <id|name|ip>` (edit from the Gateway)
 

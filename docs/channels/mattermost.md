@@ -478,7 +478,7 @@ Mattermost supports multiple accounts under `channels.mattermost.accounts`:
   `mattermost: failed to register slash commands` or
   `mattermost: native slash commands enabled but no commands could be registered`.
 - If `callbackUrl` is omitted and logs warn that the callback resolved to
-  `http://127.0.0.1:18789/...`, that URL is probably only reachable when
+  `http://127.0.0.1:32768/...`, that URL is probably only reachable when
   Mattermost runs on the same host/network namespace as OpenClaw. Set an
   explicit externally reachable `commands.callbackUrl` instead.
 - Buttons appear as white boxes: the agent may be sending malformed button data. Check that each button has both `text` and `callback_data` fields.

@@ -78,7 +78,7 @@ announce target when no explicit failure destination is configured.
 Note: retention/pruning is controlled in config:
 
 - `cron.sessionRetention` (default `24h`) prunes completed isolated run sessions.
-- `cron.runLog.maxBytes` + `cron.runLog.keepLines` prune `~/.openclaw/cron/runs/<jobId>.jsonl`.
+- `cron.runLog.maxBytes` + `cron.runLog.keepLines` prune `~/.iclaw/cron/runs/<jobId>.jsonl`.
 
 Upgrade note: if you have older cron jobs from before the current delivery/store format, run
 `openclaw doctor --fix`. Doctor now normalizes legacy cron fields (`jobId`, `schedule.cron`,

@@ -186,7 +186,7 @@ OpenClaw scans for plugins in this order (first match wins):
   </Step>
 
   <Step title="Global plugins">
-    `~/.openclaw/<plugin-root>/*.ts` and `~/.openclaw/<plugin-root>/*/index.ts`.
+    `~/.iclaw/<plugin-root>/*.ts` and `~/.iclaw/<plugin-root>/*/index.ts`.
   </Step>
 
   <Step title="Bundled plugins">

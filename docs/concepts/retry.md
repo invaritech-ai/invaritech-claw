@@ -48,7 +48,7 @@ title: "Retry policy"
 
 ## Configuration
 
-Set retry policy per provider in `~/.openclaw/openclaw.json`:
+Set retry policy per provider in `~/.iclaw/iclaw.json`:
 
 ```json5
 {

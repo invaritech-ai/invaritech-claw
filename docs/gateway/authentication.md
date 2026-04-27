@@ -38,10 +38,10 @@ openclaw models status
 ```
 
 3. If the Gateway runs under systemd/launchd, prefer putting the key in
-   `~/.openclaw/.env` so the daemon can read it:
+   `~/.iclaw/.env` so the daemon can read it:
 
 ```bash
-cat >> ~/.openclaw/.env <<'EOF'
+cat >> ~/.iclaw/.env <<'EOF'
 <PROVIDER>_API_KEY=...
 EOF
 ```
@@ -57,7 +57,7 @@ If you’d rather not manage env vars yourself, onboarding can store
 API keys for daemon use: `openclaw onboard`.
 
 See [Help](/help) for details on env inheritance (`env.shellEnv`,
-`~/.openclaw/.env`, systemd/launchd).
+`~/.iclaw/.env`, systemd/launchd).
 
 ## Anthropic: Claude CLI and token compatibility
 

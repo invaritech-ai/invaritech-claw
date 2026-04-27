@@ -365,9 +365,9 @@ Live tests discover credentials the same way the CLI does. Practical implication
 - If the CLI works, live tests should find the same keys.
 - If a live test says “no creds”, debug the same way you’d debug `openclaw models list` / model selection.
 
-- Per-agent auth profiles: `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (this is what “profile keys” means in the live tests)
-- Config: `~/.openclaw/openclaw.json` (or `ICLAW_CONFIG_PATH`)
-- Legacy state dir: `~/.openclaw/credentials/` (copied into the staged live home when present, but not the main profile-key store)
+- Per-agent auth profiles: `~/.iclaw/agents/<agentId>/agent/auth-profiles.json` (this is what “profile keys” means in the live tests)
+- Config: `~/.iclaw/iclaw.json` (or `ICLAW_CONFIG_PATH`)
+- Legacy state dir: `~/.iclaw/credentials/` (copied into the staged live home when present, but not the main profile-key store)
 - Live local runs copy the active config, per-agent `auth-profiles.json` files, legacy `credentials/`, and supported external CLI auth dirs into a temp test home by default; staged live homes skip `workspace/` and `sandboxes/`, and `agents.*.workspace` / `agentDir` path overrides are stripped so probes stay off your real host workspace.
 
 If you want to rely on env keys (e.g. exported in your `~/.profile`), run local tests after `source ~/.profile`, or use the Docker runners below (they can mount `~/.profile` into the container).

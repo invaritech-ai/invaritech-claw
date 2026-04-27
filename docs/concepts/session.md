@@ -76,8 +76,8 @@ sessions should expire on a timer.
 All session state is owned by the **gateway**. UI clients query the gateway for
 session data.
 
-- **Store:** `~/.openclaw/agents/<agentId>/sessions/sessions.json`
-- **Transcripts:** `~/.openclaw/agents/<agentId>/sessions/<sessionId>.jsonl`
+- **Store:** `~/.iclaw/agents/<agentId>/sessions/sessions.json`
+- **Transcripts:** `~/.iclaw/agents/<agentId>/sessions/<sessionId>.jsonl`
 
 ## Session maintenance
 

@@ -16,7 +16,7 @@ Scope intent:
 
 ## Supported credentials
 
-### `openclaw.json` targets (`secrets configure` + `secrets apply` + `secrets audit`)
+### `iclaw.json` targets (`secrets configure` + `secrets apply` + `secrets audit`)
 
 [//]: # "secretref-supported-list-start"
 

@@ -6,7 +6,7 @@ read_when:
   - You are validating channel, model, gateway, or tool config blocks
 ---
 
-Core config reference for **`iclaw.json`** under your state directory (default `~/.iclaw`; legacy `~/.openclaw` / `~/.clawdbot` may be used when `~/.iclaw` is absent unless **`ICLAW_STRICT_HOME`** is set). For a task-oriented overview, see [Configuration](/gateway/configuration).
+Core config reference for **`iclaw.json`** under your state directory (default `~/.iclaw`; legacy **`~/.openclaw`** / **`~/.clawdbot`** may be used when `~/.iclaw` is absent unless **`ICLAW_STRICT_HOME`** is set). For a task-oriented overview, see [Configuration](/gateway/configuration).
 
 This page covers the main OpenClaw config surfaces and links out when a subsystem has its own deeper reference. It does **not** try to inline every channel/plugin-owned command catalog or every deep memory/QMD knob on one page.
 
@@ -26,13 +26,13 @@ Config format is **JSON5** (comments + trailing commas allowed). All fields are 
 
 ### State directory and environment overrides
 
-| Variable             | Purpose                                                                                                                                                                                                                                                |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `ICLAW_STATE_DIR`    | Override state directory (sessions, credentials, default config path).                                                                                                                                                                                 |
-| `ICLAW_CONFIG_PATH`  | Explicit config file path.                                                                                                                                                                                                                             |
-| `ICLAW_HOME`         | Home root used to resolve default `~/.iclaw`.                                                                                                                                                                                                          |
-| `ICLAW_STRICT_HOME`  | When truthy (`1`, `true`, `yes`, `on`): never use legacy `~/.openclaw` / `~/.clawdbot` or legacy config filenames; canonical file is `<state>/iclaw.json`. Config load paths throw if that file is missing—run `iclaw setup` or create the file first. |
-| `ICLAW_GATEWAY_PORT` | Env override for gateway listen port (see `gateway.port` precedence below).                                                                                                                                                                            |
+| Variable             | Purpose                                                                                                                                                                                                                                                        |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ICLAW_STATE_DIR`    | Override state directory (sessions, credentials, default config path).                                                                                                                                                                                         |
+| `ICLAW_CONFIG_PATH`  | Explicit config file path.                                                                                                                                                                                                                                     |
+| `ICLAW_HOME`         | Home root used to resolve default `~/.iclaw`.                                                                                                                                                                                                                  |
+| `ICLAW_STRICT_HOME`  | When truthy (`1`, `true`, `yes`, `on`): never use legacy **`~/.openclaw`** / **`~/.clawdbot`** or legacy config filenames; canonical file is `<state>/iclaw.json`. Config load paths throw if that file is missing—run `iclaw setup` or create the file first. |
+| `ICLAW_GATEWAY_PORT` | Env override for gateway listen port (see `gateway.port` precedence below).                                                                                                                                                                                    |
 
 Default gateway port when nothing else is set is **32768** (see `DEFAULT_GATEWAY_PORT` in `src/config/paths.ts`).
 
@@ -123,7 +123,7 @@ provider / base-URL setup moved to a dedicated page — see
 }
 ```
 
-- Loaded from `~/.openclaw/extensions`, `<workspace>/.openclaw/extensions`, plus `plugins.load.paths`.
+- Loaded from `~/.iclaw/extensions`, `<workspace>/.openclaw/extensions`, plus `plugins.load.paths`.
 - Discovery accepts native OpenClaw plugins plus compatible Codex bundles and Claude bundles, including manifestless Claude default-layout bundles.
 - **Config changes require a gateway restart.**
 - `allow`: optional allowlist (only listed plugins load). `deny` wins.
@@ -333,7 +333,7 @@ See [Plugins](/tools/plugin).
 - `remote.transport`: `ssh` (default) or `direct` (ws/wss). For `direct`, `remote.url` must be `ws://` or `wss://`.
 - `ICLAW_ALLOW_INSECURE_PRIVATE_WS=1`: client-side process-environment
   break-glass override that allows plaintext `ws://` to trusted private-network
-  IPs; default remains loopback-only for plaintext. There is no `openclaw.json`
+  IPs; default remains loopback-only for plaintext. There is no `iclaw.json`
   equivalent, and browser private-network config such as
   `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork` does not affect Gateway
   WebSocket clients.
@@ -375,12 +375,12 @@ See [Plugins](/tools/plugin).
 Run multiple gateways on one host with unique ports and state dirs:
 
 ```bash
-ICLAW_CONFIG_PATH=~/.openclaw/a.json \
-ICLAW_STATE_DIR=~/.openclaw-a \
+ICLAW_CONFIG_PATH=~/.iclaw/a.json \
+ICLAW_STATE_DIR=~/.iclaw-a \
 openclaw gateway --port 19001
 ```
 
-Convenience flags: `--dev` (uses `~/.openclaw-dev` + port `19001`), `--profile <name>` (uses `~/.openclaw-<name>`).
+Convenience flags: `--dev` (uses `~/.iclaw-dev` + port `19001`), `--profile <name>` (uses `~/.iclaw-<name>`).
 
 See [Multiple Gateways](/gateway/multiple-gateways).
 
@@ -444,7 +444,7 @@ See [Multiple Gateways](/gateway/multiple-gateways).
     allowedSessionKeyPrefixes: ["hook:", "hook:gmail:"],
     allowedAgentIds: ["hooks", "main"],
     presets: ["gmail"],
-    transformsDir: "~/.openclaw/hooks/transforms",
+    transformsDir: "~/.iclaw/hooks/transforms",
     mappings: [
       {
         match: { path: "gmail" },
@@ -536,7 +536,7 @@ Validation and safety notes:
 ```json5
 {
   canvasHost: {
-    root: "~/.openclaw/workspace/canvas",
+    root: "~/.iclaw/workspace/canvas",
     liveReload: true,
     // enabled: false, // or ICLAW_SKIP_CANVAS_HOST=1
   },
@@ -586,7 +586,7 @@ Validation and safety notes:
 }
 ```
 
-Writes a unicast DNS-SD zone under `~/.openclaw/dns/`. For cross-network discovery, pair with a DNS server (CoreDNS recommended) + Tailscale split DNS.
+Writes a unicast DNS-SD zone under `~/.iclaw/dns/`. For cross-network discovery, pair with a DNS server (CoreDNS recommended) + Tailscale split DNS.
 
 Setup: `openclaw dns setup --apply`.
 
@@ -612,7 +612,7 @@ Setup: `openclaw dns setup --apply`.
 ```
 
 - Inline env vars are only applied if the process env is missing the key.
-- `.env` files: CWD `.env` + `~/.openclaw/.env` (neither overrides existing vars).
+- `.env` files: CWD `.env` + `~/.iclaw/.env` (neither overrides existing vars).
 - `shellEnv`: imports missing expected keys from your login shell profile.
 - See [Environment](/help/environment) for full precedence.
 
@@ -658,7 +658,7 @@ Validation:
 ### Supported credential surface
 
 - Canonical matrix: [SecretRef Credential Surface](/reference/secretref-credential-surface)
-- `secrets apply` targets supported `openclaw.json` credential paths.
+- `secrets apply` targets supported `iclaw.json` credential paths.
 - `auth-profiles.json` refs are included in runtime resolution and audit coverage.
 
 ### Secret providers config
@@ -670,7 +670,7 @@ Validation:
       default: { source: "env" }, // optional explicit env provider
       filemain: {
         source: "file",
-        path: "~/.openclaw/secrets.json",
+        path: "~/.iclaw/secrets.json",
         mode: "json",
         timeoutMs: 5000,
       },
@@ -724,7 +724,7 @@ Notes:
 - `auth-profiles.json` supports value-level refs (`keyRef` for `api_key`, `tokenRef` for `token`) for static credential modes.
 - OAuth-mode profiles (`auth.profiles.<id>.mode = "oauth"`) do not support SecretRef-backed auth-profile credentials.
 - Static runtime credentials come from in-memory resolved snapshots; legacy static `auth.json` entries are scrubbed when discovered.
-- Legacy OAuth imports from `~/.openclaw/credentials/oauth.json`.
+- Legacy OAuth imports from `~/.iclaw/credentials/oauth.json`.
 - See [OAuth](/concepts/oauth).
 - Secrets runtime behavior and `audit/configure/apply` tooling: [Secrets Management](/gateway/secrets).
 
@@ -812,7 +812,7 @@ Notes:
 
     cacheTrace: {
       enabled: false,
-      filePath: "~/.openclaw/logs/cache-trace.jsonl",
+      filePath: "~/.iclaw/logs/cache-trace.jsonl",
       includeMessages: true,
       includePrompt: true,
       includeSystem: true,
@@ -1109,7 +1109,7 @@ Template placeholders expanded in `tools.media.models[].args`:
 Split config into multiple files:
 
 ```json5
-// ~/.openclaw/openclaw.json
+// ~/.iclaw/iclaw.json
 {
   gateway: { port: 32768 },
   agents: { $include: "./agents.json5" },
@@ -1125,8 +1125,8 @@ Split config into multiple files:
 - Array of files: deep-merged in order (later overrides earlier).
 - Sibling keys: merged after includes (override included values).
 - Nested includes: up to 10 levels deep.
-- Paths: resolved relative to the including file, but must stay inside the top-level config directory (`dirname` of `openclaw.json`). Absolute/`../` forms are allowed only when they still resolve inside that boundary.
-- OpenClaw-owned writes that change only one top-level section backed by a single-file include write through to that included file. For example, `plugins install` updates `plugins: { $include: "./plugins.json5" }` in `plugins.json5` and leaves `openclaw.json` intact.
+- Paths: resolved relative to the including file, but must stay inside the top-level config directory (`dirname` of `iclaw.json`). Absolute/`../` forms are allowed only when they still resolve inside that boundary.
+- OpenClaw-owned writes that change only one top-level section backed by a single-file include write through to that included file. For example, `plugins install` updates `plugins: { $include: "./plugins.json5" }` in `plugins.json5` and leaves `iclaw.json` intact.
 - Root includes, include arrays, and includes with sibling overrides are read-only for OpenClaw-owned writes; those writes fail closed instead of flattening the config.
 - Errors: clear messages for missing files, parse errors, and circular includes.
 

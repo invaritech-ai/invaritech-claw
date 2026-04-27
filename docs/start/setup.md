@@ -15,7 +15,7 @@ For onboarding details, see [Onboarding (CLI)](/start/wizard).
 
 Pick a setup workflow based on how often you want updates and whether you want to run the Gateway yourself:
 
-- **Tailoring lives outside the repo:** keep your config and workspace in `~/.openclaw/openclaw.json` and `~/.openclaw/workspace/` so repo updates don't touch them.
+- **Tailoring lives outside the repo:** keep your config and workspace in `~/.iclaw/iclaw.json` and `~/.iclaw/workspace/` so repo updates don't touch them.
 - **Stable workflow (recommended for most):** install the macOS app and let it run the bundled Gateway.
 - **Bleeding edge workflow (dev):** run the Gateway yourself via `pnpm gateway:watch`, then let the macOS app attach in Local mode.
 
@@ -29,8 +29,8 @@ Pick a setup workflow based on how often you want updates and whether you want t
 
 If you want “100% tailored to me” _and_ easy updates, keep your customization in:
 
-- **Config:** `~/.openclaw/openclaw.json` (JSON/JSON5-ish)
-- **Workspace:** `~/.openclaw/workspace` (skills, prompts, memories; make it a private git repo)
+- **Config:** `~/.iclaw/iclaw.json` (JSON/JSON5-ish)
+- **Workspace:** `~/.iclaw/workspace` (skills, prompts, memories; make it a private git repo)
 
 Bootstrap once:
 
@@ -51,7 +51,7 @@ If you don’t have a global install yet, run it via `pnpm openclaw setup` (or `
 After `pnpm build`, you can run the packaged CLI directly:
 
 ```bash
-node iclaw.mjs gateway --port 18789 --verbose
+node iclaw.mjs gateway --port 32768 --verbose
 ```
 
 ## Stable workflow (macOS app first)
@@ -128,32 +128,32 @@ openclaw health
 
 ### Common footguns
 
-- **Wrong port:** Gateway WS defaults to `ws://127.0.0.1:18789`; keep app + CLI on the same port.
+- **Wrong port:** Gateway WS defaults to `ws://127.0.0.1:32768`; keep app + CLI on the same port.
 - **Where state lives:**
-  - Channel/provider state: `~/.openclaw/credentials/`
-  - Model auth profiles: `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
-  - Sessions: `~/.openclaw/agents/<agentId>/sessions/`
+  - Channel/provider state: `~/.iclaw/credentials/`
+  - Model auth profiles: `~/.iclaw/agents/<agentId>/agent/auth-profiles.json`
+  - Sessions: `~/.iclaw/agents/<agentId>/sessions/`
   - Logs: `/tmp/openclaw/`
 
 ## Credential storage map
 
 Use this when debugging auth or deciding what to back up:
 
-- **WhatsApp**: `~/.openclaw/credentials/whatsapp/<accountId>/creds.json`
+- **WhatsApp**: `~/.iclaw/credentials/whatsapp/<accountId>/creds.json`
 - **Telegram bot token**: config/env or `channels.telegram.tokenFile` (regular file only; symlinks rejected)
 - **Discord bot token**: config/env or SecretRef (env/file/exec providers)
 - **Slack tokens**: config/env (`channels.slack.*`)
 - **Pairing allowlists**:
-  - `~/.openclaw/credentials/<channel>-allowFrom.json` (default account)
-  - `~/.openclaw/credentials/<channel>-<accountId>-allowFrom.json` (non-default accounts)
-- **Model auth profiles**: `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`
-- **File-backed secrets payload (optional)**: `~/.openclaw/secrets.json`
-- **Legacy OAuth import**: `~/.openclaw/credentials/oauth.json`
+  - `~/.iclaw/credentials/<channel>-allowFrom.json` (default account)
+  - `~/.iclaw/credentials/<channel>-<accountId>-allowFrom.json` (non-default accounts)
+- **Model auth profiles**: `~/.iclaw/agents/<agentId>/agent/auth-profiles.json`
+- **File-backed secrets payload (optional)**: `~/.iclaw/secrets.json`
+- **Legacy OAuth import**: `~/.iclaw/credentials/oauth.json`
   More detail: [Security](/gateway/security#credential-storage-map).
 
 ## Updating (without wrecking your setup)
 
-- Keep `~/.openclaw/workspace` and `~/.openclaw/` as “your stuff”; don’t put personal prompts/config into the `openclaw` repo.
+- Keep `~/.iclaw/workspace` and `~/.iclaw/` as “your stuff”; don’t put personal prompts/config into the `openclaw` repo.
 - Updating source: `git pull` + your chosen package-manager install step (`pnpm install` by default; `bun install` for Bun workflow) + keep using the matching `gateway:watch` command.
 
 ## Linux (systemd user service)

@@ -567,12 +567,12 @@ Notes:
 Use narrow SDK subpaths instead of the monolithic `openclaw/plugin-sdk` root
 barrel when authoring new plugins. Core subpaths:
 
-| Subpath                             | Purpose                                            |
-| ----------------------------------- | -------------------------------------------------- |
-| `openclaw/plugin-sdk/plugin-entry`  | Plugin registration primitives                     |
-| `openclaw/plugin-sdk/channel-core`  | Channel entry/build helpers                        |
-| `openclaw/plugin-sdk/core`          | Generic shared helpers and umbrella contract       |
-| `openclaw/plugin-sdk/config-schema` | Root `openclaw.json` Zod schema (`OpenClawSchema`) |
+| Subpath                             | Purpose                                         |
+| ----------------------------------- | ----------------------------------------------- |
+| `openclaw/plugin-sdk/plugin-entry`  | Plugin registration primitives                  |
+| `openclaw/plugin-sdk/channel-core`  | Channel entry/build helpers                     |
+| `openclaw/plugin-sdk/core`          | Generic shared helpers and umbrella contract    |
+| `openclaw/plugin-sdk/config-schema` | Root `iclaw.json` Zod schema (`OpenClawSchema`) |
 
 Channel plugins pick from a family of narrow seams — `channel-setup`,
 `setup-runtime`, `setup-adapter-runtime`, `setup-tools`, `channel-pairing`,
@@ -876,9 +876,9 @@ Useful `openclaw.channel` fields beyond the minimal example:
 OpenClaw can also merge **external channel catalogs** (for example, an MPM
 registry export). Drop a JSON file at one of:
 
-- `~/.openclaw/mpm/plugins.json`
-- `~/.openclaw/mpm/catalog.json`
-- `~/.openclaw/plugins/catalog.json`
+- `~/.iclaw/mpm/plugins.json`
+- `~/.iclaw/mpm/catalog.json`
+- `~/.iclaw/plugins/catalog.json`
 
 Or point `ICLAW_PLUGIN_CATALOG_PATHS` (or `ICLAW_MPM_CATALOG_PATHS`) at
 one or more JSON files (comma/semicolon/`PATH`-delimited). Each file should

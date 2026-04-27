@@ -76,7 +76,7 @@ order shown. Set `memorySearch.provider` to override.
 OpenClaw indexes `MEMORY.md` and `memory/*.md` into chunks (~400 tokens with
 80-token overlap) and stores them in a per-agent SQLite database.
 
-- **Index location:** `~/.openclaw/memory/<agentId>.sqlite`
+- **Index location:** `~/.iclaw/memory/<agentId>.sqlite`
 - **File watching:** changes to memory files trigger a debounced reindex (1.5s).
 - **Auto-reindex:** when the embedding provider, model, or chunking config
   changes, the entire index is rebuilt automatically.

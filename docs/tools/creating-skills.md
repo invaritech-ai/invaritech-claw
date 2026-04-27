@@ -18,7 +18,7 @@ For how skills are loaded and prioritized, see [Skills](/tools/skills).
     Skills live in your workspace. Create a new folder:
 
     ```bash
-    mkdir -p ~/.openclaw/workspace/skills/hello-world
+    mkdir -p ~/.iclaw/workspace/skills/hello-world
     ```
 
   </Step>
@@ -105,7 +105,7 @@ The YAML frontmatter supports these fields:
 | `\<workspace\>/skills/`         | Highest    | Per-agent             |
 | `\<workspace\>/.agents/skills/` | High       | Per-workspace agent   |
 | `~/.agents/skills/`             | Medium     | Shared agent profile  |
-| `~/.openclaw/skills/`           | Medium     | Shared (all agents)   |
+| `~/.iclaw/skills/`              | Medium     | Shared (all agents)   |
 | Bundled (shipped with OpenClaw) | Low        | Global                |
 | `skills.load.extraDirs`         | Lowest     | Custom shared folders |
 

@@ -38,7 +38,7 @@ Supported channels: `bluebubbles`, `discord`, `feishu`, `googlechat`, `imessage`
 
 ### Where the state lives
 
-Stored under `~/.openclaw/credentials/`:
+Stored under `~/.iclaw/credentials/`:
 
 - Pending requests: `<channel>-pairing.json`
 - Approved allowlist store:
@@ -106,7 +106,7 @@ requested access before you approve.
 
 ### Node pairing state storage
 
-Stored under `~/.openclaw/devices/`:
+Stored under `~/.iclaw/devices/`:
 
 - `pending.json` (short-lived; pending requests expire)
 - `paired.json` (paired devices + tokens)

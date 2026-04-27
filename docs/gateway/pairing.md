@@ -149,10 +149,10 @@ operator auth.
 
 ## Storage (local, private)
 
-Pairing state is stored under the Gateway state directory (default `~/.openclaw`):
+Pairing state is stored under the Gateway state directory (default `~/.iclaw`):
 
-- `~/.openclaw/nodes/paired.json`
-- `~/.openclaw/nodes/pending.json`
+- `~/.iclaw/nodes/paired.json`
+- `~/.iclaw/nodes/pending.json`
 
 If you override `ICLAW_STATE_DIR`, the `nodes/` folder moves with it.
 

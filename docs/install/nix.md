@@ -79,8 +79,8 @@ OpenClaw reads JSON5 config from `ICLAW_CONFIG_PATH` and stores mutable data in 
 | Variable            | Default                                 |
 | ------------------- | --------------------------------------- |
 | `ICLAW_HOME`        | `HOME` / `USERPROFILE` / `os.homedir()` |
-| `ICLAW_STATE_DIR`   | `~/.openclaw`                           |
-| `ICLAW_CONFIG_PATH` | `$ICLAW_STATE_DIR/openclaw.json`        |
+| `ICLAW_STATE_DIR`   | `~/.iclaw`                              |
+| `ICLAW_CONFIG_PATH` | `$ICLAW_STATE_DIR/iclaw.json`           |
 
 ## Related
 

@@ -72,7 +72,7 @@ In practice, that means the rescue bot gets its own:
 
 - config file
 - state directory
-- workspace (by default `~/.openclaw/workspace-rescue`)
+- workspace (by default `~/.iclaw/workspace-rescue`)
 - managed service name
 
 The prompts are otherwise the same as normal onboarding.
@@ -88,7 +88,7 @@ own base port:
 ```bash
 # main (default profile)
 openclaw setup
-openclaw gateway --port 18789
+openclaw gateway --port 32768
 
 # extra gateway
 openclaw --profile ops setup
@@ -99,7 +99,7 @@ If you want both Gateways to use named profiles, that also works:
 
 ```bash
 openclaw --profile main setup
-openclaw --profile main gateway --port 18789
+openclaw --profile main gateway --port 32768
 
 openclaw --profile ops setup
 openclaw --profile ops gateway --port 19789
@@ -148,12 +148,12 @@ If you override any of these in config or env, you must keep them unique per ins
 ## Manual env example
 
 ```bash
-ICLAW_CONFIG_PATH=~/.openclaw/main.json \
-ICLAW_STATE_DIR=~/.openclaw \
-openclaw gateway --port 18789
+ICLAW_CONFIG_PATH=~/.iclaw/main.json \
+ICLAW_STATE_DIR=~/.iclaw \
+openclaw gateway --port 32768
 
-ICLAW_CONFIG_PATH=~/.openclaw/rescue.json \
-ICLAW_STATE_DIR=~/.openclaw-rescue \
+ICLAW_CONFIG_PATH=~/.iclaw/rescue.json \
+ICLAW_STATE_DIR=~/.iclaw-rescue \
 openclaw gateway --port 19789
 ```
 

@@ -21,7 +21,7 @@ Your agent has three memory-related files:
 - **`DREAMS.md`** (optional) -- Dream Diary and dreaming sweep
   summaries for human review, including grounded historical backfill entries.
 
-These files live in the agent workspace (default `~/.openclaw/workspace`).
+These files live in the agent workspace (default `~/.iclaw/workspace`).
 
 <Tip>
 If you want your agent to remember something, just ask it: "Remember that I

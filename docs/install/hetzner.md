@@ -30,10 +30,10 @@ See [Security](/gateway/security) and [VPS hosting](/vps).
 - Rent a small Linux server (Hetzner VPS)
 - Install Docker (isolated app runtime)
 - Start the OpenClaw Gateway in Docker
-- Persist `~/.openclaw` + `~/.openclaw/workspace` on the host (survives restarts/rebuilds)
+- Persist `~/.iclaw` + `~/.iclaw/workspace` on the host (survives restarts/rebuilds)
 - Access the Control UI from your laptop via an SSH tunnel
 
-That mounted `~/.openclaw` state includes `openclaw.json`, per-agent
+That mounted `~/.iclaw` state includes `iclaw.json`, per-agent
 `agents/<agentId>/agent/auth-profiles.json`, and `.env`.
 
 The Gateway can be accessed via:
@@ -136,7 +136,7 @@ For the generic Docker flow, see [Docker](/install/docker).
     ICLAW_IMAGE=openclaw:latest
     ICLAW_GATEWAY_TOKEN=
     ICLAW_GATEWAY_BIND=lan
-    ICLAW_GATEWAY_PORT=18789
+    ICLAW_GATEWAY_PORT=32768
 
     ICLAW_CONFIG_DIR=/root/.openclaw
     ICLAW_WORKSPACE_DIR=/root/.openclaw/workspace
@@ -158,7 +158,7 @@ For the generic Docker flow, see [Docker](/install/docker).
 
     This `.env` file is for container/runtime env such as `ICLAW_GATEWAY_TOKEN`.
     Stored provider OAuth/API-key auth lives in the mounted
-    `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`.
+    `~/.iclaw/agents/<agentId>/agent/auth-profiles.json`.
 
   </Step>
 
@@ -189,7 +189,7 @@ For the generic Docker flow, see [Docker](/install/docker).
         ports:
           # Recommended: keep the Gateway loopback-only on the VPS; access via SSH tunnel.
           # To expose it publicly, remove the `127.0.0.1:` prefix and firewall accordingly.
-          - "127.0.0.1:${ICLAW_GATEWAY_PORT}:18789"
+          - "127.0.0.1:${ICLAW_GATEWAY_PORT}:32768"
         command:
           [
             "node",
@@ -221,12 +221,12 @@ For the generic Docker flow, see [Docker](/install/docker).
     After the shared build and launch steps, tunnel from your laptop:
 
     ```bash
-    ssh -N -L 18789:127.0.0.1:18789 root@YOUR_VPS_IP
+    ssh -N -L 32768:127.0.0.1:32768 root@YOUR_VPS_IP
     ```
 
     Open:
 
-    `http://127.0.0.1:18789/`
+    `http://127.0.0.1:32768/`
 
     Paste the configured shared secret. This guide uses the gateway token by
     default; if you switched to password auth, use that password instead.

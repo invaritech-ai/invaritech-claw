@@ -130,7 +130,7 @@ Define providers under `secrets.providers`:
       default: { source: "env" },
       filemain: {
         source: "file",
-        path: "~/.openclaw/secrets.json",
+        path: "~/.iclaw/secrets.json",
         mode: "json", // or "singleValue"
       },
       vault: {
@@ -368,7 +368,7 @@ Runtime-minted or rotating credentials and OAuth refresh material are intentiona
 Warning and audit signals:
 
 - `SECRETS_REF_OVERRIDES_PLAINTEXT` (runtime warning)
-- `REF_SHADOWED` (audit finding when `auth-profiles.json` credentials take precedence over `openclaw.json` refs)
+- `REF_SHADOWED` (audit finding when `auth-profiles.json` credentials take precedence over `iclaw.json` refs)
 
 Google Chat compatibility behavior:
 
@@ -444,10 +444,10 @@ openclaw secrets audit --check
 
 Findings include:
 
-- plaintext values at rest (`openclaw.json`, `auth-profiles.json`, `.env`, and generated `agents/*/agent/models.json`)
+- plaintext values at rest (`iclaw.json`, `auth-profiles.json`, `.env`, and generated `agents/*/agent/models.json`)
 - plaintext sensitive provider header residues in generated `models.json` entries
 - unresolved refs
-- precedence shadowing (`auth-profiles.json` taking priority over `openclaw.json` refs)
+- precedence shadowing (`auth-profiles.json` taking priority over `iclaw.json` refs)
 - legacy residues (`auth.json`, OAuth reminders)
 
 Exec note:
@@ -464,7 +464,7 @@ Header residue note:
 Interactive helper that:
 
 - configures `secrets.providers` first (`env`/`file`/`exec`, add/edit/remove)
-- lets you select supported secret-bearing fields in `openclaw.json` plus `auth-profiles.json` for one agent scope
+- lets you select supported secret-bearing fields in `iclaw.json` plus `auth-profiles.json` for one agent scope
 - can create a new `auth-profiles.json` mapping directly in the target picker
 - captures SecretRef details (`source`, `provider`, `id`)
 - runs preflight resolution

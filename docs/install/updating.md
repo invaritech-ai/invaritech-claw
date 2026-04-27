@@ -69,7 +69,7 @@ ReadWritePaths=/var/lib/openclaw /home/openclaw/.openclaw /tmp
 ```
 
 If `ICLAW_PLUGIN_STAGE_DIR` is not set, OpenClaw uses `$STATE_DIRECTORY` when
-systemd provides it, then falls back to `~/.openclaw/plugin-runtime-deps`.
+systemd provides it, then falls back to `~/.iclaw/plugin-runtime-deps`.
 
 ### Bundled plugin runtime dependencies
 
@@ -85,7 +85,7 @@ plugins and custom load paths still use `openclaw plugins install` or
 
 ## Auto-updater
 
-The auto-updater is off by default. Enable it in `~/.openclaw/openclaw.json`:
+The auto-updater is off by default. Enable it in `~/.iclaw/iclaw.json`:
 
 ```json5
 {

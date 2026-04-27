@@ -89,7 +89,7 @@ OpenClaw accepts dynamic Fireworks model ids too. Use the exact model or router 
     If the Gateway runs outside your interactive shell, make sure `FIREWORKS_API_KEY` is available to that process too.
 
     <Warning>
-    A key sitting only in `~/.profile` will not help a launchd/systemd daemon unless that environment is imported there as well. Set the key in `~/.openclaw/.env` or via `env.shellEnv` to ensure the gateway process can read it.
+    A key sitting only in `~/.profile` will not help a launchd/systemd daemon unless that environment is imported there as well. Set the key in `~/.iclaw/.env` or via `env.shellEnv` to ensure the gateway process can read it.
     </Warning>
 
   </Accordion>

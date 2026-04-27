@@ -115,7 +115,7 @@ Run a persistent OpenClaw Gateway on Oracle Cloud's **Always Free** ARM tier (up
     openclaw --version
     systemctl --user status openclaw-gateway.service
     tailscale serve status
-    curl http://localhost:18789
+    curl http://localhost:32768
     ```
 
     Access the Control UI from any device on your tailnet:
@@ -134,10 +134,10 @@ Run a persistent OpenClaw Gateway on Oracle Cloud's **Always Free** ARM tier (up
 If Tailscale Serve is not working, use an SSH tunnel from your local machine:
 
 ```bash
-ssh -L 18789:127.0.0.1:18789 ubuntu@openclaw
+ssh -L 32768:127.0.0.1:32768 ubuntu@openclaw
 ```
 
-Then open `http://localhost:18789`.
+Then open `http://localhost:32768`.
 
 ## Troubleshooting
 

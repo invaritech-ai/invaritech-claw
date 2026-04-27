@@ -15,11 +15,11 @@ top-level keys, see [Configuration reference](/gateway/configuration-reference).
 
 ### `agents.defaults.workspace`
 
-Default: `~/.openclaw/workspace`.
+Default: `~/.iclaw/workspace`.
 
 ```json5
 {
-  agents: { defaults: { workspace: "~/.openclaw/workspace" } },
+  agents: { defaults: { workspace: "~/.iclaw/workspace" } },
 }
 ```
 
@@ -666,7 +666,7 @@ Optional sandboxing for the embedded agent. See [Sandboxing](/gateway/sandboxing
         backend: "docker", // docker | ssh | openshell
         scope: "agent", // session | agent | shared
         workspaceAccess: "none", // none | ro | rw
-        workspaceRoot: "~/.openclaw/sandboxes",
+        workspaceRoot: "~/.iclaw/sandboxes",
         docker: {
           image: "openclaw-sandbox:bookworm-slim",
           containerPrefix: "openclaw-sbx-",
@@ -787,7 +787,7 @@ When `backend: "openshell"` is selected, runtime-specific settings move to
 
 **Workspace access:**
 
-- `none`: per-scope sandbox workspace under `~/.openclaw/sandboxes`
+- `none`: per-scope sandbox workspace under `~/.iclaw/sandboxes`
 - `ro`: sandbox workspace at `/workspace`, agent workspace mounted read-only at `/agent`
 - `rw`: agent workspace mounted read/write at `/workspace`
 
@@ -841,7 +841,7 @@ Transport is SSH into the OpenShell sandbox, but the plugin owns sandbox lifecyc
 
 **`docker.binds`** mounts additional host directories; global and per-agent binds are merged.
 
-**Sandboxed browser** (`sandbox.browser.enabled`): Chromium + CDP in a container. noVNC URL injected into system prompt. Does not require `browser.enabled` in `openclaw.json`.
+**Sandboxed browser** (`sandbox.browser.enabled`): Chromium + CDP in a container. noVNC URL injected into system prompt. Does not require `browser.enabled` in `iclaw.json`.
 noVNC observer access uses VNC auth by default and OpenClaw emits a short-lived token URL (instead of exposing the password in the shared URL).
 
 - `allowHostControl: false` (default) blocks sandboxed sessions from targeting the host browser.
@@ -899,8 +899,8 @@ scripts/sandbox-browser-setup.sh   # optional browser image
         id: "main",
         default: true,
         name: "Main Agent",
-        workspace: "~/.openclaw/workspace",
-        agentDir: "~/.openclaw/agents/main/agent",
+        workspace: "~/.iclaw/workspace",
+        agentDir: "~/.iclaw/agents/main/agent",
         model: "anthropic/claude-opus-4-6", // or { primary, fallbacks }
         thinkingDefault: "high", // per-agent thinking level override
         reasoningDefault: "on", // per-agent reasoning visibility override
@@ -964,8 +964,8 @@ Run multiple isolated agents inside one Gateway. See [Multi-Agent](/concepts/mul
 {
   agents: {
     list: [
-      { id: "home", default: true, workspace: "~/.openclaw/workspace-home" },
-      { id: "work", workspace: "~/.openclaw/workspace-work" },
+      { id: "home", default: true, workspace: "~/.iclaw/workspace-home" },
+      { id: "work", workspace: "~/.iclaw/workspace-work" },
     ],
   },
   bindings: [
@@ -1007,7 +1007,7 @@ For `type: "acp"` entries, OpenClaw resolves by exact conversation identity (`ma
     list: [
       {
         id: "personal",
-        workspace: "~/.openclaw/workspace-personal",
+        workspace: "~/.iclaw/workspace-personal",
         sandbox: { mode: "off" },
       },
     ],
@@ -1025,7 +1025,7 @@ For `type: "acp"` entries, OpenClaw resolves by exact conversation identity (`ma
     list: [
       {
         id: "family",
-        workspace: "~/.openclaw/workspace-family",
+        workspace: "~/.iclaw/workspace-family",
         sandbox: { mode: "all", scope: "agent", workspaceAccess: "ro" },
         tools: {
           allow: [
@@ -1054,7 +1054,7 @@ For `type: "acp"` entries, OpenClaw resolves by exact conversation identity (`ma
     list: [
       {
         id: "public",
-        workspace: "~/.openclaw/workspace-public",
+        workspace: "~/.iclaw/workspace-public",
         sandbox: { mode: "all", scope: "agent", workspaceAccess: "none" },
         tools: {
           allow: [
@@ -1117,7 +1117,7 @@ See [Multi-Agent Sandbox & Tools](/tools/multi-agent-sandbox-tools) for preceden
       group: { mode: "idle", idleMinutes: 120 },
     },
     resetTriggers: ["/new", "/reset"],
-    store: "~/.openclaw/agents/{agentId}/sessions/sessions.json",
+    store: "~/.iclaw/agents/{agentId}/sessions/sessions.json",
     parentForkMaxTokens: 100000, // skip parent-thread fork above this token count (0 disables)
     maintenance: {
       mode: "warn", // warn | enforce
@@ -1255,7 +1255,7 @@ Batches rapid text-only messages from the same sender into a single agent turn. 
       modelOverrides: { enabled: true },
       maxTextLength: 4000,
       timeoutMs: 30000,
-      prefsPath: "~/.openclaw/settings/tts.json",
+      prefsPath: "~/.iclaw/settings/tts.json",
       elevenlabs: {
         apiKey: "elevenlabs_api_key",
         baseUrl: "https://api.elevenlabs.io",

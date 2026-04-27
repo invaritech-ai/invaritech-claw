@@ -86,7 +86,7 @@ and troubleshooting see the main [FAQ](/help/faq).
     openclaw onboard --install-daemon
     ```
 
-    The wizard can also build UI assets automatically. After onboarding, you typically run the Gateway on port **18789**.
+    The wizard can also build UI assets automatically. After onboarding, you typically run the Gateway on port **32768**.
 
     From source (contributors/dev):
 
@@ -110,7 +110,7 @@ and troubleshooting see the main [FAQ](/help/faq).
   <Accordion title="How do I authenticate the dashboard on localhost vs remote?">
     **Localhost (same machine):**
 
-    - Open `http://127.0.0.1:18789/`.
+    - Open `http://127.0.0.1:32768/`.
     - If it asks for shared-secret auth, paste the configured token or password into Control UI settings.
     - Token source: `gateway.auth.token` (or `ICLAW_GATEWAY_TOKEN`).
     - Password source: `gateway.auth.password` (or `ICLAW_GATEWAY_PASSWORD`).
@@ -120,9 +120,9 @@ and troubleshooting see the main [FAQ](/help/faq).
 
     - **Tailscale Serve** (recommended): keep bind loopback, run `openclaw gateway --tailscale serve`, open `https://<magicdns>/`. If `gateway.auth.allowTailscale` is `true`, identity headers satisfy Control UI/WebSocket auth (no pasted shared secret, assumes trusted gateway host); HTTP APIs still require shared-secret auth unless you deliberately use private-ingress `none` or trusted-proxy HTTP auth.
       Bad concurrent Serve auth attempts from the same client are serialized before the failed-auth limiter records them, so the second bad retry can already show `retry later`.
-    - **Tailnet bind**: run `openclaw gateway --bind tailnet --token "<token>"` (or configure password auth), open `http://<tailscale-ip>:18789/`, then paste the matching shared secret in dashboard settings.
+    - **Tailnet bind**: run `openclaw gateway --bind tailnet --token "<token>"` (or configure password auth), open `http://<tailscale-ip>:32768/`, then paste the matching shared secret in dashboard settings.
     - **Identity-aware reverse proxy**: keep the Gateway behind a non-loopback trusted proxy, configure `gateway.auth.mode: "trusted-proxy"`, then open the proxy URL.
-    - **SSH tunnel**: `ssh -N -L 18789:127.0.0.1:18789 user@host` then open `http://127.0.0.1:18789/`. Shared-secret auth still applies over the tunnel; paste the configured token or password if prompted.
+    - **SSH tunnel**: `ssh -N -L 32768:127.0.0.1:32768 user@host` then open `http://127.0.0.1:32768/`. Shared-secret auth still applies over the tunnel; paste the configured token or password if prompted.
 
     See [Dashboard](/web/dashboard) and [Web surfaces](/web) for bind modes and auth details.
 
@@ -215,8 +215,8 @@ and troubleshooting see the main [FAQ](/help/faq).
     state) as long as you copy **both** locations:
 
     1. Install OpenClaw on the new machine.
-    2. Copy `$ICLAW_STATE_DIR` (default: `~/.openclaw`) from the old machine.
-    3. Copy your workspace (default: `~/.openclaw/workspace`).
+    2. Copy `$ICLAW_STATE_DIR` (default: `~/.iclaw`) from the old machine.
+    3. Copy your workspace (default: `~/.iclaw/workspace`).
     4. Run `openclaw doctor` and restart the Gateway service.
 
     That preserves config, auth profiles, WhatsApp creds, sessions, and memory. If you're in
@@ -224,7 +224,7 @@ and troubleshooting see the main [FAQ](/help/faq).
 
     **Important:** if you only commit/push your workspace to GitHub, you're backing
     up **memory + bootstrap files**, but **not** session history or auth. Those live
-    under `~/.openclaw/` (for example `~/.openclaw/agents/<agentId>/sessions/`).
+    under `~/.iclaw/` (for example `~/.iclaw/agents/<agentId>/sessions/`).
 
     Related: [Migrating](/install/migrating), [Where things live on disk](#where-things-live-on-disk),
     [Agent workspace](/concepts/agent-workspace), [Doctor](/gateway/doctor),
@@ -641,7 +641,7 @@ and troubleshooting see the main [FAQ](/help/faq).
   </Accordion>
 
   <Accordion title="How do I set up Gemini CLI OAuth?">
-    Gemini CLI uses a **plugin auth flow**, not a client id or secret in `openclaw.json`.
+    Gemini CLI uses a **plugin auth flow**, not a client id or secret in `iclaw.json`.
 
     Steps:
 
@@ -770,7 +770,7 @@ and troubleshooting see the main [FAQ](/help/faq).
   <Accordion title="Can I switch between npm and git installs later?">
     Yes. Install the other flavor, then run Doctor so the gateway service points at the new entrypoint.
     This **does not delete your data** - it only changes the OpenClaw code install. Your state
-    (`~/.openclaw`) and workspace (`~/.openclaw/workspace`) stay untouched.
+    (`~/.iclaw`) and workspace (`~/.iclaw/workspace`) stay untouched.
 
     From npm to git:
 

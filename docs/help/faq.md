@@ -168,11 +168,11 @@ lives on the [First-run FAQ](/help/faq-first-run).
 
 <AccordionGroup>
   <Accordion title="How do I customize skills without keeping the repo dirty?">
-    Use managed overrides instead of editing the repo copy. Put your changes in `~/.openclaw/skills/<name>/SKILL.md` (or add a folder via `skills.load.extraDirs` in `~/.openclaw/openclaw.json`). Precedence is `<workspace>/skills` → `<workspace>/.agents/skills` → `~/.agents/skills` → `~/.openclaw/skills` → bundled → `skills.load.extraDirs`, so managed overrides still win over bundled skills without touching git. If you need the skill installed globally but only visible to some agents, keep the shared copy in `~/.openclaw/skills` and control visibility with `agents.defaults.skills` and `agents.list[].skills`. Only upstream-worthy edits should live in the repo and go out as PRs.
+    Use managed overrides instead of editing the repo copy. Put your changes in `~/.iclaw/skills/<name>/SKILL.md` (or add a folder via `skills.load.extraDirs` in `~/.iclaw/iclaw.json`). Precedence is `<workspace>/skills` → `<workspace>/.agents/skills` → `~/.agents/skills` → `~/.iclaw/skills` → bundled → `skills.load.extraDirs`, so managed overrides still win over bundled skills without touching git. If you need the skill installed globally but only visible to some agents, keep the shared copy in `~/.iclaw/skills` and control visibility with `agents.defaults.skills` and `agents.list[].skills`. Only upstream-worthy edits should live in the repo and go out as PRs.
   </Accordion>
 
   <Accordion title="Can I load skills from a custom folder?">
-    Yes. Add extra directories via `skills.load.extraDirs` in `~/.openclaw/openclaw.json` (lowest precedence). Default precedence is `<workspace>/skills` → `<workspace>/.agents/skills` → `~/.agents/skills` → `~/.openclaw/skills` → bundled → `skills.load.extraDirs`. `clawhub` installs into `./skills` by default, which OpenClaw treats as `<workspace>/skills` on the next session. If the skill should only be visible to certain agents, pair that with `agents.defaults.skills` or `agents.list[].skills`.
+    Yes. Add extra directories via `skills.load.extraDirs` in `~/.iclaw/iclaw.json` (lowest precedence). Default precedence is `<workspace>/skills` → `<workspace>/.agents/skills` → `~/.agents/skills` → `~/.iclaw/skills` → bundled → `skills.load.extraDirs`. `clawhub` installs into `./skills` by default, which OpenClaw treats as `<workspace>/skills` on the next session. If the skill should only be visible to certain agents, pair that with `agents.defaults.skills` or `agents.list[].skills`.
   </Accordion>
 
   <Accordion title="How can I use different models for different tasks?">
@@ -332,7 +332,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
     Native `openclaw skills install` writes into the active workspace `skills/`
     directory. Install the separate `clawhub` CLI only if you want to publish or
     sync your own skills. For shared installs across agents, put the skill under
-    `~/.openclaw/skills` and use `agents.defaults.skills` or
+    `~/.iclaw/skills` and use `agents.defaults.skills` or
     `agents.list[].skills` if you want to narrow which agents can see it.
 
   </Accordion>
@@ -372,7 +372,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
        ```
 
     2. Put the wrapper on `PATH` on the Linux host (for example `~/bin/memo`).
-    3. Override the skill metadata (workspace or `~/.openclaw/skills`) to allow Linux:
+    3. Override the skill metadata (workspace or `~/.iclaw/skills`) to allow Linux:
 
        ```markdown
        ---
@@ -409,7 +409,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
     openclaw skills update --all
     ```
 
-    Native installs land in the active workspace `skills/` directory. For shared skills across agents, place them in `~/.openclaw/skills/<name>/SKILL.md`. If only some agents should see a shared install, configure `agents.defaults.skills` or `agents.list[].skills`. Some skills expect binaries installed via Homebrew; on Linux that means Linuxbrew (see the Homebrew Linux FAQ entry above). See [Skills](/tools/skills), [Skills config](/tools/skills-config), and [ClawHub](/tools/clawhub).
+    Native installs land in the active workspace `skills/` directory. For shared skills across agents, place them in `~/.iclaw/skills/<name>/SKILL.md`. If only some agents should see a shared install, configure `agents.defaults.skills` or `agents.list[].skills`. Some skills expect binaries installed via Homebrew; on Linux that means Linuxbrew (see the Homebrew Linux FAQ entry above). See [Skills](/tools/skills), [Skills config](/tools/skills-config), and [ClawHub](/tools/clawhub).
 
   </Accordion>
 
@@ -545,7 +545,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
     No - **OpenClaw's state is local**, but **external services still see what you send them**.
 
     - **Local by default:** sessions, memory files, config, and workspace live on the Gateway host
-      (`~/.openclaw` + your workspace directory).
+      (`~/.iclaw` + your workspace directory).
     - **Remote by necessity:** messages you send to model providers (Anthropic/OpenAI/etc.) go to
       their APIs, and chat platforms (WhatsApp/Telegram/Slack/etc.) store message data on their
       servers.
@@ -557,11 +557,11 @@ lives on the [First-run FAQ](/help/faq-first-run).
   </Accordion>
 
   <Accordion title="Where does OpenClaw store its data?">
-    Everything lives under `$ICLAW_STATE_DIR` (default: `~/.openclaw`):
+    Everything lives under `$ICLAW_STATE_DIR` (default: `~/.iclaw`):
 
     | Path                                                            | Purpose                                                            |
     | --------------------------------------------------------------- | ------------------------------------------------------------------ |
-    | `$ICLAW_STATE_DIR/openclaw.json`                             | Main config (JSON5)                                                |
+    | `$ICLAW_STATE_DIR/iclaw.json`                             | Main config (JSON5)                                                |
     | `$ICLAW_STATE_DIR/credentials/oauth.json`                    | Legacy OAuth import (copied into auth profiles on first use)       |
     | `$ICLAW_STATE_DIR/agents/<agentId>/agent/auth-profiles.json` | Auth profiles (OAuth, API keys, and optional `keyRef`/`tokenRef`)  |
     | `$ICLAW_STATE_DIR/secrets.json`                              | Optional file-backed secret payload for `file` SecretRef providers |
@@ -571,27 +571,27 @@ lives on the [First-run FAQ](/help/faq-first-run).
     | `$ICLAW_STATE_DIR/agents/<agentId>/sessions/`                | Conversation history & state (per agent)                           |
     | `$ICLAW_STATE_DIR/agents/<agentId>/sessions/sessions.json`   | Session metadata (per agent)                                       |
 
-    Legacy single-agent path: `~/.openclaw/agent/*` (migrated by `openclaw doctor`).
+    Legacy single-agent path: `~/.iclaw/agent/*` (migrated by `openclaw doctor`).
 
-    Your **workspace** (AGENTS.md, memory files, skills, etc.) is separate and configured via `agents.defaults.workspace` (default: `~/.openclaw/workspace`).
+    Your **workspace** (AGENTS.md, memory files, skills, etc.) is separate and configured via `agents.defaults.workspace` (default: `~/.iclaw/workspace`).
 
   </Accordion>
 
   <Accordion title="Where should AGENTS.md / SOUL.md / USER.md / MEMORY.md live?">
-    These files live in the **agent workspace**, not `~/.openclaw`.
+    These files live in the **agent workspace**, not `~/.iclaw`.
 
     - **Workspace (per agent)**: `AGENTS.md`, `SOUL.md`, `IDENTITY.md`, `USER.md`,
       `MEMORY.md`, `memory/YYYY-MM-DD.md`, optional `HEARTBEAT.md`.
       Lowercase root `memory.md` is legacy repair input only; `openclaw doctor --fix`
       can merge it into `MEMORY.md` when both files exist.
-    - **State dir (`~/.openclaw`)**: config, channel/provider state, auth profiles, sessions, logs,
-      and shared skills (`~/.openclaw/skills`).
+    - **State dir (`~/.iclaw`)**: config, channel/provider state, auth profiles, sessions, logs,
+      and shared skills (`~/.iclaw/skills`).
 
-    Default workspace is `~/.openclaw/workspace`, configurable via:
+    Default workspace is `~/.iclaw/workspace`, configurable via:
 
     ```json5
     {
-      agents: { defaults: { workspace: "~/.openclaw/workspace" } },
+      agents: { defaults: { workspace: "~/.iclaw/workspace" } },
     }
     ```
 
@@ -611,7 +611,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
     private (for example GitHub private). This captures memory + AGENTS/SOUL/USER
     files, and lets you restore the assistant's "mind" later.
 
-    Do **not** commit anything under `~/.openclaw` (credentials, sessions, tokens, or encrypted secrets payloads).
+    Do **not** commit anything under `~/.iclaw` (credentials, sessions, tokens, or encrypted secrets payloads).
     If you need a full restore, back up both the workspace and the state directory
     separately (see the migration question above).
 
@@ -655,13 +655,13 @@ lives on the [First-run FAQ](/help/faq-first-run).
 
 <AccordionGroup>
   <Accordion title="What format is the config? Where is it?">
-    OpenClaw reads an optional **JSON5** config from `$ICLAW_CONFIG_PATH` (default: `~/.openclaw/openclaw.json`):
+    OpenClaw reads an optional **JSON5** config from `$ICLAW_CONFIG_PATH` (default: `~/.iclaw/iclaw.json`):
 
     ```
     $ICLAW_CONFIG_PATH
     ```
 
-    If the file is missing, it uses safe-ish defaults (including a default workspace of `~/.openclaw/workspace`).
+    If the file is missing, it uses safe-ish defaults (including a default workspace of `~/.iclaw/workspace`).
 
   </Accordion>
 
@@ -790,7 +790,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
     - If you use allowlists, add `web_search`/`web_fetch`/`x_search` or `group:web`.
     - `web_fetch` is enabled by default (unless explicitly disabled).
     - If `tools.web.fetch.provider` is omitted, OpenClaw auto-detects the first ready fetch fallback provider from available credentials. Today the bundled provider is Firecrawl.
-    - Daemons read env vars from `~/.openclaw/.env` (or the service environment).
+    - Daemons read env vars from `~/.iclaw/.env` (or the service environment).
 
     Docs: [Web tools](/tools/web).
 
@@ -803,14 +803,14 @@ lives on the [First-run FAQ](/help/faq-first-run).
     Current OpenClaw protects many accidental clobbers:
 
     - OpenClaw-owned config writes validate the full post-change config before writing.
-    - Invalid or destructive OpenClaw-owned writes are rejected and saved as `openclaw.json.rejected.*`.
-    - If a direct edit breaks startup or hot reload, the Gateway restores the last-known-good config and saves the rejected file as `openclaw.json.clobbered.*`.
+    - Invalid or destructive OpenClaw-owned writes are rejected and saved as `iclaw.json.rejected.*`.
+    - If a direct edit breaks startup or hot reload, the Gateway restores the last-known-good config and saves the rejected file as `iclaw.json.clobbered.*`.
     - The main agent receives a boot warning after recovery so it does not blindly write the bad config again.
 
     Recover:
 
     - Check `openclaw logs --follow` for `Config auto-restored from last-known-good`, `Config write rejected:`, or `config reload restored last-known-good config`.
-    - Inspect the newest `openclaw.json.clobbered.*` or `openclaw.json.rejected.*` beside the active config.
+    - Inspect the newest `iclaw.json.clobbered.*` or `iclaw.json.rejected.*` beside the active config.
     - Keep the active restored config if it works, then copy only the intended keys back with `openclaw config set` or `config.patch`.
     - Run `openclaw config validate` and `openclaw doctor`.
     - If you have no last-known-good or rejected payload, restore from backup, or re-run `openclaw doctor` and reconfigure channels/models.
@@ -1006,7 +1006,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
   <Accordion title="Minimal sane config for a first install">
     ```json5
     {
-      agents: { defaults: { workspace: "~/.openclaw/workspace" } },
+      agents: { defaults: { workspace: "~/.iclaw/workspace" } },
       channels: { whatsapp: { allowFrom: ["+15555550123"] } },
     }
     ```
@@ -1031,7 +1031,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
        - In the Tailscale admin console, enable MagicDNS so the VPS has a stable name.
     4. **Use the tailnet hostname**
        - SSH: `ssh user@your-vps.tailnet-xxxx.ts.net`
-       - Gateway WS: `ws://your-vps.tailnet-xxxx.ts.net:18789`
+       - Gateway WS: `ws://your-vps.tailnet-xxxx.ts.net:32768`
 
     If you want the Control UI without SSH, use Tailscale Serve on the VPS:
 
@@ -1081,7 +1081,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
     OpenClaw reads env vars from the parent process (shell, launchd/systemd, CI, etc.) and additionally loads:
 
     - `.env` from the current working directory
-    - a global fallback `.env` from `~/.openclaw/.env` (aka `$ICLAW_STATE_DIR/.env`)
+    - a global fallback `.env` from `~/.iclaw/.env` (aka `$ICLAW_STATE_DIR/.env`)
 
     Neither `.env` file overrides existing env vars.
 
@@ -1103,7 +1103,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
   <Accordion title="I started the Gateway via the service and my env vars disappeared. What now?">
     Two common fixes:
 
-    1. Put the missing keys in `~/.openclaw/.env` so they're picked up even when the service doesn't inherit your shell env.
+    1. Put the missing keys in `~/.iclaw/.env` so they're picked up even when the service doesn't inherit your shell env.
     2. Enable shell import (opt-in convenience):
 
     ```json5
@@ -1130,7 +1130,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
     If the Gateway runs as a service (launchd/systemd), it won't inherit your shell
     environment. Fix by doing one of these:
 
-    1. Put the token in `~/.openclaw/.env`:
+    1. Put the token in `~/.iclaw/.env`:
 
        ```
        COPILOT_GITHUB_TOKEN=...
@@ -1223,7 +1223,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
     Notes:
 
     - Onboarding also offers **Reset** if it sees an existing config. See [Onboarding (CLI)](/start/wizard).
-    - If you used profiles (`--profile` / `ICLAW_PROFILE`), reset each state dir (defaults are `~/.openclaw-<profile>`).
+    - If you used profiles (`--profile` / `ICLAW_PROFILE`), reset each state dir (defaults are `~/.iclaw-<profile>`).
     - Dev reset: `openclaw gateway --dev --reset` (dev-only; wipes dev config + credentials + sessions + workspace).
 
   </Accordion>
@@ -1343,7 +1343,7 @@ lives on the [First-run FAQ](/help/faq-first-run).
   <Accordion title="How many workspaces and agents can I create?">
     No hard limits. Dozens (even hundreds) are fine, but watch for:
 
-    - **Disk growth:** sessions + transcripts live under `~/.openclaw/agents/<agentId>/sessions/`.
+    - **Disk growth:** sessions + transcripts live under `~/.iclaw/agents/<agentId>/sessions/`.
     - **Token cost:** more agents means more concurrent model usage.
     - **Ops overhead:** per-agent auth profiles, workspaces, and channel routing.
 
@@ -1390,7 +1390,7 @@ lives on the [Models FAQ](/help/faq-models).
     Precedence:
 
     ```
-    --port > ICLAW_GATEWAY_PORT > gateway.port > default 18789
+    --port > ICLAW_GATEWAY_PORT > gateway.port > default 32768
     ```
 
   </Accordion>
@@ -1420,7 +1420,7 @@ lives on the [Models FAQ](/help/faq-models).
   </Accordion>
 
   <Accordion title='What does "another gateway instance is already listening" mean?'>
-    OpenClaw enforces a runtime lock by binding the WebSocket listener immediately on startup (default `ws://127.0.0.1:18789`). If the bind fails with `EADDRINUSE`, it throws `GatewayLockError` indicating another instance is already listening.
+    OpenClaw enforces a runtime lock by binding the WebSocket listener immediately on startup (default `ws://127.0.0.1:32768`). If the bind fails with `EADDRINUSE`, it throws `GatewayLockError` indicating another instance is already listening.
 
     Fix: stop the other instance, free the port, or run with `openclaw gateway --port <port>`.
 
@@ -1434,7 +1434,7 @@ lives on the [Models FAQ](/help/faq-models).
       gateway: {
         mode: "remote",
         remote: {
-          url: "ws://gateway.tailnet:18789",
+          url: "ws://gateway.tailnet:32768",
           token: "your-token",
           password: "your-password",
         },
@@ -1465,7 +1465,7 @@ lives on the [Models FAQ](/help/faq-models).
 
     - Fastest: `openclaw dashboard` (prints + copies the dashboard URL, tries to open; shows SSH hint if headless).
     - If you don't have a token yet: `openclaw doctor --generate-gateway-token`.
-    - If remote, tunnel first: `ssh -N -L 18789:127.0.0.1:18789 user@host` then open `http://127.0.0.1:18789/`.
+    - If remote, tunnel first: `ssh -N -L 32768:127.0.0.1:32768 user@host` then open `http://127.0.0.1:32768/`.
     - Shared-secret mode: set `gateway.auth.token` / `ICLAW_GATEWAY_TOKEN` or `gateway.auth.password` / `ICLAW_GATEWAY_PASSWORD`, then paste the matching secret in Control UI settings.
     - Tailscale Serve mode: make sure `gateway.auth.allowTailscale` is enabled and you are opening the Serve URL, not a raw loopback/tailnet URL that bypasses Tailscale identity headers.
     - Trusted-proxy mode: make sure you are coming through the configured non-loopback identity-aware proxy, not a same-host loopback proxy or raw gateway URL.
@@ -1503,7 +1503,7 @@ lives on the [Models FAQ](/help/faq-models).
 
     Quick setup (recommended):
 
-    - Use `openclaw --profile <name> ...` per instance (auto-creates `~/.openclaw-<name>`).
+    - Use `openclaw --profile <name> ...` per instance (auto-creates `~/.iclaw-<name>`).
     - Set a unique `gateway.port` in each profile config (or pass `--port` for manual runs).
     - Install a per-profile service: `openclaw --profile <name> gateway install`.
 
@@ -1525,14 +1525,14 @@ lives on the [Models FAQ](/help/faq-models).
 
     Quick fixes:
 
-    1. Use the WS URL: `ws://<host>:18789` (or `wss://...` if HTTPS).
+    1. Use the WS URL: `ws://<host>:32768` (or `wss://...` if HTTPS).
     2. Don't open the WS port in a normal browser tab.
     3. If auth is on, include the token/password in the `connect` frame.
 
     If you're using the CLI or TUI, the URL should look like:
 
     ```
-    openclaw tui --url ws://<host>:18789 --token <token>
+    openclaw tui --url ws://<host>:32768 --token <token>
     ```
 
     Protocol details: [Gateway protocol](/gateway/protocol).
@@ -1560,7 +1560,7 @@ lives on the [Models FAQ](/help/faq-models).
 
     Service/supervisor logs (when the gateway runs via launchd/systemd):
 
-    - macOS: `$ICLAW_STATE_DIR/logs/gateway.log` and `gateway.err.log` (default: `~/.openclaw/logs/...`; profiles use `~/.openclaw-<profile>/logs/...`)
+    - macOS: `$ICLAW_STATE_DIR/logs/gateway.log` and `gateway.err.log` (default: `~/.iclaw/logs/...`; profiles use `~/.iclaw-<profile>/logs/...`)
     - Linux: `journalctl --user -u openclaw-gateway[-<profile>].service -n 200 --no-pager`
     - Windows: `schtasks /Query /TN "OpenClaw Gateway (<profile>)" /V /FO LIST`
 

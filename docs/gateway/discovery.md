@@ -19,9 +19,9 @@ The design goal is to keep all network discovery/advertising in the **Node Gatew
 ## Terms
 
 - **Gateway**: a single long-running gateway process that owns state (sessions, pairing, node registry) and runs channels. Most setups use one per host; isolated multi-gateway setups are possible.
-- **Gateway WS (control plane)**: the WebSocket endpoint on `127.0.0.1:18789` by default; can be bound to LAN/tailnet via `gateway.bind`.
+- **Gateway WS (control plane)**: the WebSocket endpoint on `127.0.0.1:32768` by default; can be bound to LAN/tailnet via `gateway.bind`.
 - **Direct WS transport**: a LAN/tailnet-facing Gateway WS endpoint (no SSH).
-- **SSH transport (fallback)**: remote control by forwarding `127.0.0.1:18789` over SSH.
+- **SSH transport (fallback)**: remote control by forwarding `127.0.0.1:32768` over SSH.
 - **Legacy TCP bridge (removed)**: older node transport (see
   [Bridge protocol](/gateway/bridge-protocol)); no longer advertised for
   discovery and no longer part of current builds.
@@ -68,7 +68,7 @@ Troubleshooting and beacon details: [Bonjour](/gateway/bonjour).
   - `transport=gateway`
   - `displayName=<friendly name>` (operator-configured display name)
   - `lanHost=<hostname>.local`
-  - `gatewayPort=18789` (Gateway WS + HTTP)
+  - `gatewayPort=32768` (Gateway WS + HTTP)
   - `gatewayTls=1` (only when TLS is enabled)
   - `gatewayTlsSha256=<sha256>` (only when TLS is enabled and fingerprint is available)
   - `canvasPort=<port>` (canvas host port; currently the same as `gatewayPort` when the canvas host is enabled)
@@ -86,7 +86,7 @@ Security notes:
 Disable/override:
 
 - `ICLAW_DISABLE_BONJOUR=1` disables advertising.
-- `gateway.bind` in `~/.openclaw/openclaw.json` controls the Gateway bind mode.
+- `gateway.bind` in `~/.iclaw/iclaw.json` controls the Gateway bind mode.
 - `ICLAW_SSH_PORT` overrides the SSH port advertised when `sshPort` is emitted.
 - `ICLAW_TAILNET_DNS` publishes a `tailnetDns` hint (MagicDNS).
 - `ICLAW_CLI_PATH` overrides the advertised CLI path.

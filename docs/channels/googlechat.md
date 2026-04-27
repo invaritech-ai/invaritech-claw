@@ -22,7 +22,7 @@ Status: ready for DMs + spaces via Google Chat API webhooks (HTTP only).
    - Go to the **Keys** tab.
    - Click **Add Key** > **Create new key**.
    - Select **JSON** and press **Create**.
-4. Store the downloaded JSON file on your gateway host (e.g., `~/.openclaw/googlechat-service-account.json`).
+4. Store the downloaded JSON file on your gateway host (e.g., `~/.iclaw/googlechat-service-account.json`).
 5. Create a Google Chat app in the [Google Cloud Console Chat Configuration](https://console.cloud.google.com/apis/api/chat.googleapis.com/hangouts-chat):
    - Fill in the **Application info**:
      - **App name**: (e.g. `OpenClaw`)
@@ -70,7 +70,7 @@ Use Tailscale Serve for the private dashboard and Funnel for the public webhook 
 1. **Check what address your gateway is bound to:**
 
    ```bash
-   ss -tlnp | grep 18789
+   ss -tlnp | grep 32768
    ```
 
    Note the IP address (e.g., `127.0.0.1`, `0.0.0.0`, or your Tailscale IP like `100.x.x.x`).
@@ -79,20 +79,20 @@ Use Tailscale Serve for the private dashboard and Funnel for the public webhook 
 
    ```bash
    # If bound to localhost (127.0.0.1 or 0.0.0.0):
-   tailscale serve --bg --https 8443 http://127.0.0.1:18789
+   tailscale serve --bg --https 8443 http://127.0.0.1:32768
 
    # If bound to Tailscale IP only (e.g., 100.106.161.80):
-   tailscale serve --bg --https 8443 http://100.106.161.80:18789
+   tailscale serve --bg --https 8443 http://100.106.161.80:32768
    ```
 
 3. **Expose only the webhook path publicly:**
 
    ```bash
    # If bound to localhost (127.0.0.1 or 0.0.0.0):
-   tailscale funnel --bg --set-path /googlechat http://127.0.0.1:18789/googlechat
+   tailscale funnel --bg --set-path /googlechat http://127.0.0.1:32768/googlechat
 
    # If bound to Tailscale IP only (e.g., 100.106.161.80):
-   tailscale funnel --bg --set-path /googlechat http://100.106.161.80:18789/googlechat
+   tailscale funnel --bg --set-path /googlechat http://100.106.161.80:32768/googlechat
    ```
 
 4. **Authorize the node for Funnel access:**
@@ -121,7 +121,7 @@ If you use a reverse proxy like Caddy, only proxy the specific path:
 
 ```caddy
 your-domain.com {
-    reverse_proxy /googlechat* localhost:18789
+    reverse_proxy /googlechat* localhost:32768
 }
 ```
 
@@ -131,7 +131,7 @@ With this config, any request to `your-domain.com/` will be ignored or returned 
 
 Configure your tunnel's ingress rules to only route the webhook path:
 
-- **Path**: `/googlechat` -> `http://localhost:18789/googlechat`
+- **Path**: `/googlechat` -> `http://localhost:32768/googlechat`
 - **Default Rule**: HTTP 404 (Not Found)
 
 ## How it works

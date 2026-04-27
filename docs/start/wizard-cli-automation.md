@@ -21,7 +21,7 @@ openclaw onboard --non-interactive \
   --auth-choice apiKey \
   --anthropic-api-key "$ANTHROPIC_API_KEY" \
   --secret-input-mode plaintext \
-  --gateway-port 18789 \
+  --gateway-port 32768 \
   --gateway-bind loopback \
   --install-daemon \
   --daemon-runtime node \
@@ -55,7 +55,7 @@ openclaw onboard --non-interactive \
       --mode local \
       --auth-choice apiKey \
       --anthropic-api-key "$ANTHROPIC_API_KEY" \
-      --gateway-port 18789 \
+      --gateway-port 32768 \
       --gateway-bind loopback
     ```
   </Accordion>
@@ -65,7 +65,7 @@ openclaw onboard --non-interactive \
       --mode local \
       --auth-choice gemini-api-key \
       --gemini-api-key "$GEMINI_API_KEY" \
-      --gateway-port 18789 \
+      --gateway-port 32768 \
       --gateway-bind loopback
     ```
   </Accordion>
@@ -75,7 +75,7 @@ openclaw onboard --non-interactive \
       --mode local \
       --auth-choice zai-api-key \
       --zai-api-key "$ZAI_API_KEY" \
-      --gateway-port 18789 \
+      --gateway-port 32768 \
       --gateway-bind loopback
     ```
   </Accordion>
@@ -85,7 +85,7 @@ openclaw onboard --non-interactive \
       --mode local \
       --auth-choice ai-gateway-api-key \
       --ai-gateway-api-key "$AI_GATEWAY_API_KEY" \
-      --gateway-port 18789 \
+      --gateway-port 32768 \
       --gateway-bind loopback
     ```
   </Accordion>
@@ -97,7 +97,7 @@ openclaw onboard --non-interactive \
       --cloudflare-ai-gateway-account-id "your-account-id" \
       --cloudflare-ai-gateway-gateway-id "your-gateway-id" \
       --cloudflare-ai-gateway-api-key "$CLOUDFLARE_AI_GATEWAY_API_KEY" \
-      --gateway-port 18789 \
+      --gateway-port 32768 \
       --gateway-bind loopback
     ```
   </Accordion>
@@ -107,7 +107,7 @@ openclaw onboard --non-interactive \
       --mode local \
       --auth-choice moonshot-api-key \
       --moonshot-api-key "$MOONSHOT_API_KEY" \
-      --gateway-port 18789 \
+      --gateway-port 32768 \
       --gateway-bind loopback
     ```
   </Accordion>
@@ -117,7 +117,7 @@ openclaw onboard --non-interactive \
       --mode local \
       --auth-choice mistral-api-key \
       --mistral-api-key "$MISTRAL_API_KEY" \
-      --gateway-port 18789 \
+      --gateway-port 32768 \
       --gateway-bind loopback
     ```
   </Accordion>
@@ -127,7 +127,7 @@ openclaw onboard --non-interactive \
       --mode local \
       --auth-choice synthetic-api-key \
       --synthetic-api-key "$SYNTHETIC_API_KEY" \
-      --gateway-port 18789 \
+      --gateway-port 32768 \
       --gateway-bind loopback
     ```
   </Accordion>
@@ -137,7 +137,7 @@ openclaw onboard --non-interactive \
       --mode local \
       --auth-choice opencode-zen \
       --opencode-zen-api-key "$OPENCODE_API_KEY" \
-      --gateway-port 18789 \
+      --gateway-port 32768 \
       --gateway-bind loopback
     ```
     Swap to `--auth-choice opencode-go --opencode-go-api-key "$OPENCODE_API_KEY"` for the Go catalog.
@@ -149,7 +149,7 @@ openclaw onboard --non-interactive \
       --auth-choice ollama \
       --custom-model-id "qwen3.5:27b" \
       --accept-risk \
-      --gateway-port 18789 \
+      --gateway-port 32768 \
       --gateway-bind loopback
     ```
   </Accordion>
@@ -163,7 +163,7 @@ openclaw onboard --non-interactive \
       --custom-api-key "$CUSTOM_API_KEY" \
       --custom-provider-id "my-custom" \
       --custom-compatibility anthropic \
-      --gateway-port 18789 \
+      --gateway-port 32768 \
       --gateway-bind loopback
     ```
 
@@ -181,7 +181,7 @@ openclaw onboard --non-interactive \
       --secret-input-mode ref \
       --custom-provider-id "my-custom" \
       --custom-compatibility anthropic \
-      --gateway-port 18789 \
+      --gateway-port 32768 \
       --gateway-bind loopback
     ```
 
@@ -200,7 +200,7 @@ sessions, and auth profiles. Running without `--workspace` launches the wizard.
 
 ```bash
 openclaw agents add work \
-  --workspace ~/.openclaw/workspace-work \
+  --workspace ~/.iclaw/workspace-work \
   --model openai/gpt-5.4 \
   --bind whatsapp:biz \
   --non-interactive \
@@ -215,7 +215,7 @@ What it sets:
 
 Notes:
 
-- Default workspaces follow `~/.openclaw/workspace-<agentId>`.
+- Default workspaces follow `~/.iclaw/workspace-<agentId>`.
 - Add `bindings` to route inbound messages (the wizard can do this).
 - Non-interactive flags: `--model`, `--agent-dir`, `--bind`, `--non-interactive`.
 

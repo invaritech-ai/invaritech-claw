@@ -25,7 +25,7 @@ By default, the Gateway writes a rolling log file under:
 
 The date uses the gateway host's local timezone.
 
-You can override this in `~/.openclaw/openclaw.json`:
+You can override this in `~/.iclaw/iclaw.json`:
 
 ```json
 {
@@ -129,7 +129,7 @@ openclaw gateway --verbose --ws-log full
 
 ## Configuring logging
 
-All logging configuration lives under `logging` in `~/.openclaw/openclaw.json`.
+All logging configuration lives under `logging` in `~/.iclaw/iclaw.json`.
 
 ```json
 {
@@ -149,7 +149,7 @@ All logging configuration lives under `logging` in `~/.openclaw/openclaw.json`.
 - `logging.level`: **file logs** (JSONL) level.
 - `logging.consoleLevel`: **console** verbosity level.
 
-You can override both via the **`ICLAW_LOG_LEVEL`** environment variable (e.g. `ICLAW_LOG_LEVEL=debug`). The env var takes precedence over the config file, so you can raise verbosity for a single run without editing `openclaw.json`. You can also pass the global CLI option **`--log-level <level>`** (for example, `openclaw --log-level debug gateway run`), which overrides the environment variable for that command.
+You can override both via the **`ICLAW_LOG_LEVEL`** environment variable (e.g. `ICLAW_LOG_LEVEL=debug`). The env var takes precedence over the config file, so you can raise verbosity for a single run without editing `iclaw.json`. You can also pass the global CLI option **`--log-level <level>`** (for example, `openclaw --log-level debug gateway run`), which overrides the environment variable for that command.
 
 `--verbose` only affects console output and WS log verbosity; it does not change
 file log levels.

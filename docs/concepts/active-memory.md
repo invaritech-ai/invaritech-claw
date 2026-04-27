@@ -20,7 +20,7 @@ before the main reply is generated.
 
 ## Quick start
 
-Paste this into `openclaw.json` for a safe-default setup — plugin on, scoped to
+Paste this into `iclaw.json` for a safe-default setup — plugin on, scoped to
 the `main` agent, direct-message sessions only, inherits the session model
 when available:
 

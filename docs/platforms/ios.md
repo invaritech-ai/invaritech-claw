@@ -28,7 +28,7 @@ Availability: internal preview. The iOS app is not publicly distributed yet.
 1. Start the Gateway:
 
 ```bash
-openclaw gateway --port 18789
+openclaw gateway --port 32768
 ```
 
 2. In the iOS app, open Settings and pick a discovered gateway (or enable Manual Host and enter host/port).
@@ -166,10 +166,10 @@ direct APNs delivery for local iOS builds.
 Recommended gateway-host storage:
 
 ```bash
-mkdir -p ~/.openclaw/credentials/apns
-chmod 700 ~/.openclaw/credentials/apns
-mv /path/to/AuthKey_KEYID.p8 ~/.openclaw/credentials/apns/AuthKey_KEYID.p8
-chmod 600 ~/.openclaw/credentials/apns/AuthKey_KEYID.p8
+mkdir -p ~/.iclaw/credentials/apns
+chmod 700 ~/.iclaw/credentials/apns
+mv /path/to/AuthKey_KEYID.p8 ~/.iclaw/credentials/apns/AuthKey_KEYID.p8
+chmod 600 ~/.iclaw/credentials/apns/AuthKey_KEYID.p8
 export ICLAW_APNS_PRIVATE_KEY_PATH="$HOME/.openclaw/credentials/apns/AuthKey_KEYID.p8"
 ```
 
@@ -191,20 +191,20 @@ See [Bonjour](/gateway/bonjour) for the CoreDNS example.
 
 ### Manual host/port
 
-In Settings, enable **Manual Host** and enter the gateway host + port (default `18789`).
+In Settings, enable **Manual Host** and enter the gateway host + port (default `32768`).
 
 ## Canvas + A2UI
 
 The iOS node renders a WKWebView canvas. Use `node.invoke` to drive it:
 
 ```bash
-openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:18789/__openclaw__/canvas/"}'
+openclaw nodes invoke --node "iOS Node" --command canvas.navigate --params '{"url":"http://<gateway-host>:32768/__openclaw__/canvas/"}'
 ```
 
 Notes:
 
 - The Gateway canvas host serves `/__openclaw__/canvas/` and `/__openclaw__/a2ui/`.
-- It is served from the Gateway HTTP server (same port as `gateway.port`, default `18789`).
+- It is served from the Gateway HTTP server (same port as `gateway.port`, default `32768`).
 - The iOS node auto-navigates to A2UI on connect when a canvas host URL is advertised.
 - Return to the built-in scaffold with `canvas.navigate` and `{"url":""}`.
 

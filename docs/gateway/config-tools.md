@@ -353,7 +353,7 @@ Notes:
 
 ## Custom providers and base URLs
 
-OpenClaw uses the built-in model catalog. Add custom providers via `models.providers` in config or `~/.openclaw/agents/<agentId>/agent/models.json`.
+OpenClaw uses the built-in model catalog. Add custom providers via `models.providers` in config or `~/.iclaw/agents/<agentId>/agent/models.json`.
 
 ```json5
 {

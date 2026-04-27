@@ -51,7 +51,7 @@ If you set `ICLAW_CONFIG_PATH` to a custom location outside the state dir, delet
 4. Delete your workspace (optional, removes agent files):
 
 ```bash
-rm -rf ~/.openclaw/workspace
+rm -rf ~/.iclaw/workspace
 ```
 
 5. Remove the CLI install (pick the one you used):
@@ -70,7 +70,7 @@ rm -rf /Applications/OpenClaw.app
 
 Notes:
 
-- If you used profiles (`--profile` / `ICLAW_PROFILE`), repeat step 3 for each state dir (defaults are `~/.openclaw-<profile>`).
+- If you used profiles (`--profile` / `ICLAW_PROFILE`), repeat step 3 for each state dir (defaults are `~/.iclaw-<profile>`).
 - In remote mode, the state dir lives on the **gateway host**, so run steps 1-4 there too.
 
 ## Manual service removal (CLI not installed)

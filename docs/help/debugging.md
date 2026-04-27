@@ -14,7 +14,7 @@ provider mixes reasoning into normal text.
 
 Use `/debug` in chat to set **runtime-only** config overrides (memory, not disk).
 `/debug` is disabled by default; enable with `commands.debug: true`.
-This is handy when you need to toggle obscure settings without editing `openclaw.json`.
+This is handy when you need to toggle obscure settings without editing `iclaw.json`.
 
 Examples:
 
@@ -212,7 +212,7 @@ replaces the older watcher instead of leaving duplicate watcher parents behind.
 Use the dev profile to isolate state and spin up a safe, disposable setup for
 debugging. There are **two** `--dev` flags:
 
-- **Global `--dev` (profile):** isolates state under `~/.openclaw-dev` and
+- **Global `--dev` (profile):** isolates state under `~/.iclaw-dev` and
   defaults the gateway port to `19001` (derived ports shift with it).
 - **`gateway --dev`: tells the Gateway to auto-create a default config +
   workspace** when missing (and skip BOOTSTRAP.md).
@@ -230,8 +230,8 @@ What this does:
 
 1. **Profile isolation** (global `--dev`)
    - `ICLAW_PROFILE=dev`
-   - `ICLAW_STATE_DIR=~/.openclaw-dev`
-   - `ICLAW_CONFIG_PATH=~/.openclaw-dev/openclaw.json`
+   - `ICLAW_STATE_DIR=~/.iclaw-dev`
+   - `ICLAW_CONFIG_PATH=~/.iclaw-dev/iclaw.json`
    - `ICLAW_GATEWAY_PORT=19001` (browser/canvas shift accordingly)
 
 2. **Dev bootstrap** (`gateway --dev`)
@@ -280,19 +280,19 @@ pnpm gateway:watch --raw-stream
 Optional path override:
 
 ```bash
-pnpm gateway:watch --raw-stream --raw-stream-path ~/.openclaw/logs/raw-stream.jsonl
+pnpm gateway:watch --raw-stream --raw-stream-path ~/.iclaw/logs/raw-stream.jsonl
 ```
 
 Equivalent env vars:
 
 ```bash
 ICLAW_RAW_STREAM=1
-ICLAW_RAW_STREAM_PATH=~/.openclaw/logs/raw-stream.jsonl
+ICLAW_RAW_STREAM_PATH=~/.iclaw/logs/raw-stream.jsonl
 ```
 
 Default file:
 
-`~/.openclaw/logs/raw-stream.jsonl`
+`~/.iclaw/logs/raw-stream.jsonl`
 
 ## Raw chunk logging (pi-mono)
 

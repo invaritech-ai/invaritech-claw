@@ -58,11 +58,11 @@ For tool call behavior, prompt for a `read` or `exec` action so you can see tool
 
 ## Clean Slate Reset
 
-State lives under the OpenClaw state directory. Default is `~/.openclaw`. If `ICLAW_STATE_DIR` is set, use that directory instead.
+State lives under the OpenClaw state directory. Default is `~/.iclaw`. If `ICLAW_STATE_DIR` is set, use that directory instead.
 
 To reset everything:
 
-- `openclaw.json` for config
+- `iclaw.json` for config
 - `agents/<agentId>/agent/auth-profiles.json` for model auth profiles (API keys + OAuth)
 - `credentials/` for provider/channel state that still lives outside the auth profile store
 - `agents/<agentId>/sessions/` for agent session history

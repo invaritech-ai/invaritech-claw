@@ -83,7 +83,7 @@ Only override the endpoint when your TokenHub account or region requires it.
 ## Environment note
 
 If the Gateway runs as a daemon (launchd/systemd), make sure `TOKENHUB_API_KEY`
-is available to that process (for example, in `~/.openclaw/.env` or via
+is available to that process (for example, in `~/.iclaw/.env` or via
 `env.shellEnv`).
 
 ## Related documentation

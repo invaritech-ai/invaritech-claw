@@ -69,7 +69,7 @@ speech provider in registry auto-select order.
 
 ## Config
 
-TTS config lives under `messages.tts` in `openclaw.json`.
+TTS config lives under `messages.tts` in `iclaw.json`.
 Full schema is in [Gateway configuration](/gateway/configuration).
 
 ### Minimal config (enable + provider)
@@ -251,7 +251,7 @@ the default. `language` accepts a BCP-47 tag or `auto`.
       auto: "always",
       maxTextLength: 4000,
       timeoutMs: 30000,
-      prefsPath: "~/.openclaw/settings/tts.json",
+      prefsPath: "~/.iclaw/settings/tts.json",
     },
   },
 }
@@ -411,7 +411,7 @@ Optional allowlist (enable provider switching while keeping other knobs configur
 ## Per-user preferences
 
 Slash commands write local overrides to `prefsPath` (default:
-`~/.openclaw/settings/tts.json`, override with `ICLAW_TTS_PREFS` or
+`~/.iclaw/settings/tts.json`, override with `ICLAW_TTS_PREFS` or
 `messages.tts.prefsPath`).
 
 Stored fields:

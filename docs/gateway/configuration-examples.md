@@ -15,12 +15,12 @@ Examples below are aligned with the current config schema. For the exhaustive re
 
 ```json5
 {
-  agent: { workspace: "~/.openclaw/workspace" },
+  agent: { workspace: "~/.iclaw/workspace" },
   channels: { whatsapp: { allowFrom: ["+15555550123"] } },
 }
 ```
 
-Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
+Save to `~/.iclaw/iclaw.json` and you can DM the bot from that number.
 
 ### Recommended starter
 
@@ -32,7 +32,7 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
     emoji: "🦞",
   },
   agent: {
-    workspace: "~/.openclaw/workspace",
+    workspace: "~/.iclaw/workspace",
     model: { primary: "anthropic/claude-sonnet-4-6" },
   },
   channels: {
@@ -158,7 +158,7 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
       discord: { mode: "idle", idleMinutes: 10080 },
     },
     resetTriggers: ["/new", "/reset"],
-    store: "~/.openclaw/agents/default/sessions/sessions.json",
+    store: "~/.iclaw/agents/default/sessions/sessions.json",
     maintenance: {
       mode: "warn",
       pruneAfter: "30d",
@@ -230,7 +230,7 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
   // Agent runtime
   agents: {
     defaults: {
-      workspace: "~/.openclaw/workspace",
+      workspace: "~/.iclaw/workspace",
       userTimezone: "America/Chicago",
       model: {
         primary: "anthropic/claude-sonnet-4-6",
@@ -285,7 +285,7 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
       sandbox: {
         mode: "non-main",
         scope: "session", // preferred over legacy perSession: true
-        workspaceRoot: "~/.openclaw/sandboxes",
+        workspaceRoot: "~/.iclaw/sandboxes",
         docker: {
           image: "openclaw-sandbox:bookworm-slim",
           workdir: "/workspace",
@@ -368,7 +368,7 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
   // Cron jobs
   cron: {
     enabled: true,
-    store: "~/.openclaw/cron/cron.json",
+    store: "~/.iclaw/cron/cron.json",
     maxConcurrentRuns: 2,
     sessionRetention: "24h",
     runLog: {
@@ -383,7 +383,7 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
     path: "/hooks",
     token: "shared-secret",
     presets: ["gmail"],
-    transformsDir: "~/.openclaw/hooks/transforms",
+    transformsDir: "~/.iclaw/hooks/transforms",
     mappings: [
       {
         id: "gmail-hook",
@@ -411,7 +411,7 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
       topic: "projects/<project-id>/topics/gog-gmail-watch",
       subscription: "gog-gmail-watch-push",
       pushToken: "shared-push-token",
-      hookUrl: "http://127.0.0.1:18789/hooks/gmail",
+      hookUrl: "http://127.0.0.1:32768/hooks/gmail",
       includeBody: true,
       maxBytes: 20000,
       renewEveryMinutes: 720,
@@ -423,7 +423,7 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
   // Gateway + networking
   gateway: {
     mode: "local",
-    port: 18789,
+    port: 32768,
     bind: "loopback",
     controlUi: { enabled: true, basePath: "/openclaw" },
     auth: {
@@ -432,7 +432,7 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
       allowTailscale: true,
     },
     tailscale: { mode: "serve", resetOnExit: false },
-    remote: { url: "ws://gateway.tailnet:18789", token: "remote-token" },
+    remote: { url: "ws://gateway.tailnet:32768", token: "remote-token" },
     reload: { mode: "hybrid", debounceMs: 300 },
   },
 
@@ -465,12 +465,12 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
 {
   agents: {
     defaults: {
-      workspace: "~/.openclaw/workspace",
+      workspace: "~/.iclaw/workspace",
       skills: ["github", "weather"],
     },
     list: [
       { id: "main", default: true },
-      { id: "docs", workspace: "~/.openclaw/workspace-docs", skills: ["docs-search"] },
+      { id: "docs", workspace: "~/.iclaw/workspace-docs", skills: ["docs-search"] },
     ],
   },
 }
@@ -484,7 +484,7 @@ Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
 
 ```json5
 {
-  agent: { workspace: "~/.openclaw/workspace" },
+  agent: { workspace: "~/.iclaw/workspace" },
   channels: {
     whatsapp: { allowFrom: ["+15555550123"] },
     telegram: {
@@ -555,7 +555,7 @@ Only enable direct mutable name/email/nick matching with each channel's `dangero
     },
   },
   agent: {
-    workspace: "~/.openclaw/workspace",
+    workspace: "~/.iclaw/workspace",
     model: {
       primary: "anthropic/claude-opus-4-6",
       fallbacks: ["minimax/MiniMax-M2.7"],
@@ -594,7 +594,7 @@ Only enable direct mutable name/email/nick matching with each channel's `dangero
 ```json5
 {
   agent: {
-    workspace: "~/.openclaw/workspace",
+    workspace: "~/.iclaw/workspace",
     model: { primary: "lmstudio/my-local-model" },
   },
   models: {

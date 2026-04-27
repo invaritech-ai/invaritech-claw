@@ -297,7 +297,7 @@ Why the assertions differ:
 diagnostics:
   cacheTrace:
     enabled: true
-    filePath: "~/.openclaw/logs/cache-trace.jsonl" # optional
+    filePath: "~/.iclaw/logs/cache-trace.jsonl" # optional
     includeMessages: false # default true
     includePrompt: false # default true
     includeSystem: false # default true

@@ -141,7 +141,7 @@ systemctl --user status openclaw-gateway.service
 tailscale serve status
 
 # Test local response
-curl http://localhost:18789
+curl http://localhost:32768
 ```
 
 ## 8) Lock Down VCN Security
@@ -195,7 +195,7 @@ This setup often removes the _need_ for extra host-based firewall rules purely t
 
 ### Still Recommended
 
-- **Credential permissions:** `chmod 700 ~/.openclaw`
+- **Credential permissions:** `chmod 700 ~/.iclaw`
 - **Security audit:** `openclaw security audit`
 - **System updates:** `sudo apt update && sudo apt upgrade` regularly
 - **Monitor Tailscale:** Review devices in [Tailscale admin console](https://login.tailscale.com/admin)
@@ -221,10 +221,10 @@ If Tailscale Serve isn't working, use an SSH tunnel:
 
 ```bash
 # From your local machine (via Tailscale)
-ssh -L 18789:127.0.0.1:18789 ubuntu@openclaw
+ssh -L 32768:127.0.0.1:32768 ubuntu@openclaw
 ```
 
-Then open `http://localhost:18789`.
+Then open `http://localhost:32768`.
 
 ---
 
@@ -263,7 +263,7 @@ journalctl --user -u openclaw-gateway.service -n 50
 tailscale serve status
 
 # Check gateway is listening
-curl http://localhost:18789
+curl http://localhost:32768
 
 # Restart if needed
 systemctl --user restart openclaw-gateway.service
@@ -285,8 +285,8 @@ Most npm packages work fine. For binaries, look for `linux-arm64` or `aarch64` r
 
 All state lives in:
 
-- `~/.openclaw/` — `openclaw.json`, per-agent `auth-profiles.json`, channel/provider state, and session data
-- `~/.openclaw/workspace/` — workspace (SOUL.md, memory, artifacts)
+- `~/.iclaw/` — `iclaw.json`, per-agent `auth-profiles.json`, channel/provider state, and session data
+- `~/.iclaw/workspace/` — workspace (SOUL.md, memory, artifacts)
 
 Back up periodically:
 

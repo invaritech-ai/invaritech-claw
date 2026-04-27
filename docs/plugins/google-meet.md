@@ -132,7 +132,7 @@ openclaw plugins enable google-meet
 Start the node host in the VM:
 
 ```bash
-openclaw node run --host <gateway-host> --port 18789 --display-name parallels-macos
+openclaw node run --host <gateway-host> --port 32768 --display-name parallels-macos
 ```
 
 If `<gateway-host>` is a LAN IP and you are not using TLS, the node refuses the
@@ -140,19 +140,19 @@ plaintext WebSocket unless you opt in for that trusted private network:
 
 ```bash
 ICLAW_ALLOW_INSECURE_PRIVATE_WS=1 \
-  openclaw node run --host <gateway-lan-ip> --port 18789 --display-name parallels-macos
+  openclaw node run --host <gateway-lan-ip> --port 32768 --display-name parallels-macos
 ```
 
 Use the same environment variable when installing the node as a LaunchAgent:
 
 ```bash
 ICLAW_ALLOW_INSECURE_PRIVATE_WS=1 \
-  openclaw node install --host <gateway-lan-ip> --port 18789 --display-name parallels-macos --force
+  openclaw node install --host <gateway-lan-ip> --port 32768 --display-name parallels-macos --force
 openclaw node restart
 ```
 
 `ICLAW_ALLOW_INSECURE_PRIVATE_WS=1` is process environment, not an
-`openclaw.json` setting. `openclaw node install` stores it in the LaunchAgent
+`iclaw.json` setting. `openclaw node install` stores it in the LaunchAgent
 environment when it is present on the install command.
 
 Approve the node from the Gateway host:
@@ -433,7 +433,7 @@ Twilio-only config:
     defaultPin: "123456",
   },
   voiceCall: {
-    gatewayUrl: "ws://127.0.0.1:18789",
+    gatewayUrl: "ws://127.0.0.1:32768",
   },
 }
 ```

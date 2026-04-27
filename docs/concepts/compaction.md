@@ -39,7 +39,7 @@ Before compacting, OpenClaw automatically reminds the agent to save important
 notes to [memory](/concepts/memory) files. This prevents context loss.
 </Info>
 
-Use the `agents.defaults.compaction` setting in your `openclaw.json` to configure compaction behavior (mode, target tokens, etc.).
+Use the `agents.defaults.compaction` setting in your `iclaw.json` to configure compaction behavior (mode, target tokens, etc.).
 Compaction summarization preserves opaque identifiers by default (`identifierPolicy: "strict"`). You can override this with `identifierPolicy: "off"` or provide custom text with `identifierPolicy: "custom"` and `identifierInstructions`.
 
 You can optionally specify a different model for compaction summarization via `agents.defaults.compaction.model`. This is useful when your primary model is a local or small model and you want compaction summaries produced by a more capable model. The override accepts any `provider/model-id` string:
