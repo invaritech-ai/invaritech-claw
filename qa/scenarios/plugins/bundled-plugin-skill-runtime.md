@@ -11,7 +11,7 @@ coverage:
     - plugins.runtime
 objective: Verify packaged bundled plugin skills load from dist-runtime instead of being skipped by path-containment checks.
 successCriteria:
-  - The runtime-packaged bundled plugin tree is used as OPENCLAW_BUNDLED_PLUGINS_DIR.
+  - The runtime-packaged bundled plugin tree is used as ICLAW_BUNDLED_PLUGINS_DIR.
   - The enabled bundled plugin skill is reported as eligible by the skills CLI.
   - The check fails on SKILL.md symlink escapes and passes when runtime staging copies SKILL.md as a real file.
 docsRefs:
@@ -78,11 +78,11 @@ steps:
               const cliEnv = {
                 ...env.gateway.runtimeEnv,
                 HOME: homeDir,
-                OPENCLAW_HOME: homeDir,
-                OPENCLAW_CONFIG_PATH: configPath,
-                OPENCLAW_STATE_DIR: stateDir,
-                OPENCLAW_OAUTH_DIR: path.join(stateDir, "credentials"),
-                OPENCLAW_BUNDLED_PLUGINS_DIR: distRuntimeExtensions,
+                ICLAW_HOME: homeDir,
+                ICLAW_CONFIG_PATH: configPath,
+                ICLAW_STATE_DIR: stateDir,
+                ICLAW_OAUTH_DIR: path.join(stateDir, "credentials"),
+                ICLAW_BUNDLED_PLUGINS_DIR: distRuntimeExtensions,
                 XDG_CONFIG_HOME: xdgConfigHome,
                 XDG_DATA_HOME: xdgDataHome,
                 XDG_CACHE_HOME: xdgCacheHome,

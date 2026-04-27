@@ -43,13 +43,13 @@ npx convex deploy
 
 4. In Convex deployment environment variables, set:
 
-- `OPENCLAW_QA_CONVEX_SECRET_MAINTAINER`
-- `OPENCLAW_QA_CONVEX_SECRET_CI`
+- `ICLAW_QA_CONVEX_SECRET_MAINTAINER`
+- `ICLAW_QA_CONVEX_SECRET_CI`
 
 Client URL policy:
 
-- `OPENCLAW_QA_CONVEX_SITE_URL` must use `https://` in normal use.
-- Local development may use loopback `http://` only when `OPENCLAW_QA_ALLOW_INSECURE_HTTP=1`.
+- `ICLAW_QA_CONVEX_SITE_URL` must use `https://` in normal use.
+- Local development may use loopback `http://` only when `ICLAW_QA_ALLOW_INSECURE_HTTP=1`.
 
 ## Manage credentials from qa-lab CLI
 
@@ -69,7 +69,7 @@ pnpm openclaw qa credentials list --kind telegram
 pnpm openclaw qa credentials remove --credential-id <credential-id>
 ```
 
-Admin endpoints require `OPENCLAW_QA_CONVEX_SECRET_MAINTAINER`.
+Admin endpoints require `ICLAW_QA_CONVEX_SECRET_MAINTAINER`.
 
 ## Local request examples
 
