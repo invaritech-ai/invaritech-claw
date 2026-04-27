@@ -411,7 +411,7 @@ Optional allowlist (enable provider switching while keeping other knobs configur
 ## Per-user preferences
 
 Slash commands write local overrides to `prefsPath` (default:
-`~/.openclaw/settings/tts.json`, override with `OPENCLAW_TTS_PREFS` or
+`~/.openclaw/settings/tts.json`, override with `ICLAW_TTS_PREFS` or
 `messages.tts.prefsPath`).
 
 Stored fields:

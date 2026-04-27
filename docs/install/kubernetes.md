@@ -35,7 +35,7 @@ Retrieve the configured shared secret for the Control UI. This deploy script
 creates token auth by default:
 
 ```bash
-kubectl get secret openclaw-secrets -n openclaw -o jsonpath='{.data.OPENCLAW_GATEWAY_TOKEN}' | base64 -d
+kubectl get secret openclaw-secrets -n openclaw -o jsonpath='{.data.ICLAW_GATEWAY_TOKEN}' | base64 -d
 ```
 
 For local debugging, `./scripts/k8s/deploy.sh --show-token` prints the token after deploy.
@@ -85,7 +85,7 @@ open http://localhost:18789
 ## What gets deployed
 
 ```
-Namespace: openclaw (configurable via OPENCLAW_NAMESPACE)
+Namespace: openclaw (configurable via ICLAW_NAMESPACE)
 ├── Deployment/openclaw        # Single pod, init container + gateway
 ├── Service/openclaw           # ClusterIP on port 18789
 ├── PersistentVolumeClaim      # 10Gi for agent state and config
@@ -131,7 +131,7 @@ kubectl rollout restart deployment/openclaw -n openclaw
 ### Custom namespace
 
 ```bash
-OPENCLAW_NAMESPACE=my-namespace ./scripts/k8s/deploy.sh
+ICLAW_NAMESPACE=my-namespace ./scripts/k8s/deploy.sh
 ```
 
 ### Custom image

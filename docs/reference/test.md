@@ -14,7 +14,7 @@ title: "Tests"
 - `pnpm changed:lanes`: shows the architectural lanes triggered by the diff against `origin/main`.
 - `pnpm check:changed`: runs the smart changed gate for the diff against `origin/main`. It runs core work with core test lanes, extension work with extension test lanes, test-only work with test typecheck/tests only, expands public Plugin SDK or plugin-contract changes to one extension validation pass, and keeps release metadata-only version bumps on targeted version/config/root-dependency checks.
 - `pnpm test`: routes explicit file/directory targets through scoped Vitest lanes. Untargeted runs use fixed shard groups and expand to leaf configs for local parallel execution; the extension group always expands to the per-extension shard configs instead of one giant root-project process.
-- Full and extension shard runs update local timing data in `.artifacts/vitest-shard-timings.json`; later runs use those timings to balance slow and fast shards. Set `OPENCLAW_TEST_PROJECTS_TIMINGS=0` to ignore the local timing artifact.
+- Full and extension shard runs update local timing data in `.artifacts/vitest-shard-timings.json`; later runs use those timings to balance slow and fast shards. Set `ICLAW_TEST_PROJECTS_TIMINGS=0` to ignore the local timing artifact.
 - Selected `plugin-sdk` and `commands` test files now route through dedicated light lanes that keep only `test/setup.ts`, leaving runtime-heavy cases on their existing lanes.
 - Selected `plugin-sdk` and `commands` helper source files also map `pnpm test:changed` to explicit sibling tests in those light lanes, so small helper edits avoid rerunning the heavy runtime-backed suites.
 - `auto-reply` now also splits into three dedicated configs (`core`, `top-level`, `reply`) so the reply harness does not dominate the lighter top-level status/token/helper tests.
@@ -29,10 +29,10 @@ title: "Tests"
 - `pnpm test:perf:profile:runner`: writes CPU + heap profiles for the unit runner (`.artifacts/vitest-runner-profile`).
 - `pnpm test:perf:groups --full-suite --allow-failures --output .artifacts/test-perf/baseline-before.json`: runs every full-suite Vitest leaf config serially and writes grouped duration data plus per-config JSON/log artifacts. The Test Performance Agent uses this as its baseline before attempting slow-test fixes.
 - `pnpm test:perf:groups:compare .artifacts/test-perf/baseline-before.json .artifacts/test-perf/after-agent.json`: compares grouped reports after a performance-focused change.
-- Gateway integration: opt-in via `OPENCLAW_TEST_INCLUDE_GATEWAY=1 pnpm test` or `pnpm test:gateway`.
-- `pnpm test:e2e`: Runs gateway end-to-end smoke tests (multi-instance WS/HTTP/node pairing). Defaults to `threads` + `isolate: false` with adaptive workers in `vitest.e2e.config.ts`; tune with `OPENCLAW_E2E_WORKERS=<n>` and set `OPENCLAW_E2E_VERBOSE=1` for verbose logs.
+- Gateway integration: opt-in via `ICLAW_TEST_INCLUDE_GATEWAY=1 pnpm test` or `pnpm test:gateway`.
+- `pnpm test:e2e`: Runs gateway end-to-end smoke tests (multi-instance WS/HTTP/node pairing). Defaults to `threads` + `isolate: false` with adaptive workers in `vitest.e2e.config.ts`; tune with `ICLAW_E2E_WORKERS=<n>` and set `ICLAW_E2E_VERBOSE=1` for verbose logs.
 - `pnpm test:live`: Runs provider live tests (minimax/zai). Requires API keys and `LIVE=1` (or provider-specific `*_LIVE_TEST=1`) to unskip.
-- `pnpm test:docker:all`: Builds the shared live-test image and Docker E2E image once, then runs the Docker smoke lanes with `OPENCLAW_SKIP_DOCKER_BUILD=1` at concurrency 8 by default. Tune the main pool with `OPENCLAW_DOCKER_ALL_PARALLELISM=<n>` and the provider-sensitive tail pool with `OPENCLAW_DOCKER_ALL_TAIL_PARALLELISM=<n>`; both default to 8. Lane starts are staggered by 2 seconds by default to avoid local Docker daemon create storms; override with `OPENCLAW_DOCKER_ALL_START_STAGGER_MS=<ms>`. The runner stops scheduling new pooled lanes after the first failure unless `OPENCLAW_DOCKER_ALL_FAIL_FAST=0` is set, and each lane has a 120-minute timeout overrideable with `OPENCLAW_DOCKER_ALL_LANE_TIMEOUT_MS`. Per-lane logs are written under `.artifacts/docker-tests/<run-id>/`.
+- `pnpm test:docker:all`: Builds the shared live-test image and Docker E2E image once, then runs the Docker smoke lanes with `ICLAW_SKIP_DOCKER_BUILD=1` at concurrency 8 by default. Tune the main pool with `ICLAW_DOCKER_ALL_PARALLELISM=<n>` and the provider-sensitive tail pool with `ICLAW_DOCKER_ALL_TAIL_PARALLELISM=<n>`; both default to 8. Lane starts are staggered by 2 seconds by default to avoid local Docker daemon create storms; override with `ICLAW_DOCKER_ALL_START_STAGGER_MS=<ms>`. The runner stops scheduling new pooled lanes after the first failure unless `ICLAW_DOCKER_ALL_FAIL_FAST=0` is set, and each lane has a 120-minute timeout overrideable with `ICLAW_DOCKER_ALL_LANE_TIMEOUT_MS`. Per-lane logs are written under `.artifacts/docker-tests/<run-id>/`.
 - `pnpm test:docker:openwebui`: Starts Dockerized OpenClaw + Open WebUI, signs in through Open WebUI, checks `/api/models`, then runs a real proxied chat through `/api/chat/completions`. Requires a usable live model key (for example OpenAI in `~/.profile`), pulls an external Open WebUI image, and is not expected to be CI-stable like the normal unit/e2e suites.
 - `pnpm test:docker:mcp-channels`: Starts a seeded Gateway container and a second client container that spawns `openclaw mcp serve`, then verifies routed conversation discovery, transcript reads, attachment metadata, live event queue behavior, outbound send routing, and Claude-style channel + permission notifications over the real stdio bridge. The Claude notification assertion reads the raw stdio MCP frames directly so the smoke reflects what the bridge actually emits.
 
@@ -49,8 +49,8 @@ For local PR land/gate checks, run:
 
 If `pnpm test` flakes on a loaded host, rerun once before treating it as a regression, then isolate with `pnpm test <path/to/test>`. For memory-constrained hosts, use:
 
-- `OPENCLAW_VITEST_MAX_WORKERS=1 pnpm test`
-- `OPENCLAW_VITEST_FS_MODULE_CACHE_PATH=/tmp/openclaw-vitest-cache pnpm test:changed`
+- `ICLAW_VITEST_MAX_WORKERS=1 pnpm test`
+- `ICLAW_VITEST_FS_MODULE_CACHE_PATH=/tmp/openclaw-vitest-cache pnpm test:changed`
 
 ## Model latency bench (local keys)
 
@@ -82,7 +82,7 @@ Usage:
 - `pnpm tsx scripts/bench-cli-startup.ts --runs 12`
 - `pnpm tsx scripts/bench-cli-startup.ts --preset real`
 - `pnpm tsx scripts/bench-cli-startup.ts --preset real --case status --case gatewayStatus --runs 3`
-- `pnpm tsx scripts/bench-cli-startup.ts --entry openclaw.mjs --entry-secondary dist/entry.js --preset all`
+- `pnpm tsx scripts/bench-cli-startup.ts --entry iclaw.mjs --entry-secondary dist/entry.js --preset all`
 - `pnpm tsx scripts/bench-cli-startup.ts --preset all --output .artifacts/cli-startup-bench-all.json`
 - `pnpm tsx scripts/bench-cli-startup.ts --preset real --case gatewayStatusJson --output .artifacts/cli-startup-bench-smoke.json`
 - `pnpm tsx scripts/bench-cli-startup.ts --preset real --cpu-prof-dir .artifacts/cli-cpu`

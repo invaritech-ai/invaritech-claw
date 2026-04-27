@@ -110,7 +110,7 @@ and append-style `X-Forwarded-For` chains are treated as a hardening risk.
 Access `https://<vm-name>.exe.xyz/` (see the Control UI output from onboarding). If it prompts for auth, paste the
 configured shared secret from the VM. This guide uses token auth, so retrieve `gateway.auth.token`
 with `openclaw config get gateway.auth.token` (or generate one with `openclaw doctor --generate-gateway-token`).
-If you changed the gateway to password auth, use `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD` instead.
+If you changed the gateway to password auth, use `gateway.auth.password` / `ICLAW_GATEWAY_PASSWORD` instead.
 Approve devices with `openclaw devices list` and `openclaw devices approve <requestId>`. When in doubt, use Shelley from your browser!
 
 ## Remote Access

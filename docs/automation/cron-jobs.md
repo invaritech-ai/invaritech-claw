@@ -270,7 +270,7 @@ This writes `hooks.gmail` config, enables the Gmail preset, and uses Tailscale F
 
 ### Gateway auto-start
 
-When `hooks.enabled=true` and `hooks.gmail.account` is set, the Gateway starts `gog gmail watch serve` on boot and auto-renews the watch. Set `OPENCLAW_SKIP_GMAIL_WATCHER=1` to opt out.
+When `hooks.enabled=true` and `hooks.gmail.account` is set, the Gateway starts `gog gmail watch serve` on boot and auto-renews the watch. Set `ICLAW_SKIP_GMAIL_WATCHER=1` to opt out.
 
 ### Manual one-time setup
 
@@ -377,7 +377,7 @@ The runtime state sidecar is derived from `cron.store`: a `.json` store such as
 `~/clawd/cron/jobs.json` uses `~/clawd/cron/jobs-state.json`, while a store path
 without a `.json` suffix appends `-state.json`.
 
-Disable cron: `cron.enabled: false` or `OPENCLAW_SKIP_CRON=1`.
+Disable cron: `cron.enabled: false` or `ICLAW_SKIP_CRON=1`.
 
 **One-shot retry**: transient errors (rate limit, overload, network, server error) retry up to 3 times with exponential backoff. Permanent errors disable immediately.
 
@@ -402,7 +402,7 @@ openclaw doctor
 
 ### Cron not firing
 
-- Check `cron.enabled` and `OPENCLAW_SKIP_CRON` env var.
+- Check `cron.enabled` and `ICLAW_SKIP_CRON` env var.
 - Confirm the Gateway is running continuously.
 - For `cron` schedules, verify timezone (`--tz`) vs the host timezone.
 - `reason: not-due` in run output means manual run was checked with `openclaw cron run <jobId> --due` and the job was not due yet.

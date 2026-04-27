@@ -139,19 +139,19 @@ If `<gateway-host>` is a LAN IP and you are not using TLS, the node refuses the
 plaintext WebSocket unless you opt in for that trusted private network:
 
 ```bash
-OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1 \
+ICLAW_ALLOW_INSECURE_PRIVATE_WS=1 \
   openclaw node run --host <gateway-lan-ip> --port 18789 --display-name parallels-macos
 ```
 
 Use the same environment variable when installing the node as a LaunchAgent:
 
 ```bash
-OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1 \
+ICLAW_ALLOW_INSECURE_PRIVATE_WS=1 \
   openclaw node install --host <gateway-lan-ip> --port 18789 --display-name parallels-macos --force
 openclaw node restart
 ```
 
-`OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` is process environment, not an
+`ICLAW_ALLOW_INSECURE_PRIVATE_WS=1` is process environment, not an
 `openclaw.json` setting. `openclaw node install` stores it in the LaunchAgent
 environment when it is present on the install command.
 
@@ -316,14 +316,14 @@ copy/paste flow with `--manual`.
 
 These environment variables are accepted as fallbacks:
 
-- `OPENCLAW_GOOGLE_MEET_CLIENT_ID` or `GOOGLE_MEET_CLIENT_ID`
-- `OPENCLAW_GOOGLE_MEET_CLIENT_SECRET` or `GOOGLE_MEET_CLIENT_SECRET`
-- `OPENCLAW_GOOGLE_MEET_REFRESH_TOKEN` or `GOOGLE_MEET_REFRESH_TOKEN`
-- `OPENCLAW_GOOGLE_MEET_ACCESS_TOKEN` or `GOOGLE_MEET_ACCESS_TOKEN`
-- `OPENCLAW_GOOGLE_MEET_ACCESS_TOKEN_EXPIRES_AT` or
+- `ICLAW_GOOGLE_MEET_CLIENT_ID` or `GOOGLE_MEET_CLIENT_ID`
+- `ICLAW_GOOGLE_MEET_CLIENT_SECRET` or `GOOGLE_MEET_CLIENT_SECRET`
+- `ICLAW_GOOGLE_MEET_REFRESH_TOKEN` or `GOOGLE_MEET_REFRESH_TOKEN`
+- `ICLAW_GOOGLE_MEET_ACCESS_TOKEN` or `GOOGLE_MEET_ACCESS_TOKEN`
+- `ICLAW_GOOGLE_MEET_ACCESS_TOKEN_EXPIRES_AT` or
   `GOOGLE_MEET_ACCESS_TOKEN_EXPIRES_AT`
-- `OPENCLAW_GOOGLE_MEET_DEFAULT_MEETING` or `GOOGLE_MEET_DEFAULT_MEETING`
-- `OPENCLAW_GOOGLE_MEET_PREVIEW_ACK` or `GOOGLE_MEET_PREVIEW_ACK`
+- `ICLAW_GOOGLE_MEET_DEFAULT_MEETING` or `GOOGLE_MEET_DEFAULT_MEETING`
+- `ICLAW_GOOGLE_MEET_PREVIEW_ACK` or `GOOGLE_MEET_PREVIEW_ACK`
 
 Resolve a Meet URL, code, or `spaces/{id}` through `spaces.get`:
 

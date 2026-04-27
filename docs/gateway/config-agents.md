@@ -396,7 +396,7 @@ Codex app-server harness.
 
 - `runtime`: `"auto"`, `"pi"`, or a registered plugin harness id. The bundled Codex plugin registers `codex`.
 - `fallback`: `"pi"` or `"none"`. `"pi"` keeps the built-in PI harness as the compatibility fallback when no plugin harness is selected. `"none"` makes missing or unsupported plugin harness selection fail instead of silently using PI. Selected plugin harness failures always surface directly.
-- Environment overrides: `OPENCLAW_AGENT_RUNTIME=<id|auto|pi>` overrides `runtime`; `OPENCLAW_AGENT_HARNESS_FALLBACK=none` disables PI fallback for that process.
+- Environment overrides: `ICLAW_AGENT_RUNTIME=<id|auto|pi>` overrides `runtime`; `ICLAW_AGENT_HARNESS_FALLBACK=none` disables PI fallback for that process.
 - For Codex-only deployments, set `model: "openai/gpt-5.5"`, `embeddedHarness.runtime: "codex"`, and `embeddedHarness.fallback: "none"`.
 - Harness choice is pinned per session id after the first embedded run. Config/env changes affect new or reset sessions, not an existing transcript. Legacy sessions with transcript history but no recorded pin are treated as PI-pinned. `/status` shows non-PI harness ids such as `codex` next to `Fast`.
 - This only controls the embedded chat harness. Media generation, vision, PDF, music, video, and TTS still use their provider/model settings.
@@ -850,7 +850,7 @@ noVNC observer access uses VNC auth by default and OpenClaw emits a short-lived 
 - `sandbox.browser.binds` mounts additional host directories into the sandbox browser container only. When set (including `[]`), it replaces `docker.binds` for the browser container.
 - Launch defaults are defined in `scripts/sandbox-browser-entrypoint.sh` and tuned for container hosts:
   - `--remote-debugging-address=127.0.0.1`
-  - `--remote-debugging-port=<derived from OPENCLAW_BROWSER_CDP_PORT>`
+  - `--remote-debugging-port=<derived from ICLAW_BROWSER_CDP_PORT>`
   - `--user-data-dir=${HOME}/.chrome`
   - `--no-first-run`
   - `--no-default-browser-check`
@@ -868,11 +868,11 @@ noVNC observer access uses VNC auth by default and OpenClaw emits a short-lived 
   - `--disable-extensions` (default enabled)
   - `--disable-3d-apis`, `--disable-software-rasterizer`, and `--disable-gpu` are
     enabled by default and can be disabled with
-    `OPENCLAW_BROWSER_DISABLE_GRAPHICS_FLAGS=0` if WebGL/3D usage requires it.
-  - `OPENCLAW_BROWSER_DISABLE_EXTENSIONS=0` re-enables extensions if your workflow
+    `ICLAW_BROWSER_DISABLE_GRAPHICS_FLAGS=0` if WebGL/3D usage requires it.
+  - `ICLAW_BROWSER_DISABLE_EXTENSIONS=0` re-enables extensions if your workflow
     depends on them.
   - `--renderer-process-limit=2` can be changed with
-    `OPENCLAW_BROWSER_RENDERER_PROCESS_LIMIT=<N>`; set `0` to use Chromium's
+    `ICLAW_BROWSER_RENDERER_PROCESS_LIMIT=<N>`; set `0` to use Chromium's
     default process limit.
   - plus `--no-sandbox` and `--disable-setuid-sandbox` when `noSandbox` is enabled.
   - Defaults are the container image baseline; use a custom browser image with a custom

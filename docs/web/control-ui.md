@@ -347,7 +347,7 @@ pnpm ui:build
 Optional absolute base (when you want fixed asset URLs):
 
 ```bash
-OPENCLAW_CONTROL_UI_BASE_PATH=/openclaw/ pnpm ui:build
+ICLAW_CONTROL_UI_BASE_PATH=/openclaw/ pnpm ui:build
 ```
 
 For local development (separate dev server):

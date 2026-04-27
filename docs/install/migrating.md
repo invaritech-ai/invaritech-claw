@@ -22,7 +22,7 @@ When you copy the **state directory** (`~/.openclaw/` by default) and your **wor
 
 <Tip>
 Run `openclaw status` on the old machine to confirm your state directory path.
-Custom profiles use `~/.openclaw-<profile>/` or a path set via `OPENCLAW_STATE_DIR`.
+Custom profiles use `~/.openclaw-<profile>/` or a path set via `ICLAW_STATE_DIR`.
 </Tip>
 
 ## Migration Steps
@@ -74,7 +74,7 @@ Custom profiles use `~/.openclaw-<profile>/` or a path set via `OPENCLAW_STATE_D
 
 <AccordionGroup>
   <Accordion title="Profile or state-dir mismatch">
-    If the old gateway used `--profile` or `OPENCLAW_STATE_DIR` and the new one does not,
+    If the old gateway used `--profile` or `ICLAW_STATE_DIR` and the new one does not,
     channels will appear logged out and sessions will be empty.
     Launch the gateway with the **same** profile or state-dir you migrated, then rerun `openclaw doctor`.
   </Accordion>

@@ -85,11 +85,11 @@ Security notes:
 
 Disable/override:
 
-- `OPENCLAW_DISABLE_BONJOUR=1` disables advertising.
+- `ICLAW_DISABLE_BONJOUR=1` disables advertising.
 - `gateway.bind` in `~/.openclaw/openclaw.json` controls the Gateway bind mode.
-- `OPENCLAW_SSH_PORT` overrides the SSH port advertised when `sshPort` is emitted.
-- `OPENCLAW_TAILNET_DNS` publishes a `tailnetDns` hint (MagicDNS).
-- `OPENCLAW_CLI_PATH` overrides the advertised CLI path.
+- `ICLAW_SSH_PORT` overrides the SSH port advertised when `sshPort` is emitted.
+- `ICLAW_TAILNET_DNS` publishes a `tailnetDns` hint (MagicDNS).
+- `ICLAW_CLI_PATH` overrides the advertised CLI path.
 
 ### 2) Tailnet (cross-network)
 

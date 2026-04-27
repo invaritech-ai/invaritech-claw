@@ -52,8 +52,8 @@ reach other host locations unless sandboxing is enabled. See
 
 ## Paths (quick map)
 
-- Config: `~/.openclaw/openclaw.json` (or `OPENCLAW_CONFIG_PATH`)
-- State dir: `~/.openclaw` (or `OPENCLAW_STATE_DIR`)
+- Config: `~/.openclaw/openclaw.json` (or `ICLAW_CONFIG_PATH`)
+- State dir: `~/.openclaw` (or `ICLAW_STATE_DIR`)
 - Workspace: `~/.openclaw/workspace` (or `~/.openclaw/workspace-<agentId>`)
 - Agent dir: `~/.openclaw/agents/<agentId>/agent` (or `agents.list[].agentDir`)
 - Sessions: `~/.openclaw/agents/<agentId>/sessions`
@@ -64,7 +64,7 @@ If you do nothing, OpenClaw runs a single agent:
 
 - `agentId` defaults to **`main`**.
 - Sessions are keyed as `agent:main:<mainKey>`.
-- Workspace defaults to `~/.openclaw/workspace` (or `~/.openclaw/workspace-<profile>` when `OPENCLAW_PROFILE` is set).
+- Workspace defaults to `~/.openclaw/workspace` (or `~/.openclaw/workspace-<profile>` when `ICLAW_PROFILE` is set).
 - State defaults to `~/.openclaw/agents/main/agent`.
 
 ## Agent helper

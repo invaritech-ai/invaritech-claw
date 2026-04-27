@@ -120,8 +120,8 @@ different channels, tenants, workspaces, or operational roles.
 
 Keep these unique per Gateway instance:
 
-- `OPENCLAW_CONFIG_PATH` — per-instance config file
-- `OPENCLAW_STATE_DIR` — per-instance sessions, creds, caches
+- `ICLAW_CONFIG_PATH` — per-instance config file
+- `ICLAW_STATE_DIR` — per-instance sessions, creds, caches
 - `agents.defaults.workspace` — per-instance workspace root
 - `gateway.port` (or `--port`) — unique per instance
 - derived browser/canvas/CDP ports
@@ -130,7 +130,7 @@ If these are shared, you will hit config races and port conflicts.
 
 ## Port mapping (derived)
 
-Base port = `gateway.port` (or `OPENCLAW_GATEWAY_PORT` / `--port`).
+Base port = `gateway.port` (or `ICLAW_GATEWAY_PORT` / `--port`).
 
 - browser control service port = base + 2 (loopback only)
 - canvas host is served on the Gateway HTTP server (same port as `gateway.port`)
@@ -148,12 +148,12 @@ If you override any of these in config or env, you must keep them unique per ins
 ## Manual env example
 
 ```bash
-OPENCLAW_CONFIG_PATH=~/.openclaw/main.json \
-OPENCLAW_STATE_DIR=~/.openclaw \
+ICLAW_CONFIG_PATH=~/.openclaw/main.json \
+ICLAW_STATE_DIR=~/.openclaw \
 openclaw gateway --port 18789
 
-OPENCLAW_CONFIG_PATH=~/.openclaw/rescue.json \
-OPENCLAW_STATE_DIR=~/.openclaw-rescue \
+ICLAW_CONFIG_PATH=~/.openclaw/rescue.json \
+ICLAW_STATE_DIR=~/.openclaw-rescue \
 openclaw gateway --port 19789
 ```
 

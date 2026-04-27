@@ -50,7 +50,7 @@ openclaw logs --no-color
 openclaw logs --limit 500
 openclaw logs --local-time
 openclaw logs --follow --local-time
-openclaw logs --url ws://127.0.0.1:18789 --token "$OPENCLAW_GATEWAY_TOKEN"
+openclaw logs --url ws://127.0.0.1:18789 --token "$ICLAW_GATEWAY_TOKEN"
 ```
 
 ## Notes

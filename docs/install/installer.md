@@ -152,19 +152,19 @@ The script exits with code `2` for invalid method selection or invalid `--instal
 
   <Accordion title="Environment variables reference">
 
-| Variable                                                | Description                                   |
-| ------------------------------------------------------- | --------------------------------------------- |
-| `OPENCLAW_INSTALL_METHOD=git\|npm`                      | Install method                                |
-| `OPENCLAW_VERSION=latest\|next\|main\|<semver>\|<spec>` | npm version, dist-tag, or package spec        |
-| `OPENCLAW_BETA=0\|1`                                    | Use beta if available                         |
-| `OPENCLAW_GIT_DIR=<path>`                               | Checkout directory                            |
-| `OPENCLAW_GIT_UPDATE=0\|1`                              | Toggle git updates                            |
-| `OPENCLAW_NO_PROMPT=1`                                  | Disable prompts                               |
-| `OPENCLAW_NO_ONBOARD=1`                                 | Skip onboarding                               |
-| `OPENCLAW_DRY_RUN=1`                                    | Dry run mode                                  |
-| `OPENCLAW_VERBOSE=1`                                    | Debug mode                                    |
-| `OPENCLAW_NPM_LOGLEVEL=error\|warn\|notice`             | npm log level                                 |
-| `SHARP_IGNORE_GLOBAL_LIBVIPS=0\|1`                      | Control sharp/libvips behavior (default: `1`) |
+| Variable                                             | Description                                   |
+| ---------------------------------------------------- | --------------------------------------------- |
+| `ICLAW_INSTALL_METHOD=git\|npm`                      | Install method                                |
+| `ICLAW_VERSION=latest\|next\|main\|<semver>\|<spec>` | npm version, dist-tag, or package spec        |
+| `ICLAW_BETA=0\|1`                                    | Use beta if available                         |
+| `ICLAW_GIT_DIR=<path>`                               | Checkout directory                            |
+| `ICLAW_GIT_UPDATE=0\|1`                              | Toggle git updates                            |
+| `ICLAW_NO_PROMPT=1`                                  | Disable prompts                               |
+| `ICLAW_NO_ONBOARD=1`                                 | Skip onboarding                               |
+| `ICLAW_DRY_RUN=1`                                    | Dry run mode                                  |
+| `ICLAW_VERBOSE=1`                                    | Debug mode                                    |
+| `ICLAW_NPM_LOGLEVEL=error\|warn\|notice`             | npm log level                                 |
+| `SHARP_IGNORE_GLOBAL_LIBVIPS=0\|1`                   | Control sharp/libvips behavior (default: `1`) |
 
   </Accordion>
 </AccordionGroup>
@@ -253,17 +253,17 @@ by default, plus git-checkout installs under the same prefix flow.
 
   <Accordion title="Environment variables reference">
 
-| Variable                                    | Description                                   |
-| ------------------------------------------- | --------------------------------------------- |
-| `OPENCLAW_PREFIX=<path>`                    | Install prefix                                |
-| `OPENCLAW_INSTALL_METHOD=git\|npm`          | Install method                                |
-| `OPENCLAW_VERSION=<ver>`                    | OpenClaw version or dist-tag                  |
-| `OPENCLAW_NODE_VERSION=<ver>`               | Node version                                  |
-| `OPENCLAW_GIT_DIR=<path>`                   | Git checkout directory for git installs       |
-| `OPENCLAW_GIT_UPDATE=0\|1`                  | Toggle git updates for existing checkouts     |
-| `OPENCLAW_NO_ONBOARD=1`                     | Skip onboarding                               |
-| `OPENCLAW_NPM_LOGLEVEL=error\|warn\|notice` | npm log level                                 |
-| `SHARP_IGNORE_GLOBAL_LIBVIPS=0\|1`          | Control sharp/libvips behavior (default: `1`) |
+| Variable                                 | Description                                   |
+| ---------------------------------------- | --------------------------------------------- |
+| `ICLAW_PREFIX=<path>`                    | Install prefix                                |
+| `ICLAW_INSTALL_METHOD=git\|npm`          | Install method                                |
+| `ICLAW_VERSION=<ver>`                    | OpenClaw version or dist-tag                  |
+| `ICLAW_NODE_VERSION=<ver>`               | Node version                                  |
+| `ICLAW_GIT_DIR=<path>`                   | Git checkout directory for git installs       |
+| `ICLAW_GIT_UPDATE=0\|1`                  | Toggle git updates for existing checkouts     |
+| `ICLAW_NO_ONBOARD=1`                     | Skip onboarding                               |
+| `ICLAW_NPM_LOGLEVEL=error\|warn\|notice` | npm log level                                 |
+| `SHARP_IGNORE_GLOBAL_LIBVIPS=0\|1`       | Control sharp/libvips behavior (default: `1`) |
 
   </Accordion>
 </AccordionGroup>
@@ -348,13 +348,13 @@ by default, plus git-checkout installs under the same prefix flow.
 
   <Accordion title="Environment variables reference">
 
-| Variable                           | Description        |
-| ---------------------------------- | ------------------ |
-| `OPENCLAW_INSTALL_METHOD=git\|npm` | Install method     |
-| `OPENCLAW_GIT_DIR=<path>`          | Checkout directory |
-| `OPENCLAW_NO_ONBOARD=1`            | Skip onboarding    |
-| `OPENCLAW_GIT_UPDATE=0`            | Disable git pull   |
-| `OPENCLAW_DRY_RUN=1`               | Dry run mode       |
+| Variable                        | Description        |
+| ------------------------------- | ------------------ |
+| `ICLAW_INSTALL_METHOD=git\|npm` | Install method     |
+| `ICLAW_GIT_DIR=<path>`          | Checkout directory |
+| `ICLAW_NO_ONBOARD=1`            | Skip onboarding    |
+| `ICLAW_GIT_UPDATE=0`            | Disable git pull   |
+| `ICLAW_DRY_RUN=1`               | Dry run mode       |
 
   </Accordion>
 </AccordionGroup>
@@ -377,7 +377,7 @@ Use non-interactive flags/env vars for predictable runs.
   </Tab>
   <Tab title="install.sh (non-interactive git)">
     ```bash
-    OPENCLAW_INSTALL_METHOD=git OPENCLAW_NO_PROMPT=1 \
+    ICLAW_INSTALL_METHOD=git ICLAW_NO_PROMPT=1 \
       curl -fsSL --proto '=https' --tlsv1.2 https://openclaw.ai/install.sh | bash
     ```
   </Tab>

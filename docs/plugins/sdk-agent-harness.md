@@ -87,10 +87,10 @@ OpenClaw chooses a harness after provider/model resolution:
 
 1. An existing session's recorded harness id wins, so config/env changes do not
    hot-switch that transcript to another runtime.
-2. `OPENCLAW_AGENT_RUNTIME=<id>` forces a registered harness with that id for
+2. `ICLAW_AGENT_RUNTIME=<id>` forces a registered harness with that id for
    sessions that are not already pinned.
-3. `OPENCLAW_AGENT_RUNTIME=pi` forces the built-in PI harness.
-4. `OPENCLAW_AGENT_RUNTIME=auto` asks registered harnesses if they support the
+3. `ICLAW_AGENT_RUNTIME=pi` forces the built-in PI harness.
+4. `ICLAW_AGENT_RUNTIME=auto` asks registered harnesses if they support the
    resolved provider/model.
 5. If no registered harness matches, OpenClaw uses PI unless PI fallback is
    disabled.
@@ -179,7 +179,7 @@ to PI.
 
 Set `fallback: "none"` when you need missing plugin harness selection to fail
 instead of using PI. Selected plugin harness failures already fail hard. This
-does not block an explicit `runtime: "pi"` or `OPENCLAW_AGENT_RUNTIME=pi`.
+does not block an explicit `runtime: "pi"` or `ICLAW_AGENT_RUNTIME=pi`.
 
 For Codex-only embedded runs:
 
@@ -239,13 +239,13 @@ Per-agent overrides use the same shape:
 }
 ```
 
-`OPENCLAW_AGENT_RUNTIME` still overrides the configured runtime. Use
-`OPENCLAW_AGENT_HARNESS_FALLBACK=none` to disable PI fallback from the
+`ICLAW_AGENT_RUNTIME` still overrides the configured runtime. Use
+`ICLAW_AGENT_HARNESS_FALLBACK=none` to disable PI fallback from the
 environment.
 
 ```bash
-OPENCLAW_AGENT_RUNTIME=codex \
-OPENCLAW_AGENT_HARNESS_FALLBACK=none \
+ICLAW_AGENT_RUNTIME=codex \
+ICLAW_AGENT_HARNESS_FALLBACK=none \
 openclaw gateway run
 ```
 

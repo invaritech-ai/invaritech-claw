@@ -383,7 +383,7 @@ OpenClaw uses the built-in model catalog. Add custom providers via `models.provi
 ```
 
 - Use `authHeader: true` + `headers` for custom auth needs.
-- Override agent config root with `OPENCLAW_AGENT_DIR` (or `PI_CODING_AGENT_DIR`, a legacy environment variable alias).
+- Override agent config root with `ICLAW_AGENT_DIR` (or `PI_CODING_AGENT_DIR`, a legacy environment variable alias).
 - Merge precedence for matching provider IDs:
   - Non-empty agent `models.json` `baseUrl` values win.
   - Non-empty agent `apiKey` values win only when that provider is not SecretRef-managed in current config/auth-profile context.

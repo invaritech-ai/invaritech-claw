@@ -13,9 +13,9 @@ OpenClaw pulls environment variables from multiple sources. The rule is **never 
 
 1. **Process environment** (what the Gateway process already has from the parent shell/daemon).
 2. **`.env` in the current working directory** (dotenv default; does not override).
-3. **Global `.env`** at `~/.openclaw/.env` (aka `$OPENCLAW_STATE_DIR/.env`; does not override).
+3. **Global `.env`** at `~/.openclaw/.env` (aka `$ICLAW_STATE_DIR/.env`; does not override).
 4. **Config `env` block** in `~/.openclaw/openclaw.json` (applied only if missing).
-5. **Optional login-shell import** (`env.shellEnv.enabled` or `OPENCLAW_LOAD_SHELL_ENV=1`), applied only for missing expected keys.
+5. **Optional login-shell import** (`env.shellEnv.enabled` or `ICLAW_LOAD_SHELL_ENV=1`), applied only for missing expected keys.
 
 On Ubuntu fresh installs that use the default state dir, OpenClaw also treats `~/.config/openclaw/gateway.env` as a compatibility fallback after the global `.env`. If both files exist and disagree, OpenClaw keeps `~/.openclaw/.env` and prints a warning.
 
@@ -53,25 +53,25 @@ Two equivalent ways to set inline env vars (both are non-overriding):
 
 Env var equivalents:
 
-- `OPENCLAW_LOAD_SHELL_ENV=1`
-- `OPENCLAW_SHELL_ENV_TIMEOUT_MS=15000`
+- `ICLAW_LOAD_SHELL_ENV=1`
+- `ICLAW_SHELL_ENV_TIMEOUT_MS=15000`
 
 ## Runtime-injected env vars
 
 OpenClaw also injects context markers into spawned child processes:
 
-- `OPENCLAW_SHELL=exec`: set for commands run through the `exec` tool.
-- `OPENCLAW_SHELL=acp`: set for ACP runtime backend process spawns (for example `acpx`).
-- `OPENCLAW_SHELL=acp-client`: set for `openclaw acp client` when it spawns the ACP bridge process.
-- `OPENCLAW_SHELL=tui-local`: set for local TUI `!` shell commands.
+- `ICLAW_SHELL=exec`: set for commands run through the `exec` tool.
+- `ICLAW_SHELL=acp`: set for ACP runtime backend process spawns (for example `acpx`).
+- `ICLAW_SHELL=acp-client`: set for `openclaw acp client` when it spawns the ACP bridge process.
+- `ICLAW_SHELL=tui-local`: set for local TUI `!` shell commands.
 
 These are runtime markers (not required user config). They can be used in shell/profile logic
 to apply context-specific rules.
 
 ## UI env vars
 
-- `OPENCLAW_THEME=light`: force the light TUI palette when your terminal has a light background.
-- `OPENCLAW_THEME=dark`: force the dark TUI palette.
+- `ICLAW_THEME=light`: force the light TUI palette when your terminal has a light background.
+- `ICLAW_THEME=dark`: force the dark TUI palette.
 - `COLORFGBG`: if your terminal exports it, OpenClaw uses the background color hint to auto-pick the TUI palette.
 
 ## Env var substitution in config
@@ -103,35 +103,35 @@ Both resolve from process env at activation time. SecretRef details are document
 
 ## Path-related env vars
 
-| Variable               | Purpose                                                                                                                                                                          |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_HOME`        | Override the home directory used for all internal path resolution (`~/.openclaw/`, agent dirs, sessions, credentials). Useful when running OpenClaw as a dedicated service user. |
-| `OPENCLAW_STATE_DIR`   | Override the state directory (default `~/.openclaw`).                                                                                                                            |
-| `OPENCLAW_CONFIG_PATH` | Override the config file path (default `~/.openclaw/openclaw.json`).                                                                                                             |
+| Variable            | Purpose                                                                                                                                                                          |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ICLAW_HOME`        | Override the home directory used for all internal path resolution (`~/.openclaw/`, agent dirs, sessions, credentials). Useful when running OpenClaw as a dedicated service user. |
+| `ICLAW_STATE_DIR`   | Override the state directory (default `~/.openclaw`).                                                                                                                            |
+| `ICLAW_CONFIG_PATH` | Override the config file path (default `~/.openclaw/openclaw.json`).                                                                                                             |
 
 ## Logging
 
-| Variable             | Purpose                                                                                                                                                                                      |
-| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_LOG_LEVEL` | Override log level for both file and console (e.g. `debug`, `trace`). Takes precedence over `logging.level` and `logging.consoleLevel` in config. Invalid values are ignored with a warning. |
+| Variable          | Purpose                                                                                                                                                                                      |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ICLAW_LOG_LEVEL` | Override log level for both file and console (e.g. `debug`, `trace`). Takes precedence over `logging.level` and `logging.consoleLevel` in config. Invalid values are ignored with a warning. |
 
-### `OPENCLAW_HOME`
+### `ICLAW_HOME`
 
-When set, `OPENCLAW_HOME` replaces the system home directory (`$HOME` / `os.homedir()`) for all internal path resolution. This enables full filesystem isolation for headless service accounts.
+When set, `ICLAW_HOME` replaces the system home directory (`$HOME` / `os.homedir()`) for all internal path resolution. This enables full filesystem isolation for headless service accounts.
 
-**Precedence:** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > `os.homedir()`
+**Precedence:** `ICLAW_HOME` > `$HOME` > `USERPROFILE` > `os.homedir()`
 
 **Example** (macOS LaunchDaemon):
 
 ```xml
 <key>EnvironmentVariables</key>
 <dict>
-  <key>OPENCLAW_HOME</key>
+  <key>ICLAW_HOME</key>
   <string>/Users/user</string>
 </dict>
 ```
 
-`OPENCLAW_HOME` can also be set to a tilde path (e.g. `~/svc`), which gets expanded using `$HOME` before use.
+`ICLAW_HOME` can also be set to a tilde path (e.g. `~/svc`), which gets expanded using `$HOME` before use.
 
 ## nvm users: web_fetch TLS failures
 

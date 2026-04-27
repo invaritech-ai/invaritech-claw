@@ -133,19 +133,19 @@ For the generic Docker flow, see [Docker](/install/docker).
     Create `.env` in the repository root.
 
     ```bash
-    OPENCLAW_IMAGE=openclaw:latest
-    OPENCLAW_GATEWAY_TOKEN=
-    OPENCLAW_GATEWAY_BIND=lan
-    OPENCLAW_GATEWAY_PORT=18789
+    ICLAW_IMAGE=openclaw:latest
+    ICLAW_GATEWAY_TOKEN=
+    ICLAW_GATEWAY_BIND=lan
+    ICLAW_GATEWAY_PORT=18789
 
-    OPENCLAW_CONFIG_DIR=/root/.openclaw
-    OPENCLAW_WORKSPACE_DIR=/root/.openclaw/workspace
+    ICLAW_CONFIG_DIR=/root/.openclaw
+    ICLAW_WORKSPACE_DIR=/root/.openclaw/workspace
 
     GOG_KEYRING_PASSWORD=
     XDG_CONFIG_HOME=/home/node/.openclaw
     ```
 
-    Leave `OPENCLAW_GATEWAY_TOKEN` blank unless you explicitly want to
+    Leave `ICLAW_GATEWAY_TOKEN` blank unless you explicitly want to
     manage it through `.env`; OpenClaw writes a random gateway token to
     config on first start. Generate a keyring password and paste it into
     `GOG_KEYRING_PASSWORD`:
@@ -156,7 +156,7 @@ For the generic Docker flow, see [Docker](/install/docker).
 
     **Do not commit this file.**
 
-    This `.env` file is for container/runtime env such as `OPENCLAW_GATEWAY_TOKEN`.
+    This `.env` file is for container/runtime env such as `ICLAW_GATEWAY_TOKEN`.
     Stored provider OAuth/API-key auth lives in the mounted
     `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`.
 
@@ -168,7 +168,7 @@ For the generic Docker flow, see [Docker](/install/docker).
     ```yaml
     services:
       openclaw-gateway:
-        image: ${OPENCLAW_IMAGE}
+        image: ${ICLAW_IMAGE}
         build: .
         restart: unless-stopped
         env_file:
@@ -177,28 +177,28 @@ For the generic Docker flow, see [Docker](/install/docker).
           - HOME=/home/node
           - NODE_ENV=production
           - TERM=xterm-256color
-          - OPENCLAW_GATEWAY_BIND=${OPENCLAW_GATEWAY_BIND}
-          - OPENCLAW_GATEWAY_PORT=${OPENCLAW_GATEWAY_PORT}
-          - OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}
+          - ICLAW_GATEWAY_BIND=${ICLAW_GATEWAY_BIND}
+          - ICLAW_GATEWAY_PORT=${ICLAW_GATEWAY_PORT}
+          - ICLAW_GATEWAY_TOKEN=${ICLAW_GATEWAY_TOKEN}
           - GOG_KEYRING_PASSWORD=${GOG_KEYRING_PASSWORD}
           - XDG_CONFIG_HOME=${XDG_CONFIG_HOME}
           - PATH=/home/linuxbrew/.linuxbrew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
         volumes:
-          - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
-          - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
+          - ${ICLAW_CONFIG_DIR}:/home/node/.openclaw
+          - ${ICLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
         ports:
           # Recommended: keep the Gateway loopback-only on the VPS; access via SSH tunnel.
           # To expose it publicly, remove the `127.0.0.1:` prefix and firewall accordingly.
-          - "127.0.0.1:${OPENCLAW_GATEWAY_PORT}:18789"
+          - "127.0.0.1:${ICLAW_GATEWAY_PORT}:18789"
         command:
           [
             "node",
             "dist/index.js",
             "gateway",
             "--bind",
-            "${OPENCLAW_GATEWAY_BIND}",
+            "${ICLAW_GATEWAY_BIND}",
             "--port",
-            "${OPENCLAW_GATEWAY_PORT}",
+            "${ICLAW_GATEWAY_PORT}",
             "--allow-unconfigured",
           ]
     ```

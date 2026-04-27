@@ -441,8 +441,8 @@ probing `XAI_API_KEY`.
 
 ```bash
 pnpm test extensions/xai
-OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_TEST_QUIET=1 pnpm test:live -- extensions/xai/xai.live.test.ts
-OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_TEST_QUIET=1 OPENCLAW_LIVE_IMAGE_GENERATION_PROVIDERS=xai pnpm test:live -- test/image-generation.runtime.live.test.ts
+ICLAW_LIVE_TEST=1 ICLAW_LIVE_TEST_QUIET=1 pnpm test:live -- extensions/xai/xai.live.test.ts
+ICLAW_LIVE_TEST=1 ICLAW_LIVE_TEST_QUIET=1 ICLAW_LIVE_IMAGE_GENERATION_PROVIDERS=xai pnpm test:live -- test/image-generation.runtime.live.test.ts
 ```
 
 The provider-specific live file synthesizes normal TTS, telephony-friendly PCM

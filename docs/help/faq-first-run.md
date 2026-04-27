@@ -112,8 +112,8 @@ and troubleshooting see the main [FAQ](/help/faq).
 
     - Open `http://127.0.0.1:18789/`.
     - If it asks for shared-secret auth, paste the configured token or password into Control UI settings.
-    - Token source: `gateway.auth.token` (or `OPENCLAW_GATEWAY_TOKEN`).
-    - Password source: `gateway.auth.password` (or `OPENCLAW_GATEWAY_PASSWORD`).
+    - Token source: `gateway.auth.token` (or `ICLAW_GATEWAY_TOKEN`).
+    - Password source: `gateway.auth.password` (or `ICLAW_GATEWAY_PASSWORD`).
     - If no shared secret is configured yet, generate a token with `openclaw doctor --generate-gateway-token`.
 
     **Not on localhost:**
@@ -215,7 +215,7 @@ and troubleshooting see the main [FAQ](/help/faq).
     state) as long as you copy **both** locations:
 
     1. Install OpenClaw on the new machine.
-    2. Copy `$OPENCLAW_STATE_DIR` (default: `~/.openclaw`) from the old machine.
+    2. Copy `$ICLAW_STATE_DIR` (default: `~/.openclaw`) from the old machine.
     3. Copy your workspace (default: `~/.openclaw/workspace`).
     4. Run `openclaw doctor` and restart the Gateway service.
 

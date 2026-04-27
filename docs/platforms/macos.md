@@ -35,7 +35,7 @@ capabilities to the agent as a node.
 ## Launchd control
 
 The app manages a per‑user LaunchAgent labeled `ai.openclaw.gateway`
-(or `ai.openclaw.<profile>` when using `--profile`/`OPENCLAW_PROFILE`; legacy `com.openclaw.*` still unloads).
+(or `ai.openclaw.<profile>` when using `--profile`/`ICLAW_PROFILE`; legacy `com.openclaw.*` still unloads).
 
 ```bash
 launchctl kickstart -k gui/$UID/ai.openclaw.gateway
@@ -152,7 +152,7 @@ sessions and credentials.
 Prefer a local non-synced state path such as:
 
 ```bash
-OPENCLAW_STATE_DIR=~/.openclaw
+ICLAW_STATE_DIR=~/.openclaw
 ```
 
 If `openclaw doctor` detects state under:

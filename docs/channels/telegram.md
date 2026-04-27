@@ -868,9 +868,9 @@ channels:
     </Warning>
 
     - Environment overrides (temporary):
-      - `OPENCLAW_TELEGRAM_DISABLE_AUTO_SELECT_FAMILY=1`
-      - `OPENCLAW_TELEGRAM_ENABLE_AUTO_SELECT_FAMILY=1`
-      - `OPENCLAW_TELEGRAM_DNS_RESULT_ORDER=ipv4first`
+      - `ICLAW_TELEGRAM_DISABLE_AUTO_SELECT_FAMILY=1`
+      - `ICLAW_TELEGRAM_ENABLE_AUTO_SELECT_FAMILY=1`
+      - `ICLAW_TELEGRAM_DNS_RESULT_ORDER=ipv4first`
     - Validate DNS answers:
 
 ```bash

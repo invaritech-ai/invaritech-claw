@@ -330,7 +330,7 @@ compatibility notices. When everything is clean it prints `No plugin issues
 detected.`
 
 For module-shape failures such as missing `register`/`activate` exports, rerun
-with `OPENCLAW_PLUGIN_LOAD_DEBUG=1` to include a compact export-shape summary in
+with `ICLAW_PLUGIN_LOAD_DEBUG=1` to include a compact export-shape summary in
 the diagnostic output.
 
 ### Marketplace

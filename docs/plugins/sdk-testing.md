@@ -253,7 +253,7 @@ pnpm test:coverage
 If local runs cause memory pressure:
 
 ```bash
-OPENCLAW_VITEST_MAX_WORKERS=1 pnpm test
+ICLAW_VITEST_MAX_WORKERS=1 pnpm test
 ```
 
 ## Related

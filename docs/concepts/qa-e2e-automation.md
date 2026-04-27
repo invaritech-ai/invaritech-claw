@@ -63,7 +63,7 @@ the child config scoped to the transport under test, so Matrix runs without
 `qa-channel` in the child config. It writes the structured report artifacts and
 a combined stdout/stderr log into the selected Matrix QA output directory. To
 capture the outer `scripts/run-node.mjs` build/launcher output too, set
-`OPENCLAW_RUN_NODE_OUTPUT_LOG=<path>` to a repo-local log file.
+`ICLAW_RUN_NODE_OUTPUT_LOG=<path>` to a repo-local log file.
 
 For a transport-real Telegram smoke lane, run:
 
@@ -72,9 +72,9 @@ pnpm openclaw qa telegram
 ```
 
 That lane targets one real private Telegram group instead of provisioning a
-disposable server. It requires `OPENCLAW_QA_TELEGRAM_GROUP_ID`,
-`OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN`, and
-`OPENCLAW_QA_TELEGRAM_SUT_BOT_TOKEN`, plus two distinct bots in the same
+disposable server. It requires `ICLAW_QA_TELEGRAM_GROUP_ID`,
+`ICLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN`, and
+`ICLAW_QA_TELEGRAM_SUT_BOT_TOKEN`, plus two distinct bots in the same
 private group. The SUT bot must have a Telegram username, and bot-to-bot
 observation works best when both bots have Bot-to-Bot Communication Mode
 enabled in `@BotFather`.
@@ -92,9 +92,9 @@ pnpm openclaw qa discord
 That lane targets one real private Discord guild channel with two bots: a
 driver bot controlled by the harness and a SUT bot started by the child
 OpenClaw gateway through the bundled Discord plugin. It requires
-`OPENCLAW_QA_DISCORD_GUILD_ID`, `OPENCLAW_QA_DISCORD_CHANNEL_ID`,
-`OPENCLAW_QA_DISCORD_DRIVER_BOT_TOKEN`, `OPENCLAW_QA_DISCORD_SUT_BOT_TOKEN`,
-and `OPENCLAW_QA_DISCORD_SUT_APPLICATION_ID` when using env credentials.
+`ICLAW_QA_DISCORD_GUILD_ID`, `ICLAW_QA_DISCORD_CHANNEL_ID`,
+`ICLAW_QA_DISCORD_DRIVER_BOT_TOKEN`, `ICLAW_QA_DISCORD_SUT_BOT_TOKEN`,
+and `ICLAW_QA_DISCORD_SUT_APPLICATION_ID` when using env credentials.
 The lane verifies channel mention handling and checks that the SUT bot has
 registered the native `/help` command with Discord.
 The command exits non-zero when any scenario fails. Use `--allow-failures` when

@@ -154,7 +154,7 @@ Pairing state is stored under the Gateway state directory (default `~/.openclaw`
 - `~/.openclaw/nodes/paired.json`
 - `~/.openclaw/nodes/pending.json`
 
-If you override `OPENCLAW_STATE_DIR`, the `nodes/` folder moves with it.
+If you override `ICLAW_STATE_DIR`, the `nodes/` folder moves with it.
 
 Security notes:
 

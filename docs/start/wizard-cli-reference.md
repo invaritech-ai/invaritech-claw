@@ -251,7 +251,7 @@ Credential storage mode:
 Headless and server tip: complete OAuth on a machine with a browser, then copy
 that agent's `auth-profiles.json` (for example
 `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`, or the matching
-`$OPENCLAW_STATE_DIR/...` path) to the gateway host. `credentials/oauth.json`
+`$ICLAW_STATE_DIR/...` path) to the gateway host. `credentials/oauth.json`
 is only a legacy import source.
 </Note>
 

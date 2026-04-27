@@ -377,7 +377,7 @@ The bundled sandbox browser image also applies conservative Chromium startup def
 for containerized workloads. Current container defaults include:
 
 - `--remote-debugging-address=127.0.0.1`
-- `--remote-debugging-port=<derived from OPENCLAW_BROWSER_CDP_PORT>`
+- `--remote-debugging-port=<derived from ICLAW_BROWSER_CDP_PORT>`
 - `--user-data-dir=${HOME}/.chrome`
 - `--no-first-run`
 - `--no-default-browser-check`
@@ -396,12 +396,12 @@ for containerized workloads. Current container defaults include:
 - `--no-sandbox` and `--disable-setuid-sandbox` when `noSandbox` is enabled.
 - The three graphics hardening flags (`--disable-3d-apis`,
   `--disable-software-rasterizer`, `--disable-gpu`) are optional and are useful
-  when containers lack GPU support. Set `OPENCLAW_BROWSER_DISABLE_GRAPHICS_FLAGS=0`
+  when containers lack GPU support. Set `ICLAW_BROWSER_DISABLE_GRAPHICS_FLAGS=0`
   if your workload requires WebGL or other 3D/browser features.
 - `--disable-extensions` is enabled by default and can be disabled with
-  `OPENCLAW_BROWSER_DISABLE_EXTENSIONS=0` for extension-reliant flows.
+  `ICLAW_BROWSER_DISABLE_EXTENSIONS=0` for extension-reliant flows.
 - `--renderer-process-limit=2` is controlled by
-  `OPENCLAW_BROWSER_RENDERER_PROCESS_LIMIT=<N>`, where `0` keeps Chromium's default.
+  `ICLAW_BROWSER_RENDERER_PROCESS_LIMIT=<N>`, where `0` keeps Chromium's default.
 
 If you need a different runtime profile, use a custom browser image and provide
 your own entrypoint. For local (non-container) Chromium profiles, use
@@ -417,8 +417,8 @@ Docker installs and the containerized gateway live here:
 [Docker](/install/docker)
 
 For Docker gateway deployments, `scripts/docker/setup.sh` can bootstrap sandbox config.
-Set `OPENCLAW_SANDBOX=1` (or `true`/`yes`/`on`) to enable that path. You can
-override socket location with `OPENCLAW_DOCKER_SOCKET`. Full setup and env
+Set `ICLAW_SANDBOX=1` (or `true`/`yes`/`on`) to enable that path. You can
+override socket location with `ICLAW_DOCKER_SOCKET`. Full setup and env
 reference: [Docker](/install/docker#agent-sandbox).
 
 ## setupCommand (one-time container setup)

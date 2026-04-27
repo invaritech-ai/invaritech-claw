@@ -36,7 +36,7 @@ Docker is **optional**. Use it only if you want a containerized gateway or to va
     This builds the gateway image locally. To use a pre-built image instead:
 
     ```bash
-    export OPENCLAW_IMAGE="ghcr.io/openclaw/openclaw:latest"
+    export ICLAW_IMAGE="ghcr.io/openclaw/openclaw:latest"
     ./scripts/docker/setup.sh
     ```
 
@@ -106,8 +106,8 @@ docker compose up -d openclaw-gateway
 ```
 
 <Note>
-Run `docker compose` from the repo root. If you enabled `OPENCLAW_EXTRA_MOUNTS`
-or `OPENCLAW_HOME_VOLUME`, the setup script writes `docker-compose.extra.yml`;
+Run `docker compose` from the repo root. If you enabled `ICLAW_EXTRA_MOUNTS`
+or `ICLAW_HOME_VOLUME`, the setup script writes `docker-compose.extra.yml`;
 include it with `-f docker-compose.yml -f docker-compose.extra.yml`.
 </Note>
 
@@ -122,15 +122,15 @@ and setup-time config writes through `openclaw-gateway` with
 
 The setup script accepts these optional environment variables:
 
-| Variable                       | Purpose                                                         |
-| ------------------------------ | --------------------------------------------------------------- |
-| `OPENCLAW_IMAGE`               | Use a remote image instead of building locally                  |
-| `OPENCLAW_DOCKER_APT_PACKAGES` | Install extra apt packages during build (space-separated)       |
-| `OPENCLAW_EXTENSIONS`          | Pre-install plugin deps at build time (space-separated names)   |
-| `OPENCLAW_EXTRA_MOUNTS`        | Extra host bind mounts (comma-separated `source:target[:opts]`) |
-| `OPENCLAW_HOME_VOLUME`         | Persist `/home/node` in a named Docker volume                   |
-| `OPENCLAW_SANDBOX`             | Opt in to sandbox bootstrap (`1`, `true`, `yes`, `on`)          |
-| `OPENCLAW_DOCKER_SOCKET`       | Override Docker socket path                                     |
+| Variable                    | Purpose                                                         |
+| --------------------------- | --------------------------------------------------------------- |
+| `ICLAW_IMAGE`               | Use a remote image instead of building locally                  |
+| `ICLAW_DOCKER_APT_PACKAGES` | Install extra apt packages during build (space-separated)       |
+| `ICLAW_EXTENSIONS`          | Pre-install plugin deps at build time (space-separated names)   |
+| `ICLAW_EXTRA_MOUNTS`        | Extra host bind mounts (comma-separated `source:target[:opts]`) |
+| `ICLAW_HOME_VOLUME`         | Persist `/home/node` in a named Docker volume                   |
+| `ICLAW_SANDBOX`             | Opt in to sandbox bootstrap (`1`, `true`, `yes`, `on`)          |
+| `ICLAW_DOCKER_SOCKET`       | Override Docker socket path                                     |
 
 ### Health checks
 
@@ -148,12 +148,12 @@ orchestration systems can restart or replace it.
 Authenticated deep health snapshot:
 
 ```bash
-docker compose exec openclaw-gateway node dist/index.js health --token "$OPENCLAW_GATEWAY_TOKEN"
+docker compose exec openclaw-gateway node dist/index.js health --token "$ICLAW_GATEWAY_TOKEN"
 ```
 
 ### LAN vs loopback
 
-`scripts/docker/setup.sh` defaults `OPENCLAW_GATEWAY_BIND=lan` so host access to
+`scripts/docker/setup.sh` defaults `ICLAW_GATEWAY_BIND=lan` so host access to
 `http://127.0.0.1:18789` works with Docker port publishing.
 
 - `lan` (default): host browser and host CLI can reach the published gateway port.
@@ -167,15 +167,15 @@ Use bind mode values in `gateway.bind` (`lan` / `loopback` / `custom` /
 
 ### Storage and persistence
 
-Docker Compose bind-mounts `OPENCLAW_CONFIG_DIR` to `/home/node/.openclaw` and
-`OPENCLAW_WORKSPACE_DIR` to `/home/node/.openclaw/workspace`, so those paths
+Docker Compose bind-mounts `ICLAW_CONFIG_DIR` to `/home/node/.openclaw` and
+`ICLAW_WORKSPACE_DIR` to `/home/node/.openclaw/workspace`, so those paths
 survive container replacement.
 
 That mounted config directory is where OpenClaw keeps:
 
 - `openclaw.json` for behavior config
 - `agents/<agentId>/agent/auth-profiles.json` for stored provider OAuth/API-key auth
-- `.env` for env-backed runtime secrets such as `OPENCLAW_GATEWAY_TOKEN`
+- `.env` for env-backed runtime secrets such as `ICLAW_GATEWAY_TOKEN`
 
 For full persistence details on VM deployments, see
 [Docker VM Runtime - What persists where](/install/docker-vm-runtime#what-persists-where).
@@ -201,15 +201,15 @@ See [ClawDock](/install/clawdock) for the full helper guide.
 <AccordionGroup>
   <Accordion title="Enable agent sandbox for Docker gateway">
     ```bash
-    export OPENCLAW_SANDBOX=1
+    export ICLAW_SANDBOX=1
     ./scripts/docker/setup.sh
     ```
 
     Custom socket path (e.g. rootless Docker):
 
     ```bash
-    export OPENCLAW_SANDBOX=1
-    export OPENCLAW_DOCKER_SOCKET=/run/user/1000/docker.sock
+    export ICLAW_SANDBOX=1
+    export ICLAW_DOCKER_SOCKET=/run/user/1000/docker.sock
     ./scripts/docker/setup.sh
     ```
 
@@ -274,8 +274,8 @@ See [ClawDock](/install/clawdock) for the full helper guide.
     The default image is security-first and runs as non-root `node`. For a more
     full-featured container:
 
-    1. **Persist `/home/node`**: `export OPENCLAW_HOME_VOLUME="openclaw_home"`
-    2. **Bake system deps**: `export OPENCLAW_DOCKER_APT_PACKAGES="git curl jq"`
+    1. **Persist `/home/node`**: `export ICLAW_HOME_VOLUME="openclaw_home"`
+    2. **Bake system deps**: `export ICLAW_DOCKER_APT_PACKAGES="git curl jq"`
     3. **Install Playwright browsers**:
        ```bash
        docker compose run --rm openclaw-cli \
@@ -283,7 +283,7 @@ See [ClawDock](/install/clawdock) for the full helper guide.
        ```
     4. **Persist browser downloads**: set
        `PLAYWRIGHT_BROWSERS_PATH=/home/node/.cache/ms-playwright` and use
-       `OPENCLAW_HOME_VOLUME` or `OPENCLAW_EXTRA_MOUNTS`.
+       `ICLAW_HOME_VOLUME` or `ICLAW_EXTRA_MOUNTS`.
 
   </Accordion>
 

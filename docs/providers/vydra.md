@@ -107,8 +107,8 @@ Vydra's apex host (`https://vydra.ai/api/v1`) currently redirects to `www`. Some
     Provider-specific live coverage:
 
     ```bash
-    OPENCLAW_LIVE_TEST=1 \
-    OPENCLAW_LIVE_VYDRA_VIDEO=1 \
+    ICLAW_LIVE_TEST=1 \
+    ICLAW_LIVE_VYDRA_VIDEO=1 \
     pnpm test:live -- extensions/vydra/vydra.live.test.ts
     ```
 
@@ -120,7 +120,7 @@ Vydra's apex host (`https://vydra.ai/api/v1`) currently redirects to `www`. Some
     Override the remote image fixture when needed:
 
     ```bash
-    export OPENCLAW_LIVE_VYDRA_KLING_IMAGE_URL="https://example.com/reference.png"
+    export ICLAW_LIVE_VYDRA_KLING_IMAGE_URL="https://example.com/reference.png"
     ```
 
   </Accordion>

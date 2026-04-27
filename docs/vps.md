@@ -69,13 +69,13 @@ If CLI commands feel slow on low-power VMs (or ARM hosts), enable Node's module 
 grep -q 'NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache' ~/.bashrc || cat >> ~/.bashrc <<'EOF'
 export NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
 mkdir -p /var/tmp/openclaw-compile-cache
-export OPENCLAW_NO_RESPAWN=1
+export ICLAW_NO_RESPAWN=1
 EOF
 source ~/.bashrc
 ```
 
 - `NODE_COMPILE_CACHE` improves repeated command startup times.
-- `OPENCLAW_NO_RESPAWN=1` avoids extra startup overhead from a self-respawn path.
+- `ICLAW_NO_RESPAWN=1` avoids extra startup overhead from a self-respawn path.
 - First command run warms the cache; subsequent runs are faster.
 - For Raspberry Pi specifics, see [Raspberry Pi](/install/raspberry-pi).
 
@@ -84,7 +84,7 @@ source ~/.bashrc
 For VM hosts using `systemd`, consider:
 
 - Add service env for a stable startup path:
-  - `OPENCLAW_NO_RESPAWN=1`
+  - `ICLAW_NO_RESPAWN=1`
   - `NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache`
 - Keep restart behavior explicit:
   - `Restart=always`
@@ -100,7 +100,7 @@ systemctl --user edit openclaw-gateway.service
 
 ```ini
 [Service]
-Environment=OPENCLAW_NO_RESPAWN=1
+Environment=ICLAW_NO_RESPAWN=1
 Environment=NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
 Restart=always
 RestartSec=2

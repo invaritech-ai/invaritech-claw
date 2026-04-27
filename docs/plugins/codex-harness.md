@@ -33,7 +33,7 @@ OpenClaw-owned transcript tool-result writes.
 
 The harness is off by default. New configs should keep OpenAI model refs
 canonical as `openai/gpt-*` and explicitly force
-`embeddedHarness.runtime: "codex"` or `OPENCLAW_AGENT_RUNTIME=codex` when they
+`embeddedHarness.runtime: "codex"` or `ICLAW_AGENT_RUNTIME=codex` when they
 want native app-server execution. Legacy `codex/*` model refs still auto-select
 the harness for compatibility.
 
@@ -75,7 +75,7 @@ in `auto` mode, each plugin candidate's support result.
 Harness selection is not a live session control. When an embedded turn runs,
 OpenClaw records the selected harness id on that session and keeps using it for
 later turns in the same session id. Change `embeddedHarness` config or
-`OPENCLAW_AGENT_RUNTIME` when you want future sessions to use another harness;
+`ICLAW_AGENT_RUNTIME` when you want future sessions to use another harness;
 use `/new` or `/reset` to start a fresh session before switching an existing
 conversation between PI and Codex. This avoids replaying one transcript through
 two incompatible native session systems.
@@ -208,8 +208,8 @@ the Codex harness:
 Environment override:
 
 ```bash
-OPENCLAW_AGENT_RUNTIME=codex \
-OPENCLAW_AGENT_HARNESS_FALLBACK=none \
+ICLAW_AGENT_RUNTIME=codex \
+ICLAW_AGENT_HARNESS_FALLBACK=none \
 openclaw gateway run
 ```
 
@@ -385,15 +385,15 @@ Supported `appServer` fields:
 The older environment variables still work as fallbacks for local testing when
 the matching config field is unset:
 
-- `OPENCLAW_CODEX_APP_SERVER_BIN`
-- `OPENCLAW_CODEX_APP_SERVER_ARGS`
-- `OPENCLAW_CODEX_APP_SERVER_MODE=yolo|guardian`
-- `OPENCLAW_CODEX_APP_SERVER_APPROVAL_POLICY`
-- `OPENCLAW_CODEX_APP_SERVER_SANDBOX`
+- `ICLAW_CODEX_APP_SERVER_BIN`
+- `ICLAW_CODEX_APP_SERVER_ARGS`
+- `ICLAW_CODEX_APP_SERVER_MODE=yolo|guardian`
+- `ICLAW_CODEX_APP_SERVER_APPROVAL_POLICY`
+- `ICLAW_CODEX_APP_SERVER_SANDBOX`
 
-`OPENCLAW_CODEX_APP_SERVER_GUARDIAN=1` was removed. Use
+`ICLAW_CODEX_APP_SERVER_GUARDIAN=1` was removed. Use
 `plugins.entries.codex.config.appServer.mode: "guardian"` instead, or
-`OPENCLAW_CODEX_APP_SERVER_MODE=guardian` for one-off local testing. Config is
+`ICLAW_CODEX_APP_SERVER_MODE=guardian` for one-off local testing. Config is
 preferred for repeatable deployments because it keeps the plugin behavior in the
 same reviewed file as the rest of the Codex harness setup.
 

@@ -119,11 +119,11 @@ OpenClaw also writes a best-effort pointer file beside the session:
 <session>.trajectory-path.json
 ```
 
-Set `OPENCLAW_TRAJECTORY_DIR` to store runtime trajectory sidecars in a
+Set `ICLAW_TRAJECTORY_DIR` to store runtime trajectory sidecars in a
 dedicated directory:
 
 ```bash
-export OPENCLAW_TRAJECTORY_DIR=/var/lib/openclaw/trajectories
+export ICLAW_TRAJECTORY_DIR=/var/lib/openclaw/trajectories
 ```
 
 When this variable is set, OpenClaw writes one JSONL file per session id in that
@@ -131,10 +131,10 @@ directory.
 
 ## Disable capture
 
-Set `OPENCLAW_TRAJECTORY=0` before starting OpenClaw:
+Set `ICLAW_TRAJECTORY=0` before starting OpenClaw:
 
 ```bash
-export OPENCLAW_TRAJECTORY=0
+export ICLAW_TRAJECTORY=0
 ```
 
 This disables runtime trajectory capture. `/export-trajectory` can still export
@@ -167,8 +167,8 @@ and cannot know every application-specific secret.
 
 If the export has no runtime events:
 
-- confirm OpenClaw was started without `OPENCLAW_TRAJECTORY=0`
-- check whether `OPENCLAW_TRAJECTORY_DIR` points to a writable directory
+- confirm OpenClaw was started without `ICLAW_TRAJECTORY=0`
+- check whether `ICLAW_TRAJECTORY_DIR` points to a writable directory
 - run another message in the session, then export again
 - inspect `manifest.json` for `runtimeEventCount`
 

@@ -177,7 +177,7 @@ Then open the printed Dashboard URL in your local browser.
 
 If the UI asks for shared-secret auth, paste the configured token or password
 into Control UI settings. For token auth, use `gateway.auth.token` (or
-`OPENCLAW_GATEWAY_TOKEN`).
+`ICLAW_GATEWAY_TOKEN`).
 
 For always-on remote access, see [Tailscale](/gateway/tailscale).
 
@@ -204,7 +204,7 @@ On lower-power Pi hosts, enable Node's module compile cache so repeated CLI runs
 grep -q 'NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache' ~/.bashrc || cat >> ~/.bashrc <<'EOF' # pragma: allowlist secret
 export NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
 mkdir -p /var/tmp/openclaw-compile-cache
-export OPENCLAW_NO_RESPAWN=1
+export ICLAW_NO_RESPAWN=1
 EOF
 source ~/.bashrc
 ```
@@ -213,7 +213,7 @@ Notes:
 
 - `NODE_COMPILE_CACHE` speeds up subsequent runs (`status`, `health`, `--help`).
 - `/var/tmp` survives reboots better than `/tmp`.
-- `OPENCLAW_NO_RESPAWN=1` avoids extra startup cost from CLI self-respawn.
+- `ICLAW_NO_RESPAWN=1` avoids extra startup cost from CLI self-respawn.
 - First run warms the cache; later runs benefit most.
 
 ### systemd startup tuning (optional)
@@ -227,7 +227,7 @@ systemctl --user edit openclaw-gateway.service
 
 ```ini
 [Service]
-Environment=OPENCLAW_NO_RESPAWN=1
+Environment=ICLAW_NO_RESPAWN=1
 Environment=NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
 Restart=always
 RestartSec=2

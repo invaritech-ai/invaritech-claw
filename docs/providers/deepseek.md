@@ -105,8 +105,8 @@ The direct live model suite includes DeepSeek V4 in the modern model set. To
 run only the DeepSeek V4 direct-model checks:
 
 ```bash
-OPENCLAW_LIVE_PROVIDERS=deepseek \
-OPENCLAW_LIVE_MODELS="deepseek/deepseek-v4-flash,deepseek/deepseek-v4-pro" \
+ICLAW_LIVE_PROVIDERS=deepseek \
+ICLAW_LIVE_MODELS="deepseek/deepseek-v4-flash,deepseek/deepseek-v4-pro" \
 pnpm test:live src/agents/models.profiles.live.test.ts
 ```
 

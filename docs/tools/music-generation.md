@@ -252,7 +252,7 @@ the shared `music_generate` tool can validate mode support deterministically.
 Opt-in live coverage for the shared bundled providers:
 
 ```bash
-OPENCLAW_LIVE_TEST=1 pnpm test:live -- extensions/music-generation-providers.live.test.ts
+ICLAW_LIVE_TEST=1 pnpm test:live -- extensions/music-generation-providers.live.test.ts
 ```
 
 Repo wrapper:
@@ -274,7 +274,7 @@ Today that means:
 Opt-in live coverage for the bundled ComfyUI music path:
 
 ```bash
-OPENCLAW_LIVE_TEST=1 COMFY_LIVE_TEST=1 pnpm test:live -- extensions/comfy/comfy.live.test.ts
+ICLAW_LIVE_TEST=1 COMFY_LIVE_TEST=1 pnpm test:live -- extensions/comfy/comfy.live.test.ts
 ```
 
 The Comfy live file also covers comfy image and video workflows when those

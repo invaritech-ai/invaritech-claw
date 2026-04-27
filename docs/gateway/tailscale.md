@@ -23,8 +23,8 @@ Tailscale provides HTTPS, routing, and (for Serve) identity headers.
 Set `gateway.auth.mode` to control the handshake:
 
 - `none` (private ingress only)
-- `token` (default when `OPENCLAW_GATEWAY_TOKEN` is set)
-- `password` (shared secret via `OPENCLAW_GATEWAY_PASSWORD` or config)
+- `token` (default when `ICLAW_GATEWAY_TOKEN` is set)
+- `password` (shared secret via `ICLAW_GATEWAY_PASSWORD` or config)
 - `trusted-proxy` (identity-aware reverse proxy; see [Trusted Proxy Auth](/gateway/trusted-proxy-auth))
 
 When `tailscale.mode = "serve"` and `gateway.auth.allowTailscale` is `true`,
@@ -92,7 +92,7 @@ Note: loopback (`http://127.0.0.1:18789`) will **not** work in this mode.
 }
 ```
 
-Prefer `OPENCLAW_GATEWAY_PASSWORD` over committing a password to disk.
+Prefer `ICLAW_GATEWAY_PASSWORD` over committing a password to disk.
 
 ## CLI examples
 

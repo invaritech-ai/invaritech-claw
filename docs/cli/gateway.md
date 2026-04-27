@@ -47,7 +47,7 @@ Notes:
 - `--port <port>`: WebSocket port (default comes from config/env; usually `18789`).
 - `--bind <loopback|lan|tailnet|auto|custom>`: listener bind mode.
 - `--auth <token|password>`: auth mode override.
-- `--token <token>`: token override (also sets `OPENCLAW_GATEWAY_TOKEN` for the process).
+- `--token <token>`: token override (also sets `ICLAW_GATEWAY_TOKEN` for the process).
 - `--password <password>`: password override. Warning: inline passwords can be exposed in local process listings.
 - `--password-file <path>`: read the gateway password from a file.
 - `--tailscale <off|serve|funnel>`: expose the Gateway via Tailscale.
@@ -65,7 +65,7 @@ Notes:
 
 Startup profiling:
 
-- Set `OPENCLAW_GATEWAY_STARTUP_TRACE=1` to log phase timings during Gateway startup.
+- Set `ICLAW_GATEWAY_STARTUP_TRACE=1` to log phase timings during Gateway startup.
 - Run `pnpm test:startup:gateway -- --runs 5 --warmup 1` to benchmark Gateway startup. The benchmark records first process output, `/healthz`, `/readyz`, and startup trace timings.
 
 ## Query a running Gateway
@@ -321,8 +321,8 @@ Notes:
 - `gateway install` supports `--port`, `--runtime`, `--token`, `--force`, `--json`.
 - When token auth requires a token and `gateway.auth.token` is SecretRef-managed, `gateway install` validates that the SecretRef is resolvable but does not persist the resolved token into service environment metadata.
 - If token auth requires a token and the configured token SecretRef is unresolved, install fails closed instead of persisting fallback plaintext.
-- For password auth on `gateway run`, prefer `OPENCLAW_GATEWAY_PASSWORD`, `--password-file`, or a SecretRef-backed `gateway.auth.password` over inline `--password`.
-- In inferred auth mode, shell-only `OPENCLAW_GATEWAY_PASSWORD` does not relax install token requirements; use durable config (`gateway.auth.password` or config `env`) when installing a managed service.
+- For password auth on `gateway run`, prefer `ICLAW_GATEWAY_PASSWORD`, `--password-file`, or a SecretRef-backed `gateway.auth.password` over inline `--password`.
+- In inferred auth mode, shell-only `ICLAW_GATEWAY_PASSWORD` does not relax install token requirements; use durable config (`gateway.auth.password` or config `env`) when installing a managed service.
 - If both `gateway.auth.token` and `gateway.auth.password` are configured and `gateway.auth.mode` is unset, install is blocked until mode is set explicitly.
 - Lifecycle commands accept `--json` for scripting.
 

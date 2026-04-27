@@ -259,7 +259,7 @@ location / {
 
 ## Mixed token configuration
 
-OpenClaw rejects ambiguous configurations where both a `gateway.auth.token` (or `OPENCLAW_GATEWAY_TOKEN`) and `trusted-proxy` mode are active at the same time. Mixed token configs can cause loopback requests to silently authenticate on the wrong auth path.
+OpenClaw rejects ambiguous configurations where both a `gateway.auth.token` (or `ICLAW_GATEWAY_TOKEN`) and `trusted-proxy` mode are active at the same time. Mixed token configs can cause loopback requests to silently authenticate on the wrong auth path.
 
 If you see a `mixed_trusted_proxy_token` error on startup:
 

@@ -37,15 +37,15 @@ The intended model is:
   </Step>
 
   <Step title="Manage the running container from the host CLI">
-    Set `OPENCLAW_CONTAINER=openclaw`, then use normal `openclaw` commands from the host.
+    Set `ICLAW_CONTAINER=openclaw`, then use normal `openclaw` commands from the host.
   </Step>
 </Steps>
 
 Setup details:
 
-- `./scripts/podman/setup.sh` builds `openclaw:local` in your rootless Podman store by default, or uses `OPENCLAW_IMAGE` / `OPENCLAW_PODMAN_IMAGE` if you set one.
+- `./scripts/podman/setup.sh` builds `openclaw:local` in your rootless Podman store by default, or uses `ICLAW_IMAGE` / `ICLAW_PODMAN_IMAGE` if you set one.
 - It creates `~/.openclaw/openclaw.json` with `gateway.mode: "local"` if missing.
-- It creates `~/.openclaw/.env` with `OPENCLAW_GATEWAY_TOKEN` if missing.
+- It creates `~/.openclaw/.env` with `ICLAW_GATEWAY_TOKEN` if missing.
 - For manual launches, the helper reads only a small allowlist of Podman-related keys from `~/.openclaw/.env` and passes explicit runtime env vars to the container; it does not hand the full env file to Podman.
 
 Quadlet-managed setup:
@@ -56,13 +56,13 @@ Quadlet-managed setup:
 
 Quadlet is a Linux-only option because it depends on systemd user services.
 
-You can also set `OPENCLAW_PODMAN_QUADLET=1`.
+You can also set `ICLAW_PODMAN_QUADLET=1`.
 
 Optional build/setup env vars:
 
-- `OPENCLAW_IMAGE` or `OPENCLAW_PODMAN_IMAGE` -- use an existing/pulled image instead of building `openclaw:local`
-- `OPENCLAW_DOCKER_APT_PACKAGES` -- install extra apt packages during image build
-- `OPENCLAW_EXTENSIONS` -- pre-install plugin dependencies at build time
+- `ICLAW_IMAGE` or `ICLAW_PODMAN_IMAGE` -- use an existing/pulled image instead of building `openclaw:local`
+- `ICLAW_DOCKER_APT_PACKAGES` -- install extra apt packages during image build
+- `ICLAW_EXTENSIONS` -- pre-install plugin dependencies at build time
 
 Container start:
 
@@ -83,7 +83,7 @@ Then open `http://127.0.0.1:18789/` and use the token from `~/.openclaw/.env`.
 Host CLI default:
 
 ```bash
-export OPENCLAW_CONTAINER=openclaw
+export ICLAW_CONTAINER=openclaw
 ```
 
 Then commands such as these will run inside that container automatically:
@@ -153,8 +153,8 @@ sudo loginctl enable-linger "$(whoami)"
 
 The launch script and Quadlet bind-mount host state into the container:
 
-- `OPENCLAW_CONFIG_DIR` -> `/home/node/.openclaw`
-- `OPENCLAW_WORKSPACE_DIR` -> `/home/node/.openclaw/workspace`
+- `ICLAW_CONFIG_DIR` -> `/home/node/.openclaw`
+- `ICLAW_WORKSPACE_DIR` -> `/home/node/.openclaw/workspace`
 
 By default those are host directories, not anonymous container state, so
 `openclaw.json`, per-agent `auth-profiles.json`, channel/provider state,
@@ -163,24 +163,24 @@ The Podman setup also seeds `gateway.controlUi.allowedOrigins` for `127.0.0.1` a
 
 Useful env vars for the manual launcher:
 
-- `OPENCLAW_PODMAN_CONTAINER` -- container name (`openclaw` by default)
-- `OPENCLAW_PODMAN_IMAGE` / `OPENCLAW_IMAGE` -- image to run
-- `OPENCLAW_PODMAN_GATEWAY_HOST_PORT` -- host port mapped to container `18789`
-- `OPENCLAW_PODMAN_BRIDGE_HOST_PORT` -- host port mapped to container `18790`
-- `OPENCLAW_PODMAN_PUBLISH_HOST` -- host interface for published ports; default is `127.0.0.1`
-- `OPENCLAW_GATEWAY_BIND` -- gateway bind mode inside the container; default is `lan`
-- `OPENCLAW_PODMAN_USERNS` -- `keep-id` (default), `auto`, or `host`
+- `ICLAW_PODMAN_CONTAINER` -- container name (`openclaw` by default)
+- `ICLAW_PODMAN_IMAGE` / `ICLAW_IMAGE` -- image to run
+- `ICLAW_PODMAN_GATEWAY_HOST_PORT` -- host port mapped to container `18789`
+- `ICLAW_PODMAN_BRIDGE_HOST_PORT` -- host port mapped to container `18790`
+- `ICLAW_PODMAN_PUBLISH_HOST` -- host interface for published ports; default is `127.0.0.1`
+- `ICLAW_GATEWAY_BIND` -- gateway bind mode inside the container; default is `lan`
+- `ICLAW_PODMAN_USERNS` -- `keep-id` (default), `auto`, or `host`
 
 The manual launcher reads `~/.openclaw/.env` before finalizing container/image defaults, so you can persist these there.
 
-If you use a non-default `OPENCLAW_CONFIG_DIR` or `OPENCLAW_WORKSPACE_DIR`, set the same variables for both `./scripts/podman/setup.sh` and later `./scripts/run-openclaw-podman.sh launch` commands. The repo-local launcher does not persist custom path overrides across shells.
+If you use a non-default `ICLAW_CONFIG_DIR` or `ICLAW_WORKSPACE_DIR`, set the same variables for both `./scripts/podman/setup.sh` and later `./scripts/run-openclaw-podman.sh launch` commands. The repo-local launcher does not persist custom path overrides across shells.
 
 Quadlet note:
 
 - The generated Quadlet service intentionally keeps a fixed, hardened default shape: `127.0.0.1` published ports, `--bind lan` inside the container, and `keep-id` user namespace.
-- It pins `OPENCLAW_NO_RESPAWN=1`, `Restart=on-failure`, and `TimeoutStartSec=300`.
+- It pins `ICLAW_NO_RESPAWN=1`, `Restart=on-failure`, and `TimeoutStartSec=300`.
 - It publishes both `127.0.0.1:18789:18789` (gateway) and `127.0.0.1:18790:18790` (bridge).
-- It reads `~/.openclaw/.env` as a runtime `EnvironmentFile` for values such as `OPENCLAW_GATEWAY_TOKEN`, but it does not consume the manual launcher's Podman-specific override allowlist.
+- It reads `~/.openclaw/.env` as a runtime `EnvironmentFile` for values such as `ICLAW_GATEWAY_TOKEN`, but it does not consume the manual launcher's Podman-specific override allowlist.
 - If you need custom publish ports, publish host, or other container-run flags, use the manual launcher or edit `~/.config/containers/systemd/openclaw.container` directly, then reload and restart the service.
 
 ## Useful commands
@@ -196,7 +196,7 @@ Quadlet note:
 
 - **Permission denied (EACCES) on config or workspace:** The container runs with `--userns=keep-id` and `--user <your uid>:<your gid>` by default. Ensure the host config/workspace paths are owned by your current user.
 - **Gateway start blocked (missing `gateway.mode=local`):** Ensure `~/.openclaw/openclaw.json` exists and sets `gateway.mode="local"`. `scripts/podman/setup.sh` creates this if missing.
-- **Container CLI commands hit the wrong target:** Use `openclaw --container <name> ...` explicitly, or export `OPENCLAW_CONTAINER=<name>` in your shell.
+- **Container CLI commands hit the wrong target:** Use `openclaw --container <name> ...` explicitly, or export `ICLAW_CONTAINER=<name>` in your shell.
 - **`openclaw update` fails with `--container`:** Expected. Rebuild/pull the image, then restart the container or the Quadlet service.
 - **Quadlet service does not start:** Run `systemctl --user daemon-reload`, then `systemctl --user start openclaw.service`. On headless systems you may also need `sudo loginctl enable-linger "$(whoami)"`.
 - **SELinux blocks bind mounts:** Leave the default mount behavior alone; the launcher auto-adds `:Z` on Linux when SELinux is enforcing or permissive.

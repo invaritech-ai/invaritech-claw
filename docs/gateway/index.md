@@ -63,7 +63,7 @@ of live probe output.
 </Steps>
 
 <Note>
-Gateway config reload watches the active config file path (resolved from profile/state defaults, or `OPENCLAW_CONFIG_PATH` when set).
+Gateway config reload watches the active config file path (resolved from profile/state defaults, or `ICLAW_CONFIG_PATH` when set).
 Default mode is `gateway.reload.mode="hybrid"`.
 After the first successful load, the running process serves the active in-memory config snapshot; successful reload swaps that snapshot atomically.
 </Note>
@@ -78,7 +78,7 @@ After the first successful load, the running process serves the active in-memory
 - Default bind mode: `loopback`.
 - Auth is required by default. Shared-secret setups use
   `gateway.auth.token` / `gateway.auth.password` (or
-  `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_PASSWORD`), and non-loopback
+  `ICLAW_GATEWAY_TOKEN` / `ICLAW_GATEWAY_PASSWORD`), and non-loopback
   reverse-proxy setups can use `gateway.auth.mode: "trusted-proxy"`.
 
 ## OpenAI-compatible endpoints
@@ -107,10 +107,10 @@ All of these run on the main Gateway port and use the same trusted operator auth
 
 ### Port and bind precedence
 
-| Setting      | Resolution order                                              |
-| ------------ | ------------------------------------------------------------- |
-| Gateway port | `--port` → `OPENCLAW_GATEWAY_PORT` → `gateway.port` → `18789` |
-| Bind mode    | CLI/override → `gateway.bind` → `loopback`                    |
+| Setting      | Resolution order                                           |
+| ------------ | ---------------------------------------------------------- |
+| Gateway port | `--port` → `ICLAW_GATEWAY_PORT` → `gateway.port` → `18789` |
+| Bind mode    | CLI/override → `gateway.bind` → `loopback`                 |
 
 ### Hot reload modes
 
@@ -163,15 +163,15 @@ What to expect:
 Checklist per instance:
 
 - Unique `gateway.port`
-- Unique `OPENCLAW_CONFIG_PATH`
-- Unique `OPENCLAW_STATE_DIR`
+- Unique `ICLAW_CONFIG_PATH`
+- Unique `ICLAW_STATE_DIR`
 - Unique `agents.defaults.workspace`
 
 Example:
 
 ```bash
-OPENCLAW_CONFIG_PATH=~/.openclaw/a.json OPENCLAW_STATE_DIR=~/.openclaw-a openclaw gateway --port 19001
-OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
+ICLAW_CONFIG_PATH=~/.openclaw/a.json ICLAW_STATE_DIR=~/.openclaw-a openclaw gateway --port 19001
+ICLAW_CONFIG_PATH=~/.openclaw/b.json ICLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
 ```
 
 Detailed setup: [/gateway/multiple-gateways](/gateway/multiple-gateways).

@@ -39,8 +39,8 @@ When debugging real providers/models (requires real creds):
 - Docker live model sweep: `pnpm test:docker:live-models`
   - Each selected model now runs a text turn plus a small file-read-style probe.
     Models whose metadata advertises `image` input also run a tiny image turn.
-    Disable the extra probes with `OPENCLAW_LIVE_MODEL_FILE_PROBE=0` or
-    `OPENCLAW_LIVE_MODEL_IMAGE_PROBE=0` when isolating provider failures.
+    Disable the extra probes with `ICLAW_LIVE_MODEL_FILE_PROBE=0` or
+    `ICLAW_LIVE_MODEL_IMAGE_PROBE=0` when isolating provider failures.
   - CI coverage: daily `OpenClaw Scheduled Live And E2E Checks` and manual
     `OpenClaw Release Checks` both call the reusable live/E2E workflow with
     `include_live_suites: true`, which includes separate Docker live model
@@ -104,21 +104,21 @@ runs the same lanes before release approval.
     by default, verifies enabling the plugin installs runtime dependencies on
     demand, runs doctor, and runs one local agent turn against a mocked OpenAI
     endpoint.
-  - Use `OPENCLAW_NPM_ONBOARD_CHANNEL=discord` to run the same packaged-install
+  - Use `ICLAW_NPM_ONBOARD_CHANNEL=discord` to run the same packaged-install
     lane with Discord.
 - `pnpm test:docker:npm-telegram-live`
   - Installs a published OpenClaw package in Docker, runs installed-package
     onboarding, configures Telegram through the installed CLI, then reuses the
     live Telegram QA lane with that installed package as the SUT Gateway.
-  - Defaults to `OPENCLAW_NPM_TELEGRAM_PACKAGE_SPEC=openclaw@beta`.
+  - Defaults to `ICLAW_NPM_TELEGRAM_PACKAGE_SPEC=openclaw@beta`.
   - Uses the same Telegram env credentials or Convex credential source as
     `pnpm openclaw qa telegram`. For CI/release automation, set
-    `OPENCLAW_NPM_TELEGRAM_CREDENTIAL_SOURCE=convex` plus
-    `OPENCLAW_QA_CONVEX_SITE_URL` and the role secret. If
-    `OPENCLAW_QA_CONVEX_SITE_URL` and a Convex role secret are present in CI,
+    `ICLAW_NPM_TELEGRAM_CREDENTIAL_SOURCE=convex` plus
+    `ICLAW_QA_CONVEX_SITE_URL` and the role secret. If
+    `ICLAW_QA_CONVEX_SITE_URL` and a Convex role secret are present in CI,
     the Docker wrapper selects Convex automatically.
-  - `OPENCLAW_NPM_TELEGRAM_CREDENTIAL_ROLE=ci|maintainer` overrides the shared
-    `OPENCLAW_QA_CREDENTIAL_ROLE` for this lane only.
+  - `ICLAW_NPM_TELEGRAM_CREDENTIAL_ROLE=ci|maintainer` overrides the shared
+    `ICLAW_QA_CREDENTIAL_ROLE` for this lane only.
   - GitHub Actions exposes this lane as the manual maintainer workflow
     `NPM Telegram Beta E2E`. It does not run on merge. The workflow uses the
     `qa-live-shared` environment and Convex CI credential leases.
@@ -144,13 +144,13 @@ runs the same lanes before release approval.
   - Repo checkouts load the bundled runner directly; no separate plugin install
     step is needed.
   - Provisions three temporary Matrix users (`driver`, `sut`, `observer`) plus one private room, then starts a QA gateway child with the real Matrix plugin as the SUT transport.
-  - Uses the pinned stable Tuwunel image `ghcr.io/matrix-construct/tuwunel:v1.5.1` by default. Override with `OPENCLAW_QA_MATRIX_TUWUNEL_IMAGE` when you need to test a different image.
+  - Uses the pinned stable Tuwunel image `ghcr.io/matrix-construct/tuwunel:v1.5.1` by default. Override with `ICLAW_QA_MATRIX_TUWUNEL_IMAGE` when you need to test a different image.
   - Matrix does not expose shared credential-source flags because the lane provisions disposable users locally.
   - Writes a Matrix QA report, summary, observed-events artifact, and combined stdout/stderr output log under `.artifacts/qa-e2e/...`.
 - `pnpm openclaw qa telegram`
   - Runs the Telegram live QA lane against a real private group using the driver and SUT bot tokens from env.
-  - Requires `OPENCLAW_QA_TELEGRAM_GROUP_ID`, `OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN`, and `OPENCLAW_QA_TELEGRAM_SUT_BOT_TOKEN`. The group id must be the numeric Telegram chat id.
-  - Supports `--credential-source convex` for shared pooled credentials. Use env mode by default, or set `OPENCLAW_QA_CREDENTIAL_SOURCE=convex` to opt into pooled leases.
+  - Requires `ICLAW_QA_TELEGRAM_GROUP_ID`, `ICLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN`, and `ICLAW_QA_TELEGRAM_SUT_BOT_TOKEN`. The group id must be the numeric Telegram chat id.
+  - Supports `--credential-source convex` for shared pooled credentials. Use env mode by default, or set `ICLAW_QA_CREDENTIAL_SOURCE=convex` to opt into pooled leases.
   - Exits non-zero when any scenario fails. Use `--allow-failures` when you
     want artifacts without a failing exit code.
   - Requires two distinct bots in the same private group, with the SUT bot exposing a Telegram username.
@@ -169,7 +169,7 @@ transport coverage matrix.
 
 ### Shared Telegram credentials via Convex (v1)
 
-When `--credential-source convex` (or `OPENCLAW_QA_CREDENTIAL_SOURCE=convex`) is enabled for
+When `--credential-source convex` (or `ICLAW_QA_CREDENTIAL_SOURCE=convex`) is enabled for
 `openclaw qa telegram`, QA lab acquires an exclusive lease from a Convex-backed pool, heartbeats
 that lease while the lane is running, and releases the lease on shutdown.
 
@@ -179,28 +179,28 @@ Reference Convex project scaffold:
 
 Required env vars:
 
-- `OPENCLAW_QA_CONVEX_SITE_URL` (for example `https://your-deployment.convex.site`)
+- `ICLAW_QA_CONVEX_SITE_URL` (for example `https://your-deployment.convex.site`)
 - One secret for the selected role:
-  - `OPENCLAW_QA_CONVEX_SECRET_MAINTAINER` for `maintainer`
-  - `OPENCLAW_QA_CONVEX_SECRET_CI` for `ci`
+  - `ICLAW_QA_CONVEX_SECRET_MAINTAINER` for `maintainer`
+  - `ICLAW_QA_CONVEX_SECRET_CI` for `ci`
 - Credential role selection:
   - CLI: `--credential-role maintainer|ci`
-  - Env default: `OPENCLAW_QA_CREDENTIAL_ROLE` (defaults to `ci` in CI, `maintainer` otherwise)
+  - Env default: `ICLAW_QA_CREDENTIAL_ROLE` (defaults to `ci` in CI, `maintainer` otherwise)
 
 Optional env vars:
 
-- `OPENCLAW_QA_CREDENTIAL_LEASE_TTL_MS` (default `1200000`)
-- `OPENCLAW_QA_CREDENTIAL_HEARTBEAT_INTERVAL_MS` (default `30000`)
-- `OPENCLAW_QA_CREDENTIAL_ACQUIRE_TIMEOUT_MS` (default `90000`)
-- `OPENCLAW_QA_CREDENTIAL_HTTP_TIMEOUT_MS` (default `15000`)
-- `OPENCLAW_QA_CONVEX_ENDPOINT_PREFIX` (default `/qa-credentials/v1`)
-- `OPENCLAW_QA_CREDENTIAL_OWNER_ID` (optional trace id)
-- `OPENCLAW_QA_ALLOW_INSECURE_HTTP=1` allows loopback `http://` Convex URLs for local-only development.
+- `ICLAW_QA_CREDENTIAL_LEASE_TTL_MS` (default `1200000`)
+- `ICLAW_QA_CREDENTIAL_HEARTBEAT_INTERVAL_MS` (default `30000`)
+- `ICLAW_QA_CREDENTIAL_ACQUIRE_TIMEOUT_MS` (default `90000`)
+- `ICLAW_QA_CREDENTIAL_HTTP_TIMEOUT_MS` (default `15000`)
+- `ICLAW_QA_CONVEX_ENDPOINT_PREFIX` (default `/qa-credentials/v1`)
+- `ICLAW_QA_CREDENTIAL_OWNER_ID` (optional trace id)
+- `ICLAW_QA_ALLOW_INSECURE_HTTP=1` allows loopback `http://` Convex URLs for local-only development.
 
-`OPENCLAW_QA_CONVEX_SITE_URL` should use `https://` in normal operation.
+`ICLAW_QA_CONVEX_SITE_URL` should use `https://` in normal operation.
 
 Maintainer admin commands (pool add/remove/list) require
-`OPENCLAW_QA_CONVEX_SECRET_MAINTAINER` specifically.
+`ICLAW_QA_CONVEX_SECRET_MAINTAINER` specifically.
 
 CLI helpers for maintainers:
 
@@ -212,7 +212,7 @@ pnpm openclaw qa credentials remove --credential-id <credential-id>
 
 Use `--json` for machine-readable output in scripts and CI utilities.
 
-Default endpoint contract (`OPENCLAW_QA_CONVEX_SITE_URL` + `/qa-credentials/v1`):
+Default endpoint contract (`ICLAW_QA_CONVEX_SITE_URL` + `/qa-credentials/v1`):
 
 - `POST /acquire`
   - Request: `{ kind, ownerId, actorRole, leaseTtlMs, heartbeatIntervalMs }`
@@ -363,7 +363,7 @@ Think of the suites as “increasing realism” (and increasing flakiness/cost):
           defaults from the shared Vitest config.
         - `scripts/run-vitest.mjs` adds `--no-maglev` for Vitest child Node
           processes by default to reduce V8 compile churn during big local runs.
-          Set `OPENCLAW_VITEST_ENABLE_MAGLEV=1` to compare against stock V8
+          Set `ICLAW_VITEST_ENABLE_MAGLEV=1` to compare against stock V8
           behavior.
       </Accordion>
 
@@ -384,8 +384,8 @@ Think of the suites as “increasing realism” (and increasing flakiness/cost):
         - The base Vitest config marks the projects/config files as
           `forceRerunTriggers` so changed-mode reruns stay correct when test
           wiring changes.
-        - The config keeps `OPENCLAW_VITEST_FS_MODULE_CACHE` enabled on supported
-          hosts; set `OPENCLAW_VITEST_FS_MODULE_CACHE_PATH=/abs/path` if you want
+        - The config keeps `ICLAW_VITEST_FS_MODULE_CACHE` enabled on supported
+          hosts; set `ICLAW_VITEST_FS_MODULE_CACHE_PATH=/abs/path` if you want
           one explicit cache location for direct profiling.
       </Accordion>
 
@@ -435,8 +435,8 @@ Think of the suites as “increasing realism” (and increasing flakiness/cost):
   - Uses adaptive workers (CI: up to 2, local: 1 by default).
   - Runs in silent mode by default to reduce console I/O overhead.
 - Useful overrides:
-  - `OPENCLAW_E2E_WORKERS=<n>` to force worker count (capped at 16).
-  - `OPENCLAW_E2E_VERBOSE=1` to re-enable verbose console output.
+  - `ICLAW_E2E_WORKERS=<n>` to force worker count (capped at 16).
+  - `ICLAW_E2E_VERBOSE=1` to re-enable verbose console output.
 - Scope:
   - Multi-instance gateway end-to-end behavior
   - WebSocket/HTTP surfaces, node pairing, and heavier networking
@@ -459,15 +459,15 @@ Think of the suites as “increasing realism” (and increasing flakiness/cost):
   - Requires a local `openshell` CLI plus a working Docker daemon
   - Uses isolated `HOME` / `XDG_CONFIG_HOME`, then destroys the test gateway and sandbox
 - Useful overrides:
-  - `OPENCLAW_E2E_OPENSHELL=1` to enable the test when running the broader e2e suite manually
-  - `OPENCLAW_E2E_OPENSHELL_COMMAND=/path/to/openshell` to point at a non-default CLI binary or wrapper script
+  - `ICLAW_E2E_OPENSHELL=1` to enable the test when running the broader e2e suite manually
+  - `ICLAW_E2E_OPENSHELL_COMMAND=/path/to/openshell` to point at a non-default CLI binary or wrapper script
 
 ### Live (real providers + real models)
 
 - Command: `pnpm test:live`
 - Config: `vitest.live.config.ts`
 - Files: `src/**/*.live.test.ts`, `test/**/*.live.test.ts`, and bundled-plugin live tests under `extensions/`
-- Default: **enabled** by `pnpm test:live` (sets `OPENCLAW_LIVE_TEST=1`)
+- Default: **enabled** by `pnpm test:live` (sets `ICLAW_LIVE_TEST=1`)
 - Scope:
   - “Does this provider/model actually work _today_ with real creds?”
   - Catch provider format changes, tool-calling quirks, auth issues, and rate limit behavior
@@ -477,14 +477,14 @@ Think of the suites as “increasing realism” (and increasing flakiness/cost):
   - Prefer running narrowed subsets instead of “everything”
 - Live runs source `~/.profile` to pick up missing API keys.
 - By default, live runs still isolate `HOME` and copy config/auth material into a temp test home so unit fixtures cannot mutate your real `~/.openclaw`.
-- Set `OPENCLAW_LIVE_USE_REAL_HOME=1` only when you intentionally need live tests to use your real home directory.
-- `pnpm test:live` now defaults to a quieter mode: it keeps `[live] ...` progress output, but suppresses the extra `~/.profile` notice and mutes gateway bootstrap logs/Bonjour chatter. Set `OPENCLAW_LIVE_TEST_QUIET=0` if you want the full startup logs back.
-- API key rotation (provider-specific): set `*_API_KEYS` with comma/semicolon format or `*_API_KEY_1`, `*_API_KEY_2` (for example `OPENAI_API_KEYS`, `ANTHROPIC_API_KEYS`, `GEMINI_API_KEYS`) or per-live override via `OPENCLAW_LIVE_*_KEY`; tests retry on rate limit responses.
+- Set `ICLAW_LIVE_USE_REAL_HOME=1` only when you intentionally need live tests to use your real home directory.
+- `pnpm test:live` now defaults to a quieter mode: it keeps `[live] ...` progress output, but suppresses the extra `~/.profile` notice and mutes gateway bootstrap logs/Bonjour chatter. Set `ICLAW_LIVE_TEST_QUIET=0` if you want the full startup logs back.
+- API key rotation (provider-specific): set `*_API_KEYS` with comma/semicolon format or `*_API_KEY_1`, `*_API_KEY_2` (for example `OPENAI_API_KEYS`, `ANTHROPIC_API_KEYS`, `GEMINI_API_KEYS`) or per-live override via `ICLAW_LIVE_*_KEY`; tests retry on rate limit responses.
 - Progress/heartbeat output:
   - Live suites now emit progress lines to stderr so long provider calls are visibly active even when Vitest console capture is quiet.
   - `vitest.live.config.ts` disables Vitest console interception so provider/gateway progress lines stream immediately during live runs.
-  - Tune direct-model heartbeats with `OPENCLAW_LIVE_HEARTBEAT_MS`.
-  - Tune gateway/probe heartbeats with `OPENCLAW_LIVE_GATEWAY_HEARTBEAT_MS`.
+  - Tune direct-model heartbeats with `ICLAW_LIVE_HEARTBEAT_MS`.
+  - Tune gateway/probe heartbeats with `ICLAW_LIVE_GATEWAY_HEARTBEAT_MS`.
 
 ## Which suite should I run?
 
@@ -507,11 +507,11 @@ These Docker runners split into two buckets:
 
 - Live-model runners: `test:docker:live-models` and `test:docker:live-gateway` run only their matching profile-key live file inside the repo Docker image (`src/agents/models.profiles.live.test.ts` and `src/gateway/gateway-models.profiles.live.test.ts`), mounting your local config dir and workspace (and sourcing `~/.profile` if mounted). The matching local entrypoints are `test:live:models-profiles` and `test:live:gateway-profiles`.
 - Docker live runners default to a smaller smoke cap so a full Docker sweep stays practical:
-  `test:docker:live-models` defaults to `OPENCLAW_LIVE_MAX_MODELS=12`, and
-  `test:docker:live-gateway` defaults to `OPENCLAW_LIVE_GATEWAY_SMOKE=1`,
-  `OPENCLAW_LIVE_GATEWAY_MAX_MODELS=8`,
-  `OPENCLAW_LIVE_GATEWAY_STEP_TIMEOUT_MS=45000`, and
-  `OPENCLAW_LIVE_GATEWAY_MODEL_TIMEOUT_MS=90000`. Override those env vars when you
+  `test:docker:live-models` defaults to `ICLAW_LIVE_MAX_MODELS=12`, and
+  `test:docker:live-gateway` defaults to `ICLAW_LIVE_GATEWAY_SMOKE=1`,
+  `ICLAW_LIVE_GATEWAY_MAX_MODELS=8`,
+  `ICLAW_LIVE_GATEWAY_STEP_TIMEOUT_MS=45000`, and
+  `ICLAW_LIVE_GATEWAY_MODEL_TIMEOUT_MS=90000`. Override those env vars when you
   explicitly want the larger exhaustive scan.
 - `test:docker:all` builds the live Docker image once via `test:docker:live-build`, then reuses it for the two live Docker lanes. It also builds one shared `scripts/e2e/Dockerfile` image via `test:docker:e2e-build` and reuses it for the E2E container smoke runners that exercise the built app.
 - Container smoke runners: `test:docker:openwebui`, `test:docker:onboard`, `test:docker:npm-onboard-channel-agent`, `test:docker:gateway-network`, `test:docker:mcp-channels`, `test:docker:pi-bundle-mcp-tools`, `test:docker:cron-mcp-cleanup`, `test:docker:plugins`, `test:docker:plugin-update`, and `test:docker:config-reload` boot one or more real containers and verify higher-level integration paths.
@@ -525,10 +525,10 @@ The live-model Docker runners also bind-mount only the needed CLI auth homes (or
 - Gateway + dev agent: `pnpm test:docker:live-gateway` (script: `scripts/test-live-gateway-models-docker.sh`)
 - Open WebUI live smoke: `pnpm test:docker:openwebui` (script: `scripts/e2e/openwebui-docker.sh`)
 - Onboarding wizard (TTY, full scaffolding): `pnpm test:docker:onboard` (script: `scripts/e2e/onboard-docker.sh`)
-- Npm tarball onboarding/channel/agent smoke: `pnpm test:docker:npm-onboard-channel-agent` installs the packed OpenClaw tarball globally in Docker, configures OpenAI via env-ref onboarding plus Telegram by default, verifies doctor repairs activated plugin runtime deps, and runs one mocked OpenAI agent turn. Reuse a prebuilt tarball with `OPENCLAW_NPM_ONBOARD_PACKAGE_TGZ=/path/to/openclaw-*.tgz`, skip the host rebuild with `OPENCLAW_NPM_ONBOARD_HOST_BUILD=0`, or switch channel with `OPENCLAW_NPM_ONBOARD_CHANNEL=discord`.
-- Bun global install smoke: `bash scripts/e2e/bun-global-install-smoke.sh` packs the current tree, installs it with `bun install -g` in an isolated home, and verifies `openclaw infer image providers --json` returns bundled image providers instead of hanging. Reuse a prebuilt tarball with `OPENCLAW_BUN_GLOBAL_SMOKE_PACKAGE_TGZ=/path/to/openclaw-*.tgz`, skip the host build with `OPENCLAW_BUN_GLOBAL_SMOKE_HOST_BUILD=0`, or copy `dist/` from a built Docker image with `OPENCLAW_BUN_GLOBAL_SMOKE_DIST_IMAGE=openclaw-dockerfile-smoke:local`.
-- Installer Docker smoke: `bash scripts/test-install-sh-docker.sh` shares one npm cache across its root, update, and direct-npm containers. Update smoke defaults to npm `latest` as the stable baseline before upgrading to the candidate tarball. Non-root installer checks keep an isolated npm cache so root-owned cache entries do not mask user-local install behavior. Set `OPENCLAW_INSTALL_SMOKE_NPM_CACHE_DIR=/path/to/cache` to reuse the root/update/direct-npm cache across local reruns.
-- Install Smoke CI skips the duplicate direct-npm global update with `OPENCLAW_INSTALL_SMOKE_SKIP_NPM_GLOBAL=1`; run the script locally without that env when direct `npm install -g` coverage is needed.
+- Npm tarball onboarding/channel/agent smoke: `pnpm test:docker:npm-onboard-channel-agent` installs the packed OpenClaw tarball globally in Docker, configures OpenAI via env-ref onboarding plus Telegram by default, verifies doctor repairs activated plugin runtime deps, and runs one mocked OpenAI agent turn. Reuse a prebuilt tarball with `ICLAW_NPM_ONBOARD_PACKAGE_TGZ=/path/to/openclaw-*.tgz`, skip the host rebuild with `ICLAW_NPM_ONBOARD_HOST_BUILD=0`, or switch channel with `ICLAW_NPM_ONBOARD_CHANNEL=discord`.
+- Bun global install smoke: `bash scripts/e2e/bun-global-install-smoke.sh` packs the current tree, installs it with `bun install -g` in an isolated home, and verifies `openclaw infer image providers --json` returns bundled image providers instead of hanging. Reuse a prebuilt tarball with `ICLAW_BUN_GLOBAL_SMOKE_PACKAGE_TGZ=/path/to/openclaw-*.tgz`, skip the host build with `ICLAW_BUN_GLOBAL_SMOKE_HOST_BUILD=0`, or copy `dist/` from a built Docker image with `ICLAW_BUN_GLOBAL_SMOKE_DIST_IMAGE=openclaw-dockerfile-smoke:local`.
+- Installer Docker smoke: `bash scripts/test-install-sh-docker.sh` shares one npm cache across its root, update, and direct-npm containers. Update smoke defaults to npm `latest` as the stable baseline before upgrading to the candidate tarball. Non-root installer checks keep an isolated npm cache so root-owned cache entries do not mask user-local install behavior. Set `ICLAW_INSTALL_SMOKE_NPM_CACHE_DIR=/path/to/cache` to reuse the root/update/direct-npm cache across local reruns.
+- Install Smoke CI skips the duplicate direct-npm global update with `ICLAW_INSTALL_SMOKE_SKIP_NPM_GLOBAL=1`; run the script locally without that env when direct `npm install -g` coverage is needed.
 - Gateway networking (two containers, WS auth + health): `pnpm test:docker:gateway-network` (script: `scripts/e2e/gateway-network-docker.sh`)
 - OpenAI Responses web_search minimal reasoning regression: `pnpm test:docker:openai-web-search-minimal` (script: `scripts/e2e/openai-web-search-minimal-docker.sh`) runs a mocked OpenAI server through Gateway, verifies `web_search` raises `reasoning.effort` from `minimal` to `low`, then forces the provider schema reject and checks the raw detail appears in Gateway logs.
 - MCP channel bridge (seeded Gateway + stdio bridge + raw Claude notification-frame smoke): `pnpm test:docker:mcp-channels` (script: `scripts/e2e/mcp-channels-docker.sh`)
@@ -537,18 +537,18 @@ The live-model Docker runners also bind-mount only the needed CLI auth homes (or
 - Plugins (install smoke + `/plugin` alias + Claude-bundle restart semantics): `pnpm test:docker:plugins` (script: `scripts/e2e/plugins-docker.sh`)
 - Plugin update unchanged smoke: `pnpm test:docker:plugin-update` (script: `scripts/e2e/plugin-update-unchanged-docker.sh`)
 - Config reload metadata smoke: `pnpm test:docker:config-reload` (script: `scripts/e2e/config-reload-source-docker.sh`)
-- Bundled plugin runtime deps: `pnpm test:docker:bundled-channel-deps` builds a small Docker runner image by default, builds and packs OpenClaw once on the host, then mounts that tarball into each Linux install scenario. Reuse the image with `OPENCLAW_SKIP_DOCKER_BUILD=1`, skip the host rebuild after a fresh local build with `OPENCLAW_BUNDLED_CHANNEL_HOST_BUILD=0`, or point at an existing tarball with `OPENCLAW_BUNDLED_CHANNEL_PACKAGE_TGZ=/path/to/openclaw-*.tgz`. The full Docker aggregate pre-packs this tarball once, then shards bundled channel checks into independent lanes; use `OPENCLAW_BUNDLED_CHANNELS=telegram,slack` to narrow the channel matrix when running the bundled lane directly. The lane also verifies that `channels.<id>.enabled=false` and `plugins.entries.<id>.enabled=false` suppress doctor/runtime-dependency repair.
+- Bundled plugin runtime deps: `pnpm test:docker:bundled-channel-deps` builds a small Docker runner image by default, builds and packs OpenClaw once on the host, then mounts that tarball into each Linux install scenario. Reuse the image with `ICLAW_SKIP_DOCKER_BUILD=1`, skip the host rebuild after a fresh local build with `ICLAW_BUNDLED_CHANNEL_HOST_BUILD=0`, or point at an existing tarball with `ICLAW_BUNDLED_CHANNEL_PACKAGE_TGZ=/path/to/openclaw-*.tgz`. The full Docker aggregate pre-packs this tarball once, then shards bundled channel checks into independent lanes; use `ICLAW_BUNDLED_CHANNELS=telegram,slack` to narrow the channel matrix when running the bundled lane directly. The lane also verifies that `channels.<id>.enabled=false` and `plugins.entries.<id>.enabled=false` suppress doctor/runtime-dependency repair.
 - Narrow bundled plugin runtime deps while iterating by disabling unrelated scenarios, for example:
-  `OPENCLAW_BUNDLED_CHANNEL_SCENARIOS=0 OPENCLAW_BUNDLED_CHANNEL_UPDATE_SCENARIO=0 OPENCLAW_BUNDLED_CHANNEL_ROOT_OWNED_SCENARIO=0 OPENCLAW_BUNDLED_CHANNEL_SETUP_ENTRY_SCENARIO=0 pnpm test:docker:bundled-channel-deps`.
+  `ICLAW_BUNDLED_CHANNEL_SCENARIOS=0 ICLAW_BUNDLED_CHANNEL_UPDATE_SCENARIO=0 ICLAW_BUNDLED_CHANNEL_ROOT_OWNED_SCENARIO=0 ICLAW_BUNDLED_CHANNEL_SETUP_ENTRY_SCENARIO=0 pnpm test:docker:bundled-channel-deps`.
 
 To prebuild and reuse the shared built-app image manually:
 
 ```bash
-OPENCLAW_DOCKER_E2E_IMAGE=openclaw-docker-e2e:local pnpm test:docker:e2e-build
-OPENCLAW_DOCKER_E2E_IMAGE=openclaw-docker-e2e:local OPENCLAW_SKIP_DOCKER_BUILD=1 pnpm test:docker:mcp-channels
+ICLAW_DOCKER_E2E_IMAGE=openclaw-docker-e2e:local pnpm test:docker:e2e-build
+ICLAW_DOCKER_E2E_IMAGE=openclaw-docker-e2e:local ICLAW_SKIP_DOCKER_BUILD=1 pnpm test:docker:mcp-channels
 ```
 
-Suite-specific image overrides such as `OPENCLAW_GATEWAY_NETWORK_E2E_IMAGE` still win when set. When `OPENCLAW_SKIP_DOCKER_BUILD=1` points at a remote shared image, the scripts pull it if it is not already local. The QR and installer Docker tests keep their own Dockerfiles because they validate package/install behavior rather than the shared built-app runtime.
+Suite-specific image overrides such as `ICLAW_GATEWAY_NETWORK_E2E_IMAGE` still win when set. When `ICLAW_SKIP_DOCKER_BUILD=1` points at a remote shared image, the scripts pull it if it is not already local. The QR and installer Docker tests keep their own Dockerfiles because they validate package/install behavior rather than the shared built-app runtime.
 
 The live-model Docker runners also bind-mount the current checkout read-only and
 stage it into a temporary workdir inside the container. This keeps the runtime
@@ -557,10 +557,10 @@ The staging step skips large local-only caches and app build outputs such as
 `.pnpm-store`, `.worktrees`, `__openclaw_vitest__`, and app-local `.build` or
 Gradle output directories so Docker live runs do not spend minutes copying
 machine-specific artifacts.
-They also set `OPENCLAW_SKIP_CHANNELS=1` so gateway live probes do not start
+They also set `ICLAW_SKIP_CHANNELS=1` so gateway live probes do not start
 real Telegram/Discord/etc. channel workers inside the container.
 `test:docker:live-models` still runs `pnpm test:live`, so pass through
-`OPENCLAW_LIVE_GATEWAY_*` as well when you need to narrow or exclude gateway
+`ICLAW_LIVE_GATEWAY_*` as well when you need to narrow or exclude gateway
 live coverage from that Docker lane.
 `test:docker:openwebui` is a higher-level compatibility smoke: it starts an
 OpenClaw gateway container with the OpenAI-compatible HTTP endpoints enabled,
@@ -569,7 +569,7 @@ Open WebUI, verifies `/api/models` exposes `openclaw/default`, then sends a
 real chat request through Open WebUI's `/api/chat/completions` proxy.
 The first run can be noticeably slower because Docker may need to pull the
 Open WebUI image and Open WebUI may need to finish its own cold-start setup.
-This lane expects a usable live model key, and `OPENCLAW_PROFILE_FILE`
+This lane expects a usable live model key, and `ICLAW_PROFILE_FILE`
 (`~/.profile` by default) is the primary way to provide it in Dockerized runs.
 Successful runs print a small JSON payload like `{ "ok": true, "model":
 "openclaw/default", ... }`.
@@ -598,22 +598,22 @@ Manual ACP plain-language thread smoke (not CI):
 
 Useful env vars:
 
-- `OPENCLAW_CONFIG_DIR=...` (default: `~/.openclaw`) mounted to `/home/node/.openclaw`
-- `OPENCLAW_WORKSPACE_DIR=...` (default: `~/.openclaw/workspace`) mounted to `/home/node/.openclaw/workspace`
-- `OPENCLAW_PROFILE_FILE=...` (default: `~/.profile`) mounted to `/home/node/.profile` and sourced before running tests
-- `OPENCLAW_DOCKER_PROFILE_ENV_ONLY=1` to verify only env vars sourced from `OPENCLAW_PROFILE_FILE`, using temporary config/workspace dirs and no external CLI auth mounts
-- `OPENCLAW_DOCKER_CLI_TOOLS_DIR=...` (default: `~/.cache/openclaw/docker-cli-tools`) mounted to `/home/node/.npm-global` for cached CLI installs inside Docker
+- `ICLAW_CONFIG_DIR=...` (default: `~/.openclaw`) mounted to `/home/node/.openclaw`
+- `ICLAW_WORKSPACE_DIR=...` (default: `~/.openclaw/workspace`) mounted to `/home/node/.openclaw/workspace`
+- `ICLAW_PROFILE_FILE=...` (default: `~/.profile`) mounted to `/home/node/.profile` and sourced before running tests
+- `ICLAW_DOCKER_PROFILE_ENV_ONLY=1` to verify only env vars sourced from `ICLAW_PROFILE_FILE`, using temporary config/workspace dirs and no external CLI auth mounts
+- `ICLAW_DOCKER_CLI_TOOLS_DIR=...` (default: `~/.cache/openclaw/docker-cli-tools`) mounted to `/home/node/.npm-global` for cached CLI installs inside Docker
 - External CLI auth dirs/files under `$HOME` are mounted read-only under `/host-auth...`, then copied into `/home/node/...` before tests start
   - Default dirs: `.minimax`
   - Default files: `~/.codex/auth.json`, `~/.codex/config.toml`, `.claude.json`, `~/.claude/.credentials.json`, `~/.claude/settings.json`, `~/.claude/settings.local.json`
-  - Narrowed provider runs mount only the needed dirs/files inferred from `OPENCLAW_LIVE_PROVIDERS` / `OPENCLAW_LIVE_GATEWAY_PROVIDERS`
-  - Override manually with `OPENCLAW_DOCKER_AUTH_DIRS=all`, `OPENCLAW_DOCKER_AUTH_DIRS=none`, or a comma list like `OPENCLAW_DOCKER_AUTH_DIRS=.claude,.codex`
-- `OPENCLAW_LIVE_GATEWAY_MODELS=...` / `OPENCLAW_LIVE_MODELS=...` to narrow the run
-- `OPENCLAW_LIVE_GATEWAY_PROVIDERS=...` / `OPENCLAW_LIVE_PROVIDERS=...` to filter providers in-container
-- `OPENCLAW_SKIP_DOCKER_BUILD=1` to reuse an existing `openclaw:local-live` image for reruns that do not need a rebuild
-- `OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS=1` to ensure creds come from the profile store (not env)
-- `OPENCLAW_OPENWEBUI_MODEL=...` to choose the model exposed by the gateway for the Open WebUI smoke
-- `OPENCLAW_OPENWEBUI_PROMPT=...` to override the nonce-check prompt used by the Open WebUI smoke
+  - Narrowed provider runs mount only the needed dirs/files inferred from `ICLAW_LIVE_PROVIDERS` / `ICLAW_LIVE_GATEWAY_PROVIDERS`
+  - Override manually with `ICLAW_DOCKER_AUTH_DIRS=all`, `ICLAW_DOCKER_AUTH_DIRS=none`, or a comma list like `ICLAW_DOCKER_AUTH_DIRS=.claude,.codex`
+- `ICLAW_LIVE_GATEWAY_MODELS=...` / `ICLAW_LIVE_MODELS=...` to narrow the run
+- `ICLAW_LIVE_GATEWAY_PROVIDERS=...` / `ICLAW_LIVE_PROVIDERS=...` to filter providers in-container
+- `ICLAW_SKIP_DOCKER_BUILD=1` to reuse an existing `openclaw:local-live` image for reruns that do not need a rebuild
+- `ICLAW_LIVE_REQUIRE_PROFILE_KEYS=1` to ensure creds come from the profile store (not env)
+- `ICLAW_OPENWEBUI_MODEL=...` to choose the model exposed by the gateway for the Open WebUI smoke
+- `ICLAW_OPENWEBUI_PROMPT=...` to override the nonce-check prompt used by the Open WebUI smoke
 - `OPENWEBUI_IMAGE=...` to override the pinned Open WebUI image tag
 
 ## Docs sanity

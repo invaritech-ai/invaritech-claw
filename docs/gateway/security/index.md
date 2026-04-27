@@ -112,6 +112,10 @@ Use this as the quick model when triaging risk:
 | Local TUI `!` shell                                       | Explicit operator-triggered local execution       | "Local shell convenience command is remote injection"                         |
 | Node pairing and node commands                            | Operator-level remote execution on paired devices | "Remote device control should be treated as untrusted user access by default" |
 
+## HTTP and WebSocket ingress
+
+For a route-by-route view of built-in HTTP handlers and common WebSocket upgrades (auth expectations and exposure notes), see [HTTP ingress matrix](/gateway/security/http-ingress-matrix).
+
 ## Not vulnerabilities by design
 
 <Accordion title="Common findings that are out of scope">
@@ -346,7 +350,7 @@ gateway:
   allowRealIpFallback: false
   auth:
     mode: password
-    password: ${OPENCLAW_GATEWAY_PASSWORD}
+    password: ${ICLAW_GATEWAY_PASSWORD}
 ```
 
 When `trustedProxies` is configured, the Gateway uses `X-Forwarded-For` to determine the client IP. `X-Real-IP` is ignored by default unless `gateway.allowRealIpFallback: true` is explicitly set.
@@ -698,7 +702,7 @@ Keep config + state private on the gateway host:
 The Gateway multiplexes **WebSocket + HTTP** on a single port:
 
 - Default: `18789`
-- Config/flags/env: `gateway.port`, `--port`, `OPENCLAW_GATEWAY_PORT`
+- Config/flags/env: `gateway.port`, `--port`, `ICLAW_GATEWAY_PORT`
 
 This HTTP surface includes the Control UI and the canvas host:
 
@@ -812,7 +816,7 @@ The Gateway broadcasts its presence via mDNS (`_openclaw-gw._tcp` on port 5353) 
    }
    ```
 
-4. **Environment variable** (alternative): set `OPENCLAW_DISABLE_BONJOUR=1` to disable mDNS without config changes.
+4. **Environment variable** (alternative): set `ICLAW_DISABLE_BONJOUR=1` to disable mDNS without config changes.
 
 In minimal mode, the Gateway still broadcasts enough for device discovery (`role`, `gatewayPort`, `transport`) but omits `cliPath` and `sshPort`. Apps that need CLI path information can fetch it via the authenticated WebSocket connection instead.
 
@@ -844,7 +848,7 @@ If `gateway.auth.token` / `gateway.auth.password` is explicitly configured via
 SecretRef and unresolved, resolution fails closed (no remote fallback masking).
 Optional: pin remote TLS with `gateway.remote.tlsFingerprint` when using `wss://`.
 Plaintext `ws://` is loopback-only by default. For trusted private-network
-paths, set `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` on the client process as
+paths, set `ICLAW_ALLOW_INSECURE_PRIVATE_WS=1` on the client process as
 break-glass. This is intentionally process environment only, not an
 `openclaw.json` config key.
 Mobile pairing and Android manual or scanned gateway routes are stricter:
@@ -867,12 +871,12 @@ Local device pairing:
 Auth modes:
 
 - `gateway.auth.mode: "token"`: shared bearer token (recommended for most setups).
-- `gateway.auth.mode: "password"`: password auth (prefer setting via env: `OPENCLAW_GATEWAY_PASSWORD`).
+- `gateway.auth.mode: "password"`: password auth (prefer setting via env: `ICLAW_GATEWAY_PASSWORD`).
 - `gateway.auth.mode: "trusted-proxy"`: trust an identity-aware reverse proxy to authenticate users and pass identity via headers (see [Trusted Proxy Auth](/gateway/trusted-proxy-auth)).
 
 Rotation checklist (token/password):
 
-1. Generate/set a new secret (`gateway.auth.token` or `OPENCLAW_GATEWAY_PASSWORD`).
+1. Generate/set a new secret (`gateway.auth.token` or `ICLAW_GATEWAY_PASSWORD`).
 2. Restart the Gateway (or restart the macOS app if it supervises the Gateway).
 3. Update any remote clients (`gateway.remote.token` / `.password` on machines that call into the Gateway).
 4. Verify you can no longer connect with the old credentials.
@@ -942,7 +946,7 @@ Avoid:
 
 ### Secrets on disk
 
-Assume anything under `~/.openclaw/` (or `$OPENCLAW_STATE_DIR/`) may contain secrets or private data:
+Assume anything under `~/.openclaw/` (or `$ICLAW_STATE_DIR/`) may contain secrets or private data:
 
 - `openclaw.json`: config may include tokens (gateway, remote gateway), provider settings, and allowlists.
 - `credentials/**`: channel credentials (example: WhatsApp creds), pairing allowlists, legacy OAuth imports.
@@ -963,12 +967,12 @@ Hardening tips:
 
 OpenClaw loads workspace-local `.env` files for agents and tools, but never lets those files silently override gateway runtime controls.
 
-- Any key that starts with `OPENCLAW_*` is blocked from untrusted workspace `.env` files.
+- Any key that starts with `ICLAW_*` is blocked from untrusted workspace `.env` files.
 - Channel endpoint settings for Matrix, Mattermost, IRC, and Synology Chat are also blocked from workspace `.env` overrides, so cloned workspaces cannot redirect bundled connector traffic through local endpoint config. Endpoint env keys (such as `MATRIX_HOMESERVER`, `MATTERMOST_URL`, `IRC_HOST`, `SYNOLOGY_CHAT_INCOMING_URL`) must come from the gateway process environment or `env.shellEnv`, not from a workspace-loaded `.env`.
 - The block is fail-closed: a new runtime-control variable added in a future release cannot be inherited from a checked-in or attacker-supplied `.env`; the key is ignored and the gateway keeps its own value.
 - Trusted process/OS environment variables (the gateway's own shell, launchd/systemd unit, app bundle) still apply — this only constrains `.env` file loading.
 
-Why: workspace `.env` files frequently live next to agent code, get committed by accident, or get written by tools. Blocking the whole `OPENCLAW_*` prefix means adding a new `OPENCLAW_*` flag later can never regress into silent inheritance from workspace state.
+Why: workspace `.env` files frequently live next to agent code, get committed by accident, or get written by tools. Blocking the whole `ICLAW_*` prefix means adding a new `ICLAW_*` flag later can never regress into silent inheritance from workspace state.
 
 ### Logs and transcripts (redaction and retention)
 
@@ -1253,7 +1257,7 @@ If your AI does something bad:
 
 ### Rotate (assume compromise if secrets leaked)
 
-1. Rotate Gateway auth (`gateway.auth.token` / `OPENCLAW_GATEWAY_PASSWORD`) and restart.
+1. Rotate Gateway auth (`gateway.auth.token` / `ICLAW_GATEWAY_PASSWORD`) and restart.
 2. Rotate remote client secrets (`gateway.remote.token` / `.password`) on any machine that can call the Gateway.
 3. Rotate provider/API credentials (WhatsApp creds, Slack/Discord tokens, model/API keys in `auth-profiles.json`, and encrypted secrets payload values when used).
 

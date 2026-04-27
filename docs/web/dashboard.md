@@ -44,7 +44,7 @@ Prefer localhost, Tailscale Serve, or an SSH tunnel.
 
 - **Localhost**: open `http://127.0.0.1:18789/`.
 - **Shared-secret token source**: `gateway.auth.token` (or
-  `OPENCLAW_GATEWAY_TOKEN`); `openclaw dashboard` can pass it via URL fragment
+  `ICLAW_GATEWAY_TOKEN`); `openclaw dashboard` can pass it via URL fragment
   for one-time bootstrap, and the Control UI keeps it in sessionStorage for the
   current browser tab session and selected gateway URL instead of localStorage.
 - If `gateway.auth.token` is SecretRef-managed, `openclaw dashboard`
@@ -55,7 +55,7 @@ Prefer localhost, Tailscale Serve, or an SSH tunnel.
   current shell, `openclaw dashboard` still prints a non-tokenized URL plus
   actionable auth setup guidance.
 - **Shared-secret password**: use the configured `gateway.auth.password` (or
-  `OPENCLAW_GATEWAY_PASSWORD`). The dashboard does not persist passwords across
+  `ICLAW_GATEWAY_PASSWORD`). The dashboard does not persist passwords across
   reloads.
 - **Identity-bearing modes**: Tailscale Serve can satisfy Control UI/WebSocket
   auth via identity headers when `gateway.auth.allowTailscale: true`, and a
@@ -83,9 +83,9 @@ Prefer localhost, Tailscale Serve, or an SSH tunnel.
 - Retrieve or supply the shared secret from the gateway host:
   - Token: `openclaw config get gateway.auth.token`
   - Password: resolve the configured `gateway.auth.password` or
-    `OPENCLAW_GATEWAY_PASSWORD`
+    `ICLAW_GATEWAY_PASSWORD`
   - SecretRef-managed token: resolve the external secret provider or export
-    `OPENCLAW_GATEWAY_TOKEN` in this shell, then rerun `openclaw dashboard`
+    `ICLAW_GATEWAY_TOKEN` in this shell, then rerun `openclaw dashboard`
   - No shared secret configured: `openclaw doctor --generate-gateway-token`
 - In the dashboard settings, paste the token or password into the auth field,
   then connect.

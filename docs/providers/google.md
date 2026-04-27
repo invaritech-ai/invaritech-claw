@@ -102,8 +102,8 @@ Choose your preferred auth method and follow the setup steps.
 
     **Environment variables:**
 
-    - `OPENCLAW_GEMINI_OAUTH_CLIENT_ID`
-    - `OPENCLAW_GEMINI_OAUTH_CLIENT_SECRET`
+    - `ICLAW_GEMINI_OAUTH_CLIENT_ID`
+    - `ICLAW_GEMINI_OAUTH_CLIENT_SECRET`
 
     (Or the `GEMINI_CLI_*` variants.)
 
