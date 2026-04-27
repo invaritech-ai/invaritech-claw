@@ -40,7 +40,7 @@ function normalizedLogHaystack(log: { message?: string; id?: string; importer?: 
 }
 
 function buildInputOptions(options: InputOptionsArg): InputOptionsReturn {
-  if (process.env.OPENCLAW_BUILD_VERBOSE === "1") {
+  if (process.env.ICLAW_BUILD_VERBOSE === "1") {
     return undefined;
   }
 
@@ -93,7 +93,7 @@ function nodeBuildConfig(config: UserConfig): UserConfig {
 
 const bundledPluginBuildEntries = collectBundledPluginBuildEntries();
 const bundledPluginRuntimeDependencies = listBundledPluginRuntimeDependencies();
-const shouldBuildPrivateQaEntries = process.env.OPENCLAW_BUILD_PRIVATE_QA === "1";
+const shouldBuildPrivateQaEntries = process.env.ICLAW_BUILD_PRIVATE_QA === "1";
 
 function buildBundledHookEntries(): Record<string, string> {
   const hooksRoot = path.join(process.cwd(), "src", "hooks", "bundled");
