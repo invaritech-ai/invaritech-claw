@@ -57,7 +57,7 @@ This is why localhost URLs don't work - the node receives the Tailscale hostname
 
 ## Configuration
 
-In the active OpenClaw config file (`$OPENCLAW_CONFIG_PATH`, default `~/.openclaw/openclaw.json`):
+In the active OpenClaw config file (`$ICLAW_CONFIG_PATH`, default `~/.openclaw/openclaw.json`):
 
 ```json
 {
@@ -106,7 +106,7 @@ HTML
 Check how your gateway is bound:
 
 ```bash
-CONFIG_PATH="${OPENCLAW_CONFIG_PATH:-${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/openclaw.json}"
+CONFIG_PATH="${ICLAW_CONFIG_PATH:-${ICLAW_STATE_DIR:-$HOME/.openclaw}/openclaw.json}"
 cat "$CONFIG_PATH" | jq '.gateway.bind'
 ```
 
@@ -157,7 +157,7 @@ canvas action:hide node:<node-id>
 
 **Debug steps:**
 
-1. Check server bind: `CONFIG_PATH="${OPENCLAW_CONFIG_PATH:-${OPENCLAW_STATE_DIR:-$HOME/.openclaw}/openclaw.json}"; cat "$CONFIG_PATH" | jq '.gateway.bind'`
+1. Check server bind: `CONFIG_PATH="${ICLAW_CONFIG_PATH:-${ICLAW_STATE_DIR:-$HOME/.openclaw}/openclaw.json}"; cat "$CONFIG_PATH" | jq '.gateway.bind'`
 2. Check what port canvas is on: `lsof -i :18793`
 3. Test URL directly: `curl http://<hostname>:18793/__openclaw__/canvas/<file>.html`
 
