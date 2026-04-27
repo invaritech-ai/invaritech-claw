@@ -23,8 +23,8 @@ describe("Codex app-server config", () => {
         },
       },
       env: {
-        OPENCLAW_CODEX_APP_SERVER_APPROVAL_POLICY: "never",
-        OPENCLAW_CODEX_APP_SERVER_SANDBOX: "read-only",
+        ICLAW_CODEX_APP_SERVER_APPROVAL_POLICY: "never",
+        ICLAW_CODEX_APP_SERVER_SANDBOX: "read-only",
       },
     });
 
@@ -122,7 +122,7 @@ describe("Codex app-server config", () => {
   it("allows environment mode fallback to opt in to guardian-reviewed local execution", () => {
     const runtime = resolveCodexAppServerRuntimeOptions({
       pluginConfig: {},
-      env: { OPENCLAW_CODEX_APP_SERVER_MODE: "guardian" },
+      env: { ICLAW_CODEX_APP_SERVER_MODE: "guardian" },
     });
 
     expect(runtime).toEqual(
@@ -149,10 +149,10 @@ describe("Codex app-server config", () => {
     ).toBe("guardian_subagent");
   });
 
-  it("ignores removed OPENCLAW_CODEX_APP_SERVER_GUARDIAN fallback", () => {
+  it("ignores removed ICLAW_CODEX_APP_SERVER_GUARDIAN fallback", () => {
     const runtime = resolveCodexAppServerRuntimeOptions({
       pluginConfig: {},
-      env: { OPENCLAW_CODEX_APP_SERVER_GUARDIAN: "1" },
+      env: { ICLAW_CODEX_APP_SERVER_GUARDIAN: "1" },
     });
 
     expect(runtime).toEqual(

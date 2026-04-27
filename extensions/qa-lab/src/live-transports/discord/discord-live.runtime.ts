@@ -144,14 +144,14 @@ type DiscordQaSummary = {
 };
 
 const DISCORD_API_BASE_URL = "https://discord.com/api/v10";
-const DISCORD_QA_CAPTURE_CONTENT_ENV = "OPENCLAW_QA_DISCORD_CAPTURE_CONTENT";
-const QA_REDACT_PUBLIC_METADATA_ENV = "OPENCLAW_QA_REDACT_PUBLIC_METADATA";
+const DISCORD_QA_CAPTURE_CONTENT_ENV = "ICLAW_QA_DISCORD_CAPTURE_CONTENT";
+const QA_REDACT_PUBLIC_METADATA_ENV = "ICLAW_QA_REDACT_PUBLIC_METADATA";
 const DISCORD_QA_ENV_KEYS = [
-  "OPENCLAW_QA_DISCORD_GUILD_ID",
-  "OPENCLAW_QA_DISCORD_CHANNEL_ID",
-  "OPENCLAW_QA_DISCORD_DRIVER_BOT_TOKEN",
-  "OPENCLAW_QA_DISCORD_SUT_BOT_TOKEN",
-  "OPENCLAW_QA_DISCORD_SUT_APPLICATION_ID",
+  "ICLAW_QA_DISCORD_GUILD_ID",
+  "ICLAW_QA_DISCORD_CHANNEL_ID",
+  "ICLAW_QA_DISCORD_DRIVER_BOT_TOKEN",
+  "ICLAW_QA_DISCORD_SUT_BOT_TOKEN",
+  "ICLAW_QA_DISCORD_SUT_APPLICATION_ID",
 ] as const;
 
 const DISCORD_QA_SCENARIOS: DiscordQaScenarioDefinition[] = [
@@ -236,13 +236,13 @@ export function resolveDiscordQaRuntimeEnv(
   env: NodeJS.ProcessEnv = process.env,
 ): DiscordQaRuntimeEnv {
   const runtimeEnv = {
-    guildId: resolveEnvValue(env, "OPENCLAW_QA_DISCORD_GUILD_ID"),
-    channelId: resolveEnvValue(env, "OPENCLAW_QA_DISCORD_CHANNEL_ID"),
-    driverBotToken: resolveEnvValue(env, "OPENCLAW_QA_DISCORD_DRIVER_BOT_TOKEN"),
-    sutBotToken: resolveEnvValue(env, "OPENCLAW_QA_DISCORD_SUT_BOT_TOKEN"),
-    sutApplicationId: resolveEnvValue(env, "OPENCLAW_QA_DISCORD_SUT_APPLICATION_ID"),
+    guildId: resolveEnvValue(env, "ICLAW_QA_DISCORD_GUILD_ID"),
+    channelId: resolveEnvValue(env, "ICLAW_QA_DISCORD_CHANNEL_ID"),
+    driverBotToken: resolveEnvValue(env, "ICLAW_QA_DISCORD_DRIVER_BOT_TOKEN"),
+    sutBotToken: resolveEnvValue(env, "ICLAW_QA_DISCORD_SUT_BOT_TOKEN"),
+    sutApplicationId: resolveEnvValue(env, "ICLAW_QA_DISCORD_SUT_APPLICATION_ID"),
   };
-  validateDiscordQaRuntimeEnv(runtimeEnv, "OPENCLAW_QA_DISCORD");
+  validateDiscordQaRuntimeEnv(runtimeEnv, "ICLAW_QA_DISCORD");
   return runtimeEnv;
 }
 
@@ -875,7 +875,7 @@ export async function runDiscordQaLive(params: {
 
   const finishedAt = new Date().toISOString();
   const publishedCleanupIssues = redactPublicMetadata
-    ? cleanupIssues.map(() => "details redacted (OPENCLAW_QA_REDACT_PUBLIC_METADATA=1)")
+    ? cleanupIssues.map(() => "details redacted (ICLAW_QA_REDACT_PUBLIC_METADATA=1)")
     : cleanupIssues;
   const passedCount = scenarioResults.filter((entry) => entry.status === "pass").length;
   const failedCount = scenarioResults.filter((entry) => entry.status === "fail").length;

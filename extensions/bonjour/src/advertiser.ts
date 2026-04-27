@@ -88,7 +88,7 @@ async function loadCiaoModule(): Promise<CiaoModule> {
 }
 
 function isDisabledByEnv() {
-  if (isTruthyEnvValue(process.env.OPENCLAW_DISABLE_BONJOUR)) {
+  if (isTruthyEnvValue(process.env.ICLAW_DISABLE_BONJOUR)) {
     return true;
   }
   if (process.env.NODE_ENV === "test") {
@@ -191,7 +191,7 @@ export async function startGatewayBonjourAdvertiser(
   };
 
   try {
-    const hostnameRaw = process.env.OPENCLAW_MDNS_HOSTNAME?.trim() || "openclaw";
+    const hostnameRaw = process.env.ICLAW_MDNS_HOSTNAME?.trim() || "openclaw";
     const hostname =
       hostnameRaw
         .replace(/\.local$/i, "")

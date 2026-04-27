@@ -81,23 +81,23 @@ describe("toWhatsappJid", () => {
 describe("jidToE164", () => {
   it("maps @lid using reverse mapping file", async () => {
     await withTempDir("openclaw-state-", async (stateDir) => {
-      const previousStateDir = process.env.OPENCLAW_STATE_DIR;
+      const previousStateDir = process.env.ICLAW_STATE_DIR;
       const credentialsDir = path.join(stateDir, "credentials");
       fs.mkdirSync(credentialsDir, { recursive: true });
       fs.writeFileSync(
         path.join(credentialsDir, "lid-mapping-123_reverse.json"),
         JSON.stringify("5551234"),
       );
-      process.env.OPENCLAW_STATE_DIR = stateDir;
+      process.env.ICLAW_STATE_DIR = stateDir;
       vi.resetModules();
       try {
         const { jidToE164: freshJidToE164 } = await import("./text-runtime.js");
         expect(freshJidToE164("123@lid")).toBe("+5551234");
       } finally {
         if (previousStateDir) {
-          process.env.OPENCLAW_STATE_DIR = previousStateDir;
+          process.env.ICLAW_STATE_DIR = previousStateDir;
         } else {
-          delete process.env.OPENCLAW_STATE_DIR;
+          delete process.env.ICLAW_STATE_DIR;
         }
         vi.resetModules();
       }

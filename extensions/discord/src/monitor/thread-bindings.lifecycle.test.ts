@@ -661,9 +661,9 @@ describe("thread binding lifecycle", () => {
 
   it("persists touched activity timestamps across restart when persistence is enabled", async () => {
     vi.useFakeTimers();
-    const previousStateDir = process.env.OPENCLAW_STATE_DIR;
+    const previousStateDir = process.env.ICLAW_STATE_DIR;
     const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-thread-bindings-"));
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    process.env.ICLAW_STATE_DIR = stateDir;
     try {
       __testing.resetThreadBindingsForTests();
       vi.setSystemTime(new Date("2026-02-20T00:00:00.000Z"));
@@ -709,9 +709,9 @@ describe("thread binding lifecycle", () => {
     } finally {
       __testing.resetThreadBindingsForTests();
       if (previousStateDir === undefined) {
-        delete process.env.OPENCLAW_STATE_DIR;
+        delete process.env.ICLAW_STATE_DIR;
       } else {
-        process.env.OPENCLAW_STATE_DIR = previousStateDir;
+        process.env.ICLAW_STATE_DIR = previousStateDir;
       }
       fs.rmSync(stateDir, { recursive: true, force: true });
       vi.useRealTimers();
@@ -1698,9 +1698,9 @@ describe("thread binding lifecycle", () => {
   });
 
   it("migrates legacy expiresAt bindings to idle/max-age semantics", () => {
-    const previousStateDir = process.env.OPENCLAW_STATE_DIR;
+    const previousStateDir = process.env.ICLAW_STATE_DIR;
     const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-thread-bindings-"));
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    process.env.ICLAW_STATE_DIR = stateDir;
     try {
       __testing.resetThreadBindingsForTests();
       const bindingsPath = __testing.resolveThreadBindingsPath();
@@ -1791,18 +1791,18 @@ describe("thread binding lifecycle", () => {
     } finally {
       __testing.resetThreadBindingsForTests();
       if (previousStateDir === undefined) {
-        delete process.env.OPENCLAW_STATE_DIR;
+        delete process.env.ICLAW_STATE_DIR;
       } else {
-        process.env.OPENCLAW_STATE_DIR = previousStateDir;
+        process.env.ICLAW_STATE_DIR = previousStateDir;
       }
       fs.rmSync(stateDir, { recursive: true, force: true });
     }
   });
 
   it("persists unbinds even when no manager is active", () => {
-    const previousStateDir = process.env.OPENCLAW_STATE_DIR;
+    const previousStateDir = process.env.ICLAW_STATE_DIR;
     const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-thread-bindings-"));
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    process.env.ICLAW_STATE_DIR = stateDir;
     try {
       __testing.resetThreadBindingsForTests();
       const bindingsPath = __testing.resolveThreadBindingsPath();
@@ -1847,9 +1847,9 @@ describe("thread binding lifecycle", () => {
     } finally {
       __testing.resetThreadBindingsForTests();
       if (previousStateDir === undefined) {
-        delete process.env.OPENCLAW_STATE_DIR;
+        delete process.env.ICLAW_STATE_DIR;
       } else {
-        process.env.OPENCLAW_STATE_DIR = previousStateDir;
+        process.env.ICLAW_STATE_DIR = previousStateDir;
       }
       fs.rmSync(stateDir, { recursive: true, force: true });
     }

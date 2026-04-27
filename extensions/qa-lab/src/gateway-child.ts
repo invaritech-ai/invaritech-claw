@@ -43,8 +43,8 @@ import type { QaTransportAdapter } from "./qa-transport.js";
 export type { QaCliBackendAuthMode } from "./providers/env.js";
 const QA_GATEWAY_CHILD_STARTUP_MAX_ATTEMPTS = 5;
 const QA_GATEWAY_CHILD_BLOCKED_SECRET_ENV_VARS = Object.freeze([
-  "OPENCLAW_QA_CONVEX_SECRET_CI",
-  "OPENCLAW_QA_CONVEX_SECRET_MAINTAINER",
+  "ICLAW_QA_CONVEX_SECRET_CI",
+  "ICLAW_QA_CONVEX_SECRET_MAINTAINER",
 ]);
 
 export type QaGatewayChildStateMutationContext = {
@@ -202,26 +202,26 @@ export function buildQaRuntimeEnv(params: {
           claudeCliAuthMode: params.claudeCliAuthMode,
         })
       : {}),
-    OPENCLAW_HOME: params.homeDir,
-    OPENCLAW_CONFIG_PATH: params.configPath,
-    OPENCLAW_STATE_DIR: params.stateDir,
-    OPENCLAW_OAUTH_DIR: path.join(params.stateDir, "credentials"),
-    OPENCLAW_GATEWAY_TOKEN: params.gatewayToken,
-    OPENCLAW_SKIP_BROWSER_CONTROL_SERVER: "1",
-    OPENCLAW_SKIP_GMAIL_WATCHER: "1",
-    OPENCLAW_SKIP_CANVAS_HOST: "1",
-    OPENCLAW_NO_RESPAWN: "1",
-    OPENCLAW_TEST_FAST: "1",
-    OPENCLAW_QA_ALLOW_LOCAL_IMAGE_PROVIDER: "1",
+    ICLAW_HOME: params.homeDir,
+    ICLAW_CONFIG_PATH: params.configPath,
+    ICLAW_STATE_DIR: params.stateDir,
+    ICLAW_OAUTH_DIR: path.join(params.stateDir, "credentials"),
+    ICLAW_GATEWAY_TOKEN: params.gatewayToken,
+    ICLAW_SKIP_BROWSER_CONTROL_SERVER: "1",
+    ICLAW_SKIP_GMAIL_WATCHER: "1",
+    ICLAW_SKIP_CANVAS_HOST: "1",
+    ICLAW_NO_RESPAWN: "1",
+    ICLAW_TEST_FAST: "1",
+    ICLAW_QA_ALLOW_LOCAL_IMAGE_PROVIDER: "1",
     // QA uses the fast runtime envelope for speed, but it still exercises
     // normal config-driven heartbeats and runtime config writes.
-    OPENCLAW_ALLOW_SLOW_REPLY_TESTS: "1",
+    ICLAW_ALLOW_SLOW_REPLY_TESTS: "1",
     XDG_CONFIG_HOME: params.xdgConfigHome,
     XDG_DATA_HOME: params.xdgDataHome,
     XDG_CACHE_HOME: params.xdgCacheHome,
-    ...(params.bundledPluginsDir ? { OPENCLAW_BUNDLED_PLUGINS_DIR: params.bundledPluginsDir } : {}),
+    ...(params.bundledPluginsDir ? { ICLAW_BUNDLED_PLUGINS_DIR: params.bundledPluginsDir } : {}),
     ...(params.compatibilityHostVersion
-      ? { OPENCLAW_COMPATIBILITY_HOST_VERSION: params.compatibilityHostVersion }
+      ? { ICLAW_COMPATIBILITY_HOST_VERSION: params.compatibilityHostVersion }
       : {}),
   };
   const normalizedEnv = normalizeQaProviderModeEnv(env, params.providerMode);
@@ -559,7 +559,7 @@ export async function startQaGatewayChild(params: {
 
   const logs = () =>
     `${Buffer.concat(stdout).toString("utf8")}\n${Buffer.concat(stderr).toString("utf8")}`.trim();
-  const keepTemp = process.env.OPENCLAW_QA_KEEP_TEMP === "1";
+  const keepTemp = process.env.ICLAW_QA_KEEP_TEMP === "1";
   let gatewayPort = 0;
   let baseUrl = "";
   let wsUrl = "";

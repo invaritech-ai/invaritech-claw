@@ -31,7 +31,7 @@ const {
 
 let _handlers: Record<string, (data: unknown) => Promise<void>> = {};
 let lastRuntime: ReturnType<typeof createRuntimeEnv> | null = null;
-const originalStateDir = process.env.OPENCLAW_STATE_DIR;
+const originalStateDir = process.env.ICLAW_STATE_DIR;
 const { cfg: lifecycleConfig, account: lifecycleAccount } = createFeishuLifecycleFixture({
   accountId: "acct-acp",
   appId: "cli_test",

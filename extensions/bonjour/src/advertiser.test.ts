@@ -22,7 +22,7 @@ function enableAdvertiserUnitMode(hostname = "test-host") {
   delete process.env.VITEST;
   process.env.NODE_ENV = "development";
   vi.spyOn(os, "hostname").mockReturnValue(hostname);
-  process.env.OPENCLAW_MDNS_HOSTNAME = hostname;
+  process.env.ICLAW_MDNS_HOSTNAME = hostname;
 }
 
 function mockCiaoService(params?: {
@@ -184,9 +184,9 @@ describe("gateway bonjour advertiser", () => {
     await started.stop();
   });
 
-  it("honors truthy OPENCLAW_DISABLE_BONJOUR values", async () => {
+  it("honors truthy ICLAW_DISABLE_BONJOUR values", async () => {
     enableAdvertiserUnitMode();
-    process.env.OPENCLAW_DISABLE_BONJOUR = "true";
+    process.env.ICLAW_DISABLE_BONJOUR = "true";
 
     const started = await startAdvertiser({
       gatewayPort: 18789,

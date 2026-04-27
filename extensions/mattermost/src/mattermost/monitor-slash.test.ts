@@ -80,7 +80,7 @@ describe("mattermost monitor slash", () => {
   });
 
   it("registers deduped default and native skill commands across teams", async () => {
-    vi.stubEnv("OPENCLAW_GATEWAY_PORT", "18888");
+    vi.stubEnv("ICLAW_GATEWAY_PORT", "18888");
     resolveSlashCommandConfig.mockReturnValue({ enabled: true, nativeSkills: true });
     isSlashCommandsEnabled.mockReturnValue(true);
     parseStrictPositiveInteger.mockReturnValue(18888);

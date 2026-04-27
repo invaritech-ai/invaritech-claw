@@ -300,13 +300,13 @@ export const TELEGRAM_QA_STANDARD_SCENARIO_IDS = collectLiveTransportStandardSce
 });
 
 const TELEGRAM_QA_ENV_KEYS = [
-  "OPENCLAW_QA_TELEGRAM_GROUP_ID",
-  "OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN",
-  "OPENCLAW_QA_TELEGRAM_SUT_BOT_TOKEN",
+  "ICLAW_QA_TELEGRAM_GROUP_ID",
+  "ICLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN",
+  "ICLAW_QA_TELEGRAM_SUT_BOT_TOKEN",
 ] as const;
-const TELEGRAM_QA_CAPTURE_CONTENT_ENV = "OPENCLAW_QA_TELEGRAM_CAPTURE_CONTENT";
-const QA_REDACT_PUBLIC_METADATA_ENV = "OPENCLAW_QA_REDACT_PUBLIC_METADATA";
-const QA_SUITE_PROGRESS_ENV = "OPENCLAW_QA_SUITE_PROGRESS";
+const TELEGRAM_QA_CAPTURE_CONTENT_ENV = "ICLAW_QA_TELEGRAM_CAPTURE_CONTENT";
+const QA_REDACT_PUBLIC_METADATA_ENV = "ICLAW_QA_REDACT_PUBLIC_METADATA";
+const QA_SUITE_PROGRESS_ENV = "ICLAW_QA_SUITE_PROGRESS";
 const TELEGRAM_QA_PROGRESS_DETAIL_LIMIT = 240;
 const TELEGRAM_QA_PROGRESS_PREFIX = "[qa-telegram-live]";
 const execFileAsync = promisify(execFile);
@@ -384,14 +384,14 @@ function formatTelegramQaProgressDetails(details: string): string {
 export function resolveTelegramQaRuntimeEnv(
   env: NodeJS.ProcessEnv = process.env,
 ): TelegramQaRuntimeEnv {
-  const groupId = resolveEnvValue(env, "OPENCLAW_QA_TELEGRAM_GROUP_ID");
+  const groupId = resolveEnvValue(env, "ICLAW_QA_TELEGRAM_GROUP_ID");
   if (!/^-?\d+$/u.test(groupId)) {
-    throw new Error("OPENCLAW_QA_TELEGRAM_GROUP_ID must be a numeric Telegram chat id.");
+    throw new Error("ICLAW_QA_TELEGRAM_GROUP_ID must be a numeric Telegram chat id.");
   }
   return {
     groupId,
-    driverToken: resolveEnvValue(env, "OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN"),
-    sutToken: resolveEnvValue(env, "OPENCLAW_QA_TELEGRAM_SUT_BOT_TOKEN"),
+    driverToken: resolveEnvValue(env, "ICLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN"),
+    sutToken: resolveEnvValue(env, "ICLAW_QA_TELEGRAM_SUT_BOT_TOKEN"),
   };
 }
 
@@ -982,10 +982,10 @@ async function runInstalledOpenClawTelegramOnboardingPreflight(params: {
   const env = {
     ...process.env,
     HOME: homeDir,
-    OPENCLAW_HOME: stateDir,
-    OPENCLAW_CONFIG_PATH: path.join(stateDir, "openclaw.json"),
-    OPENCLAW_STATE_DIR: stateDir,
-    OPENCLAW_GATEWAY_TOKEN: "npm-telegram-live-onboard",
+    ICLAW_HOME: stateDir,
+    ICLAW_CONFIG_PATH: path.join(stateDir, "openclaw.json"),
+    ICLAW_STATE_DIR: stateDir,
+    ICLAW_GATEWAY_TOKEN: "npm-telegram-live-onboard",
     ...(params.providerMode === "live-frontier"
       ? {}
       : { OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? "sk-openclaw-npm-telegram-preflight" }),
@@ -1303,7 +1303,7 @@ export async function runTelegramQaLive(params: {
 
   const finishedAt = new Date().toISOString();
   const publishedCleanupIssues = redactPublicMetadata
-    ? cleanupIssues.map(() => "details redacted (OPENCLAW_QA_REDACT_PUBLIC_METADATA=1)")
+    ? cleanupIssues.map(() => "details redacted (ICLAW_QA_REDACT_PUBLIC_METADATA=1)")
     : cleanupIssues;
   const passedCount = scenarioResults.filter((entry) => entry.status === "pass").length;
   const failedCount = scenarioResults.filter((entry) => entry.status === "fail").length;

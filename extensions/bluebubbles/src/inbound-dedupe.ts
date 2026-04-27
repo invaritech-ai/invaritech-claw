@@ -28,7 +28,7 @@ function resolveStateDirFromEnv(env: NodeJS.ProcessEnv = process.env): string {
     const name = "openclaw-vitest-" + process.pid;
     return path.join(resolvePreferredOpenClawTmpDir(), name);
   }
-  // Canonical OpenClaw state dir: honors OPENCLAW_STATE_DIR (with `~` expansion
+  // Canonical OpenClaw state dir: honors ICLAW_STATE_DIR (with `~` expansion
   // via resolveUserPath), plus legacy/new fallback. Using the shared helper
   // keeps this plugin's persistence aligned with the rest of OpenClaw state.
   return resolveStateDir(env);

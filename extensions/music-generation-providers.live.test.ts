@@ -25,10 +25,10 @@ import { maybeLoadShellEnvForGenerationProviders } from "./test-support/generati
 
 const LIVE = isLiveTestEnabled();
 const REQUIRE_PROFILE_KEYS =
-  isLiveProfileKeyModeEnabled() || isTruthyEnvValue(process.env.OPENCLAW_LIVE_REQUIRE_PROFILE_KEYS);
+  isLiveProfileKeyModeEnabled() || isTruthyEnvValue(process.env.ICLAW_LIVE_REQUIRE_PROFILE_KEYS);
 const describeLive = LIVE ? describe : describe.skip;
-const providerFilter = parseCsvFilter(process.env.OPENCLAW_LIVE_MUSIC_GENERATION_PROVIDERS);
-const envModelMap = parseProviderModelMap(process.env.OPENCLAW_LIVE_MUSIC_GENERATION_MODELS);
+const providerFilter = parseCsvFilter(process.env.ICLAW_LIVE_MUSIC_GENERATION_PROVIDERS);
+const envModelMap = parseProviderModelMap(process.env.ICLAW_LIVE_MUSIC_GENERATION_MODELS);
 
 type LiveProviderCase = {
   plugin: Parameters<typeof registerProviderPlugin>[0]["plugin"];

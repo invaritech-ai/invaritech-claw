@@ -79,7 +79,7 @@ describe("Codex trajectory recorder", () => {
         sessionId: "../evil/session",
         model: { api: "responses" },
       } as never,
-      env: { OPENCLAW_TRAJECTORY_DIR: tmpDir },
+      env: { ICLAW_TRAJECTORY_DIR: tmpDir },
     });
 
     recorder?.recordEvent("session.started");
@@ -97,7 +97,7 @@ describe("Codex trajectory recorder", () => {
         sessionId: "session-1",
         model: { api: "responses" },
       } as never,
-      env: { OPENCLAW_TRAJECTORY: "0" },
+      env: { ICLAW_TRAJECTORY: "0" },
     });
 
     expect(recorder).toBeNull();

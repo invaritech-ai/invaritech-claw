@@ -13,8 +13,8 @@ import plugin from "./index.js";
 import { XAI_DEFAULT_STT_MODEL } from "./stt.js";
 
 const XAI_API_KEY = process.env.XAI_API_KEY ?? "";
-const LIVE_IMAGE_MODEL = process.env.OPENCLAW_LIVE_XAI_IMAGE_MODEL?.trim() || "grok-imagine-image";
-const liveEnabled = XAI_API_KEY.trim().length > 0 && process.env.OPENCLAW_LIVE_TEST === "1";
+const LIVE_IMAGE_MODEL = process.env.ICLAW_LIVE_XAI_IMAGE_MODEL?.trim() || "grok-imagine-image";
+const liveEnabled = XAI_API_KEY.trim().length > 0 && process.env.ICLAW_LIVE_TEST === "1";
 const describeLive = liveEnabled ? describe : describe.skip;
 const EMPTY_AUTH_STORE = { version: 1, profiles: {} } as const;
 

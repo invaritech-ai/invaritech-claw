@@ -12,7 +12,7 @@ const MEMORY_MAX_SIZE = 1_000;
 const FILE_MAX_ENTRIES = 10_000;
 
 function resolveStateDirFromEnv(env: NodeJS.ProcessEnv = process.env): string {
-  const stateOverride = env.OPENCLAW_STATE_DIR?.trim();
+  const stateOverride = env.ICLAW_STATE_DIR?.trim();
   if (stateOverride) {
     return stateOverride;
   }

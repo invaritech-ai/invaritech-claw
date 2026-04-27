@@ -10,7 +10,7 @@ const require = createRequire(import.meta.url);
 const { createJiti } = require("jiti");
 
 const PLUGIN_ID = "matrix";
-const OPENCLAW_PLUGIN_SDK_PACKAGE_NAMES = [
+const ICLAW_PLUGIN_SDK_PACKAGE_NAMES = [
   ["openclaw", "plugin-sdk"].join("/"),
   ["@openclaw", "plugin-sdk"].join("/"),
 ];
@@ -48,21 +48,30 @@ function hasTrustedOpenClawRootIndicator(packageRoot, packageJson) {
     return false;
   }
   const hasCliEntryExport = Object.prototype.hasOwnProperty.call(packageExports, "./cli-entry");
-  const hasOpenClawBin =
+  const binRecord =
+    typeof packageJson?.bin === "object" && packageJson.bin !== null ? packageJson.bin : null;
+  const binString = normalizeLowercaseStringOrEmpty(
+    typeof packageJson?.bin === "string" ? packageJson.bin : "",
+  );
+  const hasHostCliBin =
     (typeof packageJson?.bin === "string" &&
-      normalizeLowercaseStringOrEmpty(packageJson.bin).includes("openclaw")) ||
-    (typeof packageJson?.bin === "object" &&
-      packageJson.bin !== null &&
-      typeof packageJson.bin.openclaw === "string");
-  const hasOpenClawEntrypoint = fs.existsSync(path.join(packageRoot, "openclaw.mjs"));
-  return hasCliEntryExport || hasOpenClawBin || hasOpenClawEntrypoint;
+      (binString.includes("openclaw") || binString.includes("iclaw"))) ||
+    (binRecord !== null &&
+      (typeof binRecord.openclaw === "string" || typeof binRecord.iclaw === "string"));
+  const hasHostCliEntrypoint =
+    fs.existsSync(path.join(packageRoot, "iclaw.mjs")) ||
+    fs.existsSync(path.join(packageRoot, "openclaw.mjs"));
+  return hasCliEntryExport || hasHostCliBin || hasHostCliEntrypoint;
 }
 
 function findOpenClawPackageRoot(startDir) {
   let cursor = path.resolve(startDir);
   for (let i = 0; i < 12; i += 1) {
     const pkg = readPackageJson(cursor);
-    if (pkg?.name === "openclaw" && hasTrustedOpenClawRootIndicator(cursor, pkg)) {
+    if (
+      (pkg?.name === "iclaw" || pkg?.name === "openclaw") &&
+      hasTrustedOpenClawRootIndicator(cursor, pkg)
+    ) {
       return { packageRoot: cursor, packageJson: pkg };
     }
     const parent = path.dirname(cursor);
@@ -98,7 +107,7 @@ function buildPluginSdkAliasMap(moduleUrl) {
     resolveExistingFile(path.join(sourcePluginSdkDir, "root-alias"), [".cjs"]) ??
     resolveExistingFile(path.join(distPluginSdkDir, "root-alias"), [".cjs"]);
   if (rootAlias) {
-    for (const packageName of OPENCLAW_PLUGIN_SDK_PACKAGE_NAMES) {
+    for (const packageName of ICLAW_PLUGIN_SDK_PACKAGE_NAMES) {
       aliasMap[packageName] = rootAlias;
     }
   }
@@ -115,7 +124,7 @@ function buildPluginSdkAliasMap(moduleUrl) {
       resolveExistingFile(path.join(sourcePluginSdkDir, subpath), PLUGIN_SDK_SOURCE_EXTENSIONS) ??
       resolveExistingFile(path.join(distPluginSdkDir, subpath), [".js"]);
     if (resolvedPath) {
-      for (const packageName of OPENCLAW_PLUGIN_SDK_PACKAGE_NAMES) {
+      for (const packageName of ICLAW_PLUGIN_SDK_PACKAGE_NAMES) {
         aliasMap[`${packageName}/${subpath}`] = resolvedPath;
       }
     }

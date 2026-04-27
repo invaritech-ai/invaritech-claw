@@ -26,7 +26,7 @@ export {
 } from "./config-schema.js";
 
 export const ACPX_PLUGIN_TOOLS_MCP_SERVER_NAME = "openclaw-plugin-tools";
-export const ACPX_OPENCLAW_TOOLS_MCP_SERVER_NAME = "openclaw-tools";
+export const ACPX_ICLAW_TOOLS_MCP_SERVER_NAME = "openclaw-tools";
 const requireFromHere = createRequire(import.meta.url);
 
 function isAcpxPluginRoot(dir: string): boolean {
@@ -201,9 +201,9 @@ function resolveConfiguredMcpServers(params: {
       `mcpServers.${ACPX_PLUGIN_TOOLS_MCP_SERVER_NAME} is reserved when pluginToolsMcpBridge=true`,
     );
   }
-  if (params.openClawToolsMcpBridge && resolved[ACPX_OPENCLAW_TOOLS_MCP_SERVER_NAME]) {
+  if (params.openClawToolsMcpBridge && resolved[ACPX_ICLAW_TOOLS_MCP_SERVER_NAME]) {
     throw new Error(
-      `mcpServers.${ACPX_OPENCLAW_TOOLS_MCP_SERVER_NAME} is reserved when openClawToolsMcpBridge=true`,
+      `mcpServers.${ACPX_ICLAW_TOOLS_MCP_SERVER_NAME} is reserved when openClawToolsMcpBridge=true`,
     );
   }
   if (params.pluginToolsMcpBridge) {
@@ -212,7 +212,7 @@ function resolveConfiguredMcpServers(params: {
     );
   }
   if (params.openClawToolsMcpBridge) {
-    resolved[ACPX_OPENCLAW_TOOLS_MCP_SERVER_NAME] = resolveOpenClawToolsMcpServerConfig(
+    resolved[ACPX_ICLAW_TOOLS_MCP_SERVER_NAME] = resolveOpenClawToolsMcpServerConfig(
       params.moduleUrl,
     );
   }

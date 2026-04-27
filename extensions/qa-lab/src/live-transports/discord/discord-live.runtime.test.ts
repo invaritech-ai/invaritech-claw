@@ -36,11 +36,11 @@ describe("discord live qa runtime", () => {
   it("resolves required Discord QA env vars", () => {
     expect(
       __testing.resolveDiscordQaRuntimeEnv({
-        OPENCLAW_QA_DISCORD_GUILD_ID: "123456789012345678",
-        OPENCLAW_QA_DISCORD_CHANNEL_ID: "223456789012345678",
-        OPENCLAW_QA_DISCORD_DRIVER_BOT_TOKEN: "driver",
-        OPENCLAW_QA_DISCORD_SUT_BOT_TOKEN: "sut",
-        OPENCLAW_QA_DISCORD_SUT_APPLICATION_ID: "323456789012345678",
+        ICLAW_QA_DISCORD_GUILD_ID: "123456789012345678",
+        ICLAW_QA_DISCORD_CHANNEL_ID: "223456789012345678",
+        ICLAW_QA_DISCORD_DRIVER_BOT_TOKEN: "driver",
+        ICLAW_QA_DISCORD_SUT_BOT_TOKEN: "sut",
+        ICLAW_QA_DISCORD_SUT_APPLICATION_ID: "323456789012345678",
       }),
     ).toEqual({
       guildId: "123456789012345678",
@@ -54,24 +54,24 @@ describe("discord live qa runtime", () => {
   it("fails when a required Discord QA env var is missing", () => {
     expect(() =>
       __testing.resolveDiscordQaRuntimeEnv({
-        OPENCLAW_QA_DISCORD_GUILD_ID: "123456789012345678",
-        OPENCLAW_QA_DISCORD_CHANNEL_ID: "223456789012345678",
-        OPENCLAW_QA_DISCORD_DRIVER_BOT_TOKEN: "driver",
-        OPENCLAW_QA_DISCORD_SUT_BOT_TOKEN: "sut",
+        ICLAW_QA_DISCORD_GUILD_ID: "123456789012345678",
+        ICLAW_QA_DISCORD_CHANNEL_ID: "223456789012345678",
+        ICLAW_QA_DISCORD_DRIVER_BOT_TOKEN: "driver",
+        ICLAW_QA_DISCORD_SUT_BOT_TOKEN: "sut",
       }),
-    ).toThrow("OPENCLAW_QA_DISCORD_SUT_APPLICATION_ID");
+    ).toThrow("ICLAW_QA_DISCORD_SUT_APPLICATION_ID");
   });
 
   it("fails when Discord IDs are not snowflakes", () => {
     expect(() =>
       __testing.resolveDiscordQaRuntimeEnv({
-        OPENCLAW_QA_DISCORD_GUILD_ID: "qa-guild",
-        OPENCLAW_QA_DISCORD_CHANNEL_ID: "223456789012345678",
-        OPENCLAW_QA_DISCORD_DRIVER_BOT_TOKEN: "driver",
-        OPENCLAW_QA_DISCORD_SUT_BOT_TOKEN: "sut",
-        OPENCLAW_QA_DISCORD_SUT_APPLICATION_ID: "323456789012345678",
+        ICLAW_QA_DISCORD_GUILD_ID: "qa-guild",
+        ICLAW_QA_DISCORD_CHANNEL_ID: "223456789012345678",
+        ICLAW_QA_DISCORD_DRIVER_BOT_TOKEN: "driver",
+        ICLAW_QA_DISCORD_SUT_BOT_TOKEN: "sut",
+        ICLAW_QA_DISCORD_SUT_APPLICATION_ID: "323456789012345678",
       }),
-    ).toThrow("OPENCLAW_QA_DISCORD_GUILD_ID must be a Discord snowflake.");
+    ).toThrow("ICLAW_QA_DISCORD_GUILD_ID must be a Discord snowflake.");
   });
 
   it("parses Discord pooled credential payloads", () => {

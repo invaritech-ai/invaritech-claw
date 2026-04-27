@@ -47,7 +47,7 @@ describe("token", () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
-    delete process.env.OPENCLAW_TWITCH_ACCESS_TOKEN;
+    delete process.env.ICLAW_TWITCH_ACCESS_TOKEN;
   });
 
   describe("resolveTwitchToken", () => {
@@ -87,7 +87,7 @@ describe("token", () => {
     });
 
     it("should prioritize config token over env var (simplified config)", () => {
-      process.env.OPENCLAW_TWITCH_ACCESS_TOKEN = "oauth:env-token";
+      process.env.ICLAW_TWITCH_ACCESS_TOKEN = "oauth:env-token";
 
       const result = resolveTwitchToken(mockSimplifiedConfig, { accountId: "default" });
 
@@ -97,7 +97,7 @@ describe("token", () => {
     });
 
     it("should use env var when config token is empty (simplified config)", () => {
-      process.env.OPENCLAW_TWITCH_ACCESS_TOKEN = "oauth:env-token";
+      process.env.ICLAW_TWITCH_ACCESS_TOKEN = "oauth:env-token";
 
       const configWithEmptyToken = {
         channels: {
@@ -131,7 +131,7 @@ describe("token", () => {
     });
 
     it("should not use env var for non-default accounts (multi-account)", () => {
-      process.env.OPENCLAW_TWITCH_ACCESS_TOKEN = "oauth:env-token";
+      process.env.ICLAW_TWITCH_ACCESS_TOKEN = "oauth:env-token";
 
       const configWithoutToken = {
         channels: {

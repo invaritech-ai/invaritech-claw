@@ -132,9 +132,9 @@ describe("deliverMattermostReplyPayload", () => {
   });
 
   it("passes agent-scoped mediaLocalRoots when sending media paths", async () => {
-    const previousStateDir = process.env.OPENCLAW_STATE_DIR;
+    const previousStateDir = process.env.ICLAW_STATE_DIR;
     const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-mm-state-"));
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    process.env.ICLAW_STATE_DIR = stateDir;
 
     try {
       const sendMessage = vi.fn(async () => undefined);
@@ -171,9 +171,9 @@ describe("deliverMattermostReplyPayload", () => {
       );
     } finally {
       if (previousStateDir === undefined) {
-        delete process.env.OPENCLAW_STATE_DIR;
+        delete process.env.ICLAW_STATE_DIR;
       } else {
-        process.env.OPENCLAW_STATE_DIR = previousStateDir;
+        process.env.ICLAW_STATE_DIR = previousStateDir;
       }
       await fs.rm(stateDir, { recursive: true, force: true });
     }

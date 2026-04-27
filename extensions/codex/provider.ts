@@ -26,7 +26,7 @@ import type {
 } from "./src/app-server/models.js";
 
 const DEFAULT_DISCOVERY_TIMEOUT_MS = 2500;
-const LIVE_DISCOVERY_ENV = "OPENCLAW_CODEX_DISCOVERY_LIVE";
+const LIVE_DISCOVERY_ENV = "ICLAW_CODEX_DISCOVERY_LIVE";
 const MODEL_DISCOVERY_PAGE_LIMIT = 100;
 const codexCatalogLog = createSubsystemLogger("codex/catalog");
 

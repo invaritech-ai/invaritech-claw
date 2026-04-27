@@ -7,8 +7,8 @@ type TestSessionStore = {
   save(record: Record<string, unknown>): Promise<void>;
 };
 
-const DOCUMENTED_OPENCLAW_BRIDGE_COMMAND =
-  "env OPENCLAW_HIDE_BANNER=1 OPENCLAW_SUPPRESS_NOTES=1 openclaw acp --url ws://127.0.0.1:18789 --token-file ~/.openclaw/gateway.token --session agent:main:main";
+const DOCUMENTED_ICLAW_BRIDGE_COMMAND =
+  "env ICLAW_HIDE_BANNER=1 ICLAW_SUPPRESS_NOTES=1 openclaw acp --url ws://127.0.0.1:18789 --token-file ~/.openclaw/gateway.token --session agent:main:main";
 
 function makeRuntime(
   baseStore: TestSessionStore,
@@ -314,7 +314,7 @@ describe("AcpxRuntime fresh reset wrapper", () => {
       mcpServers: [{ name: "tools", command: "mcp-tools" }] as never,
       agentRegistry: {
         resolve: (agentName: string) =>
-          agentName === "openclaw" ? DOCUMENTED_OPENCLAW_BRIDGE_COMMAND : agentName,
+          agentName === "openclaw" ? DOCUMENTED_ICLAW_BRIDGE_COMMAND : agentName,
         list: () => ["codex", "openclaw"],
       },
     });
@@ -350,7 +350,7 @@ describe("AcpxRuntime fresh reset wrapper", () => {
       mcpServers: [{ name: "tools", command: "mcp-tools" }] as never,
       agentRegistry: {
         resolve: (agentName: string) =>
-          agentName === "openclaw" ? "env OPENCLAW_HIDE_BANNER=1 node openclaw.mjs acp" : agentName,
+          agentName === "openclaw" ? "env ICLAW_HIDE_BANNER=1 node iclaw.mjs acp" : agentName,
         list: () => ["codex", "openclaw"],
       },
     });
@@ -380,7 +380,7 @@ describe("AcpxRuntime fresh reset wrapper", () => {
     const baseStore: TestSessionStore = {
       load: vi.fn(async () => ({
         acpxRecordId: "agent:openclaw:acp:test",
-        agentCommand: DOCUMENTED_OPENCLAW_BRIDGE_COMMAND,
+        agentCommand: DOCUMENTED_ICLAW_BRIDGE_COMMAND,
       })),
       save: vi.fn(async () => {}),
     };
@@ -423,7 +423,7 @@ describe("AcpxRuntime fresh reset wrapper", () => {
       probeAgent: "openclaw",
       agentRegistry: {
         resolve: (agentName: string) =>
-          agentName === "openclaw" ? DOCUMENTED_OPENCLAW_BRIDGE_COMMAND : agentName,
+          agentName === "openclaw" ? DOCUMENTED_ICLAW_BRIDGE_COMMAND : agentName,
         list: () => ["codex", "openclaw"],
       },
     });

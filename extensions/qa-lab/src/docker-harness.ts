@@ -26,7 +26,7 @@ function renderImageBlock(params: {
     return `    image: ${params.imageName}\n`;
   }
   const context = toPosixRelative(params.outputDir, params.repoRoot) || ".";
-  return `    build:\n      context: ${context}\n      dockerfile: Dockerfile\n      args:\n        OPENCLAW_EXTENSIONS: "qa-channel qa-lab"\n`;
+  return `    build:\n      context: ${context}\n      dockerfile: Dockerfile\n      args:\n        ICLAW_EXTENSIONS: "qa-channel qa-lab"\n`;
 }
 
 function renderCompose(params: {
@@ -86,10 +86,10 @@ ${params.bindUiDist ? `    volumes:\n      - ${qaLabUiMount}:${QA_LAB_UI_OVERLAY
       retries: 6
       start_period: 5s
     environment:
-      OPENCLAW_SKIP_GMAIL_WATCHER: "1"
-      OPENCLAW_SKIP_BROWSER_CONTROL_SERVER: "1"
-      OPENCLAW_SKIP_CANVAS_HOST: "1"
-      OPENCLAW_PROFILE: ""
+      ICLAW_SKIP_GMAIL_WATCHER: "1"
+      ICLAW_SKIP_BROWSER_CONTROL_SERVER: "1"
+      ICLAW_SKIP_CANVAS_HOST: "1"
+      ICLAW_PROFILE: ""
     command:
       - node
       - dist/index.js
@@ -126,13 +126,13 @@ ${imageBlock}    pull_policy: never
     ports:
       - "${params.gatewayPort}:18789"
     environment:
-      OPENCLAW_CONFIG_PATH: /tmp/openclaw/openclaw.json
-      OPENCLAW_STATE_DIR: /tmp/openclaw/state
-      OPENCLAW_NO_RESPAWN: "1"
-      OPENCLAW_SKIP_GMAIL_WATCHER: "1"
-      OPENCLAW_SKIP_BROWSER_CONTROL_SERVER: "1"
-      OPENCLAW_SKIP_CANVAS_HOST: "1"
-      OPENCLAW_PROFILE: ""
+      ICLAW_CONFIG_PATH: /tmp/openclaw/openclaw.json
+      ICLAW_STATE_DIR: /tmp/openclaw/state
+      ICLAW_NO_RESPAWN: "1"
+      ICLAW_SKIP_GMAIL_WATCHER: "1"
+      ICLAW_SKIP_BROWSER_CONTROL_SERVER: "1"
+      ICLAW_SKIP_CANVAS_HOST: "1"
+      ICLAW_PROFILE: ""
     volumes:
       - ./state:/opt/openclaw-scaffold:ro
       - ${repoMount}:/opt/openclaw-repo:ro
@@ -171,7 +171,7 @@ function renderEnvExample(params: {
   includeQaLabUi: boolean;
 }) {
   return `# QA Docker harness example env
-OPENCLAW_GATEWAY_TOKEN=${params.gatewayToken}
+ICLAW_GATEWAY_TOKEN=${params.gatewayToken}
 QA_GATEWAY_PORT=${params.gatewayPort}
 QA_BUS_BASE_URL=${params.qaBusBaseUrl}
 QA_PROVIDER_BASE_URL=${params.providerBaseUrl}
@@ -198,7 +198,7 @@ Files:
 Suggested flow:
 
 1. Build the prebaked image once:
-   - \`docker build -t openclaw:qa-local-prebaked --build-arg OPENCLAW_EXTENSIONS="qa-channel qa-lab" -f Dockerfile .\`
+   - \`docker build -t openclaw:qa-local-prebaked --build-arg ICLAW_EXTENSIONS="qa-channel qa-lab" -f Dockerfile .\`
 2. Start the stack:
    - \`docker compose -f docker-compose.qa.yml up${params.usePrebuiltImage ? "" : " --build"} -d\`
 3. Open the QA dashboard:
@@ -371,7 +371,7 @@ export async function buildQaDockerHarnessImage(
       "-t",
       imageName,
       "--build-arg",
-      "OPENCLAW_EXTENSIONS=qa-channel qa-lab",
+      "ICLAW_EXTENSIONS=qa-channel qa-lab",
       "-f",
       "Dockerfile",
       ".",

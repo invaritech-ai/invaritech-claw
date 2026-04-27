@@ -112,8 +112,8 @@ beforeAll(async () => {
 beforeEach(() => {
   vi.unstubAllEnvs();
   for (const key of [
-    "OPENCLAW_DEBUG_PROXY_ENABLED",
-    "OPENCLAW_DEBUG_PROXY_URL",
+    "ICLAW_DEBUG_PROXY_ENABLED",
+    "ICLAW_DEBUG_PROXY_URL",
     "ALL_PROXY",
     "all_proxy",
     "HTTP_PROXY",
@@ -398,8 +398,8 @@ describe("resolveTelegramFetch", () => {
   });
 
   it("uses the OpenClaw debug proxy URL when no explicit proxy fetch is provided", async () => {
-    vi.stubEnv("OPENCLAW_DEBUG_PROXY_ENABLED", "1");
-    vi.stubEnv("OPENCLAW_DEBUG_PROXY_URL", "http://127.0.0.1:7777");
+    vi.stubEnv("ICLAW_DEBUG_PROXY_ENABLED", "1");
+    vi.stubEnv("ICLAW_DEBUG_PROXY_URL", "http://127.0.0.1:7777");
     undiciFetch.mockResolvedValue({ ok: true } as Response);
 
     const resolved = resolveTelegramFetch(undefined);

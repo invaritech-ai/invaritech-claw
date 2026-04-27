@@ -121,7 +121,7 @@ export function resolveAccount(
   const envNasHost = process.env.SYNOLOGY_NAS_HOST ?? "localhost";
   const envAllowedUserIds = process.env.SYNOLOGY_ALLOWED_USER_IDS ?? "";
   const envRateLimitValue = parseRateLimitPerMinute(process.env.SYNOLOGY_RATE_LIMIT);
-  const envBotName = process.env.OPENCLAW_BOT_NAME ?? "OpenClaw";
+  const envBotName = process.env.ICLAW_BOT_NAME ?? "OpenClaw";
   const webhookPathSource = resolveWebhookPathSource({ accountId: id, channelCfg, rawAccount });
   const dangerouslyAllowInheritedWebhookPath =
     rawAccount.dangerouslyAllowInheritedWebhookPath ??

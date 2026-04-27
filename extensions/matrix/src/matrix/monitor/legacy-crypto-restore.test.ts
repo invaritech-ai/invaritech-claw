@@ -72,7 +72,7 @@ async function runLegacyRestoreScenario(params: {
       stateDir,
       env: {
         ...process.env,
-        OPENCLAW_STATE_DIR: stateDir,
+        ICLAW_STATE_DIR: stateDir,
         HOME: home,
       },
     });

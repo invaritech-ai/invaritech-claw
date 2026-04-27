@@ -85,7 +85,7 @@ function writeOpenClawPackageFixture(fixtureRoot: string) {
       2,
     ) + "\n",
   );
-  writeFixtureFile(fixtureRoot, "openclaw.mjs", "export {};\n");
+  writeFixtureFile(fixtureRoot, "iclaw.mjs", "export {};\n");
   writeFixtureFile(fixtureRoot, "dist/plugin-sdk/index.js", "export {};\n");
 }
 
@@ -109,7 +109,7 @@ function writeOpenClawAliasFixture(fixtureRoot: string, extraExports?: Record<st
   );
   writeFixtureFile(fixtureRoot, "src/plugin-sdk/root-alias.cjs", "module.exports = {};\n");
   writeFixtureFile(fixtureRoot, "src/plugin-sdk/group-access.ts", "export {};\n");
-  writeFixtureFile(fixtureRoot, "openclaw.mjs", "export {};\n");
+  writeFixtureFile(fixtureRoot, "iclaw.mjs", "export {};\n");
   writeFixtureFile(fixtureRoot, "dist/plugin-sdk/index.js", "export {};\n");
   writeFixtureFile(fixtureRoot, "dist/plugin-sdk/root-alias.cjs", "module.exports = {};\n");
   writeFixtureFile(fixtureRoot, "dist/plugin-sdk/group-access.js", "export {};\n");

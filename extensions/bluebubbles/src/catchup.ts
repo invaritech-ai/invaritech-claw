@@ -93,9 +93,9 @@ export type BlueBubblesCatchupCursor = {
 };
 
 function resolveStateDirFromEnv(env: NodeJS.ProcessEnv = process.env): string {
-  // Explicit OPENCLAW_STATE_DIR overrides take precedence (including
+  // Explicit ICLAW_STATE_DIR overrides take precedence (including
   // per-test mkdtemp dirs in this module's test suite).
-  if (env.OPENCLAW_STATE_DIR?.trim()) {
+  if (env.ICLAW_STATE_DIR?.trim()) {
     return resolveStateDir(env);
   }
   // Default test isolation: per-pid tmpdir, no bleed into real ~/.openclaw.

@@ -125,16 +125,13 @@ export function resolveCodexAppServerRuntimeOptions(
   const env = params.env ?? process.env;
   const config = readCodexPluginConfig(params.pluginConfig).appServer ?? {};
   const transport = resolveTransport(config.transport);
-  const command =
-    readNonEmptyString(config.command) ?? env.OPENCLAW_CODEX_APP_SERVER_BIN ?? "codex";
-  const args = resolveArgs(config.args, env.OPENCLAW_CODEX_APP_SERVER_ARGS);
+  const command = readNonEmptyString(config.command) ?? env.ICLAW_CODEX_APP_SERVER_BIN ?? "codex";
+  const args = resolveArgs(config.args, env.ICLAW_CODEX_APP_SERVER_ARGS);
   const headers = normalizeHeaders(config.headers);
   const authToken = readNonEmptyString(config.authToken);
   const url = readNonEmptyString(config.url);
   const policyMode =
-    resolvePolicyMode(config.mode) ??
-    resolvePolicyMode(env.OPENCLAW_CODEX_APP_SERVER_MODE) ??
-    "yolo";
+    resolvePolicyMode(config.mode) ?? resolvePolicyMode(env.ICLAW_CODEX_APP_SERVER_MODE) ?? "yolo";
   const serviceTier = resolveServiceTier(config.serviceTier);
   if (transport === "websocket" && !url) {
     throw new Error(
@@ -154,11 +151,11 @@ export function resolveCodexAppServerRuntimeOptions(
     requestTimeoutMs: normalizePositiveNumber(config.requestTimeoutMs, 60_000),
     approvalPolicy:
       resolveApprovalPolicy(config.approvalPolicy) ??
-      resolveApprovalPolicy(env.OPENCLAW_CODEX_APP_SERVER_APPROVAL_POLICY) ??
+      resolveApprovalPolicy(env.ICLAW_CODEX_APP_SERVER_APPROVAL_POLICY) ??
       (policyMode === "guardian" ? "on-request" : "never"),
     sandbox:
       resolveSandbox(config.sandbox) ??
-      resolveSandbox(env.OPENCLAW_CODEX_APP_SERVER_SANDBOX) ??
+      resolveSandbox(env.ICLAW_CODEX_APP_SERVER_SANDBOX) ??
       (policyMode === "guardian" ? "workspace-write" : "danger-full-access"),
     approvalsReviewer:
       resolveApprovalsReviewer(config.approvalsReviewer) ??

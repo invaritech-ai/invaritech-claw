@@ -178,10 +178,10 @@ describe("openai tts", () => {
     it("records TTS exchanges in debug proxy capture mode", async () => {
       const tempDir = mkdtempSync(path.join(os.tmpdir(), "openai-tts-capture-"));
       proxyReset.captureProxyEnv();
-      process.env.OPENCLAW_DEBUG_PROXY_ENABLED = "1";
-      process.env.OPENCLAW_DEBUG_PROXY_DB_PATH = path.join(tempDir, "capture.sqlite");
-      process.env.OPENCLAW_DEBUG_PROXY_BLOB_DIR = path.join(tempDir, "blobs");
-      process.env.OPENCLAW_DEBUG_PROXY_SESSION_ID = "tts-session";
+      process.env.ICLAW_DEBUG_PROXY_ENABLED = "1";
+      process.env.ICLAW_DEBUG_PROXY_DB_PATH = path.join(tempDir, "capture.sqlite");
+      process.env.ICLAW_DEBUG_PROXY_BLOB_DIR = path.join(tempDir, "blobs");
+      process.env.ICLAW_DEBUG_PROXY_SESSION_ID = "tts-session";
 
       globalThis.fetch = vi
         .fn()
@@ -191,8 +191,8 @@ describe("openai tts", () => {
 
       const { getDebugProxyCaptureStore } = await import("../../src/proxy-capture/store.sqlite.js");
       const store = getDebugProxyCaptureStore(
-        process.env.OPENCLAW_DEBUG_PROXY_DB_PATH,
-        process.env.OPENCLAW_DEBUG_PROXY_BLOB_DIR,
+        process.env.ICLAW_DEBUG_PROXY_DB_PATH,
+        process.env.ICLAW_DEBUG_PROXY_BLOB_DIR,
       );
       store.upsertSession({
         id: "tts-session",
@@ -200,8 +200,8 @@ describe("openai tts", () => {
         mode: "test",
         sourceScope: "openclaw",
         sourceProcess: "openclaw",
-        dbPath: process.env.OPENCLAW_DEBUG_PROXY_DB_PATH,
-        blobDir: process.env.OPENCLAW_DEBUG_PROXY_BLOB_DIR,
+        dbPath: process.env.ICLAW_DEBUG_PROXY_DB_PATH,
+        blobDir: process.env.ICLAW_DEBUG_PROXY_BLOB_DIR,
       });
 
       await openaiTTS({
@@ -227,10 +227,10 @@ describe("openai tts", () => {
     it("does not double-capture TTS exchanges when the global fetch patch is installed", async () => {
       const tempDir = mkdtempSync(path.join(os.tmpdir(), "openai-tts-patched-capture-"));
       proxyReset.captureProxyEnv();
-      process.env.OPENCLAW_DEBUG_PROXY_ENABLED = "1";
-      process.env.OPENCLAW_DEBUG_PROXY_DB_PATH = path.join(tempDir, "capture.sqlite");
-      process.env.OPENCLAW_DEBUG_PROXY_BLOB_DIR = path.join(tempDir, "blobs");
-      process.env.OPENCLAW_DEBUG_PROXY_SESSION_ID = "tts-patched-session";
+      process.env.ICLAW_DEBUG_PROXY_ENABLED = "1";
+      process.env.ICLAW_DEBUG_PROXY_DB_PATH = path.join(tempDir, "capture.sqlite");
+      process.env.ICLAW_DEBUG_PROXY_BLOB_DIR = path.join(tempDir, "blobs");
+      process.env.ICLAW_DEBUG_PROXY_SESSION_ID = "tts-patched-session";
 
       globalThis.fetch = vi
         .fn()
@@ -255,8 +255,8 @@ describe("openai tts", () => {
       runtime.finalizeDebugProxyCapture();
 
       const store = getDebugProxyCaptureStore(
-        process.env.OPENCLAW_DEBUG_PROXY_DB_PATH,
-        process.env.OPENCLAW_DEBUG_PROXY_BLOB_DIR,
+        process.env.ICLAW_DEBUG_PROXY_DB_PATH,
+        process.env.ICLAW_DEBUG_PROXY_BLOB_DIR,
       );
       const events = store
         .getSessionEvents("tts-patched-session", 10)

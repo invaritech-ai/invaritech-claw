@@ -164,7 +164,7 @@ function normalizeQaSuiteConcurrency(
   scenarioCount: number,
   defaultConcurrency = DEFAULT_QA_SUITE_CONCURRENCY,
 ) {
-  const envValue = Number(process.env.OPENCLAW_QA_SUITE_CONCURRENCY);
+  const envValue = Number(process.env.ICLAW_QA_SUITE_CONCURRENCY);
   const raw =
     typeof value === "number" && Number.isFinite(value)
       ? value

@@ -23,7 +23,7 @@ async function makeTempStateDir(): Promise<string> {
 }
 
 function makeEnv(stateDir: string): NodeJS.ProcessEnv {
-  return { ...process.env, OPENCLAW_STATE_DIR: stateDir };
+  return { ...process.env, ICLAW_STATE_DIR: stateDir };
 }
 
 async function cleanupTempDirs(): Promise<void> {
@@ -208,8 +208,8 @@ describe("prepareFileConsentActivityFs end-to-end", () => {
     const stateDir = await makeTempStateDir();
     const env = makeEnv(stateDir);
     // Redirect state dir via env so the helper's FS writes land under our tmp
-    const originalEnv = process.env.OPENCLAW_STATE_DIR;
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    const originalEnv = process.env.ICLAW_STATE_DIR;
+    process.env.ICLAW_STATE_DIR = stateDir;
 
     try {
       const result = await prepareFileConsentActivityFs({
@@ -237,9 +237,9 @@ describe("prepareFileConsentActivityFs end-to-end", () => {
       expect(loaded?.buffer.toString("utf8")).toBe("cli file");
     } finally {
       if (originalEnv === undefined) {
-        delete process.env.OPENCLAW_STATE_DIR;
+        delete process.env.ICLAW_STATE_DIR;
       } else {
-        process.env.OPENCLAW_STATE_DIR = originalEnv;
+        process.env.ICLAW_STATE_DIR = originalEnv;
       }
     }
   });

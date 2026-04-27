@@ -22,7 +22,7 @@ const runtimeMocks = vi.hoisted(() => ({
 }));
 
 type OpenAIRefreshDelegateGlobal = typeof globalThis & {
-  __OPENCLAW_TEST_REFRESH_OPENAI_CODEX_TOKEN__?: (...args: unknown[]) => unknown;
+  __ICLAW_TEST_REFRESH_OPENAI_CODEX_TOKEN__?: (...args: unknown[]) => unknown;
 };
 
 const openAIRefreshDelegateGlobal = () => globalThis as OpenAIRefreshDelegateGlobal;
@@ -42,7 +42,7 @@ vi.mock("@mariozechner/pi-ai/oauth", () => ({
   getOAuthProviders: () => [],
   loginOpenAICodex: vi.fn(),
   refreshOpenAICodexToken: vi.fn((...args: unknown[]) =>
-    openAIRefreshDelegateGlobal().__OPENCLAW_TEST_REFRESH_OPENAI_CODEX_TOKEN__?.(...args),
+    openAIRefreshDelegateGlobal().__ICLAW_TEST_REFRESH_OPENAI_CODEX_TOKEN__?.(...args),
   ),
 }));
 
@@ -312,7 +312,7 @@ describe("openai plugin", () => {
       expires: Date.now() + 60_000,
     };
     runtimeMocks.refreshOpenAICodexToken.mockResolvedValue(refreshed);
-    openAIRefreshDelegateGlobal().__OPENCLAW_TEST_REFRESH_OPENAI_CODEX_TOKEN__ =
+    openAIRefreshDelegateGlobal().__ICLAW_TEST_REFRESH_OPENAI_CODEX_TOKEN__ =
       runtimeMocks.refreshOpenAICodexToken;
     try {
       await expect(refreshOpenAICodexToken("refresh-token")).resolves.toBe(refreshed);
@@ -323,7 +323,7 @@ describe("openai plugin", () => {
         runtimeMocks.ensureGlobalUndiciEnvProxyDispatcher.mock.invocationCallOrder[0],
       ).toBeLessThan(runtimeMocks.refreshOpenAICodexToken.mock.invocationCallOrder[0]);
     } finally {
-      delete openAIRefreshDelegateGlobal().__OPENCLAW_TEST_REFRESH_OPENAI_CODEX_TOKEN__;
+      delete openAIRefreshDelegateGlobal().__ICLAW_TEST_REFRESH_OPENAI_CODEX_TOKEN__;
     }
   });
 

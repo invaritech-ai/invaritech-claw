@@ -93,8 +93,8 @@ export function createAcpxRuntimeService(
   return {
     id: "acpx-runtime",
     async start(ctx: OpenClawPluginServiceContext): Promise<void> {
-      if (process.env.OPENCLAW_SKIP_ACPX_RUNTIME === "1") {
-        ctx.logger.info("skipping embedded acpx runtime backend (OPENCLAW_SKIP_ACPX_RUNTIME=1)");
+      if (process.env.ICLAW_SKIP_ACPX_RUNTIME === "1") {
+        ctx.logger.info("skipping embedded acpx runtime backend (ICLAW_SKIP_ACPX_RUNTIME=1)");
         return;
       }
 
@@ -126,7 +126,7 @@ export function createAcpxRuntimeService(
       });
       ctx.logger.info(`embedded acpx runtime backend registered (cwd: ${pluginConfig.cwd})`);
 
-      if (process.env.OPENCLAW_SKIP_ACPX_RUNTIME_PROBE === "1") {
+      if (process.env.ICLAW_SKIP_ACPX_RUNTIME_PROBE === "1") {
         return;
       }
 

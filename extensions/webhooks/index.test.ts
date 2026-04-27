@@ -43,7 +43,7 @@ describe("webhooks plugin registration", () => {
               secret: {
                 source: "env",
                 provider: "default",
-                id: "OPENCLAW_WEBHOOK_SECRET",
+                id: "ICLAW_WEBHOOK_SECRET",
               },
             },
           },

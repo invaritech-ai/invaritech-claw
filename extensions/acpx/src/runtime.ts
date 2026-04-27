@@ -58,8 +58,8 @@ function createResetAwareSessionStore(baseStore: AcpSessionStore): ResetAwareSes
   };
 }
 
-const OPENCLAW_BRIDGE_EXECUTABLE = "openclaw";
-const OPENCLAW_BRIDGE_SUBCOMMAND = "acp";
+const ICLAW_BRIDGE_EXECUTABLE = "openclaw";
+const ICLAW_BRIDGE_SUBCOMMAND = "acp";
 
 function normalizeAgentName(value: string | undefined): string | undefined {
   const normalized = value?.trim().toLowerCase();
@@ -165,14 +165,14 @@ function isOpenClawBridgeCommand(command: string | undefined): boolean {
     return false;
   }
   const parts = unwrapEnvCommand(splitCommandParts(command.trim()));
-  if (basename(parts[0] ?? "") === OPENCLAW_BRIDGE_EXECUTABLE) {
-    return parts[1] === OPENCLAW_BRIDGE_SUBCOMMAND;
+  if (basename(parts[0] ?? "") === ICLAW_BRIDGE_EXECUTABLE) {
+    return parts[1] === ICLAW_BRIDGE_SUBCOMMAND;
   }
   if (basename(parts[0] ?? "") !== "node") {
     return false;
   }
   const scriptName = basename(parts[1] ?? "");
-  return /^openclaw(?:\.[cm]?js)?$/i.test(scriptName) && parts[2] === OPENCLAW_BRIDGE_SUBCOMMAND;
+  return /^openclaw(?:\.[cm]?js)?$/i.test(scriptName) && parts[2] === ICLAW_BRIDGE_SUBCOMMAND;
 }
 
 function resolveAgentCommand(params: {

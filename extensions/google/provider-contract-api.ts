@@ -35,8 +35,8 @@ export function createGoogleGeminiCliProvider(): ProviderPlugin {
     docsPath: "/providers/models",
     aliases: ["gemini-cli"],
     envVars: [
-      "OPENCLAW_GEMINI_OAUTH_CLIENT_ID",
-      "OPENCLAW_GEMINI_OAUTH_CLIENT_SECRET",
+      "ICLAW_GEMINI_OAUTH_CLIENT_ID",
+      "ICLAW_GEMINI_OAUTH_CLIENT_SECRET",
       "GEMINI_CLI_OAUTH_CLIENT_ID",
       "GEMINI_CLI_OAUTH_CLIENT_SECRET",
     ],

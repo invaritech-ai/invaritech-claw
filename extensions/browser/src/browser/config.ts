@@ -20,9 +20,9 @@ import {
   DEFAULT_AI_SNAPSHOT_MAX_CHARS,
   DEFAULT_BROWSER_DEFAULT_PROFILE_NAME,
   DEFAULT_BROWSER_EVALUATE_ENABLED,
-  DEFAULT_OPENCLAW_BROWSER_COLOR,
-  DEFAULT_OPENCLAW_BROWSER_ENABLED,
-  DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME,
+  DEFAULT_ICLAW_BROWSER_COLOR,
+  DEFAULT_ICLAW_BROWSER_ENABLED,
+  DEFAULT_ICLAW_BROWSER_PROFILE_NAME,
 } from "./constants.js";
 import { resolveBrowserControlAuth, type BrowserControlAuth } from "./control-auth.js";
 import { DEFAULT_UPLOAD_DIR } from "./paths.js";
@@ -31,9 +31,9 @@ export {
   DEFAULT_AI_SNAPSHOT_MAX_CHARS,
   DEFAULT_BROWSER_DEFAULT_PROFILE_NAME,
   DEFAULT_BROWSER_EVALUATE_ENABLED,
-  DEFAULT_OPENCLAW_BROWSER_COLOR,
-  DEFAULT_OPENCLAW_BROWSER_ENABLED,
-  DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME,
+  DEFAULT_ICLAW_BROWSER_COLOR,
+  DEFAULT_ICLAW_BROWSER_ENABLED,
+  DEFAULT_ICLAW_BROWSER_PROFILE_NAME,
   DEFAULT_UPLOAD_DIR,
   parseBrowserHttpUrl,
   redactCdpUrl,
@@ -89,11 +89,11 @@ const DEFAULT_BROWSER_CDP_PORT_RANGE_START = 18800;
 function normalizeHexColor(raw: string | undefined): string {
   const value = (raw ?? "").trim();
   if (!value) {
-    return DEFAULT_OPENCLAW_BROWSER_COLOR;
+    return DEFAULT_ICLAW_BROWSER_COLOR;
   }
   const normalized = value.startsWith("#") ? value : `#${value}`;
   if (!/^#[0-9a-fA-F]{6}$/.test(normalized)) {
-    return DEFAULT_OPENCLAW_BROWSER_COLOR;
+    return DEFAULT_ICLAW_BROWSER_COLOR;
   }
   return normalized.toUpperCase();
 }
@@ -167,8 +167,8 @@ function ensureDefaultProfile(
   legacyCdpUrl?: string,
 ): Record<string, BrowserProfileConfig> {
   const result = { ...profiles };
-  if (!result[DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME]) {
-    result[DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME] = {
+  if (!result[DEFAULT_ICLAW_BROWSER_PROFILE_NAME]) {
+    result[DEFAULT_ICLAW_BROWSER_PROFILE_NAME] = {
       cdpPort: legacyCdpPort ?? derivedDefaultCdpPort ?? DEFAULT_BROWSER_CDP_PORT_RANGE_START,
       color: defaultColor,
       ...(legacyCdpUrl ? { cdpUrl: legacyCdpUrl } : {}),
@@ -196,7 +196,7 @@ export function resolveBrowserConfig(
   cfg: BrowserConfig | undefined,
   rootConfig?: OpenClawConfig,
 ): ResolvedBrowserConfig {
-  const enabled = cfg?.enabled ?? DEFAULT_OPENCLAW_BROWSER_ENABLED;
+  const enabled = cfg?.enabled ?? DEFAULT_ICLAW_BROWSER_ENABLED;
   const evaluateEnabled = cfg?.evaluateEnabled ?? DEFAULT_BROWSER_EVALUATE_ENABLED;
   const gatewayPort = resolveGatewayPort(rootConfig);
   const controlPort = deriveDefaultBrowserControlPort(gatewayPort ?? DEFAULT_BROWSER_CONTROL_PORT);
@@ -265,8 +265,8 @@ export function resolveBrowserConfig(
     defaultProfileFromConfig ??
     (profiles[DEFAULT_BROWSER_DEFAULT_PROFILE_NAME]
       ? DEFAULT_BROWSER_DEFAULT_PROFILE_NAME
-      : profiles[DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME]
-        ? DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME
+      : profiles[DEFAULT_ICLAW_BROWSER_PROFILE_NAME]
+        ? DEFAULT_ICLAW_BROWSER_PROFILE_NAME
         : "user");
 
   const extraArgs = Array.isArray(cfg?.extraArgs)

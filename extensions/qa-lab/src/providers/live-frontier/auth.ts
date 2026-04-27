@@ -5,9 +5,9 @@ import {
 } from "openclaw/plugin-sdk/provider-auth";
 import { resolveQaAgentAuthDir, writeQaAuthProfiles } from "../shared/auth-store.js";
 
-export const QA_LIVE_ANTHROPIC_SETUP_TOKEN_ENV = "OPENCLAW_QA_LIVE_ANTHROPIC_SETUP_TOKEN";
-export const QA_LIVE_SETUP_TOKEN_VALUE_ENV = "OPENCLAW_LIVE_SETUP_TOKEN_VALUE";
-const QA_LIVE_ANTHROPIC_SETUP_TOKEN_PROFILE_ENV = "OPENCLAW_QA_LIVE_ANTHROPIC_SETUP_TOKEN_PROFILE";
+export const QA_LIVE_ANTHROPIC_SETUP_TOKEN_ENV = "ICLAW_QA_LIVE_ANTHROPIC_SETUP_TOKEN";
+export const QA_LIVE_SETUP_TOKEN_VALUE_ENV = "ICLAW_LIVE_SETUP_TOKEN_VALUE";
+const QA_LIVE_ANTHROPIC_SETUP_TOKEN_PROFILE_ENV = "ICLAW_QA_LIVE_ANTHROPIC_SETUP_TOKEN_PROFILE";
 const QA_LIVE_ANTHROPIC_SETUP_TOKEN_PROFILE_ID = "anthropic:qa-setup-token";
 
 function resolveQaLiveAnthropicSetupToken(env: NodeJS.ProcessEnv = process.env) {

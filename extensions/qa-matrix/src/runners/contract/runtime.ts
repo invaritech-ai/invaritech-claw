@@ -143,7 +143,7 @@ type MatrixQaTimings = {
 };
 
 function shouldWriteMatrixQaProgress() {
-  const override = process.env.OPENCLAW_QA_MATRIX_PROGRESS;
+  const override = process.env.ICLAW_QA_MATRIX_PROGRESS;
   if (override === "0") {
     return false;
   }
@@ -437,7 +437,7 @@ export async function runMatrixQaLive(params: {
     scenarios,
   });
   const observedEvents: MatrixQaObservedEvent[] = [];
-  const includeObservedEventContent = process.env.OPENCLAW_QA_MATRIX_CAPTURE_CONTENT === "1";
+  const includeObservedEventContent = process.env.ICLAW_QA_MATRIX_CAPTURE_CONTENT === "1";
   const startedAtDate = new Date();
   const startedAt = startedAtDate.toISOString();
   const runStartedAtMs = Date.now();
@@ -657,7 +657,7 @@ export async function runMatrixQaLive(params: {
               observerDeviceId: provisioning.observer.deviceId,
               observerPassword: provisioning.observer.password,
               observerUserId: provisioning.observer.userId,
-              gatewayStateDir: scenarioGateway.harness.gateway.runtimeEnv?.OPENCLAW_STATE_DIR,
+              gatewayStateDir: scenarioGateway.harness.gateway.runtimeEnv?.ICLAW_STATE_DIR,
               outputDir,
               restartGateway: async () => {
                 if (!gatewayHarness) {

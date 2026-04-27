@@ -153,32 +153,32 @@ function normalizeEndpointPrefix(value: string | undefined): string {
 }
 
 function resolveAdminAuthToken(env: NodeJS.ProcessEnv): string {
-  const token = env.OPENCLAW_QA_CONVEX_SECRET_MAINTAINER?.trim();
+  const token = env.ICLAW_QA_CONVEX_SECRET_MAINTAINER?.trim();
   if (token) {
     return token;
   }
   throw new QaCredentialAdminError({
     code: "MISSING_MAINTAINER_SECRET",
-    message: "Missing OPENCLAW_QA_CONVEX_SECRET_MAINTAINER for qa credential admin commands.",
+    message: "Missing ICLAW_QA_CONVEX_SECRET_MAINTAINER for qa credential admin commands.",
   });
 }
 
 function resolveAdminConfig(options: AdminBaseOptions): AdminConfig {
   const env = options.env ?? process.env;
-  const siteUrl = options.siteUrl?.trim() || env.OPENCLAW_QA_CONVEX_SITE_URL?.trim();
+  const siteUrl = options.siteUrl?.trim() || env.ICLAW_QA_CONVEX_SITE_URL?.trim();
   if (!siteUrl) {
     throw new QaCredentialAdminError({
       code: "MISSING_SITE_URL",
-      message: "Missing OPENCLAW_QA_CONVEX_SITE_URL for qa credential admin commands.",
+      message: "Missing ICLAW_QA_CONVEX_SITE_URL for qa credential admin commands.",
     });
   }
   const normalizedSiteUrl = normalizeConvexSiteUrl(siteUrl, env);
   const endpointPrefix = normalizeEndpointPrefix(
-    options.endpointPrefix?.trim() || env.OPENCLAW_QA_CONVEX_ENDPOINT_PREFIX,
+    options.endpointPrefix?.trim() || env.ICLAW_QA_CONVEX_ENDPOINT_PREFIX,
   );
   const actorId =
     options.actorId?.trim() ||
-    env.OPENCLAW_QA_CREDENTIAL_OWNER_ID?.trim() ||
+    env.ICLAW_QA_CREDENTIAL_OWNER_ID?.trim() ||
     `qa-lab-admin-${process.pid}-${randomUUID().slice(0, 8)}`;
 
   return {
@@ -188,7 +188,7 @@ function resolveAdminConfig(options: AdminBaseOptions): AdminConfig {
     endpointPrefix,
     httpTimeoutMs: parsePositiveIntegerEnv(
       env,
-      "OPENCLAW_QA_CREDENTIAL_HTTP_TIMEOUT_MS",
+      "ICLAW_QA_CREDENTIAL_HTTP_TIMEOUT_MS",
       DEFAULT_HTTP_TIMEOUT_MS,
     ),
     addUrl: joinQaCredentialEndpoint(normalizedSiteUrl, endpointPrefix, "admin/add"),

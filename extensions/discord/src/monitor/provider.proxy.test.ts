@@ -119,7 +119,7 @@ vi.mock("openclaw/plugin-sdk/proxy-capture", () => ({
   captureHttpExchange: captureHttpExchangeSpy,
   captureWsEvent: captureWsEventSpy,
   resolveEffectiveDebugProxyUrl: (configuredProxyUrl?: string) =>
-    configuredProxyUrl?.trim() || process.env.OPENCLAW_DEBUG_PROXY_URL,
+    configuredProxyUrl?.trim() || process.env.ICLAW_DEBUG_PROXY_URL,
   resolveDebugProxySettings: resolveDebugProxySettingsMock,
 }));
 
@@ -222,8 +222,8 @@ describe("createDiscordGatewayPlugin", () => {
 
   beforeEach(() => {
     vi.unstubAllEnvs();
-    vi.stubEnv("OPENCLAW_DEBUG_PROXY_ENABLED", "");
-    vi.stubEnv("OPENCLAW_DEBUG_PROXY_URL", "");
+    vi.stubEnv("ICLAW_DEBUG_PROXY_ENABLED", "");
+    vi.stubEnv("ICLAW_DEBUG_PROXY_URL", "");
     vi.stubGlobal("fetch", globalFetchMock);
     vi.useRealTimers();
     baseRegisterClientSpy.mockClear();

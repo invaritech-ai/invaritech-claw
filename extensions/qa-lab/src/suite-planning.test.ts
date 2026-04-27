@@ -17,8 +17,8 @@ import { makeQaSuiteTestScenario } from "./suite-test-helpers.js";
 
 describe("qa suite planning helpers", () => {
   it("normalizes suite concurrency to a bounded integer", () => {
-    const previous = process.env.OPENCLAW_QA_SUITE_CONCURRENCY;
-    delete process.env.OPENCLAW_QA_SUITE_CONCURRENCY;
+    const previous = process.env.ICLAW_QA_SUITE_CONCURRENCY;
+    delete process.env.ICLAW_QA_SUITE_CONCURRENCY;
     try {
       expect(normalizeQaSuiteConcurrency(undefined, 10)).toBe(10);
       expect(normalizeQaSuiteConcurrency(undefined, 80)).toBe(64);
@@ -34,9 +34,9 @@ describe("qa suite planning helpers", () => {
       expect(normalizeQaSuiteConcurrency(0, 3)).toBe(1);
     } finally {
       if (previous === undefined) {
-        delete process.env.OPENCLAW_QA_SUITE_CONCURRENCY;
+        delete process.env.ICLAW_QA_SUITE_CONCURRENCY;
       } else {
-        process.env.OPENCLAW_QA_SUITE_CONCURRENCY = previous;
+        process.env.ICLAW_QA_SUITE_CONCURRENCY = previous;
       }
     }
   });

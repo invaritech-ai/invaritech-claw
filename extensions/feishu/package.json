@@ -9,13 +9,13 @@
   },
   "devDependencies": {
     "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "iclaw": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.4.24"
+    "iclaw": ">=2026.4.24"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "iclaw": {
       "optional": true
     }
   },

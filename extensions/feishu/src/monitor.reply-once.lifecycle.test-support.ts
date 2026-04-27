@@ -30,7 +30,7 @@ const {
 let lastRuntime: ReturnType<typeof createRuntimeEnv> | null = null;
 let lifecycleCore: ReturnType<typeof installFeishuLifecycleReplyRuntime>;
 const handleMessageMock = vi.fn();
-const originalStateDir = process.env.OPENCLAW_STATE_DIR;
+const originalStateDir = process.env.ICLAW_STATE_DIR;
 const lifecycleConfig = createFeishuLifecycleConfig({
   accountId: "acct-lifecycle",
   appId: "cli_test",

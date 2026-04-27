@@ -96,7 +96,7 @@ async function noteTwitchSetupHelp(prompter: WizardPrompter): Promise<void> {
       "2. Generate a token with scopes: chat:read and chat:write",
       "   Use https://twitchtokengenerator.com/ or https://twitchapps.com/tmi/",
       "3. Copy the token (starts with 'oauth:') and Client ID",
-      "Env vars supported: OPENCLAW_TWITCH_ACCESS_TOKEN",
+      "Env vars supported: ICLAW_TWITCH_ACCESS_TOKEN",
       `Docs: ${formatDocsLink("/channels/twitch", "channels/twitch")}`,
     ].join("\n"),
     "Twitch setup",
@@ -228,7 +228,7 @@ export async function configureWithEnvToken(
   }
 
   const useEnv = await prompter.confirm({
-    message: "Twitch env var OPENCLAW_TWITCH_ACCESS_TOKEN detected. Use env token?",
+    message: "Twitch env var ICLAW_TWITCH_ACCESS_TOKEN detected. Use env token?",
     initialValue: true,
   });
   if (!useEnv) {
@@ -423,7 +423,7 @@ export const twitchSetupWizard: ChannelSetupWizard = {
       await noteTwitchSetupHelp(prompter);
     }
 
-    const envToken = process.env.OPENCLAW_TWITCH_ACCESS_TOKEN?.trim();
+    const envToken = process.env.ICLAW_TWITCH_ACCESS_TOKEN?.trim();
 
     if (accountId === DEFAULT_ACCOUNT_ID && envToken && !account?.accessToken) {
       const envResult = await configureWithEnvToken(
