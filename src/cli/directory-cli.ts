@@ -11,7 +11,7 @@ import {
   normalizeOptionalString,
   normalizeStringifiedOptionalString,
 } from "../shared/string-coerce.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { getTerminalTableWidth, renderTable } from "../terminal/table.js";
 import { theme } from "../terminal/theme.js";
 import { formatHelpExamples } from "./help-format.js";
@@ -86,10 +86,7 @@ export function registerDirectoryCli(program: Command) {
             "openclaw directory groups members --channel discord --group-id <id>",
             "List members for a specific group.",
           ],
-        ])}\n\n${theme.muted("Docs:")} ${formatDocsLink(
-          "/cli/directory",
-          "docs.openclaw.ai/cli/directory",
-        )}\n`,
+        ])}\n\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/directory")}\n`,
     )
     .action(() => {
       directory.help({ error: true });

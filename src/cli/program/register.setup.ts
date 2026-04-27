@@ -2,7 +2,7 @@ import type { Command } from "commander";
 import { setupWizardCommand } from "../../commands/onboard.js";
 import { setupCommand } from "../../commands/setup.js";
 import { defaultRuntime } from "../../runtime.js";
-import { formatDocsLink } from "../../terminal/links.js";
+import { formatCliDocsLink } from "../../terminal/links.js";
 import { theme } from "../../terminal/theme.js";
 import { runCommandWithRuntime } from "../cli-utils.js";
 import { hasExplicitOptions } from "../command-options.js";
@@ -10,12 +10,8 @@ import { hasExplicitOptions } from "../command-options.js";
 export function registerSetupCommand(program: Command) {
   program
     .command("setup")
-    .description("Initialize the active OpenClaw config and agent workspace")
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/setup", "docs.openclaw.ai/cli/setup")}\n`,
-    )
+    .description("Initialize the active iclaw config and agent workspace")
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/setup")}\n`)
     .option(
       "--workspace <dir>",
       "Agent workspace directory (default: ~/.openclaw/workspace; stored as agents.defaults.workspace)",

@@ -16,6 +16,7 @@ import {
 } from "./package-dist-inventory.js";
 import { readPackageVersion } from "./package-json.js";
 import { applyPathPrepend } from "./path-prepend.js";
+import { PRODUCT_DISPLAY_NAME } from "./product-branding.js";
 import { parseSemver } from "./runtime-guard.js";
 
 export type GlobalInstallManager = "npm" | "pnpm" | "bun";
@@ -277,7 +278,7 @@ async function resolvePortableGitPathPrepend(
   if (!localAppData) {
     return [];
   }
-  const portableGitRoot = path.join(localAppData, "OpenClaw", "deps", "portable-git");
+  const portableGitRoot = path.join(localAppData, PRODUCT_DISPLAY_NAME, "deps", "portable-git");
   const candidates = [
     path.join(portableGitRoot, "mingw64", "bin"),
     path.join(portableGitRoot, "usr", "bin"),

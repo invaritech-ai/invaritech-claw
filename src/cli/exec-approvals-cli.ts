@@ -17,7 +17,7 @@ import { formatTimeAgo } from "../infra/format-time/format-relative.ts";
 import { defaultRuntime } from "../runtime.js";
 import { normalizeOptionalString } from "../shared/string-coerce.js";
 import { sanitizeForLog } from "../terminal/ansi.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { getTerminalTableWidth, renderTable } from "../terminal/table.js";
 import { isRich, theme } from "../terminal/theme.js";
 import { callGatewayFromCli } from "./gateway-rpc.js";
@@ -481,8 +481,7 @@ export function registerExecApprovalsCli(program: Command) {
     .description("Manage exec approvals (gateway or node host)")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/approvals", "docs.openclaw.ai/cli/approvals")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/approvals")}\n`,
     );
 
   const getCmd = approvals
@@ -570,7 +569,7 @@ export function registerExecApprovalsCli(program: Command) {
         )}\n${formatExample(
           'openclaw approvals allowlist remove "~/Projects/**/bin/rg"',
           "Remove an allowlist pattern.",
-        )}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/approvals", "docs.openclaw.ai/cli/approvals")}\n`,
+        )}\n\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/approvals")}\n`,
     );
 
   registerAllowlistMutationCommand({

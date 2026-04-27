@@ -1,6 +1,6 @@
 import type { Command } from "commander";
 import { defaultRuntime } from "../runtime.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
 import { inheritOptionFromParent } from "./command-options.js";
 import { formatHelpExamples } from "./help-format.js";
@@ -35,7 +35,7 @@ export function registerUpdateCli(program: Command) {
   program.enablePositionalOptions();
   const update = program
     .command("update")
-    .description("Update OpenClaw and inspect update channel status")
+    .description("Update iclaw and inspect update channel status")
     .option("--json", "Output result as JSON", false)
     .option("--no-restart", "Skip restarting the gateway service after a successful update")
     .option("--dry-run", "Preview update actions without making changes", false)
@@ -87,7 +87,7 @@ ${theme.heading("Notes:")}
   - Downgrades require confirmation (can break configuration)
   - Skips update if the working directory has uncommitted changes
 
-${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.openclaw.ai/cli/update")}`;
+${theme.muted("Docs:")} ${formatCliDocsLink("/cli/update")}`;
     })
     .action(async (opts) => {
       try {
@@ -110,10 +110,7 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.openclaw.ai/cli/up
     .command("wizard")
     .description("Interactive update wizard")
     .option("--timeout <seconds>", "Timeout for each update step in seconds (default: 1200)")
-    .addHelpText(
-      "after",
-      `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.openclaw.ai/cli/update")}\n`,
-    )
+    .addHelpText("after", `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/update")}\n`)
     .action(async (opts, command) => {
       try {
         await updateWizardCommand({
@@ -141,7 +138,7 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.openclaw.ai/cli/up
           "- Shows current update channel (stable/beta/dev) and source",
         )}\n${theme.muted("- Includes git tag/branch/SHA for source checkouts")}\n\n${theme.muted(
           "Docs:",
-        )} ${formatDocsLink("/cli/update", "docs.openclaw.ai/cli/update")}`,
+        )} ${formatCliDocsLink("/cli/update")}`,
     )
     .action(async (opts, command) => {
       try {

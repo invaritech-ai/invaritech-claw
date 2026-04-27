@@ -13,10 +13,7 @@ import { memoryExtensionTestRoots } from "./vitest.extension-memory-paths.mjs";
 import { messagingExtensionTestRoots } from "./vitest.extension-messaging-paths.mjs";
 import { miscExtensionTestRoots } from "./vitest.extension-misc-paths.mjs";
 import { msTeamsExtensionTestRoots } from "./vitest.extension-msteams-paths.mjs";
-import {
-  providerExtensionTestRoots,
-  providerOpenAiExtensionTestRoots,
-} from "./vitest.extension-provider-paths.mjs";
+import { providerExtensionTestRoots } from "./vitest.extension-provider-paths.mjs";
 import { qaExtensionTestRoots } from "./vitest.extension-qa-paths.mjs";
 import { telegramExtensionTestRoots } from "./vitest.extension-telegram-paths.mjs";
 import { voiceCallExtensionTestRoots } from "./vitest.extension-voice-call-paths.mjs";
@@ -57,7 +54,6 @@ export function createExtensionsVitestConfig(
       ...messagingExtensionTestRoots.map((root) => `${root.replace(/^extensions\//u, "")}/**`),
       ...miscExtensionTestRoots.map((root) => `${root.replace(/^extensions\//u, "")}/**`),
       ...msTeamsExtensionTestRoots.map((root) => `${root.replace(/^extensions\//u, "")}/**`),
-      ...providerOpenAiExtensionTestRoots.map((root) => `${root.replace(/^extensions\//u, "")}/**`),
       ...providerExtensionTestRoots.map((root) => `${root.replace(/^extensions\//u, "")}/**`),
       ...qaExtensionTestRoots.map((root) => `${root.replace(/^extensions\//u, "")}/**`),
       ...telegramExtensionTestRoots.map((root) => `${root.replace(/^extensions\//u, "")}/**`),

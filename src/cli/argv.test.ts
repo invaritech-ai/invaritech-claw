@@ -93,6 +93,21 @@ describe("argv helpers", () => {
       argv: ["node", "openclaw", "--unknown", "--version"],
       expected: false,
     },
+    {
+      name: "pnpm-style separator before --version",
+      argv: ["node", "openclaw", "--", "--version"],
+      expected: true,
+    },
+    {
+      name: "pnpm-style separator before -V",
+      argv: ["node", "openclaw", "--", "-V"],
+      expected: true,
+    },
+    {
+      name: "pnpm-style separator before -v alias",
+      argv: ["node", "openclaw", "--", "-v"],
+      expected: true,
+    },
   ])("detects root-only version invocations: $name", ({ argv, expected }) => {
     expect(isRootVersionInvocation(argv)).toBe(expected);
   });
@@ -111,6 +126,16 @@ describe("argv helpers", () => {
     {
       name: "root --help with profile",
       argv: ["node", "openclaw", "--profile", "work", "--help"],
+      expected: true,
+    },
+    {
+      name: "pnpm-style separator before --help",
+      argv: ["node", "openclaw", "--", "--help"],
+      expected: true,
+    },
+    {
+      name: "pnpm-style separator before -h",
+      argv: ["node", "openclaw", "--", "-h"],
       expected: true,
     },
     {

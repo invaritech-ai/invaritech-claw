@@ -74,33 +74,6 @@ const DEBUG_PROXY_COVERAGE_ENTRIES: readonly DebugProxyCoverageEntry[] = [
     notes: "Mattermost websocket monitor uses the debug proxy agent and records frame activity.",
   },
   {
-    id: "openai-realtime-voice",
-    label: "OpenAI realtime voice bridge",
-    modulePath: "extensions/openai/realtime-voice-provider.ts",
-    protocols: ["wss"],
-    status: "captured",
-    notes:
-      "Realtime voice bridge now routes through the debug proxy agent and records websocket frames.",
-  },
-  {
-    id: "openai-realtime-transcription",
-    label: "OpenAI realtime transcription",
-    modulePath: "extensions/openai/realtime-transcription-provider.ts",
-    protocols: ["wss"],
-    status: "captured",
-    notes:
-      "Realtime transcription sessions now route through the debug proxy agent and record websocket frames.",
-  },
-  {
-    id: "openai-tts",
-    label: "OpenAI text-to-speech",
-    modulePath: "extensions/openai/tts.ts",
-    protocols: ["https"],
-    status: "captured",
-    notes:
-      "Direct OpenAI TTS fetches record request/response payloads while inheriting proxy env routing.",
-  },
-  {
     id: "microsoft-voices",
     label: "Microsoft voice discovery",
     modulePath: "extensions/microsoft/speech-provider.ts",

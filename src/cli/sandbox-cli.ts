@@ -2,7 +2,7 @@ import type { Command } from "commander";
 import { sandboxExplainCommand } from "../commands/sandbox-explain.js";
 import { sandboxListCommand, sandboxRecreateCommand } from "../commands/sandbox.js";
 import { defaultRuntime } from "../runtime.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
 import { formatHelpExamples } from "./help-format.js";
 
@@ -64,11 +64,7 @@ export function registerSandboxCli(program: Command) {
       "after",
       () => `\n${theme.heading("Examples:")}\n${formatHelpExamples(SANDBOX_EXAMPLES.main)}\n`,
     )
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/sandbox", "docs.openclaw.ai/cli/sandbox")}\n`,
-    )
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/sandbox")}\n`)
     .action(() => {
       sandbox.help({ error: true });
     });

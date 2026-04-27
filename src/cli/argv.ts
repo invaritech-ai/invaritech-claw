@@ -68,12 +68,33 @@ export function isRootVersionInvocation(argv: string[]): boolean {
   return isRootInvocationForFlags(argv, VERSION_FLAGS, { includeVersionAlias: true });
 }
 
+function peelLeadingTerminatorBeforeRootFlagToken(
+  args: string[],
+  targetFlags: Set<string>,
+  options?: { includeVersionAlias?: boolean },
+): string[] {
+  if (args.length < 2 || args[0] !== FLAG_TERMINATOR) {
+    return args;
+  }
+  const next = args[1];
+  if (!next) {
+    return args;
+  }
+  if (targetFlags.has(next)) {
+    return args.slice(1);
+  }
+  if (options?.includeVersionAlias === true && next === ROOT_VERSION_ALIAS_FLAG) {
+    return args.slice(1);
+  }
+  return args;
+}
+
 function isRootInvocationForFlags(
   argv: string[],
   targetFlags: Set<string>,
   options?: { includeVersionAlias?: boolean },
 ): boolean {
-  const args = argv.slice(2);
+  const args = peelLeadingTerminatorBeforeRootFlagToken(argv.slice(2), targetFlags, options);
   let hasTarget = false;
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i];

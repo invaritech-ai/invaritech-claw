@@ -37,7 +37,7 @@ const configureGatewayForSetup = vi.hoisted(() =>
   vi.fn(async (args) => ({
     nextConfig: args.nextConfig,
     settings: {
-      port: args.localPort ?? 18789,
+      port: args.localPort ?? 32768,
       bind: "loopback",
       authMode: "token",
       gatewayToken: "test-token",
@@ -101,7 +101,7 @@ const resolveGatewayPort = vi.hoisted(() =>
   vi.fn((_cfg?: unknown, env?: NodeJS.ProcessEnv) => {
     const raw = env?.ICLAW_GATEWAY_PORT ?? process.env.ICLAW_GATEWAY_PORT;
     const port = raw ? Number.parseInt(raw, 10) : Number.NaN;
-    return Number.isFinite(port) && port > 0 ? port : 18789;
+    return Number.isFinite(port) && port > 0 ? port : 32768;
   }),
 );
 const readConfigFileSnapshot = vi.hoisted(() =>
@@ -184,7 +184,7 @@ vi.mock("../commands/onboard-hooks.js", () => ({
 }));
 
 vi.mock("../config/config.js", () => ({
-  DEFAULT_GATEWAY_PORT: 18789,
+  DEFAULT_GATEWAY_PORT: 32768,
   resolveGatewayPort,
   readConfigFileSnapshot,
   writeConfigFile,
@@ -210,8 +210,8 @@ vi.mock("../commands/onboard-helpers.js", () => ({
   waitForGatewayReachable: vi.fn(async () => {}),
   formatControlUiSshHint: vi.fn(() => "ssh hint"),
   resolveControlUiLinks: vi.fn(() => ({
-    httpUrl: "http://127.0.0.1:18789",
-    wsUrl: "ws://127.0.0.1:18789",
+    httpUrl: "http://127.0.0.1:32768",
+    wsUrl: "ws://127.0.0.1:32768",
   })),
 }));
 
@@ -824,7 +824,7 @@ describe("runSetupWizard", () => {
 
     expect(probeGatewayReachable).toHaveBeenCalledWith(
       expect.objectContaining({
-        url: "ws://127.0.0.1:18789",
+        url: "ws://127.0.0.1:32768",
         password: "gateway-ref-password", // pragma: allowlist secret
       }),
     );

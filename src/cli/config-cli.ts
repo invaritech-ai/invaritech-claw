@@ -37,7 +37,7 @@ import {
   resolveConfigSecretTargetByPath,
 } from "../secrets/target-registry.js";
 import { normalizeOptionalString } from "../shared/string-coerce.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
 import { shortenHomePath } from "../utils.js";
 import { formatCliCommand } from "./command-format.js";
@@ -1509,11 +1509,7 @@ export function registerConfigCli(program: Command) {
     .description(
       "Non-interactive config helpers (get/set/unset/file/schema/validate). Run without subcommand for guided setup.",
     )
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/config", "docs.openclaw.ai/cli/config")}\n`,
-    )
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/config")}\n`)
     .option(
       "--section <section>",
       "Configuration sections for guided setup (repeatable). Use with no subcommand.",

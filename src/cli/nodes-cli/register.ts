@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { formatDocsLink } from "../../terminal/links.js";
+import { formatCliDocsLink } from "../../terminal/links.js";
 import { theme } from "../../terminal/theme.js";
 import { formatHelpExamples } from "../help-format.js";
 import { registerNodesCameraCommands } from "./register.camera.js";
@@ -27,7 +27,7 @@ export function registerNodesCli(program: Command) {
             "Invoke a node command directly.",
           ],
           ["openclaw nodes camera snap --node <id>", "Capture a photo from a node camera."],
-        ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/nodes", "docs.openclaw.ai/cli/nodes")}\n`,
+        ])}\n\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/nodes")}\n`,
     );
 
   registerNodesStatusCommands(nodes);

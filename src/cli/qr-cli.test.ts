@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { DEFAULT_GATEWAY_PORT } from "../config/paths.js";
 import { encodePairingSetupCode } from "../pairing/setup-code.js";
 import { createCliRuntimeCapture, mockRuntimeModule } from "./test-runtime-capture.js";
 
@@ -150,7 +151,7 @@ describe("registerQrCli", () => {
   }
 
   function expectLoggedLocalSetupCode() {
-    expectLoggedSetupCode("ws://127.0.0.1:18789");
+    expectLoggedSetupCode(`ws://127.0.0.1:${DEFAULT_GATEWAY_PORT}`);
   }
 
   function mockTailscaleStatusLookup() {
@@ -187,7 +188,7 @@ describe("registerQrCli", () => {
     await runQr(["--setup-code-only"]);
 
     const expected = encodePairingSetupCode({
-      url: "ws://127.0.0.1:18789",
+      url: `ws://127.0.0.1:${DEFAULT_GATEWAY_PORT}`,
       bootstrapToken: "bootstrap-123",
     });
     expect(runtime.log).toHaveBeenCalledWith(expected);
@@ -241,7 +242,7 @@ describe("registerQrCli", () => {
 
     await runQr(["--setup-code-only"]);
 
-    expectLoggedSetupCode("ws://192.168.1.8:18789");
+    expectLoggedSetupCode(`ws://192.168.1.8:${DEFAULT_GATEWAY_PORT}`);
   });
 
   it("allows android emulator cleartext override urls", async () => {
@@ -252,9 +253,9 @@ describe("registerQrCli", () => {
       },
     });
 
-    await runQr(["--setup-code-only", "--url", "ws://10.0.2.2:18789"]);
+    await runQr(["--setup-code-only", "--url", `ws://10.0.2.2:${DEFAULT_GATEWAY_PORT}`]);
 
-    expectLoggedSetupCode("ws://10.0.2.2:18789");
+    expectLoggedSetupCode(`ws://10.0.2.2:${DEFAULT_GATEWAY_PORT}`);
   });
 
   it("accepts --token override when config has no auth", async () => {

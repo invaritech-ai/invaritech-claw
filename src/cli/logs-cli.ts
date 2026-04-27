@@ -8,7 +8,7 @@ import { readConfiguredLogTail } from "../logging/log-tail.js";
 import { parseLogLine } from "../logging/parse-log-line.js";
 import { formatTimestamp, isValidTimeZone } from "../logging/timestamps.js";
 import { normalizeLowercaseStringOrEmpty } from "../shared/string-coerce.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { clearActiveProgressLine } from "../terminal/progress-line.js";
 import { createSafeStreamWriter } from "../terminal/stream-writer.js";
 import { colorize, isRich, theme } from "../terminal/theme.js";
@@ -255,11 +255,7 @@ export function registerLogsCli(program: Command) {
     .option("--plain", "Plain text output (no ANSI styling)", false)
     .option("--no-color", "Disable ANSI colors")
     .option("--local-time", "Display timestamps in local timezone", false)
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/logs", "docs.openclaw.ai/cli/logs")}\n`,
-    );
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/logs")}\n`);
 
   addGatewayClientOptions(logs);
 

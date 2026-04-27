@@ -8,7 +8,7 @@ export function isLeanGatewayProfileEnabled(env: NodeJS.ProcessEnv = process.env
 /**
  * Personal-assistant / CLI+API+TUI mode: same hardening as lean, plus at runtime only
  * bundled extension directories matching {@link ICLAW_BUNDLED_PLUGIN_DIRS} or (when unset)
- * **ollama** are discovered — see `src/plugins/bundled-discovery-filter.ts`.
+ * **ollama** and **openrouter** are discovered — see `src/plugins/bundled-discovery-filter.ts`.
  */
 export function isMinimalAssistantDistributionEnabled(
   env: NodeJS.ProcessEnv = process.env,
@@ -22,9 +22,12 @@ export function isPersonalAssistantHardeningEnabled(env: NodeJS.ProcessEnv = pro
 
 /**
  * Default `plugins.allow` when hardening is on and the operator has not set `plugins.allow`.
- * This fork targets **Ollama** as the only bundled provider; add plugins explicitly in config when needed.
+ * This fork targets **Ollama** and **OpenRouter** as the only bundled LLM providers; add plugins explicitly in config when needed.
  */
-export const PERSONAL_ASSISTANT_DEFAULT_PLUGIN_ALLOWLIST: readonly string[] = ["ollama"];
+export const PERSONAL_ASSISTANT_DEFAULT_PLUGIN_ALLOWLIST: readonly string[] = [
+  "ollama",
+  "openrouter",
+];
 
 /** @deprecated Use {@link PERSONAL_ASSISTANT_DEFAULT_PLUGIN_ALLOWLIST}. */
 export const LEAN_GATEWAY_CURATED_PLUGIN_ALLOWLIST = PERSONAL_ASSISTANT_DEFAULT_PLUGIN_ALLOWLIST;

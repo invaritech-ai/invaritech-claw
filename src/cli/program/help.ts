@@ -1,6 +1,7 @@
 import type { Command } from "commander";
 import { resolveCommitHash } from "../../infra/git-commit.js";
-import { formatDocsLink } from "../../terminal/links.js";
+import { PRODUCT_DISPLAY_NAME } from "../../infra/product-branding.js";
+import { formatRootCliDocsFooterLink } from "../../terminal/links.js";
 import { isRich, theme } from "../../terminal/theme.js";
 import { escapeRegExp } from "../../utils.js";
 import { hasFlag, hasRootVersionAlias } from "../argv.js";
@@ -113,7 +114,9 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
   ) {
     const commit = resolveCommitHash({ moduleUrl: import.meta.url });
     console.log(
-      commit ? `OpenClaw ${ctx.programVersion} (${commit})` : `OpenClaw ${ctx.programVersion}`,
+      commit
+        ? `${PRODUCT_DISPLAY_NAME} ${ctx.programVersion} (${commit})`
+        : `${PRODUCT_DISPLAY_NAME} ${ctx.programVersion}`,
     );
     process.exit(0);
   }
@@ -135,7 +138,7 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
     if (command !== program) {
       return "";
     }
-    const docs = formatDocsLink("/cli", "docs.openclaw.ai/cli");
+    const docs = formatRootCliDocsFooterLink();
     return `\n${theme.heading("Examples:")}\n${fmtExamples}\n\n${theme.muted("Docs:")} ${docs}\n`;
   });
 }

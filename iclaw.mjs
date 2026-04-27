@@ -125,8 +125,11 @@ const buildMissingEntryErrorMessage = async () => {
   return lines.join("\n");
 };
 
-const isBareRootHelpInvocation = (argv) =>
-  argv.length === 3 && (argv[2] === "--help" || argv[2] === "-h");
+const isBareRootHelpInvocation = (argv) => {
+  const tail = argv.slice(2);
+  const tokens = tail[0] === "--" ? tail.slice(1) : tail;
+  return tokens.length === 1 && (tokens[0] === "--help" || tokens[0] === "-h");
+};
 
 const loadPrecomputedRootHelpText = () => {
   try {

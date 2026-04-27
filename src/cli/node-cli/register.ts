@@ -2,7 +2,7 @@ import type { Command } from "commander";
 import { loadNodeHostConfig } from "../../node-host/config.js";
 import { runNodeHost } from "../../node-host/runner.js";
 import { normalizeOptionalString } from "../../shared/string-coerce.js";
-import { formatDocsLink } from "../../terminal/links.js";
+import { formatCliDocsLink } from "../../terminal/links.js";
 import { theme } from "../../terminal/theme.js";
 import { parsePort } from "../daemon-cli/shared.js";
 import { formatHelpExamples } from "../help-format.js";
@@ -34,7 +34,7 @@ export function registerNodeCli(program: Command) {
           ["openclaw node status", "Check node host service status."],
           ["openclaw node install", "Install the node host service."],
           ["openclaw node restart", "Restart the installed node host service."],
-        ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/node", "docs.openclaw.ai/cli/node")}\n`,
+        ])}\n\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/node")}\n`,
     );
 
   node

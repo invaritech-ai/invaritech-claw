@@ -21,10 +21,7 @@ import { isMemoryExtensionRoot } from "../test/vitest/vitest.extension-memory-pa
 import { isMessagingExtensionRoot } from "../test/vitest/vitest.extension-messaging-paths.mjs";
 import { isMiscExtensionRoot } from "../test/vitest/vitest.extension-misc-paths.mjs";
 import { isMsTeamsExtensionRoot } from "../test/vitest/vitest.extension-msteams-paths.mjs";
-import {
-  isProviderExtensionRoot,
-  isProviderOpenAiExtensionRoot,
-} from "../test/vitest/vitest.extension-provider-paths.mjs";
+import { isProviderExtensionRoot } from "../test/vitest/vitest.extension-provider-paths.mjs";
 import { isQaExtensionRoot } from "../test/vitest/vitest.extension-qa-paths.mjs";
 import { isTelegramExtensionRoot } from "../test/vitest/vitest.extension-telegram-paths.mjs";
 import { isVoiceCallExtensionRoot } from "../test/vitest/vitest.extension-voice-call-paths.mjs";
@@ -86,8 +83,6 @@ const EXTENSION_MEMORY_VITEST_CONFIG = "test/vitest/vitest.extension-memory.conf
 const EXTENSION_MSTEAMS_VITEST_CONFIG = "test/vitest/vitest.extension-msteams.config.ts";
 const EXTENSION_MESSAGING_VITEST_CONFIG = "test/vitest/vitest.extension-messaging.config.ts";
 const EXTENSION_MISC_VITEST_CONFIG = "test/vitest/vitest.extension-misc.config.ts";
-const EXTENSION_PROVIDER_OPENAI_VITEST_CONFIG =
-  "test/vitest/vitest.extension-provider-openai.config.ts";
 const EXTENSION_PROVIDERS_VITEST_CONFIG = "test/vitest/vitest.extension-providers.config.ts";
 const EXTENSION_QA_VITEST_CONFIG = "test/vitest/vitest.extension-qa.config.ts";
 const EXTENSION_SIGNAL_VITEST_CONFIG = "test/vitest/vitest.extension-signal.config.ts";
@@ -169,7 +164,6 @@ const VITEST_CONFIG_BY_KIND = {
   extensionMessaging: EXTENSION_MESSAGING_VITEST_CONFIG,
   extensionMisc: EXTENSION_MISC_VITEST_CONFIG,
   extensionMsTeams: EXTENSION_MSTEAMS_VITEST_CONFIG,
-  extensionProviderOpenAi: EXTENSION_PROVIDER_OPENAI_VITEST_CONFIG,
   extensionProvider: EXTENSION_PROVIDERS_VITEST_CONFIG,
   extensionQa: EXTENSION_QA_VITEST_CONFIG,
   extensionSignal: EXTENSION_SIGNAL_VITEST_CONFIG,
@@ -594,9 +588,6 @@ function classifyTarget(arg, cwd) {
     if (splitChannelShard) {
       return splitChannelShard.kind;
     }
-    if (isProviderOpenAiExtensionRoot(extensionRoot)) {
-      return "extensionProviderOpenAi";
-    }
     if (isQaExtensionRoot(extensionRoot)) {
       return "extensionQa";
     }
@@ -921,7 +912,6 @@ export function buildVitestRunPlans(
     "extensionMisc",
     "extensionMsTeams",
     "extensionMessaging",
-    "extensionProviderOpenAi",
     "extensionProvider",
     "extensionQa",
     "extensionSignal",

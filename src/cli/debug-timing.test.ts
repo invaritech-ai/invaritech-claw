@@ -41,7 +41,7 @@ describe("cli debug timing", () => {
     expect(timing.time("sync", () => 1)).toBe(1);
 
     expect(writer.mock.calls.map(([line]) => String(line))).toEqual([
-      'OpenClaw CLI debug timing: "models list"',
+      'iclaw CLI debug timing: "models list"',
       expect.stringMatching(/\s+\d+ms\s+\+\d+ms "start" detail="ready"/),
       expect.stringMatching(/\s+\d+ms\s+\+\d+ms "sync" duration=\d+ms/),
     ]);

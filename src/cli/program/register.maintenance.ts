@@ -4,7 +4,7 @@ import { doctorCommand } from "../../commands/doctor.js";
 import { resetCommand } from "../../commands/reset.js";
 import { uninstallCommand } from "../../commands/uninstall.js";
 import { defaultRuntime } from "../../runtime.js";
-import { formatDocsLink } from "../../terminal/links.js";
+import { formatCliDocsLink } from "../../terminal/links.js";
 import { theme } from "../../terminal/theme.js";
 import { runCommandWithRuntime } from "../cli-utils.js";
 
@@ -12,11 +12,7 @@ export function registerMaintenanceCommands(program: Command) {
   const doctor = program
     .command("doctor")
     .description("Health checks + quick fixes for the gateway and channels")
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/doctor", "docs.openclaw.ai/cli/doctor")}\n`,
-    );
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/doctor")}\n`);
 
   doctor
     .command("migrate-from-openclaw")
@@ -64,8 +60,7 @@ export function registerMaintenanceCommands(program: Command) {
     .description("Open the Control UI with your current token")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/dashboard", "docs.openclaw.ai/cli/dashboard")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/dashboard")}\n`,
     )
     .option("--no-open", "Print URL but do not launch a browser")
     .action(async (opts) => {
@@ -79,11 +74,7 @@ export function registerMaintenanceCommands(program: Command) {
   program
     .command("reset")
     .description("Reset local config/state (keeps the CLI installed)")
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/reset", "docs.openclaw.ai/cli/reset")}\n`,
-    )
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/reset")}\n`)
     .option("--scope <scope>", "config|config+creds+sessions|full (default: interactive prompt)")
     .option("--yes", "Skip confirmation prompts", false)
     .option("--non-interactive", "Disable prompts (requires --scope + --yes)", false)
@@ -104,8 +95,7 @@ export function registerMaintenanceCommands(program: Command) {
     .description("Uninstall the gateway service + local data (CLI remains)")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/uninstall", "docs.openclaw.ai/cli/uninstall")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/uninstall")}\n`,
     )
     .option("--service", "Remove the gateway service", false)
     .option("--state", "Remove state + config", false)

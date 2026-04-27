@@ -13,7 +13,7 @@ import {
 } from "../../logging/diagnostic-stability.js";
 import type { WriteDiagnosticSupportExportResult } from "../../logging/diagnostic-support-export.js";
 import { defaultRuntime } from "../../runtime.js";
-import { formatDocsLink } from "../../terminal/links.js";
+import { formatCliDocsLink } from "../../terminal/links.js";
 import { colorize, isRich, theme } from "../../terminal/theme.js";
 import { runCommandWithRuntime } from "../cli-utils.js";
 import { inheritOptionFromParent } from "../command-options.js";
@@ -402,7 +402,7 @@ export function registerGatewayCli(program: Command) {
             ["openclaw gateway discover", "Find local and wide-area gateway beacons."],
             ["openclaw gateway stability", "Show recent stability diagnostics."],
             ["openclaw gateway call health", "Call a gateway RPC method directly."],
-          ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/gateway", "docs.openclaw.ai/cli/gateway")}\n`,
+          ])}\n\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/gateway")}\n`,
       ),
   );
 

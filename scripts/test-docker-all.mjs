@@ -62,7 +62,6 @@ const lanes = [
   ["plugin-update", "ICLAW_SKIP_DOCKER_BUILD=1 pnpm test:docker:plugin-update"],
   ["config-reload", "ICLAW_SKIP_DOCKER_BUILD=1 pnpm test:docker:config-reload"],
   ...bundledScenarioLanes,
-  ["openai-image-auth", "ICLAW_SKIP_DOCKER_BUILD=1 pnpm test:docker:openai-image-auth"],
   ["qr", "pnpm test:docker:qr"],
 ];
 

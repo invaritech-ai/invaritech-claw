@@ -188,16 +188,16 @@ describe("scripts/test-projects changed-target routing", () => {
     ]);
   });
 
-  it("routes LM Studio changes to the provider extension lane", () => {
+  it("routes Ollama provider changes to the provider extension lane", () => {
     const plans = buildVitestRunPlans(["--changed", "origin/main"], process.cwd(), () => [
-      "extensions/lmstudio/src/runtime.ts",
+      "extensions/ollama/src/stream.ts",
     ]);
 
     expect(plans).toEqual([
       {
         config: "test/vitest/vitest.extension-providers.config.ts",
         forwardedArgs: [],
-        includePatterns: ["extensions/lmstudio/src/**/*.test.ts"],
+        includePatterns: ["extensions/ollama/src/**/*.test.ts"],
         watchMode: false,
       },
     ]);
@@ -542,7 +542,6 @@ describe("scripts/test-projects full-suite sharding", () => {
         "test/vitest/vitest.extension-memory.config.ts",
         "test/vitest/vitest.extension-messaging.config.ts",
         "test/vitest/vitest.extension-msteams.config.ts",
-        "test/vitest/vitest.extension-provider-openai.config.ts",
         "test/vitest/vitest.extension-providers.config.ts",
         "test/vitest/vitest.extension-signal.config.ts",
         "test/vitest/vitest.extension-slack.config.ts",
@@ -734,7 +733,6 @@ describe("scripts/test-projects full-suite sharding", () => {
       "test/vitest/vitest.extension-memory.config.ts",
       "test/vitest/vitest.extension-messaging.config.ts",
       "test/vitest/vitest.extension-msteams.config.ts",
-      "test/vitest/vitest.extension-provider-openai.config.ts",
       "test/vitest/vitest.extension-providers.config.ts",
       "test/vitest/vitest.extension-signal.config.ts",
       "test/vitest/vitest.extension-slack.config.ts",

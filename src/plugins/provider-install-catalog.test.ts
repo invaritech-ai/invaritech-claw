@@ -47,18 +47,18 @@ describe("provider install catalog", () => {
     discoverOpenClawPlugins.mockReturnValue({
       candidates: [
         {
-          idHint: "openai",
+          idHint: "openrouter",
           origin: "bundled",
-          rootDir: "/repo/extensions/openai",
-          source: "/repo/extensions/openai/index.ts",
+          rootDir: "/repo/extensions/openrouter",
+          source: "/repo/extensions/openrouter/index.ts",
           workspaceDir: "/repo",
-          packageName: "@openclaw/openai",
-          packageDir: "/repo/extensions/openai",
+          packageName: "@openclaw/openrouter-provider",
+          packageDir: "/repo/extensions/openrouter",
           packageManifest: {
             install: {
-              npmSpec: "@openclaw/openai@1.2.3",
+              npmSpec: "@openclaw/openrouter-provider@1.2.3",
               defaultChoice: "npm",
-              expectedIntegrity: "sha512-openai",
+              expectedIntegrity: "sha512-openrouter",
             },
           },
         },
@@ -67,9 +67,9 @@ describe("provider install catalog", () => {
     });
     loadPluginManifest.mockReturnValue({
       ok: true,
-      manifestPath: "/repo/extensions/openai/openclaw.plugin.json",
+      manifestPath: "/repo/extensions/openrouter/openclaw.plugin.json",
       manifest: {
-        id: "openai",
+        id: "openrouter",
         configSchema: {
           type: "object",
         },
@@ -77,46 +77,46 @@ describe("provider install catalog", () => {
     });
     resolveManifestProviderAuthChoices.mockReturnValue([
       {
-        pluginId: "openai",
-        providerId: "openai",
+        pluginId: "openrouter",
+        providerId: "openrouter",
         methodId: "api-key",
-        choiceId: "openai-api-key",
-        choiceLabel: "OpenAI API key",
-        groupId: "openai",
-        groupLabel: "OpenAI",
+        choiceId: "openrouter-api-key",
+        choiceLabel: "OpenRouter API key",
+        groupId: "openrouter",
+        groupLabel: "OpenRouter",
       },
     ]);
 
     expect(resolveProviderInstallCatalogEntries()).toEqual([
       {
-        pluginId: "openai",
-        providerId: "openai",
+        pluginId: "openrouter",
+        providerId: "openrouter",
         methodId: "api-key",
-        choiceId: "openai-api-key",
-        choiceLabel: "OpenAI API key",
-        groupId: "openai",
-        groupLabel: "OpenAI",
-        label: "OpenAI",
+        choiceId: "openrouter-api-key",
+        choiceLabel: "OpenRouter API key",
+        groupId: "openrouter",
+        groupLabel: "OpenRouter",
+        label: "OpenRouter",
         origin: "bundled",
         install: {
-          npmSpec: "@openclaw/openai@1.2.3",
-          localPath: "extensions/openai",
+          npmSpec: "@openclaw/openrouter-provider@1.2.3",
+          localPath: "extensions/openrouter",
           defaultChoice: "npm",
-          expectedIntegrity: "sha512-openai",
+          expectedIntegrity: "sha512-openrouter",
         },
         installSource: {
           defaultChoice: "npm",
           npm: {
-            spec: "@openclaw/openai@1.2.3",
-            packageName: "@openclaw/openai",
+            spec: "@openclaw/openrouter-provider@1.2.3",
+            packageName: "@openclaw/openrouter-provider",
             selector: "1.2.3",
             selectorKind: "exact-version",
             exactVersion: true,
-            expectedIntegrity: "sha512-openai",
+            expectedIntegrity: "sha512-openrouter",
             pinState: "exact-with-integrity",
           },
           local: {
-            path: "extensions/openai",
+            path: "extensions/openrouter",
           },
           warnings: [],
         },

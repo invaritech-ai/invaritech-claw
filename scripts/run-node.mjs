@@ -763,6 +763,12 @@ const writeBuildStamp = (deps) => {
 const shouldSkipCleanWatchRuntimeSync = (deps) => deps.env.ICLAW_WATCH_MODE === "1";
 
 export async function runNodeMain(params = {}) {
+  let forwardedArgs = params.args ?? process.argv.slice(2);
+  // `pnpm run <script> -- <args>` forwards a literal `--` before script args; drop one so
+  // `pnpm dev -- --help` becomes `iclaw.mjs --help` (not `iclaw.mjs -- --help`).
+  if (forwardedArgs[0] === "--") {
+    forwardedArgs = forwardedArgs.slice(1);
+  }
   const deps = {
     spawn: params.spawn ?? spawn,
     spawnSync: params.spawnSync ?? spawnSync,
@@ -772,7 +778,7 @@ export async function runNodeMain(params = {}) {
     process: params.process ?? process,
     execPath: params.execPath ?? process.execPath,
     cwd: params.cwd ?? process.cwd(),
-    args: params.args ?? process.argv.slice(2),
+    args: forwardedArgs,
     env: params.env ? { ...params.env } : { ...process.env },
     runRuntimePostBuild: params.runRuntimePostBuild ?? runRuntimePostBuild,
   };

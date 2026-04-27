@@ -28,7 +28,7 @@ export function resolveBundledStockDirectoryAllowlist(
   }
   const minimal = normalizeLowercaseStringOrEmpty(env.ICLAW_MINIMAL_ASSISTANT);
   if (minimal === "1" || minimal === "true") {
-    return new Set(["ollama"]);
+    return new Set(["ollama", "openrouter"]);
   }
   return null;
 }
@@ -57,7 +57,7 @@ export function bundledStockAllowlistCacheKeyComponent(env: NodeJS.ProcessEnv): 
   }
   const minimal = normalizeLowercaseStringOrEmpty(env.ICLAW_MINIMAL_ASSISTANT);
   if (minimal === "1" || minimal === "true") {
-    return "minimal:ollama";
+    return "minimal:ollama,openrouter";
   }
   return "all";
 }

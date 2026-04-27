@@ -72,7 +72,6 @@ const SCOPED_PROJECT_GROUP_ORDER_BY_NAME = new Map(
     "extension-memory",
     "extension-messaging",
     "extension-msteams",
-    "extension-provider-openai",
     "extension-providers",
     "extension-signal",
     "extension-slack",

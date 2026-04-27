@@ -407,7 +407,7 @@ describe("run-node script", () => {
       expect(exitCode).toBe(0);
       await expect(fs.readFile(outputPath, "utf-8")).resolves.toContain("child stdout\n");
       await expect(fs.readFile(outputPath, "utf-8")).resolves.toContain("child stderr\n");
-      await expect(fs.readFile(outputPath, "utf-8")).resolves.toContain("[openclaw]");
+      await expect(fs.readFile(outputPath, "utf-8")).resolves.toContain("[iclaw]");
       expect(spawnCalls.at(-1)?.args).toEqual(["iclaw.mjs", "status"]);
       expect(spawnCalls.at(-1)?.env.ICLAW_RUN_NODE_OUTPUT_LOG).toBe(outputPath);
       expect(spawnCalls.at(-1)?.stdio).toEqual(["inherit", "pipe", "pipe"]);
@@ -479,6 +479,60 @@ describe("run-node script", () => {
       const childArgs = spawnCalls.at(-1)?.args ?? [];
       expect(childArgs).toEqual(["iclaw.mjs", "qa", "matrix"]);
       expect(spawnCalls.at(-1)?.env.ICLAW_RUN_NODE_OUTPUT_LOG).toBeUndefined();
+    });
+  });
+
+  it("strips one leading -- from forwarded args (pnpm run … -- …)", async () => {
+    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+      await setupTrackedProject(tmp);
+      const spawnCalls: string[][] = [];
+      const spawn = (cmd: string, args: string[]) => {
+        if (cmd === process.execPath && args[0] === "iclaw.mjs") {
+          spawnCalls.push(args);
+        }
+        return createExitedProcess(0);
+      };
+      const { spawnSync } = createSpawnRecorder();
+
+      const exitCode = await runNodeMain({
+        cwd: tmp,
+        args: ["--", "--help"],
+        env: { ...process.env, ICLAW_RUNNER_LOG: "0" },
+        spawn,
+        spawnSync,
+        execPath: process.execPath,
+        platform: process.platform,
+      });
+
+      expect(exitCode).toBe(0);
+      expect(spawnCalls).toEqual([["iclaw.mjs", "--help"]]);
+    });
+  });
+
+  it("strips only one leading -- so a real option terminator is preserved", async () => {
+    await withTempDir({ prefix: "openclaw-run-node-" }, async (tmp) => {
+      await setupTrackedProject(tmp);
+      const spawnCalls: string[][] = [];
+      const spawn = (cmd: string, args: string[]) => {
+        if (cmd === process.execPath && args[0] === "iclaw.mjs") {
+          spawnCalls.push(args);
+        }
+        return createExitedProcess(0);
+      };
+      const { spawnSync } = createSpawnRecorder();
+
+      const exitCode = await runNodeMain({
+        cwd: tmp,
+        args: ["--", "--", "gateway"],
+        env: { ...process.env, ICLAW_RUNNER_LOG: "0" },
+        spawn,
+        spawnSync,
+        execPath: process.execPath,
+        platform: process.platform,
+      });
+
+      expect(exitCode).toBe(0);
+      expect(spawnCalls).toEqual([["iclaw.mjs", "--", "gateway"]]);
     });
   });
 

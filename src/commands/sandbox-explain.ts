@@ -10,6 +10,7 @@ import {
   resolveStorePath,
 } from "../config/sessions.js";
 import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { resolveBundledDocsUrl } from "../infra/product-branding.js";
 import {
   buildAgentMainSessionKey,
   normalizeAgentId,
@@ -22,7 +23,7 @@ import {
   normalizeOptionalLowercaseString,
   normalizeStringifiedOptionalString,
 } from "../shared/string-coerce.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { colorize, isRich, theme } from "../terminal/theme.js";
 import { INTERNAL_MESSAGE_CHANNEL } from "../utils/message-channel.js";
 
@@ -32,7 +33,7 @@ type SandboxExplainOptions = {
   json: boolean;
 };
 
-const SANDBOX_DOCS_URL = "https://docs.openclaw.ai/sandbox";
+const SANDBOX_DOCS_URL = resolveBundledDocsUrl("/sandbox");
 
 function normalizeExplainSessionKey(params: {
   cfg: OpenClawConfig;
@@ -339,7 +340,7 @@ export async function sandboxExplainCommand(
     lines.push(`  - ${key}`);
   }
   lines.push("");
-  lines.push(`${key("Docs:")} ${formatDocsLink("/sandbox", "docs.openclaw.ai/sandbox")}`);
+  lines.push(`${key("Docs:")} ${formatCliDocsLink("/sandbox")}`);
 
   runtime.log(`${lines.join("\n")}\n`);
 }

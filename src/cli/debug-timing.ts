@@ -157,7 +157,7 @@ export function createCliDebugTiming(params: {
       return;
     }
     if (!wrotePrettyHeader) {
-      writer(`OpenClaw CLI debug timing: ${formatPrettyLabel(params.command)}`);
+      writer(`iclaw CLI debug timing: ${formatPrettyLabel(params.command)}`);
       wrotePrettyHeader = true;
     }
     writer(formatPrettyTimingLine(payload));

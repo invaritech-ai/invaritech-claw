@@ -433,11 +433,11 @@ describe("collectForbiddenPackPaths", () => {
     expect(
       collectForbiddenPackPaths([
         "dist/index.js",
-        "dist/extensions/codex/.openclaw-runtime-deps-backup-node_modules-old/zod/index.js",
+        "dist/extensions/ollama/.openclaw-runtime-deps-backup-node_modules-old/zod/index.js",
         "dist/extensions/discord/.openclaw-runtime-deps-stamp.json",
       ]),
     ).toEqual([
-      "dist/extensions/codex/.openclaw-runtime-deps-backup-node_modules-old/zod/index.js",
+      "dist/extensions/ollama/.openclaw-runtime-deps-backup-node_modules-old/zod/index.js",
       "dist/extensions/discord/.openclaw-runtime-deps-stamp.json",
     ]);
   });

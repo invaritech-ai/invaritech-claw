@@ -11,6 +11,7 @@ import {
 } from "../../daemon/systemd-hints.js";
 import { classifySystemdUnavailableDetail } from "../../daemon/systemd-unavailable.js";
 import { resolveControlUiLinks } from "../../gateway/control-ui-links.js";
+import { resolveBundledDocsUrl } from "../../infra/product-branding.js";
 import { isWSLEnv } from "../../infra/wsl.js";
 import { defaultRuntime } from "../../runtime.js";
 import { colorize } from "../../terminal/theme.js";
@@ -350,5 +351,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean })
   }
 
   defaultRuntime.log(`${label("Troubles:")} run ${formatCliCommand("openclaw status")}`);
-  defaultRuntime.log(`${label("Troubleshooting:")} https://docs.openclaw.ai/troubleshooting`);
+  defaultRuntime.log(
+    `${label("Troubleshooting:")} ${resolveBundledDocsUrl("/help/troubleshooting")}`,
+  );
 }

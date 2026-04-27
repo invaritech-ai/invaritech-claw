@@ -132,7 +132,7 @@ if [ "$status" -eq 0 ]; then
 else
   printf '[%s] openclaw restart failed source=update status=%s\\n' "$(date -u +%FT%TZ)" "$status" >&2
 fi
-# Self-cleanup (log is retained under the OpenClaw state logs directory).
+# Self-cleanup (log is retained under the iclaw state logs directory).
 rm -f "$0"
 exit "$status"
 `;

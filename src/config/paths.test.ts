@@ -173,6 +173,28 @@ describe("state + config path candidates", () => {
     });
   });
 
+  it("ICLAW_STRICT_HOME forces ~/.iclaw even when a legacy state dir exists", async () => {
+    await withTempDir({ prefix: "iclaw-strict-state-" }, async (root) => {
+      const legacyDir = path.join(root, ".openclaw");
+      await fs.mkdir(legacyDir, { recursive: true });
+      const env = { ICLAW_STRICT_HOME: "1" } as NodeJS.ProcessEnv;
+      expect(resolveStateDir(env, () => root)).toBe(path.join(root, ".iclaw"));
+    });
+  });
+
+  it("ICLAW_STRICT_HOME ignores legacy config files outside ~/.iclaw", async () => {
+    await withTempDir({ prefix: "iclaw-strict-config-" }, async (root) => {
+      const legacyDir = path.join(root, ".openclaw");
+      await fs.mkdir(legacyDir, { recursive: true });
+      const legacyPath = path.join(legacyDir, "openclaw.json");
+      await fs.writeFile(legacyPath, "{}", "utf-8");
+      const env = { ICLAW_STRICT_HOME: "1" } as NodeJS.ProcessEnv;
+      expect(resolveConfigPathCandidate(env, () => root)).toBe(
+        path.join(root, ".iclaw", "iclaw.json"),
+      );
+    });
+  });
+
   it("CONFIG_PATH prefers existing config when present", async () => {
     await withTempDir({ prefix: "iclaw-config-" }, async (root) => {
       const legacyDir = path.join(root, ".openclaw");

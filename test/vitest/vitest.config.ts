@@ -63,7 +63,6 @@ export const rootVitestProjects = [
   "test/vitest/vitest.extension-memory.config.ts",
   "test/vitest/vitest.extension-msteams.config.ts",
   "test/vitest/vitest.extension-messaging.config.ts",
-  "test/vitest/vitest.extension-provider-openai.config.ts",
   "test/vitest/vitest.extension-providers.config.ts",
   "test/vitest/vitest.extension-signal.config.ts",
   "test/vitest/vitest.extension-slack.config.ts",

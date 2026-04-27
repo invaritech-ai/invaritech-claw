@@ -83,12 +83,12 @@ describe("scripts/test-extension.mjs", () => {
     expect(plan.hasTests).toBe(true);
   });
 
-  it("resolves OpenAI onto its own provider vitest config", () => {
-    const plan = resolveExtensionTestPlan({ targetArg: "openai", cwd: process.cwd() });
+  it("resolves OpenRouter onto the bundled providers vitest config", () => {
+    const plan = resolveExtensionTestPlan({ targetArg: "openrouter", cwd: process.cwd() });
 
-    expect(plan.extensionId).toBe("openai");
-    expect(plan.config).toBe("test/vitest/vitest.extension-provider-openai.config.ts");
-    expect(plan.roots).toContain(bundledPluginRoot("openai"));
+    expect(plan.extensionId).toBe("openrouter");
+    expect(plan.config).toBe("test/vitest/vitest.extension-providers.config.ts");
+    expect(plan.roots).toContain(bundledPluginRoot("openrouter"));
     expect(plan.hasTests).toBe(true);
   });
 
@@ -180,7 +180,7 @@ describe("scripts/test-extension.mjs", () => {
     expect(resolveExtensionTestPlan({ targetArg: "qa-lab", cwd: process.cwd() }).config).toBe(
       "test/vitest/vitest.extension-qa.config.ts",
     );
-    expect(resolveExtensionTestPlan({ targetArg: "vydra", cwd: process.cwd() }).config).toBe(
+    expect(resolveExtensionTestPlan({ targetArg: "runway", cwd: process.cwd() }).config).toBe(
       "test/vitest/vitest.extension-media.config.ts",
     );
     expect(resolveExtensionTestPlan({ targetArg: "firecrawl", cwd: process.cwd() }).config).toBe(
@@ -189,11 +189,11 @@ describe("scripts/test-extension.mjs", () => {
   });
 
   it("keeps unmatched non-provider extensions on the shared extensions vitest config", () => {
-    const plan = resolveExtensionTestPlan({ targetArg: "codex", cwd: process.cwd() });
+    const plan = resolveExtensionTestPlan({ targetArg: "bonjour", cwd: process.cwd() });
 
-    expect(plan.extensionId).toBe("codex");
+    expect(plan.extensionId).toBe("bonjour");
     expect(plan.config).toBe("test/vitest/vitest.extensions.config.ts");
-    expect(plan.roots).toContain(bundledPluginRoot("codex"));
+    expect(plan.roots).toContain(bundledPluginRoot("bonjour"));
     expect(plan.hasTests).toBe(true);
   });
 
@@ -260,7 +260,7 @@ describe("scripts/test-extension.mjs", () => {
         "slack",
         "firecrawl",
         "line",
-        "openai",
+        "openrouter",
         "matrix",
         "telegram",
         "mattermost",
@@ -277,7 +277,7 @@ describe("scripts/test-extension.mjs", () => {
         "diffs",
         "browser",
         "qa-lab",
-        "vydra",
+        "runway",
       ],
     });
 
@@ -294,12 +294,12 @@ describe("scripts/test-extension.mjs", () => {
       "mattermost",
       "memory-core",
       "msteams",
-      "openai",
+      "openrouter",
       "qa-lab",
+      "runway",
       "slack",
       "telegram",
       "voice-call",
-      "vydra",
       "whatsapp",
       "zalo",
       "zalouser",
@@ -371,8 +371,8 @@ describe("scripts/test-extension.mjs", () => {
       {
         config: "test/vitest/vitest.extension-media.config.ts",
         estimatedCost: expect.any(Number),
-        extensionIds: ["vydra"],
-        roots: [bundledPluginRoot("vydra")],
+        extensionIds: ["runway"],
+        roots: [bundledPluginRoot("runway")],
         testFileCount: expect.any(Number),
       },
       {
@@ -397,10 +397,10 @@ describe("scripts/test-extension.mjs", () => {
         testFileCount: expect.any(Number),
       },
       {
-        config: "test/vitest/vitest.extension-provider-openai.config.ts",
+        config: "test/vitest/vitest.extension-providers.config.ts",
         estimatedCost: expect.any(Number),
-        extensionIds: ["openai"],
-        roots: [bundledPluginRoot("openai")],
+        extensionIds: ["openrouter"],
+        roots: [bundledPluginRoot("openrouter")],
         testFileCount: expect.any(Number),
       },
       {
@@ -476,22 +476,22 @@ describe("scripts/test-extension.mjs", () => {
 
     const browserShardIndex = shards.findIndex((shard) => shard.extensionIds.includes("browser"));
     const imessageShardIndex = shards.findIndex((shard) => shard.extensionIds.includes("imessage"));
-    const mattermostShardIndex = shards.findIndex((shard) =>
-      shard.extensionIds.includes("mattermost"),
+    const discordShardIndex = shards.findIndex((shard) => shard.extensionIds.includes("discord"));
+    const openRouterShardIndex = shards.findIndex((shard) =>
+      shard.extensionIds.includes("openrouter"),
     );
-    const openAiShardIndex = shards.findIndex((shard) => shard.extensionIds.includes("openai"));
     const qaLabShardIndex = shards.findIndex((shard) => shard.extensionIds.includes("qa-lab"));
-    const whatsappShardIndex = shards.findIndex((shard) => shard.extensionIds.includes("whatsapp"));
+    const slackShardIndex = shards.findIndex((shard) => shard.extensionIds.includes("slack"));
 
     expect(browserShardIndex).toBeGreaterThanOrEqual(0);
     expect(imessageShardIndex).toBeGreaterThanOrEqual(0);
-    expect(mattermostShardIndex).toBeGreaterThanOrEqual(0);
-    expect(openAiShardIndex).toBeGreaterThanOrEqual(0);
+    expect(discordShardIndex).toBeGreaterThanOrEqual(0);
+    expect(openRouterShardIndex).toBeGreaterThanOrEqual(0);
     expect(qaLabShardIndex).toBeGreaterThanOrEqual(0);
-    expect(whatsappShardIndex).toBeGreaterThanOrEqual(0);
+    expect(slackShardIndex).toBeGreaterThanOrEqual(0);
     expect(browserShardIndex).not.toBe(qaLabShardIndex);
-    expect(imessageShardIndex).not.toBe(openAiShardIndex);
-    expect(mattermostShardIndex).not.toBe(whatsappShardIndex);
+    expect(imessageShardIndex).not.toBe(openRouterShardIndex);
+    expect(discordShardIndex).not.toBe(slackShardIndex);
   });
 
   it("runs extension batch config groups concurrently when requested", async () => {

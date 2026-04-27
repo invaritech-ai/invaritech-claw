@@ -1452,20 +1452,13 @@ describe("runGatewayUpdate", () => {
     const localAppData = path.join(tempDir, "local-app-data");
     const portableGitMingw = path.join(
       localAppData,
-      "OpenClaw",
+      "iclaw",
       "deps",
       "portable-git",
       "mingw64",
       "bin",
     );
-    const portableGitUsr = path.join(
-      localAppData,
-      "OpenClaw",
-      "deps",
-      "portable-git",
-      "usr",
-      "bin",
-    );
+    const portableGitUsr = path.join(localAppData, "iclaw", "deps", "portable-git", "usr", "bin");
     await fs.mkdir(portableGitMingw, { recursive: true });
     await fs.mkdir(portableGitUsr, { recursive: true });
 

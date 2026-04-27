@@ -33,9 +33,9 @@ describe("bundled-discovery-filter", () => {
     expect(resolveBundledStockDirectoryAllowlist()).toEqual(new Set(["ollama", "memory-core"]));
   });
 
-  it("uses ollama-only set for ICLAW_MINIMAL_ASSISTANT=1", () => {
+  it("uses ollama+openrouter set for ICLAW_MINIMAL_ASSISTANT=1", () => {
     process.env.ICLAW_MINIMAL_ASSISTANT = "1";
-    expect(resolveBundledStockDirectoryAllowlist()).toEqual(new Set(["ollama"]));
+    expect(resolveBundledStockDirectoryAllowlist()).toEqual(new Set(["ollama", "openrouter"]));
   });
 
   it("shouldSkipBundledStockDirectory respects allowlist only at stock root", () => {
@@ -68,7 +68,7 @@ describe("bundled-discovery-filter", () => {
     delete process.env.ICLAW_MINIMAL_ASSISTANT;
     expect(bundledStockAllowlistCacheKeyComponent(process.env)).toBe("all");
     process.env.ICLAW_MINIMAL_ASSISTANT = "1";
-    expect(bundledStockAllowlistCacheKeyComponent(process.env)).toBe("minimal:ollama");
+    expect(bundledStockAllowlistCacheKeyComponent(process.env)).toBe("minimal:ollama,openrouter");
     process.env.ICLAW_BUNDLED_PLUGIN_DIRS = "a,b";
     expect(bundledStockAllowlistCacheKeyComponent(process.env)).toBe("dirs:a,b");
   });

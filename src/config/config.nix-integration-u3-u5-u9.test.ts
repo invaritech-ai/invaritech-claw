@@ -1,5 +1,6 @@
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { withTempDir } from "../test-helpers/temp-dir.js";
 import {
   DEFAULT_GATEWAY_PORT,
   resolveConfigPathCandidate,
@@ -40,8 +41,11 @@ describe("Nix integration (U3, U5, U9)", () => {
   });
 
   describe("U5: CONFIG_PATH and STATE_DIR env var overrides", () => {
-    it("STATE_DIR defaults to ~/.openclaw when env not set", () => {
-      expect(resolveStateDir(envWith({ ICLAW_STATE_DIR: undefined }))).toMatch(/\.openclaw$/);
+    it("STATE_DIR defaults to ~/.iclaw when no legacy dirs exist (hermetic)", async () => {
+      await withTempDir({ prefix: "nix-state-dir-" }, async (home) => {
+        const env = envWith({ ICLAW_HOME: home, ICLAW_STATE_DIR: undefined });
+        expect(resolveStateDir(env, () => home)).toBe(path.join(home, ".iclaw"));
+      });
     });
 
     it("STATE_DIR respects ICLAW_STATE_DIR override", () => {
@@ -53,29 +57,23 @@ describe("Nix integration (U3, U5, U9)", () => {
     it("STATE_DIR respects ICLAW_HOME when state override is unset", () => {
       const customHome = path.join(path.sep, "custom", "home");
       expect(resolveStateDir(envWith({ ICLAW_HOME: customHome, ICLAW_STATE_DIR: undefined }))).toBe(
-        path.join(path.resolve(customHome), ".openclaw"),
+        path.join(path.resolve(customHome), ".iclaw"),
       );
     });
 
-    it("CONFIG_PATH defaults to ICLAW_HOME/.openclaw/openclaw.json", () => {
-      const customHome = path.join(path.sep, "custom", "home");
-      expect(
-        resolveConfigPathCandidate(
-          envWith({
-            ICLAW_HOME: customHome,
-            ICLAW_CONFIG_PATH: undefined,
-            ICLAW_STATE_DIR: undefined,
-          }),
-        ),
-      ).toBe(path.join(path.resolve(customHome), ".openclaw", "openclaw.json"));
-    });
-
-    it("CONFIG_PATH defaults to ~/.openclaw/openclaw.json when env not set", () => {
-      expect(
-        resolveConfigPathCandidate(
-          envWith({ ICLAW_CONFIG_PATH: undefined, ICLAW_STATE_DIR: undefined }),
-        ),
-      ).toMatch(/\.openclaw[\\/]openclaw\.json$/);
+    it("CONFIG_PATH defaults to ~/.iclaw/iclaw.json when overrides unset (hermetic)", async () => {
+      await withTempDir({ prefix: "nix-config-path-" }, async (home) => {
+        expect(
+          resolveConfigPathCandidate(
+            envWith({
+              ICLAW_HOME: home,
+              ICLAW_CONFIG_PATH: undefined,
+              ICLAW_STATE_DIR: undefined,
+            }),
+            () => home,
+          ),
+        ).toBe(path.join(home, ".iclaw", "iclaw.json"));
+      });
     });
 
     it("CONFIG_PATH respects ICLAW_CONFIG_PATH override", () => {
@@ -101,7 +99,7 @@ describe("Nix integration (U3, U5, U9)", () => {
           envWith({ ICLAW_STATE_DIR: "/custom/state", ICLAW_TEST_FAST: "1" }),
           () => path.join(path.sep, "tmp", "openclaw-config-home"),
         ),
-      ).toBe(path.join(path.resolve("/custom/state"), "openclaw.json"));
+      ).toBe(path.join(path.resolve("/custom/state"), "iclaw.json"));
     });
   });
 

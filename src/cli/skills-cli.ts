@@ -9,7 +9,7 @@ import {
 import { loadConfig } from "../config/config.js";
 import { defaultRuntime } from "../runtime.js";
 import { normalizeOptionalString } from "../shared/string-coerce.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
 import { formatSkillInfo, formatSkillsCheck, formatSkillsList } from "./skills-cli.format.js";
 
@@ -53,11 +53,7 @@ export function registerSkillsCli(program: Command) {
   const skills = program
     .command("skills")
     .description("List and inspect available skills")
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/skills", "docs.openclaw.ai/cli/skills")}\n`,
-    );
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/skills")}\n`);
 
   skills
     .command("search")

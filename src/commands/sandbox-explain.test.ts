@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { resolveBundledDocsUrl } from "../infra/product-branding.js";
 import { sandboxExplainCommand } from "./sandbox-explain.js";
 
 const SANDBOX_EXPLAIN_TEST_TIMEOUT_MS = process.platform === "win32" ? 45_000 : 30_000;
@@ -37,7 +38,7 @@ describe("sandbox explain command", () => {
 
     const out = logs.join("");
     const parsed = JSON.parse(out);
-    expect(parsed).toHaveProperty("docsUrl", "https://docs.openclaw.ai/sandbox");
+    expect(parsed).toHaveProperty("docsUrl", resolveBundledDocsUrl("/sandbox"));
     expect(parsed).toHaveProperty("sandbox.mode", "all");
     expect(parsed).toHaveProperty("sandbox.tools.sources.allow.source");
     expect(Array.isArray(parsed.fixIt)).toBe(true);

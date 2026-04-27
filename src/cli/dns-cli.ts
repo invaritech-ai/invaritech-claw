@@ -6,7 +6,7 @@ import { loadConfig } from "../config/config.js";
 import { pickPrimaryTailnetIPv4, pickPrimaryTailnetIPv6 } from "../infra/tailnet.js";
 import { getWideAreaZonePath, resolveWideAreaDiscoveryDomain } from "../infra/widearea-dns.js";
 import { defaultRuntime } from "../runtime.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { getTerminalTableWidth, renderTable } from "../terminal/table.js";
 import { theme } from "../terminal/theme.js";
 
@@ -103,10 +103,7 @@ export function registerDnsCli(program: Command) {
   const dns = program
     .command("dns")
     .description("DNS helpers for wide-area discovery (Tailscale + CoreDNS)")
-    .addHelpText(
-      "after",
-      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/dns", "docs.openclaw.ai/cli/dns")}\n`,
-    );
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/dns")}\n`);
 
   dns
     .command("setup")
@@ -252,7 +249,7 @@ export function registerDnsCli(program: Command) {
         defaultRuntime.log("");
         defaultRuntime.log(
           theme.muted(
-            "Note: enable discovery.wideArea.enabled in the active OpenClaw config ($ICLAW_CONFIG_PATH, default ~/.openclaw/openclaw.json) on the gateway and restart the gateway so it writes the DNS-SD zone.",
+            "Note: enable discovery.wideArea.enabled in the active iclaw config ($ICLAW_CONFIG_PATH, default ~/.iclaw/iclaw.json) on the gateway and restart the gateway so it writes the DNS-SD zone.",
           ),
         );
       }

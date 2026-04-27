@@ -4,7 +4,7 @@ import { defaultRuntime } from "../runtime.js";
 import { runSecurityAudit } from "../security/audit.js";
 import { fixSecurityFootguns } from "../security/fix.js";
 import { normalizeOptionalString } from "../shared/string-coerce.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { isRich, theme } from "../terminal/theme.js";
 import { shortenHomeInString, shortenHomePath } from "../utils.js";
 import { formatCliCommand } from "./command-format.js";
@@ -49,7 +49,7 @@ export function registerSecurityCli(program: Command) {
           ],
           ["openclaw security audit --fix", "Apply safe remediations and file-permission fixes."],
           ["openclaw security audit --json", "Output machine-readable JSON."],
-        ])}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/security", "docs.openclaw.ai/cli/security")}\n`,
+        ])}\n\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/security")}\n`,
     );
 
   security
@@ -99,7 +99,7 @@ export function registerSecurityCli(program: Command) {
       const muted = (text: string) => (rich ? theme.muted(text) : text);
 
       const lines: string[] = [];
-      lines.push(heading("OpenClaw security audit"));
+      lines.push(heading("iclaw security audit"));
       lines.push(muted(`Summary: ${formatSummary(report.summary)}`));
       lines.push(muted(`Run deeper: ${formatCliCommand("openclaw security audit --deep")}`));
       for (const diagnostic of secretDiagnostics) {

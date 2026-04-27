@@ -65,7 +65,7 @@ Need to install Node? See [Node setup](/install/node).
     openclaw gateway status
     ```
 
-    You should see the Gateway listening on port 18789.
+    You should see the Gateway listening on port 32768 (unless you set `gateway.port` or `ICLAW_GATEWAY_PORT`).
 
   </Step>
   <Step title="Open the dashboard">

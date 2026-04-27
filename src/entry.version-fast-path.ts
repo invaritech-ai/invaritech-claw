@@ -1,5 +1,6 @@
 import { isRootVersionInvocation } from "./cli/argv.js";
 import { resolveCliContainerTarget } from "./cli/container-target.js";
+import { PRODUCT_DISPLAY_NAME } from "./infra/product-branding.js";
 
 export function tryHandleRootVersionFastPath(
   argv: string[],
@@ -27,7 +28,7 @@ export function tryHandleRootVersionFastPath(
     deps.onError ??
     ((error: unknown) => {
       console.error(
-        "[openclaw] Failed to resolve version:",
+        `[${PRODUCT_DISPLAY_NAME}] Failed to resolve version:`,
         error instanceof Error ? (error.stack ?? error.message) : error,
       );
       process.exitCode = 1;
@@ -45,7 +46,11 @@ export function tryHandleRootVersionFastPath(
   resolveVersion()
     .then(({ VERSION, resolveCommitHash }) => {
       const commit = resolveCommitHash({ moduleUrl: deps.moduleUrl ?? import.meta.url });
-      output(commit ? `OpenClaw ${VERSION} (${commit})` : `OpenClaw ${VERSION}`);
+      output(
+        commit
+          ? `${PRODUCT_DISPLAY_NAME} ${VERSION} (${commit})`
+          : `${PRODUCT_DISPLAY_NAME} ${VERSION}`,
+      );
       exit(0);
     })
     .catch(onError);

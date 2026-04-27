@@ -1,8 +1,10 @@
 # iclaw Phase 0 — dependency inventory (ground truth)
 
-**Status:** Filled per [`plans/2026-04-26-iclaw-phase-0-inventory-plan.md`](plans/2026-04-26-iclaw-phase-0-inventory-plan.md). No product behavior changes in Phase 0.
+**Status:** Phase 0 complete (inventory only; no product behavior changes in that phase).
 
 **Product contract:** [`plans/2026-04-26-iclaw-hard-fork-design.md`](plans/2026-04-26-iclaw-hard-fork-design.md)
+
+**Housekeeping:** Superseded planning files were removed per [`plans/2026-04-25-iclaw-artifact-cleanup.md`](plans/2026-04-25-iclaw-artifact-cleanup.md).
 
 **How this was produced:** Subagent-driven development — three parallel **read-only** explore agents (Tasks 1–2, 3–4, 5–6), merged in the orchestration session with Tasks 7–9 applied here. Per `subagent-driven-development`, parallel **implementers** were not used to avoid doc merge conflicts.
 
@@ -350,4 +352,4 @@ find extensions -maxdepth 2 -name 'openclaw.plugin.json' | wc -l
 - [x] Inventory sections 1–6 filled from code exploration (subagent + merge).
 - [x] Decisions / open questions section complete (no empty placeholders).
 - [x] Verification commands recorded.
-- [x] Canonical doc: this file; plan checklists updated in [`plans/2026-04-26-iclaw-phase-0-inventory-plan.md`](plans/2026-04-26-iclaw-phase-0-inventory-plan.md).
+- [x] Canonical doc: this file. (Historical task checklist file removed as duplicate; see artifact cleanup plan.)

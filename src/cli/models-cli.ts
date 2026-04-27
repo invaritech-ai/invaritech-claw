@@ -1,7 +1,7 @@
 import type { Command } from "commander";
 import { modelsListCommand, modelsStatusCommand } from "../commands/models/list.js";
 import { defaultRuntime } from "../runtime.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
 import { resolveOptionFromCommand, runCommandWithRuntime } from "./cli-utils.js";
 
@@ -16,11 +16,7 @@ export function registerModelsCli(program: Command) {
     .option("--status-json", "Output JSON (alias for `models status --json`)", false)
     .option("--status-plain", "Plain output (alias for `models status --plain`)", false)
     .option("--agent <id>", "Agent id to inspect (overrides ICLAW_AGENT_DIR/PI_CODING_AGENT_DIR)")
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/models", "docs.openclaw.ai/cli/models")}\n`,
-    );
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/models")}\n`);
 
   models
     .command("list")

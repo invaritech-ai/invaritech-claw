@@ -6,7 +6,7 @@ read_when:
   - You are validating channel, model, gateway, or tool config blocks
 ---
 
-Core config reference for `~/.openclaw/openclaw.json`. For a task-oriented overview, see [Configuration](/gateway/configuration).
+Core config reference for **`iclaw.json`** under your state directory (default `~/.iclaw`; legacy `~/.openclaw` / `~/.clawdbot` may be used when `~/.iclaw` is absent unless **`ICLAW_STRICT_HOME`** is set). For a task-oriented overview, see [Configuration](/gateway/configuration).
 
 This page covers the main OpenClaw config surfaces and links out when a subsystem has its own deeper reference. It does **not** try to inline every channel/plugin-owned command catalog or every deep memory/QMD knob on one page.
 
@@ -22,7 +22,19 @@ Dedicated deep references:
 - [Slash Commands](/tools/slash-commands) for the current built-in + bundled command catalog
 - owning channel/plugin pages for channel-specific command surfaces
 
-Config format is **JSON5** (comments + trailing commas allowed). All fields are optional — OpenClaw uses safe defaults when omitted.
+Config format is **JSON5** (comments + trailing commas allowed). All fields are optional — safe defaults apply when omitted.
+
+### State directory and environment overrides
+
+| Variable             | Purpose                                                                                                                                                                                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ICLAW_STATE_DIR`    | Override state directory (sessions, credentials, default config path).                                                                                                                                                                                 |
+| `ICLAW_CONFIG_PATH`  | Explicit config file path.                                                                                                                                                                                                                             |
+| `ICLAW_HOME`         | Home root used to resolve default `~/.iclaw`.                                                                                                                                                                                                          |
+| `ICLAW_STRICT_HOME`  | When truthy (`1`, `true`, `yes`, `on`): never use legacy `~/.openclaw` / `~/.clawdbot` or legacy config filenames; canonical file is `<state>/iclaw.json`. Config load paths throw if that file is missing—run `iclaw setup` or create the file first. |
+| `ICLAW_GATEWAY_PORT` | Env override for gateway listen port (see `gateway.port` precedence below).                                                                                                                                                                            |
+
+Default gateway port when nothing else is set is **32768** (see `DEFAULT_GATEWAY_PORT` in `src/config/paths.ts`).
 
 ---
 
@@ -239,7 +251,7 @@ See [Plugins](/tools/plugin).
 {
   gateway: {
     mode: "local", // local | remote
-    port: 18789,
+    port: 32768,
     bind: "loopback",
     auth: {
       mode: "token", // none | token | password | trusted-proxy
@@ -270,7 +282,7 @@ See [Plugins](/tools/plugin).
       // dangerouslyDisableDeviceAuth: false,
     },
     remote: {
-      url: "ws://gateway.tailnet:18789",
+      url: "ws://gateway.tailnet:32768",
       transport: "ssh", // ssh | direct
       token: "your-token",
       // password: "your-password",
@@ -299,10 +311,10 @@ See [Plugins](/tools/plugin).
 <Accordion title="Gateway field details">
 
 - `mode`: `local` (run gateway) or `remote` (connect to remote gateway). Gateway refuses to start unless `local`.
-- `port`: single multiplexed port for WS + HTTP. Precedence: `--port` > `ICLAW_GATEWAY_PORT` > `gateway.port` > `18789`.
+- `port`: single multiplexed port for WS + HTTP. Precedence: `--port` > `ICLAW_GATEWAY_PORT` > `gateway.port` > **`32768`** (iclaw default).
 - `bind`: `auto`, `loopback` (default), `lan` (`0.0.0.0`), `tailnet` (Tailscale IP only), or `custom`.
 - **Legacy bind aliases**: use bind mode values in `gateway.bind` (`auto`, `loopback`, `lan`, `tailnet`, `custom`), not host aliases (`0.0.0.0`, `127.0.0.1`, `localhost`, `::`, `::1`).
-- **Docker note**: the default `loopback` bind listens on `127.0.0.1` inside the container. With Docker bridge networking (`-p 18789:18789`), traffic arrives on `eth0`, so the gateway is unreachable. Use `--network host`, or set `bind: "lan"` (or `bind: "custom"` with `customBindHost: "0.0.0.0"`) to listen on all interfaces.
+- **Docker note**: the default `loopback` bind listens on `127.0.0.1` inside the container. With Docker bridge networking (e.g. `-p 32768:32768` when using the default port), traffic arrives on `eth0`, so the gateway is unreachable. Use `--network host`, or set `bind: "lan"` (or `bind: "custom"` with `customBindHost: "0.0.0.0"`) to listen on all interfaces.
 - **Auth**: required by default. Non-loopback binds require gateway auth. In practice that means a shared token/password or an identity-aware reverse proxy with `gateway.auth.mode: "trusted-proxy"`. Onboarding wizard generates a token by default.
 - If both `gateway.auth.token` and `gateway.auth.password` are configured (including SecretRefs), set `gateway.auth.mode` explicitly to `token` or `password`. Startup and service install/repair flows fail when both are configured and mode is unset.
 - `gateway.auth.mode: "none"`: explicit no-auth mode. Use only for trusted local loopback setups; this is intentionally not offered by onboarding prompts.
@@ -501,7 +513,7 @@ Validation and safety notes:
       topic: "projects/<project-id>/topics/gog-gmail-watch",
       subscription: "gog-gmail-watch-push",
       pushToken: "shared-push-token",
-      hookUrl: "http://127.0.0.1:18789/hooks/gmail",
+      hookUrl: "http://127.0.0.1:32768/hooks/gmail",
       includeBody: true,
       maxBytes: 20000,
       renewEveryMinutes: 720,
@@ -1099,7 +1111,7 @@ Split config into multiple files:
 ```json5
 // ~/.openclaw/openclaw.json
 {
-  gateway: { port: 18789 },
+  gateway: { port: 32768 },
   agents: { $include: "./agents.json5" },
   broadcast: {
     $include: ["./clients/mueller.json5", "./clients/schmidt.json5"],

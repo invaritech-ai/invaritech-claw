@@ -35,7 +35,6 @@ import { createExtensionMemoryVitestConfig } from "./vitest/vitest.extension-mem
 import { createExtensionMessagingVitestConfig } from "./vitest/vitest.extension-messaging.config.ts";
 import { createExtensionMiscVitestConfig } from "./vitest/vitest.extension-misc.config.ts";
 import { createExtensionMsTeamsVitestConfig } from "./vitest/vitest.extension-msteams.config.ts";
-import { createExtensionProviderOpenAiVitestConfig } from "./vitest/vitest.extension-provider-openai.config.ts";
 import { createExtensionProvidersVitestConfig } from "./vitest/vitest.extension-providers.config.ts";
 import { createExtensionQaVitestConfig } from "./vitest/vitest.extension-qa.config.ts";
 import { createExtensionSignalVitestConfig } from "./vitest/vitest.extension-signal.config.ts";
@@ -229,7 +228,6 @@ describe("scoped vitest configs", () => {
   const defaultExtensionMiscConfig = createExtensionMiscVitestConfig({});
   const defaultExtensionMsTeamsConfig = createExtensionMsTeamsVitestConfig({});
   const defaultExtensionMessagingConfig = createExtensionMessagingVitestConfig({});
-  const defaultExtensionProviderOpenAiConfig = createExtensionProviderOpenAiVitestConfig({});
   const defaultExtensionProvidersConfig = createExtensionProvidersVitestConfig({});
   const defaultExtensionQaConfig = createExtensionQaVitestConfig({});
   const defaultExtensionSignalConfig = createExtensionSignalVitestConfig({});
@@ -276,7 +274,6 @@ describe("scoped vitest configs", () => {
       defaultExtensionDiscordConfig,
       defaultExtensionImessageConfig,
       defaultExtensionLineConfig,
-      defaultExtensionProviderOpenAiConfig,
       defaultExtensionProvidersConfig,
       defaultExtensionSignalConfig,
       defaultExtensionSlackConfig,
@@ -438,13 +435,8 @@ describe("scoped vitest configs", () => {
   it("normalizes extension provider include patterns relative to the scoped dir", () => {
     expect(defaultExtensionProvidersConfig.test?.dir).toBe(path.join(process.cwd(), "extensions"));
     expect(defaultExtensionProvidersConfig.test?.include).toEqual(
-      expect.arrayContaining(["xai/**/*.test.ts", "google/**/*.test.ts"]),
+      expect.arrayContaining(["ollama/**/*.test.ts", "openrouter/**/*.test.ts"]),
     );
-    expect(defaultExtensionProvidersConfig.test?.include).not.toContain("openai/**/*.test.ts");
-    expect(defaultExtensionProviderOpenAiConfig.test?.dir).toBe(
-      path.join(process.cwd(), "extensions"),
-    );
-    expect(defaultExtensionProviderOpenAiConfig.test?.include).toEqual(["openai/**/*.test.ts"]);
   });
 
   it("normalizes extension messaging include patterns relative to the scoped dir", () => {
@@ -556,7 +548,7 @@ describe("scoped vitest configs", () => {
     const extensionExcludes = defaultExtensionsConfig.test?.exclude ?? [];
     expect(
       extensionExcludes.some((pattern) =>
-        path.matchesGlob("openai/openai-codex-provider.test.ts", pattern),
+        path.matchesGlob("openrouter/provider-runtime.contract.test.ts", pattern),
       ),
     ).toBe(true);
   });
@@ -636,12 +628,12 @@ describe("scoped vitest configs", () => {
   it("keeps broad dedicated extension groups out of the shared extensions lane", () => {
     const extensionExcludes = defaultExtensionsConfig.test?.exclude ?? [];
     expect(defaultExtensionBrowserConfig.test?.include).toContain("browser/**/*.test.ts");
-    expect(defaultExtensionMediaConfig.test?.include).toContain("vydra/**/*.test.ts");
+    expect(defaultExtensionMediaConfig.test?.include).toContain("runway/**/*.test.ts");
     expect(defaultExtensionMiscConfig.test?.include).toContain("firecrawl/**/*.test.ts");
     expect(defaultExtensionQaConfig.test?.include).toContain("qa-lab/**/*.test.ts");
     for (const file of [
       "browser/src/browser/pw.test.ts",
-      "vydra/src/index.test.ts",
+      "runway/video-generation-provider.test.ts",
       "firecrawl/src/index.test.ts",
       "qa-lab/src/index.test.ts",
     ]) {

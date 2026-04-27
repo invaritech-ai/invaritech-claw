@@ -10,7 +10,6 @@ const tsFilesCache = new Map<string, string[]>();
 const BUNDLED_TYPED_HOOK_REGISTRATION_FILES = [
   "extensions/acpx/index.ts",
   "extensions/active-memory/index.ts",
-  "extensions/codex/index.ts",
   "extensions/diffs/src/plugin.ts",
   "extensions/discord/subagent-hooks-api.ts",
   "extensions/feishu/subagent-hooks-api.ts",
@@ -23,7 +22,6 @@ const BUNDLED_TYPED_HOOK_REGISTRATION_FILES = [
 const BUNDLED_TYPED_HOOK_REGISTRATION_GUARDS = {
   "extensions/acpx/index.ts": ["reply_dispatch"],
   "extensions/active-memory/index.ts": ["before_prompt_build"],
-  "extensions/codex/index.ts": ["inbound_claim"],
   "extensions/diffs/src/plugin.ts": ["before_prompt_build"],
   "extensions/discord/subagent-hooks-api.ts": [
     "subagent_delivery_target",
@@ -50,7 +48,6 @@ const BUNDLED_TYPED_HOOK_REGISTRATION_GUARDS = {
 >;
 const BUNDLED_LIVE_CONFIG_HOOK_GUARDS = {
   "extensions/active-memory/index.ts": ["resolveLivePluginConfigObject(", '"active-memory"'],
-  "extensions/codex/index.ts": ["resolveLivePluginConfigObject(", '"codex"'],
   "extensions/diffs/src/plugin.ts": [
     "resolveLivePluginConfigObject(",
     '"diffs"',
@@ -70,32 +67,10 @@ const BUNDLED_LIVE_CONFIG_HOOK_GUARDS = {
   ],
 } as const satisfies Record<string, readonly string[]>;
 const BUNDLED_LIVE_CONFIG_PROVIDER_GUARDS = {
-  "extensions/amazon-bedrock/register.sync.runtime.ts": [
-    "resolvePluginConfigObject(",
-    "const startupPluginConfig = (api.pluginConfig ?? {})",
-    "const currentPluginConfig = resolveCurrentPluginConfig(ctx.config);",
-    "const currentGuardrail = resolveCurrentPluginConfig(config)?.guardrail;",
-  ],
-  "extensions/codex/provider.ts": [
-    "resolvePluginConfigObject(",
-    "const runtimePluginConfig = resolvePluginConfigObject(ctx.config, CODEX_PROVIDER_ID);",
-    "const pluginConfig = runtimePluginConfig ?? (ctx.config ? undefined : options.pluginConfig);",
-  ],
-  "extensions/github-copilot/index.ts": [
-    "resolvePluginConfigObject(",
-    'const runtimePluginConfig = resolvePluginConfigObject(config, "github-copilot");',
-    "return config ? {} : startupPluginConfig;",
-  ],
   "extensions/ollama/index.ts": [
     "resolvePluginConfigObject(",
     'const runtimePluginConfig = resolvePluginConfigObject(config, "ollama");',
     "return config ? {} : startupPluginConfig;",
-  ],
-  "extensions/openai/index.ts": [
-    "resolvePluginConfigObject(",
-    'const runtimePluginConfig = resolvePluginConfigObject(ctx.config, "openai");',
-    "runtimePluginConfig ??",
-    "ctx.config ? undefined : (api.pluginConfig as Record<string, unknown>)",
   ],
 } as const satisfies Record<string, readonly string[]>;
 const BUNDLED_STARTUP_GATED_HOOK_FORBIDDEN_SNIPPETS = {

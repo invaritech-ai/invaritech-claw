@@ -249,60 +249,6 @@ importers:
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
-  extensions/amazon-bedrock:
-    dependencies:
-      '@aws-sdk/client-bedrock':
-        specifier: 3.1034.0
-        version: 3.1034.0
-      '@aws-sdk/client-bedrock-runtime':
-        specifier: 3.1034.0
-        version: 3.1034.0
-      '@aws-sdk/credential-provider-node':
-        specifier: 3.972.34
-        version: 3.972.34
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/amazon-bedrock-mantle:
-    dependencies:
-      '@anthropic-ai/sdk':
-        specifier: 0.90.0
-        version: 0.90.0(zod@4.3.6)
-      '@aws/bedrock-token-generator':
-        specifier: ^1.1.0
-        version: 1.1.0
-      '@mariozechner/pi-ai':
-        specifier: 0.70.2
-        version: 0.70.2(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(ws@8.20.0)(zod@4.3.6)
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/anthropic:
-    dependencies:
-      '@mariozechner/pi-ai':
-        specifier: 0.70.2
-        version: 0.70.2(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(ws@8.20.0)(zod@4.3.6)
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/anthropic-vertex:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/arcee:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
   extensions/bluebubbles:
     devDependencies:
       '@openclaw/plugin-sdk':
@@ -360,66 +306,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
-  extensions/byteplus:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/chutes:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/cloudflare-ai-gateway:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/codex:
-    dependencies:
-      '@mariozechner/pi-coding-agent':
-        specifier: 0.70.2
-        version: 0.70.2(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(ws@8.20.0)(zod@4.3.6)
-      ajv:
-        specifier: ^8.18.0
-        version: 8.18.0
-      ws:
-        specifier: ^8.20.0
-        version: 8.20.0
-      zod:
-        specifier: ^4.3.6
-        version: 4.3.6
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/comfy:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/copilot-proxy:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
   extensions/deepgram:
     dependencies:
       ws:
         specifier: ^8.20.0
         version: 8.20.0
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/deepseek:
     devDependencies:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
@@ -540,12 +431,6 @@ importers:
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
-  extensions/fal:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
   extensions/feishu:
     dependencies:
       '@larksuiteoapi/node-sdk':
@@ -567,42 +452,6 @@ importers:
       typebox:
         specifier: 1.1.31
         version: 1.1.31
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/fireworks:
-    dependencies:
-      '@mariozechner/pi-ai':
-        specifier: 0.70.2
-        version: 0.70.2(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(ws@8.20.0)(zod@4.3.6)
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/github-copilot:
-    dependencies:
-      '@clack/prompts':
-        specifier: ^1.2.0
-        version: 1.2.0
-      '@mariozechner/pi-ai':
-        specifier: 0.70.2
-        version: 0.70.2(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(ws@8.20.0)(zod@4.3.6)
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/google:
-    dependencies:
-      '@google/genai':
-        specifier: ^1.50.1
-        version: 1.50.1(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))
-      '@mariozechner/pi-ai':
-        specifier: 0.70.2
-        version: 0.70.2(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(ws@8.20.0)(zod@4.3.6)
     devDependencies:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
@@ -649,12 +498,6 @@ importers:
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
-  extensions/huggingface:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
   extensions/image-generation-core:
     devDependencies:
       '@openclaw/plugin-sdk':
@@ -673,22 +516,6 @@ importers:
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
-  extensions/kilocode:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/kimi-coding:
-    dependencies:
-      '@mariozechner/pi-ai':
-        specifier: 0.70.2
-        version: 0.70.2(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(ws@8.20.0)(zod@4.3.6)
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
   extensions/line:
     dependencies:
       '@line/bot-sdk':
@@ -702,12 +529,6 @@ importers:
         specifier: workspace:*
         version: link:../..
 
-  extensions/litellm:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
   extensions/llm-task:
     dependencies:
       ajv:
@@ -720,12 +541,6 @@ importers:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-
-  extensions/lmstudio:
-    dependencies:
-      '@mariozechner/pi-ai':
-        specifier: 0.70.2
-        version: 0.70.2(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(ws@8.20.0)(zod@4.3.6)
 
   extensions/lobster:
     dependencies:
@@ -851,34 +666,6 @@ importers:
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
-  extensions/microsoft-foundry:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/minimax:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/mistral:
-    dependencies:
-      ws:
-        specifier: ^8.20.0
-        version: 8.20.0
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/moonshot:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
   extensions/msteams:
     dependencies:
       '@azure/identity':
@@ -942,12 +729,6 @@ importers:
         specifier: workspace:*
         version: link:../..
 
-  extensions/nvidia:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
   extensions/ollama:
     dependencies:
       '@mariozechner/pi-ai':
@@ -962,31 +743,6 @@ importers:
         version: link:../../packages/plugin-sdk
 
   extensions/open-prose:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/openai:
-    dependencies:
-      '@mariozechner/pi-ai':
-        specifier: 0.70.2
-        version: 0.70.2(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(ws@8.20.0)(zod@4.3.6)
-      ws:
-        specifier: ^8.20.0
-        version: 8.20.0
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/opencode:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/opencode-go:
     devDependencies:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
@@ -1068,12 +824,6 @@ importers:
         specifier: workspace:*
         version: link:../..
 
-  extensions/qianfan:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
   extensions/qqbot:
     dependencies:
       '@tencent-connect/qqbot-connector':
@@ -1102,12 +852,6 @@ importers:
         specifier: workspace:*
         version: link:../..
 
-  extensions/qwen:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
   extensions/runway:
     devDependencies:
       '@openclaw/plugin-sdk':
@@ -1115,12 +859,6 @@ importers:
         version: link:../../packages/plugin-sdk
 
   extensions/searxng:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/sglang:
     devDependencies:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
@@ -1167,23 +905,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
-  extensions/stepfun:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
   extensions/synology-chat:
     dependencies:
       zod:
         specifier: ^4.3.6
         version: 4.3.6
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/synthetic:
     devDependencies:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
@@ -1221,12 +947,6 @@ importers:
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
-  extensions/tencent:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
   extensions/tlon:
     dependencies:
       '@aws-sdk/client-s3':
@@ -1248,12 +968,6 @@ importers:
       iclaw:
         specifier: workspace:*
         version: link:../..
-
-  extensions/together:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
 
   extensions/tokenjuice:
     dependencies:
@@ -1281,25 +995,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
-  extensions/venice:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/vercel-ai-gateway:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
   extensions/video-generation-core:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/vllm:
     devDependencies:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
@@ -1324,19 +1020,7 @@ importers:
         specifier: workspace:*
         version: link:../..
 
-  extensions/volcengine:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
   extensions/voyage:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/vydra:
     devDependencies:
       '@openclaw/plugin-sdk':
         specifier: workspace:*
@@ -1373,34 +1057,6 @@ importers:
       iclaw:
         specifier: workspace:*
         version: link:../..
-
-  extensions/xai:
-    dependencies:
-      '@mariozechner/pi-ai':
-        specifier: 0.70.2
-        version: 0.70.2(@modelcontextprotocol/sdk@1.29.0(zod@4.3.6))(ws@8.20.0)(zod@4.3.6)
-      typebox:
-        specifier: 1.1.31
-        version: 1.1.31
-      ws:
-        specifier: ^8.20.0
-        version: 8.20.0
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/xiaomi:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
-
-  extensions/zai:
-    devDependencies:
-      '@openclaw/plugin-sdk':
-        specifier: workspace:*
-        version: link:../../packages/plugin-sdk
 
   extensions/zalo:
     dependencies:
@@ -1546,14 +1202,6 @@ packages:
     resolution: {integrity: sha512-49igCAONPtL0ZkWWIs/6gWAq3CjWRISbqtFi5ysDljAGaZXMnPigKMly1CuOGlw/zIPaWbIjk2bGhyLtz2AuXg==}
     engines: {node: '>=20.0.0'}
 
-  '@aws-sdk/client-bedrock@3.1034.0':
-    resolution: {integrity: sha512-eijbIKX20nJefh7Ppdf4gf0pJ3r72FWDPBS141+EG0ftLmBDCjkxUoYpXFR/ErpKTAP62C+FvMeBNY6udNQDQw==}
-    engines: {node: '>=20.0.0'}
-
-  '@aws-sdk/client-cognito-identity@3.1034.0':
-    resolution: {integrity: sha512-GA2Xo1fNp4qnqTUI/IRGj/QmkQDXZyer3m/nu8WO7PgT3I+8/yWw2Vzw81HjAhOiF//YjNmpn10uHVg3ViSCRA==}
-    engines: {node: '>=20.0.0'}
-
   '@aws-sdk/client-s3@3.1034.0':
     resolution: {integrity: sha512-r91IZKPKuRlpCBsEmz9qnWrYxuHD0jsQv1p9UGNasFpcuPo1OnfwIB2ClXtqdXKYUvubXCwn7KBObTVnnvYvAA==}
     engines: {node: '>=20.0.0'}
@@ -1564,10 +1212,6 @@ packages:
 
   '@aws-sdk/crc64-nvme@3.972.7':
     resolution: {integrity: sha512-QUagVVBbC8gODCF6e1aV0mE2TXWB9Opz4k8EJFdNrujUVQm5R4AjJa1mpOqzwOuROBzqJU9zawzig7M96L8Ejg==}
-    engines: {node: '>=20.0.0'}
-
-  '@aws-sdk/credential-provider-cognito-identity@3.972.26':
-    resolution: {integrity: sha512-eJyE408dpRkr8XSD1TjTQfOCK1r2o+W6vhsGHiL0PmJKr6LgCEP73epBbWbw6ZrJLKxlUYP44nVzY7cmwVlUgw==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/credential-provider-env@3.972.29':
@@ -1600,10 +1244,6 @@ packages:
 
   '@aws-sdk/credential-provider-web-identity@3.972.33':
     resolution: {integrity: sha512-RazhlN0YAkna2T2p2v4YuuRlVBVRNo8V0SL+9JePTWDndEUAeOBAjYeQfAMbtDyCh120+zA0Op6V0jS4dw2+iw==}
-    engines: {node: '>=20.0.0'}
-
-  '@aws-sdk/credential-providers@3.1034.0':
-    resolution: {integrity: sha512-xTmpZN3i4cZEgjJNQhA8CYmxKtW95ZAhh9wINe2b6ffQzbaXBLkuvfz/fhWEezl4P8uv2qWO8J+DEDms6wqL9g==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/eventstream-handler-node@3.972.14':
@@ -1713,10 +1353,6 @@ packages:
   '@aws-sdk/xml-builder@3.972.18':
     resolution: {integrity: sha512-BMDNVG1ETXRhl1tnisQiYBef3RShJ1kfZA7x7afivTFMLirfHNTb6U71K569HNXhSXbQZsweHvSDZ6euBw8hPA==}
     engines: {node: '>=20.0.0'}
-
-  '@aws/bedrock-token-generator@1.1.0':
-    resolution: {integrity: sha512-i+DkWnfdA4j4sffy9dI4k3OGoOWqN8CTGdtO4IZ3c0kpKYFr6KyqzqLQmoRNrF3ACFcWj6u+J6cbBQ97j9wx5w==}
-    engines: {node: '>=16.0.0'}
 
   '@aws/lambda-invoke-store@0.2.4':
     resolution: {integrity: sha512-iY8yvjE0y651BixKNPgmv1WrQc+GZ142sb0z4gYnChDDY2YqI4P/jsSopBWrKfAt7LOJAkOXt7rC/hms+WclQQ==}
@@ -8096,95 +7732,6 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-bedrock@3.1034.0':
-    dependencies:
-      '@aws-crypto/sha256-browser': 5.2.0
-      '@aws-crypto/sha256-js': 5.2.0
-      '@aws-sdk/core': 3.974.3
-      '@aws-sdk/credential-provider-node': 3.972.34
-      '@aws-sdk/middleware-host-header': 3.972.10
-      '@aws-sdk/middleware-logger': 3.972.10
-      '@aws-sdk/middleware-recursion-detection': 3.972.11
-      '@aws-sdk/middleware-user-agent': 3.972.33
-      '@aws-sdk/region-config-resolver': 3.972.13
-      '@aws-sdk/token-providers': 3.1034.0
-      '@aws-sdk/types': 3.973.8
-      '@aws-sdk/util-endpoints': 3.996.8
-      '@aws-sdk/util-user-agent-browser': 3.972.10
-      '@aws-sdk/util-user-agent-node': 3.973.19
-      '@smithy/config-resolver': 4.4.17
-      '@smithy/core': 3.23.16
-      '@smithy/fetch-http-handler': 5.3.17
-      '@smithy/hash-node': 4.2.14
-      '@smithy/invalid-dependency': 4.2.14
-      '@smithy/middleware-content-length': 4.2.14
-      '@smithy/middleware-endpoint': 4.4.31
-      '@smithy/middleware-retry': 4.5.4
-      '@smithy/middleware-serde': 4.2.19
-      '@smithy/middleware-stack': 4.2.14
-      '@smithy/node-config-provider': 4.3.14
-      '@smithy/node-http-handler': 4.6.0
-      '@smithy/protocol-http': 5.3.14
-      '@smithy/smithy-client': 4.12.12
-      '@smithy/types': 4.14.1
-      '@smithy/url-parser': 4.2.14
-      '@smithy/util-base64': 4.3.2
-      '@smithy/util-body-length-browser': 4.2.2
-      '@smithy/util-body-length-node': 4.2.3
-      '@smithy/util-defaults-mode-browser': 4.3.48
-      '@smithy/util-defaults-mode-node': 4.2.53
-      '@smithy/util-endpoints': 3.4.2
-      '@smithy/util-middleware': 4.2.14
-      '@smithy/util-retry': 4.3.3
-      '@smithy/util-utf8': 4.2.2
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - aws-crt
-
-  '@aws-sdk/client-cognito-identity@3.1034.0':
-    dependencies:
-      '@aws-crypto/sha256-browser': 5.2.0
-      '@aws-crypto/sha256-js': 5.2.0
-      '@aws-sdk/core': 3.974.3
-      '@aws-sdk/credential-provider-node': 3.972.34
-      '@aws-sdk/middleware-host-header': 3.972.10
-      '@aws-sdk/middleware-logger': 3.972.10
-      '@aws-sdk/middleware-recursion-detection': 3.972.11
-      '@aws-sdk/middleware-user-agent': 3.972.33
-      '@aws-sdk/region-config-resolver': 3.972.13
-      '@aws-sdk/types': 3.973.8
-      '@aws-sdk/util-endpoints': 3.996.8
-      '@aws-sdk/util-user-agent-browser': 3.972.10
-      '@aws-sdk/util-user-agent-node': 3.973.19
-      '@smithy/config-resolver': 4.4.17
-      '@smithy/core': 3.23.16
-      '@smithy/fetch-http-handler': 5.3.17
-      '@smithy/hash-node': 4.2.14
-      '@smithy/invalid-dependency': 4.2.14
-      '@smithy/middleware-content-length': 4.2.14
-      '@smithy/middleware-endpoint': 4.4.31
-      '@smithy/middleware-retry': 4.5.4
-      '@smithy/middleware-serde': 4.2.19
-      '@smithy/middleware-stack': 4.2.14
-      '@smithy/node-config-provider': 4.3.14
-      '@smithy/node-http-handler': 4.6.0
-      '@smithy/protocol-http': 5.3.14
-      '@smithy/smithy-client': 4.12.12
-      '@smithy/types': 4.14.1
-      '@smithy/url-parser': 4.2.14
-      '@smithy/util-base64': 4.3.2
-      '@smithy/util-body-length-browser': 4.2.2
-      '@smithy/util-body-length-node': 4.2.3
-      '@smithy/util-defaults-mode-browser': 4.3.48
-      '@smithy/util-defaults-mode-node': 4.2.53
-      '@smithy/util-endpoints': 3.4.2
-      '@smithy/util-middleware': 4.2.14
-      '@smithy/util-retry': 4.3.3
-      '@smithy/util-utf8': 4.2.2
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - aws-crt
-
   '@aws-sdk/client-s3@3.1034.0':
     dependencies:
       '@aws-crypto/sha1-browser': 5.2.0
@@ -8266,16 +7813,6 @@ snapshots:
     dependencies:
       '@smithy/types': 4.14.1
       tslib: 2.8.1
-
-  '@aws-sdk/credential-provider-cognito-identity@3.972.26':
-    dependencies:
-      '@aws-sdk/nested-clients': 3.997.1
-      '@aws-sdk/types': 3.973.8
-      '@smithy/property-provider': 4.2.14
-      '@smithy/types': 4.14.1
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - aws-crt
 
   '@aws-sdk/credential-provider-env@3.972.29':
     dependencies:
@@ -8376,31 +7913,6 @@ snapshots:
       '@aws-sdk/types': 3.973.8
       '@smithy/property-provider': 4.2.14
       '@smithy/shared-ini-file-loader': 4.4.9
-      '@smithy/types': 4.14.1
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - aws-crt
-
-  '@aws-sdk/credential-providers@3.1034.0':
-    dependencies:
-      '@aws-sdk/client-cognito-identity': 3.1034.0
-      '@aws-sdk/core': 3.974.3
-      '@aws-sdk/credential-provider-cognito-identity': 3.972.26
-      '@aws-sdk/credential-provider-env': 3.972.29
-      '@aws-sdk/credential-provider-http': 3.972.31
-      '@aws-sdk/credential-provider-ini': 3.972.33
-      '@aws-sdk/credential-provider-login': 3.972.33
-      '@aws-sdk/credential-provider-node': 3.972.34
-      '@aws-sdk/credential-provider-process': 3.972.29
-      '@aws-sdk/credential-provider-sso': 3.972.33
-      '@aws-sdk/credential-provider-web-identity': 3.972.33
-      '@aws-sdk/nested-clients': 3.997.1
-      '@aws-sdk/types': 3.973.8
-      '@smithy/config-resolver': 4.4.17
-      '@smithy/core': 3.23.16
-      '@smithy/credential-provider-imds': 4.2.14
-      '@smithy/node-config-provider': 4.3.14
-      '@smithy/property-provider': 4.2.14
       '@smithy/types': 4.14.1
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -8663,20 +8175,6 @@ snapshots:
       '@smithy/types': 4.14.1
       fast-xml-parser: 5.7.0
       tslib: 2.8.1
-
-  '@aws/bedrock-token-generator@1.1.0':
-    dependencies:
-      '@aws-sdk/credential-providers': 3.1034.0
-      '@aws-sdk/util-format-url': 3.972.10
-      '@smithy/config-resolver': 4.4.17
-      '@smithy/hash-node': 4.2.14
-      '@smithy/invalid-dependency': 4.2.14
-      '@smithy/node-config-provider': 4.3.14
-      '@smithy/protocol-http': 5.3.14
-      '@smithy/signature-v4': 5.3.14
-      '@smithy/types': 4.14.1
-    transitivePeerDependencies:
-      - aws-crt
 
   '@aws/lambda-invoke-store@0.2.4': {}
 

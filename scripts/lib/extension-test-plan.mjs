@@ -15,10 +15,7 @@ import { isMemoryExtensionRoot } from "../../test/vitest/vitest.extension-memory
 import { isMessagingExtensionRoot } from "../../test/vitest/vitest.extension-messaging-paths.mjs";
 import { isMiscExtensionRoot } from "../../test/vitest/vitest.extension-misc-paths.mjs";
 import { isMsTeamsExtensionRoot } from "../../test/vitest/vitest.extension-msteams-paths.mjs";
-import {
-  isProviderExtensionRoot,
-  isProviderOpenAiExtensionRoot,
-} from "../../test/vitest/vitest.extension-provider-paths.mjs";
+import { isProviderExtensionRoot } from "../../test/vitest/vitest.extension-provider-paths.mjs";
 import { isQaExtensionRoot } from "../../test/vitest/vitest.extension-qa-paths.mjs";
 import { isTelegramExtensionRoot } from "../../test/vitest/vitest.extension-telegram-paths.mjs";
 import { isVoiceCallExtensionRoot } from "../../test/vitest/vitest.extension-voice-call-paths.mjs";
@@ -49,7 +46,6 @@ const EXTENSION_TEST_COST_MULTIPLIERS = {
   "test/vitest/vitest.extension-messaging.config.ts": 0.4,
   "test/vitest/vitest.extension-misc.config.ts": 0.7,
   "test/vitest/vitest.extension-msteams.config.ts": 0.5,
-  "test/vitest/vitest.extension-provider-openai.config.ts": 1.35,
   "test/vitest/vitest.extension-providers.config.ts": 0.5,
   "test/vitest/vitest.extension-qa.config.ts": 0.65,
   "test/vitest/vitest.extension-slack.config.ts": 0.45,
@@ -164,7 +160,6 @@ export function resolveExtensionTestPlan(params = {}) {
   const usesMemoryConfig = roots.some((root) => isMemoryExtensionRoot(root));
   const usesMsTeamsConfig = roots.some((root) => isMsTeamsExtensionRoot(root));
   const usesMessagingConfig = roots.some((root) => isMessagingExtensionRoot(root));
-  const usesProviderOpenAiConfig = roots.some((root) => isProviderOpenAiExtensionRoot(root));
   const usesProviderConfig = roots.some((root) => isProviderExtensionRoot(root));
   const config = splitChannelShard
     ? splitChannelShard.config
@@ -206,11 +201,9 @@ export function resolveExtensionTestPlan(params = {}) {
                                         ? "test/vitest/vitest.extension-whatsapp.config.ts"
                                         : usesZaloConfig
                                           ? "test/vitest/vitest.extension-zalo.config.ts"
-                                          : usesProviderOpenAiConfig
-                                            ? "test/vitest/vitest.extension-provider-openai.config.ts"
-                                            : usesProviderConfig
-                                              ? "test/vitest/vitest.extension-providers.config.ts"
-                                              : "test/vitest/vitest.extensions.config.ts";
+                                          : usesProviderConfig
+                                            ? "test/vitest/vitest.extension-providers.config.ts"
+                                            : "test/vitest/vitest.extensions.config.ts";
   const testFileCount = roots.reduce(
     (sum, root) => sum + countTestFiles(path.join(repoRoot, root)),
     0,

@@ -12,6 +12,7 @@ const resolveCommitHashMock = vi.hoisted(() => vi.fn<() => string | null>(() => 
 
 vi.mock("../../terminal/links.js", () => ({
   formatDocsLink: formatDocsLinkMock,
+  formatRootCliDocsFooterLink: () => "https://mock-docs/cli",
 }));
 
 vi.mock("../../terminal/theme.js", () => ({
@@ -128,17 +129,17 @@ describe("configureProgramHelp", () => {
     const help = captureHelpOutput(program);
     expect(help).toContain("BANNER-LINE");
     expect(help).toContain("Examples:");
-    expect(help).toContain("https://docs.openclaw.ai/cli");
+    expect(help).toContain("https://mock-docs/cli");
   });
 
   it("prints version and exits immediately when version flags are present", () => {
     process.argv = ["node", "iclaw", "--version"];
-    expectVersionExit({ expectedVersion: "OpenClaw 9.9.9-test (abc1234)" });
+    expectVersionExit({ expectedVersion: "iclaw 9.9.9-test (abc1234)" });
   });
 
   it("prints version and exits immediately without commit metadata", () => {
     process.argv = ["node", "iclaw", "--version"];
     resolveCommitHashMock.mockReturnValue(null);
-    expectVersionExit({ expectedVersion: "OpenClaw 9.9.9-test" });
+    expectVersionExit({ expectedVersion: "iclaw 9.9.9-test" });
   });
 });

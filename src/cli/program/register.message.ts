@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { formatDocsLink } from "../../terminal/links.js";
+import { formatCliDocsLink } from "../../terminal/links.js";
 import { theme } from "../../terminal/theme.js";
 import { formatHelpExamples } from "../help-format.js";
 import type { ProgramContext } from "./context.js";
@@ -46,7 +46,7 @@ ${formatHelpExamples([
   ],
 ])}
 
-${theme.muted("Docs:")} ${formatDocsLink("/cli/message", "docs.openclaw.ai/cli/message")}`,
+${theme.muted("Docs:")} ${formatCliDocsLink("/cli/message")}`,
     )
     .action(() => {
       message.help({ error: true });

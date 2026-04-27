@@ -14,7 +14,7 @@ import type {
 import { setupWizardCommand } from "../../commands/onboard.js";
 import { resolveManifestProviderOnboardAuthFlags } from "../../plugins/provider-auth-choices.js";
 import { defaultRuntime } from "../../runtime.js";
-import { formatDocsLink } from "../../terminal/links.js";
+import { formatCliDocsLink } from "../../terminal/links.js";
 import { theme } from "../../terminal/theme.js";
 import { runCommandWithRuntime } from "../cli-utils.js";
 
@@ -64,11 +64,7 @@ export function registerOnboardCommand(program: Command) {
   const command = program
     .command("onboard")
     .description("Interactive onboarding for the gateway, workspace, and skills")
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/onboard", "docs.openclaw.ai/cli/onboard")}\n`,
-    )
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/onboard")}\n`)
     .option("--workspace <dir>", "Agent workspace directory (default: ~/.openclaw/workspace)")
     .option(
       "--reset",

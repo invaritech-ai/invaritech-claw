@@ -17,6 +17,30 @@ export function resolveIsNixMode(env: NodeJS.ProcessEnv = process.env): boolean 
 
 export const isNixMode = resolveIsNixMode();
 
+/**
+ * When enabled (`ICLAW_STRICT_HOME=1|true|yes|on`), iclaw never falls back to legacy
+ * `~/.openclaw` / `~/.clawdbot` for state or legacy config filenames; config is
+ * `~/.iclaw/iclaw.json` (or `ICLAW_STATE_DIR` / `ICLAW_CONFIG_PATH` overrides only).
+ *
+ * Intentionally does not import `infra/env` (matches `isTruthyEnvValue`) to avoid a
+ * load cycle with `utils` → `paths` → `env` → … → `utils`.
+ */
+export function resolveIclawStrictHome(env: NodeJS.ProcessEnv = process.env): boolean {
+  const raw = env.ICLAW_STRICT_HOME;
+  if (typeof raw !== "string") {
+    return false;
+  }
+  switch (raw.trim().toLowerCase()) {
+    case "1":
+    case "on":
+    case "true":
+    case "yes":
+      return true;
+    default:
+      return false;
+  }
+}
+
 // Legacy state dirs (pre-iclaw defaults and migration sources).
 const LEGACY_STATE_DIRNAMES = [".clawdbot", ".openclaw"] as const;
 const NEW_STATE_DIRNAME = ".iclaw";
@@ -65,6 +89,9 @@ export function resolveStateDir(
   const override = env.ICLAW_STATE_DIR?.trim();
   if (override) {
     return resolveUserPath(override, env, effectiveHomedir);
+  }
+  if (resolveIclawStrictHome(env)) {
+    return newStateDir(effectiveHomedir);
   }
   const newDir = newStateDir(effectiveHomedir);
   if (env.ICLAW_TEST_FAST === "1") {
@@ -122,6 +149,9 @@ export function resolveConfigPathCandidate(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = envHomedir(env),
 ): string {
+  if (resolveIclawStrictHome(env)) {
+    return resolveCanonicalConfigPath(env, resolveStateDir(env, homedir));
+  }
   if (env.ICLAW_TEST_FAST === "1") {
     return resolveCanonicalConfigPath(env, resolveStateDir(env, homedir));
   }
@@ -152,6 +182,9 @@ export function resolveConfigPath(
     return resolveUserPath(override, env, homedir);
   }
   if (env.ICLAW_TEST_FAST === "1") {
+    return path.join(stateDir, CONFIG_FILENAME);
+  }
+  if (resolveIclawStrictHome(env)) {
     return path.join(stateDir, CONFIG_FILENAME);
   }
   const stateOverride = env.ICLAW_STATE_DIR?.trim();
@@ -195,6 +228,10 @@ export function resolveDefaultConfigCandidates(
     return [resolveUserPath(explicit, env, effectiveHomedir)];
   }
 
+  if (resolveIclawStrictHome(env)) {
+    return [path.join(resolveStateDir(env, homedir), CONFIG_FILENAME)];
+  }
+
   const candidates: string[] = [];
   const stateDirOverride = env.ICLAW_STATE_DIR?.trim();
   if (stateDirOverride) {
@@ -211,7 +248,8 @@ export function resolveDefaultConfigCandidates(
   return candidates;
 }
 
-export const DEFAULT_GATEWAY_PORT = 18789;
+/** Default gateway listen port when unset in config and env (iclaw fork; avoids clashing with OpenClaw 18789). */
+export const DEFAULT_GATEWAY_PORT = 32768;
 
 /**
  * Gateway lock directory (ephemeral).

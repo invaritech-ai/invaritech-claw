@@ -14,7 +14,7 @@ import {
 } from "../../commands/tasks.js";
 import { setVerbose } from "../../globals.js";
 import { defaultRuntime } from "../../runtime.js";
-import { formatDocsLink } from "../../terminal/links.js";
+import { formatCliDocsLink } from "../../terminal/links.js";
 import { theme } from "../../terminal/theme.js";
 import { runCommandWithRuntime } from "../cli-utils.js";
 import { formatHelpExamples } from "../help-format.js";
@@ -75,11 +75,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
           ["openclaw status --deep --timeout 5000", "Tighten probe timeout."],
         ])}`,
     )
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/status", "docs.openclaw.ai/cli/status")}\n`,
-    )
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/status")}\n`)
     .action(async (opts) => {
       await runWithVerboseAndTimeout(opts, async ({ verbose, timeoutMs }) => {
         await statusCommand(
@@ -103,11 +99,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
     .option("--timeout <ms>", "Connection timeout in milliseconds", "10000")
     .option("--verbose", "Verbose logging", false)
     .option("--debug", "Alias for --verbose", false)
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/health", "docs.openclaw.ai/cli/health")}\n`,
-    )
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/health")}\n`)
     .action(async (opts) => {
       await runWithVerboseAndTimeout(opts, async ({ verbose, timeoutMs }) => {
         await healthCommand(
@@ -144,11 +136,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
           "Shows token usage per session when the agent reports it; set agents.defaults.contextTokens to cap the window and show %.",
         )}`,
     )
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/sessions", "docs.openclaw.ai/cli/sessions")}\n`,
-    )
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/sessions")}\n`)
     .action(async (opts) => {
       setVerbose(Boolean(opts.verbose));
       await sessionsCommand(

@@ -848,12 +848,14 @@ describe("test-projects args", () => {
     ]);
   });
 
-  it("routes direct OpenAI provider extension file targets to the OpenAI provider config", () => {
-    expect(buildVitestRunPlans(["extensions/openai/openai-codex-provider.test.ts"])).toEqual([
+  it("routes direct bundled provider extension file targets to the providers extension config", () => {
+    expect(
+      buildVitestRunPlans(["extensions/openrouter/provider-runtime.contract.test.ts"]),
+    ).toEqual([
       {
-        config: "test/vitest/vitest.extension-provider-openai.config.ts",
+        config: "test/vitest/vitest.extension-providers.config.ts",
         forwardedArgs: [],
-        includePatterns: ["extensions/openai/openai-codex-provider.test.ts"],
+        includePatterns: ["extensions/openrouter/provider-runtime.contract.test.ts"],
         watchMode: false,
       },
     ]);

@@ -69,7 +69,7 @@ import {
   materializeRuntimeConfig,
 } from "./materialize.js";
 import { applyMergePatch } from "./merge-patch.js";
-import { resolveConfigPath, resolveStateDir } from "./paths.js";
+import { resolveConfigPath, resolveIclawStrictHome, resolveStateDir } from "./paths.js";
 import { applyConfigOverrides } from "./runtime-overrides.js";
 import {
   clearRuntimeConfigSnapshot as clearRuntimeConfigSnapshotState,
@@ -854,6 +854,18 @@ export type ConfigIoDeps = {
   logger?: Pick<typeof console, "error" | "warn">;
 };
 
+function throwIfStrictConfigMissing(deps: Required<ConfigIoDeps>, configPath: string): void {
+  if (!resolveIclawStrictHome(deps.env) || deps.fs.existsSync(configPath)) {
+    return;
+  }
+  throw new Error(
+    [
+      `iclaw: config file is required when ICLAW_STRICT_HOME is enabled, but none exists at ${configPath}.`,
+      `Create it (for example run \`iclaw setup\`), set ICLAW_CONFIG_PATH to an existing file, or unset ICLAW_STRICT_HOME.`,
+    ].join(" "),
+  );
+}
+
 function warnOnConfigMiskeys(raw: unknown, logger: Pick<typeof console, "warn">): void {
   if (!raw || typeof raw !== "object") {
     return;
@@ -1192,6 +1204,7 @@ export function createConfigIO(overrides: ConfigIoDeps = {}) {
   function loadConfig(): OpenClawConfig {
     try {
       maybeLoadDotEnvForConfig(deps.env);
+      throwIfStrictConfigMissing(deps, configPath);
       if (!deps.fs.existsSync(configPath)) {
         if (shouldEnableShellEnvFallback(deps.env) && !shouldDeferShellEnvFallback(deps.env)) {
           loadShellEnvFallback({
@@ -1552,6 +1565,8 @@ export function createConfigIO(overrides: ConfigIoDeps = {}) {
   }
 
   async function readBestEffortConfig(): Promise<OpenClawConfig> {
+    maybeLoadDotEnvForConfig(deps.env);
+    throwIfStrictConfigMissing(deps, configPath);
     const result = await readConfigFileSnapshotInternal();
     if (!result.snapshot.valid) {
       return result.snapshot.config;
@@ -1563,6 +1578,7 @@ export function createConfigIO(overrides: ConfigIoDeps = {}) {
 
   async function readSourceConfigBestEffort(): Promise<OpenClawConfig> {
     maybeLoadDotEnvForConfig(deps.env);
+    throwIfStrictConfigMissing(deps, configPath);
     const exists = deps.fs.existsSync(configPath);
     if (!exists) {
       return {};

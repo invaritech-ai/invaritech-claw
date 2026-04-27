@@ -10,7 +10,7 @@ import {
   normalizeLowercaseStringOrEmpty,
   normalizeStringifiedOptionalString,
 } from "../shared/string-coerce.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { getTerminalTableWidth, renderTable } from "../terminal/table.js";
 import { theme } from "../terminal/theme.js";
 import { formatCliCommand } from "./command-format.js";
@@ -47,11 +47,7 @@ export function registerPairingCli(program: Command) {
   const pairing = program
     .command("pairing")
     .description("Secure DM pairing (approve inbound requests)")
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/pairing", "docs.openclaw.ai/cli/pairing")}\n`,
-    );
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/pairing")}\n`);
 
   pairing
     .command("list")

@@ -20,7 +20,7 @@ import {
   type ExecTarget,
 } from "../infra/exec-approvals.js";
 import { defaultRuntime } from "../runtime.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { sanitizeTerminalText } from "../terminal/safe-text.js";
 import { getTerminalTableWidth, renderTable } from "../terminal/table.js";
 import { isRich, theme } from "../terminal/theme.js";
@@ -368,8 +368,7 @@ export function registerExecPolicyCli(program: Command) {
     .description("Show or synchronize requested exec policy with host approvals")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/approvals", "docs.openclaw.ai/cli/approvals")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/approvals")}\n`,
     );
 
   execPolicy

@@ -7,23 +7,8 @@ if (!provider) {
   process.exit(1);
 }
 
-async function loadFallbackBackend(id: string) {
-  switch (id) {
-    case "claude-cli": {
-      const mod = await import("../extensions/anthropic/cli-backend.ts");
-      return mod.buildAnthropicCliBackend();
-    }
-    case "codex-cli": {
-      const mod = await import("../extensions/openai/cli-backend.ts");
-      return mod.buildOpenAICodexCliBackend();
-    }
-    case "google-gemini-cli": {
-      const mod = await import("../extensions/google/cli-backend.ts");
-      return mod.buildGoogleGeminiCliBackend();
-    }
-    default:
-      return null;
-  }
+async function loadFallbackBackend(_id: string) {
+  return null;
 }
 
 const resolved = resolveCliBackendConfig(provider);

@@ -12,7 +12,7 @@ import {
 import { setVerbose } from "../../globals.js";
 import { defaultRuntime } from "../../runtime.js";
 import { normalizeLowercaseStringOrEmpty } from "../../shared/string-coerce.js";
-import { formatDocsLink } from "../../terminal/links.js";
+import { formatCliDocsLink } from "../../terminal/links.js";
 import { theme } from "../../terminal/theme.js";
 import { runCommandWithRuntime } from "../cli-utils.js";
 import { hasExplicitOptions } from "../command-options.js";
@@ -74,7 +74,7 @@ ${formatHelpExamples([
   ],
 ])}
 
-${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "docs.openclaw.ai/cli/agent")}`,
+${theme.muted("Docs:")} ${formatCliDocsLink("/cli/agent")}`,
     )
     .action(async (opts) => {
       const verboseLevel =
@@ -90,11 +90,7 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "docs.openclaw.ai/cli/age
   const agents = program
     .command("agents")
     .description("Manage isolated agents (workspaces + auth + routing)")
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/agents", "docs.openclaw.ai/cli/agents")}\n`,
-    );
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/agents")}\n`);
 
   agents
     .command("list")
@@ -224,7 +220,7 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "docs.openclaw.ai/cli/age
         `
 ${theme.heading("Examples:")}
 ${formatHelpExamples([
-  ['openclaw agents set-identity --agent main --name "OpenClaw" --emoji "🦞"', "Set name + emoji."],
+  ['iclaw agents set-identity --agent main --name "iclaw" --emoji "🦞"', "Set name + emoji."],
   ["openclaw agents set-identity --agent main --avatar avatars/openclaw.png", "Set avatar path."],
   [
     "openclaw agents set-identity --workspace ~/.openclaw/workspace --from-identity",

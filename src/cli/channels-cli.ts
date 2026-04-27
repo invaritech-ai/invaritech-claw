@@ -2,7 +2,7 @@ import type { Command } from "commander";
 import { danger } from "../globals.js";
 import { listBundledPackageChannelMetadata } from "../plugins/bundled-package-channel-metadata.js";
 import { defaultRuntime } from "../runtime.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
 import { runChannelLogin, runChannelLogout } from "./channel-auth.js";
 import { formatCliChannelOptions } from "./channel-options.js";
@@ -77,10 +77,7 @@ export function registerChannelsCli(program: Command) {
             "Add or update a channel account non-interactively.",
           ],
           ["openclaw channels login --channel whatsapp", "Link a WhatsApp Web account."],
-        ])}\n\n${theme.muted("Docs:")} ${formatDocsLink(
-          "/cli/channels",
-          "docs.openclaw.ai/cli/channels",
-        )}\n`,
+        ])}\n\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/channels")}\n`,
     );
 
   channels

@@ -6,7 +6,8 @@ on:
     paths:
       - "extensions/qa-lab/**"
       - "extensions/qa-channel/**"
-      - "extensions/openai/**"
+      - "extensions/ollama/**"
+      - "extensions/openrouter/**"
       - "qa/scenarios/**"
       - "src/agents/**"
       - "src/context-engine/**"

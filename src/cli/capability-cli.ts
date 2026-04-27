@@ -47,7 +47,7 @@ import {
   normalizeOptionalString,
   normalizeStringifiedOptionalString,
 } from "../shared/string-coerce.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
 import { canonicalizeSpeechProviderId, listSpeechProviders } from "../tts/provider-registry.js";
 import {
@@ -1243,11 +1243,7 @@ export function registerCapabilityCli(program: Command) {
     .command("infer")
     .alias("capability")
     .description("Run provider-backed inference commands through a stable CLI surface")
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/infer", "docs.openclaw.ai/cli/infer")}\n`,
-    );
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/infer")}\n`);
 
   registerCapabilityListAndInspect(capability);
 

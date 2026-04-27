@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { Command, Option } from "commander";
 import { routeLogsToStderr } from "../logging/console.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
 import {
   buildFishOptionCompletionLine,
@@ -74,8 +74,7 @@ export function registerCompletionCli(program: Command) {
     .description("Generate shell completion script")
     .addHelpText(
       "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/completion", "docs.openclaw.ai/cli/completion")}\n`,
+      () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/completion")}\n`,
     )
     .addOption(
       new Option("-s, --shell <shell>", "Shell to generate completion for (default: zsh)").choices(

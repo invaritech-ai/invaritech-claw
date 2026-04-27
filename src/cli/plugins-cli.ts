@@ -24,7 +24,7 @@ import {
   uninstallPlugin,
 } from "../plugins/uninstall.js";
 import { defaultRuntime } from "../runtime.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { getTerminalTableWidth, renderTable } from "../terminal/table.js";
 import { theme } from "../terminal/theme.js";
 import { shortenHomeInString, shortenHomePath } from "../utils.js";
@@ -139,12 +139,8 @@ function formatInstallLines(install: PluginInstallRecord | undefined): string[] 
 export function registerPluginsCli(program: Command) {
   const plugins = program
     .command("plugins")
-    .description("Manage OpenClaw plugins and extensions")
-    .addHelpText(
-      "after",
-      () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/plugins", "docs.openclaw.ai/cli/plugins")}\n`,
-    );
+    .description("Manage iclaw plugins and extensions")
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/plugins")}\n`);
 
   plugins
     .command("list")
@@ -765,7 +761,7 @@ export function registerPluginsCli(program: Command) {
           lines.push(`- ${formatPluginCompatibilityNotice(notice)} [${marker}]`);
         }
       }
-      const docs = formatDocsLink("/plugin", "docs.openclaw.ai/plugin");
+      const docs = formatCliDocsLink("/plugin");
       lines.push("");
       lines.push(`${theme.muted("Docs:")} ${docs}`);
       defaultRuntime.log(lines.join("\n"));

@@ -8,7 +8,7 @@ import { renderQrTerminal } from "../media/qr-terminal.ts";
 import { resolvePairingSetupFromConfig, encodePairingSetupCode } from "../pairing/setup-code.js";
 import { runCommandWithTimeout } from "../process/exec.js";
 import { defaultRuntime } from "../runtime.js";
-import { formatDocsLink } from "../terminal/links.js";
+import { formatCliDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
 import { resolveCommandSecretRefsViaGateway } from "./command-secret-gateway.js";
 import { getQrRemoteCommandSecretTargetIds } from "./command-secret-targets.js";
@@ -93,10 +93,7 @@ export function registerQrCli(program: Command) {
   program
     .command("qr")
     .description("Generate a mobile pairing QR code and setup code")
-    .addHelpText(
-      "after",
-      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/qr", "docs.openclaw.ai/cli/qr")}\n`,
-    )
+    .addHelpText("after", () => `\n${theme.muted("Docs:")} ${formatCliDocsLink("/cli/qr")}\n`)
     .option(
       "--remote",
       "Use gateway.remote.url and gateway.remote token/password (ignores device-pair publicUrl)",
@@ -226,7 +223,7 @@ export function registerQrCli(program: Command) {
 
         const lines: string[] = [
           theme.heading("Pairing QR"),
-          "Scan this with the OpenClaw mobile app (Onboarding -> Scan QR).",
+          "Scan this with the iclaw mobile app (Onboarding -> Scan QR).",
           "",
         ];
 

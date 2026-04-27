@@ -241,7 +241,6 @@ export const sharedVitestConfig = {
       "test/vitest/vitest.extension-zalo-paths.mjs",
       "test/vitest/vitest.extension-zalo.config.ts",
       "test/vitest/vitest.extension-provider-paths.mjs",
-      "test/vitest/vitest.extension-provider-openai.config.ts",
       "test/vitest/vitest.extension-providers.config.ts",
       "test/vitest/vitest.extension-signal.config.ts",
       "test/vitest/vitest.extension-slack.config.ts",

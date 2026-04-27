@@ -705,7 +705,7 @@ describe("update-cli", () => {
       },
       assert: () => {
         const logs = vi.mocked(defaultRuntime.log).mock.calls.map((call) => call[0]);
-        expect(logs.join("\n")).toContain("OpenClaw update status");
+        expect(logs.join("\n")).toContain("iclaw update status");
       },
     },
     {
@@ -1139,20 +1139,13 @@ describe("update-cli", () => {
     const localAppData = createCaseDir("openclaw-localappdata");
     const portableGitMingw = path.join(
       localAppData,
-      "OpenClaw",
+      "iclaw",
       "deps",
       "portable-git",
       "mingw64",
       "bin",
     );
-    const portableGitUsr = path.join(
-      localAppData,
-      "OpenClaw",
-      "deps",
-      "portable-git",
-      "usr",
-      "bin",
-    );
+    const portableGitUsr = path.join(localAppData, "iclaw", "deps", "portable-git", "usr", "bin");
     await fs.mkdir(portableGitMingw, { recursive: true });
     await fs.mkdir(portableGitUsr, { recursive: true });
     mockPackageInstallStatus(tempDir);
