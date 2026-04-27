@@ -35,7 +35,7 @@ Use this skill for `qa-lab` / `qa-channel` work. Repo-local QA only.
 3. For live OpenAI, use:
 
 ```bash
-OPENCLAW_LIVE_OPENAI_KEY="${OPENAI_API_KEY}" \
+ICLAW_LIVE_OPENAI_KEY="${OPENAI_API_KEY}" \
 pnpm openclaw qa suite \
   --provider-mode live-frontier \
   --model openai/gpt-5.4 \
@@ -62,32 +62,32 @@ op account list
   - vault: `OpenClaw`
   - item: `Telegram E2E`
 - That item is the first place to look for:
-  - `OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN`
-  - `OPENCLAW_QA_TELEGRAM_SUT_BOT_TOKEN`
-  - `OPENCLAW_QA_PROVIDER_MODE`
-  - `OPENCLAW_NPM_TELEGRAM_PACKAGE_SPEC`
+  - `ICLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN`
+  - `ICLAW_QA_TELEGRAM_SUT_BOT_TOKEN`
+  - `ICLAW_QA_PROVIDER_MODE`
+  - `ICLAW_NPM_TELEGRAM_PACKAGE_SPEC`
 - Convex QA secrets currently live in 1Password items:
   - vault: `OpenClaw`
-  - item: `OPENCLAW_QA_CONVEX_SITE_URL`
-  - item: `OPENCLAW_QA_CONVEX_SECRET_MAINTAINER`
-  - item: `OPENCLAW_QA_CONVEX_SECRET_CI`
+  - item: `ICLAW_QA_CONVEX_SITE_URL`
+  - item: `ICLAW_QA_CONVEX_SECRET_MAINTAINER`
+  - item: `ICLAW_QA_CONVEX_SECRET_CI`
 - Additional related notes/login items seen during QA credential work:
   - vault: `Private`
   - items: `OPENCLAW QA`, `Convex`, `Telegram`
 - If a required value is missing from those notes:
   - do not guess
   - ask the maintainer/operator for the current value or the current 1Password item name
-  - for Telegram direct runs, `OPENCLAW_QA_TELEGRAM_GROUP_ID` may be stored separately from `Telegram E2E`
-  - for Convex runs, the leased Telegram credential should provide the Telegram group id and bot tokens together; do not require a separate `OPENCLAW_QA_TELEGRAM_GROUP_ID`
-  - for Convex runs, prefer `OpenClaw/OPENCLAW_QA_CONVEX_SITE_URL`; if that is stale or unclear, ask for the active pool URL before running
+  - for Telegram direct runs, `ICLAW_QA_TELEGRAM_GROUP_ID` may be stored separately from `Telegram E2E`
+  - for Convex runs, the leased Telegram credential should provide the Telegram group id and bot tokens together; do not require a separate `ICLAW_QA_TELEGRAM_GROUP_ID`
+  - for Convex runs, prefer `OpenClaw/ICLAW_QA_CONVEX_SITE_URL`; if that is stale or unclear, ask for the active pool URL before running
 - Prefer direct Telegram envs for the npm Telegram Docker lane when available:
 
 ```bash
-OPENCLAW_QA_TELEGRAM_GROUP_ID="..." \
-OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN="..." \
-OPENCLAW_QA_TELEGRAM_SUT_BOT_TOKEN="..." \
-OPENCLAW_QA_PROVIDER_MODE="mock-openai" \
-OPENCLAW_NPM_TELEGRAM_PACKAGE_SPEC="openclaw@beta" \
+ICLAW_QA_TELEGRAM_GROUP_ID="..." \
+ICLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN="..." \
+ICLAW_QA_TELEGRAM_SUT_BOT_TOKEN="..." \
+ICLAW_QA_PROVIDER_MODE="mock-openai" \
+ICLAW_NPM_TELEGRAM_PACKAGE_SPEC="openclaw@beta" \
 pnpm test:docker:npm-telegram-live
 ```
 
@@ -96,18 +96,18 @@ pnpm test:docker:npm-telegram-live
   - thinner wrapper for channel-specific setup
   - CLI/admin flows around the pooled credentials
 - Live npm Telegram Docker lane note:
-  - `scripts/e2e/npm-telegram-live-runner.ts` reads `OPENCLAW_NPM_TELEGRAM_PROVIDER_MODE`
-  - do not assume `OPENCLAW_QA_PROVIDER_MODE` is consumed by that wrapper
-  - if a 1Password note only gives `OPENCLAW_QA_PROVIDER_MODE`, map it explicitly to `OPENCLAW_NPM_TELEGRAM_PROVIDER_MODE` before running the Docker lane
+  - `scripts/e2e/npm-telegram-live-runner.ts` reads `ICLAW_NPM_TELEGRAM_PROVIDER_MODE`
+  - do not assume `ICLAW_QA_PROVIDER_MODE` is consumed by that wrapper
+  - if a 1Password note only gives `ICLAW_QA_PROVIDER_MODE`, map it explicitly to `ICLAW_NPM_TELEGRAM_PROVIDER_MODE` before running the Docker lane
 - Verified live shape:
   - Convex mode can pass the real Docker lane without direct Telegram env vars
   - leased Telegram payload includes the group id coupled to the driver/SUT tokens
   - a real run of `pnpm test:docker:npm-telegram-live` passed with:
-    - `OPENCLAW_QA_CREDENTIAL_SOURCE=convex`
-    - `OPENCLAW_QA_CREDENTIAL_ROLE=maintainer`
-    - `OPENCLAW_QA_CONVEX_SITE_URL`
-    - `OPENCLAW_QA_CONVEX_SECRET_MAINTAINER`
-    - `OPENCLAW_NPM_TELEGRAM_PROVIDER_MODE=mock-openai`
+    - `ICLAW_QA_CREDENTIAL_SOURCE=convex`
+    - `ICLAW_QA_CREDENTIAL_ROLE=maintainer`
+    - `ICLAW_QA_CONVEX_SITE_URL`
+    - `ICLAW_QA_CONVEX_SECRET_MAINTAINER`
+    - `ICLAW_NPM_TELEGRAM_PROVIDER_MODE=mock-openai`
 
 ## Character evals
 
@@ -166,7 +166,7 @@ pnpm openclaw qa manual \
 ```
 
 - Treat the concrete Codex model name as user/config input; do not hardcode it in source, docs examples, or scenarios.
-- Live QA preserves `CODEX_HOME` so Codex CLI auth/config works while keeping `HOME` and `OPENCLAW_HOME` sandboxed.
+- Live QA preserves `CODEX_HOME` so Codex CLI auth/config works while keeping `HOME` and `ICLAW_HOME` sandboxed.
 - Mock QA should scrub `CODEX_HOME`.
 - If Codex returns fallback/auth text every turn, first check `CODEX_HOME`, `~/.profile`, and gateway child logs before changing scenario assertions.
 - For model comparison, include `codex-cli/<codex-model>` as another candidate in `qa character-eval`; the report should label it as an opaque model name.

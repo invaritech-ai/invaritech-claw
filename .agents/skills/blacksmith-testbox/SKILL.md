@@ -261,7 +261,7 @@ For OpenClaw, use the repo package manager and the measured stable full-suite
 profile below. It keeps six Vitest project shards active while limiting each
 shard to one worker to avoid worker OOMs on Testbox:
 
-    blacksmith testbox run --id <ID> "env NODE_OPTIONS=--max-old-space-size=4096 OPENCLAW_TEST_PROJECTS_PARALLEL=6 OPENCLAW_VITEST_MAX_WORKERS=1 pnpm test"
+    blacksmith testbox run --id <ID> "env NODE_OPTIONS=--max-old-space-size=4096 ICLAW_TEST_PROJECTS_PARALLEL=6 ICLAW_VITEST_MAX_WORKERS=1 pnpm test"
 
 Observed full-suite time on Blacksmith Testbox is about 3-4 minutes:
 

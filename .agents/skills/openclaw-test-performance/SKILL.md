@@ -24,7 +24,7 @@ coverage intact, not runner tuning by guesswork.
    - For a scoped hotspot use:
      `/usr/bin/time -l pnpm test <file-or-files> --maxWorkers=1 --reporter=verbose`
    - For import-heavy suspicion add:
-     `OPENCLAW_VITEST_IMPORT_DURATIONS=1 OPENCLAW_VITEST_PRINT_IMPORT_BREAKDOWN=1`.
+     `ICLAW_VITEST_IMPORT_DURATIONS=1 ICLAW_VITEST_PRINT_IMPORT_BREAKDOWN=1`.
 3. Separate wall/runner noise from real file cost:
    - Compare Vitest duration, test body timing, import breakdown, wall time, and
      max RSS.
@@ -85,8 +85,8 @@ Scoped file with import breakdown:
 
 ```bash
 timeout 240 /usr/bin/time -l env \
-  OPENCLAW_VITEST_IMPORT_DURATIONS=1 \
-  OPENCLAW_VITEST_PRINT_IMPORT_BREAKDOWN=1 \
+  ICLAW_VITEST_IMPORT_DURATIONS=1 \
+  ICLAW_VITEST_PRINT_IMPORT_BREAKDOWN=1 \
   pnpm test <file> --maxWorkers=1 --reporter=verbose
 ```
 

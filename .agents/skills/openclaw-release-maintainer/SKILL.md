@@ -204,7 +204,7 @@ pnpm test:install:smoke
 For a non-root smoke path:
 
 ```bash
-  OPENCLAW_INSTALL_SMOKE_SKIP_NONROOT=1 pnpm test:install:smoke
+  ICLAW_INSTALL_SMOKE_SKIP_NONROOT=1 pnpm test:install:smoke
 ```
 
 After npm publish, run:
@@ -227,11 +227,11 @@ node --import tsx scripts/openclaw-npm-postpublish-verify.ts <published-version>
 - Use `pnpm test:live:media video` for bounded video-provider smoke when video
   generation is in release scope. The default video smoke skips `fal`, runs one
   text-to-video attempt per provider with a one-second lobster prompt, and caps
-  each provider operation with `OPENCLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS`
+  each provider operation with `ICLAW_LIVE_VIDEO_GENERATION_TIMEOUT_MS`
   (`180000` by default).
 - Run `pnpm test:live:media video --video-providers fal` only when FAL-specific
   proof is required. Its queue latency can dominate release time.
-- Set `OPENCLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` only when intentionally
+- Set `ICLAW_LIVE_VIDEO_GENERATION_FULL_MODES=1` only when intentionally
   validating the slower image-to-video and video-to-video transform lanes.
 
 ## Check all relevant release builds
@@ -259,7 +259,7 @@ node --import tsx scripts/openclaw-npm-postpublish-verify.ts <published-version>
   - `pnpm build`
   - `pnpm ui:build`
   - `pnpm release:check`
-  - `OPENCLAW_INSTALL_SMOKE_SKIP_NONROOT=1 pnpm test:install:smoke`
+  - `ICLAW_INSTALL_SMOKE_SKIP_NONROOT=1 pnpm test:install:smoke`
 - Full pre-npm beta test roster:
   - default release checks above
   - all Docker tests: `pnpm test:docker:all`, plus standalone Docker live lanes
@@ -285,7 +285,7 @@ node --import tsx scripts/openclaw-npm-postpublish-verify.ts <published-version>
     This is the default button path for installed-package onboarding,
     Telegram setup, and real Telegram E2E against the published npm package.
     Use the local `pnpm test:docker:npm-telegram-live` lane with the matching
-    `OPENCLAW_NPM_TELEGRAM_PACKAGE_SPEC` and Convex CI env only as a fallback
+    `ICLAW_NPM_TELEGRAM_PACKAGE_SPEC` and Convex CI env only as a fallback
     or debugging path.
   - Parallels published beta install/update coverage with both OpenAI and
     Anthropic provider keys available
@@ -299,7 +299,7 @@ node --import tsx scripts/openclaw-npm-postpublish-verify.ts <published-version>
     harness, rerun Actions > `QA-Lab - All Lanes`.
 - Check all release-related build surfaces touched by the release, not only the npm package.
 - For beta-style full e2e batteries, hard-cap top-level long lanes instead of letting them run indefinitely. Use host `timeout --foreground`/`gtimeout --foreground` caps such as:
-  - `45m` for `OPENCLAW_INSTALL_SMOKE_SKIP_NONROOT=1 pnpm test:install:smoke`
+  - `45m` for `ICLAW_INSTALL_SMOKE_SKIP_NONROOT=1 pnpm test:install:smoke`
   - `90m` for `pnpm test:docker:all`
   - `60m` each for standalone Docker live lanes
   - `180m` for local full QA live OpenAI + Anthropic rosters when explicitly
@@ -413,7 +413,7 @@ node --import tsx scripts/openclaw-npm-postpublish-verify.ts <published-version>
   promotion.
 - Real private mac publish uploads the packaged `.zip`, `.dmg`, and
   `.dSYM.zip` assets to the existing GitHub release in `openclaw/openclaw`
-  automatically when `OPENCLAW_PUBLIC_REPO_RELEASE_TOKEN` is present in the
+  automatically when `ICLAW_PUBLIC_REPO_RELEASE_TOKEN` is present in the
   private repo `mac-release` environment.
 - For stable releases, the agent must also download the signed
   `macos-appcast-<tag>` artifact from the successful private mac workflow and

@@ -15,7 +15,7 @@ skip assertions, weaken gates, or tune runner flags as the main fix.
 2. Establish evidence before edits:
    - Full ranking: `pnpm test:perf:groups --full-suite --allow-failures --output .artifacts/test-perf/<name>.json`
    - Targeted file: `timeout 240 /usr/bin/time -l pnpm test <file> --maxWorkers=1 --reporter=verbose`
-   - Import suspicion: add `OPENCLAW_VITEST_IMPORT_DURATIONS=1 OPENCLAW_VITEST_PRINT_IMPORT_BREAKDOWN=1`
+   - Import suspicion: add `ICLAW_VITEST_IMPORT_DURATIONS=1 ICLAW_VITEST_PRINT_IMPORT_BREAKDOWN=1`
 3. Attack highest-return hotspots first:
    - broad barrels or `importActual()` in hot tests
    - per-test `vi.resetModules()` plus fresh imports
