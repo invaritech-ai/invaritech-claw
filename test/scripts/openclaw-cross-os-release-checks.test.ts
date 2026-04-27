@@ -196,9 +196,9 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
         VAR_UBUNTU_RUNNER: "workflow-linux",
         VAR_WINDOWS_RUNNER: "workflow-windows",
         VAR_MACOS_RUNNER: "workflow-macos",
-        OPENCLAW_RELEASE_CHECKS_UBUNTU_RUNNER: "legacy-linux",
-        OPENCLAW_RELEASE_CHECKS_WINDOWS_RUNNER: "legacy-windows",
-        OPENCLAW_RELEASE_CHECKS_MACOS_RUNNER: "legacy-macos",
+        ICLAW_RELEASE_CHECKS_UBUNTU_RUNNER: "legacy-linux",
+        ICLAW_RELEASE_CHECKS_WINDOWS_RUNNER: "legacy-windows",
+        ICLAW_RELEASE_CHECKS_MACOS_RUNNER: "legacy-macos",
       }),
     ).toEqual({
       varUbuntuRunner: "workflow-linux",
@@ -213,9 +213,9 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
         VAR_UBUNTU_RUNNER: "",
         VAR_WINDOWS_RUNNER: " ",
         VAR_MACOS_RUNNER: "",
-        OPENCLAW_RELEASE_CHECKS_UBUNTU_RUNNER: "legacy-linux",
-        OPENCLAW_RELEASE_CHECKS_WINDOWS_RUNNER: "legacy-windows",
-        OPENCLAW_RELEASE_CHECKS_MACOS_RUNNER: "legacy-macos",
+        ICLAW_RELEASE_CHECKS_UBUNTU_RUNNER: "legacy-linux",
+        ICLAW_RELEASE_CHECKS_WINDOWS_RUNNER: "legacy-windows",
+        ICLAW_RELEASE_CHECKS_MACOS_RUNNER: "legacy-macos",
       }),
     ).toEqual({
       varUbuntuRunner: "legacy-linux",
@@ -360,7 +360,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
     expect(
       buildRealUpdateEnv({
         FOO: "bar",
-        OPENCLAW_DISABLE_BUNDLED_PLUGIN_POSTINSTALL: "1",
+        ICLAW_DISABLE_BUNDLED_PLUGIN_POSTINSTALL: "1",
       }),
     ).toEqual({
       FOO: "bar",

@@ -80,7 +80,7 @@ export function describeBundledMetadataOnlyChannelCatalogContract(params: {
       const entry = listChannelPluginCatalogEntries({
         env: {
           ...process.env,
-          OPENCLAW_BUNDLED_PLUGINS_DIR: path.join(packageRoot, "dist", "extensions"),
+          ICLAW_BUNDLED_PLUGINS_DIR: path.join(packageRoot, "dist", "extensions"),
         },
       }).find((item) => item.id === params.meta.id);
 
@@ -124,7 +124,7 @@ export function describeOfficialFallbackChannelCatalogContract(params: {
       const entry = listChannelPluginCatalogEntries({
         env: {
           ...process.env,
-          OPENCLAW_BUNDLED_PLUGINS_DIR: "/nonexistent/bundled/plugins",
+          ICLAW_BUNDLED_PLUGINS_DIR: "/nonexistent/bundled/plugins",
         },
         officialCatalogPaths: [catalogPath],
       }).find((item) => item.id === params.channelId);
@@ -201,7 +201,7 @@ export function describeOfficialFallbackChannelCatalogContract(params: {
         officialCatalogPaths: [officialCatalogPath],
         env: {
           ...process.env,
-          OPENCLAW_BUNDLED_PLUGINS_DIR: path.join(dir, "dist", "extensions"),
+          ICLAW_BUNDLED_PLUGINS_DIR: path.join(dir, "dist", "extensions"),
         },
       }).find((item) => item.id === params.channelId);
 
@@ -237,7 +237,7 @@ export function describeOfficialFallbackChannelCatalogContract(params: {
         officialCatalogPaths: [],
         env: {
           ...process.env,
-          OPENCLAW_BUNDLED_PLUGINS_DIR: "/nonexistent/bundled/plugins",
+          ICLAW_BUNDLED_PLUGINS_DIR: "/nonexistent/bundled/plugins",
         },
       }).find((item) => item.id === params.channelId);
 

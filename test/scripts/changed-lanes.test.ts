@@ -368,18 +368,18 @@ describe("scripts/changed-lanes", () => {
     expect(CHANGED_CHECK_VITEST_NO_OUTPUT_TIMEOUT_MS).toBe("600000");
     expect(createChangedCheckVitestEnv({ PATH: "/usr/bin" })).toMatchObject({
       PATH: "/usr/bin",
-      OPENCLAW_VITEST_NO_OUTPUT_TIMEOUT_MS: CHANGED_CHECK_VITEST_NO_OUTPUT_TIMEOUT_MS,
-      OPENCLAW_VITEST_NO_OUTPUT_RETRY: "0",
+      ICLAW_VITEST_NO_OUTPUT_TIMEOUT_MS: CHANGED_CHECK_VITEST_NO_OUTPUT_TIMEOUT_MS,
+      ICLAW_VITEST_NO_OUTPUT_RETRY: "0",
     });
 
     expect(
       createChangedCheckVitestEnv({
-        OPENCLAW_VITEST_NO_OUTPUT_TIMEOUT_MS: "45000",
-        OPENCLAW_VITEST_NO_OUTPUT_RETRY: "1",
+        ICLAW_VITEST_NO_OUTPUT_TIMEOUT_MS: "45000",
+        ICLAW_VITEST_NO_OUTPUT_RETRY: "1",
       }),
     ).toMatchObject({
-      OPENCLAW_VITEST_NO_OUTPUT_TIMEOUT_MS: "45000",
-      OPENCLAW_VITEST_NO_OUTPUT_RETRY: "1",
+      ICLAW_VITEST_NO_OUTPUT_TIMEOUT_MS: "45000",
+      ICLAW_VITEST_NO_OUTPUT_RETRY: "1",
     });
   });
 });

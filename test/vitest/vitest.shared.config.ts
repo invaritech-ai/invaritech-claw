@@ -78,7 +78,7 @@ const localScheduling = resolveLocalVitestScheduling(
 );
 
 function hasWorkerOverride(env: Record<string, string | undefined>): boolean {
-  return Boolean((env.OPENCLAW_VITEST_MAX_WORKERS ?? env.OPENCLAW_TEST_WORKERS)?.trim());
+  return Boolean((env.ICLAW_VITEST_MAX_WORKERS ?? env.ICLAW_TEST_WORKERS)?.trim());
 }
 
 export function resolveSharedVitestWorkerConfig(params: {

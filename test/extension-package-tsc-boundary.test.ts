@@ -9,7 +9,7 @@ const CHECK_EXTENSION_PACKAGE_BOUNDARY_BIN = resolve(
 );
 const SHOULD_RUN_BOUNDARY_SCRIPT_WRAPPER =
   process.env.GITHUB_ACTIONS !== "true" ||
-  process.env.OPENCLAW_RUN_EXTENSION_PACKAGE_BOUNDARY_TEST === "1";
+  process.env.ICLAW_RUN_EXTENSION_PACKAGE_BOUNDARY_TEST === "1";
 
 function runNode(args: string[], timeout: number) {
   return spawnSync(process.execPath, args, {

@@ -28,6 +28,6 @@ describe("run-oxlint", () => {
       "node scripts/prepare-extension-package-boundary-artifacts.mjs",
     );
     expect(shardedLintRunner).toContain("prepare-extension-package-boundary-artifacts.mjs");
-    expect(shardedLintRunner).toContain('OPENCLAW_OXLINT_SKIP_PREPARE: "1"');
+    expect(shardedLintRunner).toContain('ICLAW_OXLINT_SKIP_PREPARE: "1"');
   });
 });

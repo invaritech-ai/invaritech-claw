@@ -542,7 +542,7 @@ describe("scripts/test-extension.mjs", () => {
         testFileCount: 6,
       },
       {
-        env: { OPENCLAW_EXTENSION_BATCH_PARALLEL: "2" },
+        env: { ICLAW_EXTENSION_BATCH_PARALLEL: "2" },
         runGroup,
         vitestArgs: ["--reporter=dot"],
       },
@@ -563,17 +563,15 @@ describe("scripts/test-extension.mjs", () => {
       config: "heavy",
       targets: ["extensions/two"],
     });
-    expect(runGroup.mock.calls[0]?.[0].env.OPENCLAW_VITEST_FS_MODULE_CACHE_PATH).toContain(
+    expect(runGroup.mock.calls[0]?.[0].env.ICLAW_VITEST_FS_MODULE_CACHE_PATH).toContain(
       path.join("node_modules", ".experimental-vitest-cache", "extension-batch", "0-heavy"),
     );
   });
 
   it("keeps extension batch parallelism bounded by group count", () => {
-    expect(resolveExtensionBatchParallelism(3, { OPENCLAW_EXTENSION_BATCH_PARALLEL: "2" })).toBe(2);
-    expect(resolveExtensionBatchParallelism(1, { OPENCLAW_EXTENSION_BATCH_PARALLEL: "4" })).toBe(1);
-    expect(resolveExtensionBatchParallelism(3, { OPENCLAW_EXTENSION_BATCH_PARALLEL: "nope" })).toBe(
-      1,
-    );
+    expect(resolveExtensionBatchParallelism(3, { ICLAW_EXTENSION_BATCH_PARALLEL: "2" })).toBe(2);
+    expect(resolveExtensionBatchParallelism(1, { ICLAW_EXTENSION_BATCH_PARALLEL: "4" })).toBe(1);
+    expect(resolveExtensionBatchParallelism(3, { ICLAW_EXTENSION_BATCH_PARALLEL: "nope" })).toBe(1);
   });
 
   it("treats extensions without tests as a no-op by default", () => {

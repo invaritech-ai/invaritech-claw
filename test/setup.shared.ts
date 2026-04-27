@@ -2,7 +2,7 @@ import { vi } from "vitest";
 
 declare global {
   // Optional per-test delegate for the shared OAuth mock.
-  var __OPENCLAW_TEST_REFRESH_OPENAI_CODEX_TOKEN__: ((...args: unknown[]) => unknown) | undefined;
+  var __ICLAW_TEST_REFRESH_OPENAI_CODEX_TOKEN__: ((...args: unknown[]) => unknown) | undefined;
 }
 
 vi.mock("@mariozechner/pi-ai/oauth", () => ({
@@ -10,7 +10,7 @@ vi.mock("@mariozechner/pi-ai/oauth", () => ({
   getOAuthProviders: () => [],
   loginOpenAICodex: vi.fn(),
   refreshOpenAICodexToken: vi.fn((...args: unknown[]) =>
-    globalThis.__OPENCLAW_TEST_REFRESH_OPENAI_CODEX_TOKEN__?.(...args),
+    globalThis.__ICLAW_TEST_REFRESH_OPENAI_CODEX_TOKEN__?.(...args),
   ),
 }));
 
@@ -39,7 +39,7 @@ vi.mock("@mariozechner/clipboard", () => ({
 process.env.VITEST = "true";
 // Config validation walks plugin manifests; keep an aggressive cache in tests to avoid
 // repeated filesystem discovery across suites/workers.
-process.env.OPENCLAW_PLUGIN_MANIFEST_CACHE_MS ??= "60000";
+process.env.ICLAW_PLUGIN_MANIFEST_CACHE_MS ??= "60000";
 // Vitest fork workers can load transitive lockfile helpers many times per worker.
 // Raise listener budget to avoid noisy MaxListeners warnings and warning-stack overhead.
 const TEST_PROCESS_MAX_LISTENERS = 256;

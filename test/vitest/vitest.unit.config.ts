@@ -19,13 +19,13 @@ const exclude = sharedTest.exclude ?? [];
 export function loadIncludePatternsFromEnv(
   env: Record<string, string | undefined> = process.env,
 ): string[] | null {
-  return loadPatternListFromEnv("OPENCLAW_VITEST_INCLUDE_FILE", env);
+  return loadPatternListFromEnv("ICLAW_VITEST_INCLUDE_FILE", env);
 }
 
 export function loadExtraExcludePatternsFromEnv(
   env: Record<string, string | undefined> = process.env,
 ): string[] {
-  return loadPatternListFromEnv("OPENCLAW_VITEST_EXTRA_EXCLUDE_FILE", env) ?? [];
+  return loadPatternListFromEnv("ICLAW_VITEST_EXTRA_EXCLUDE_FILE", env) ?? [];
 }
 
 export function createUnitVitestConfigWithOptions(

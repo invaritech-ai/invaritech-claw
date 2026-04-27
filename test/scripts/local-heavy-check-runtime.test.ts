@@ -24,7 +24,7 @@ const ROOMY_HOST = {
 function makeEnv(overrides: Record<string, string | undefined> = {}) {
   return {
     ...process.env,
-    OPENCLAW_LOCAL_CHECK: "1",
+    ICLAW_LOCAL_CHECK: "1",
     ...overrides,
   };
 }
@@ -48,7 +48,7 @@ describe("local-heavy-check-runtime", () => {
   });
 
   it("skips declaration transforms for no-emit tsgo checks", () => {
-    const { args } = applyLocalTsgoPolicy([], makeEnv({ OPENCLAW_LOCAL_CHECK: "0" }), ROOMY_HOST);
+    const { args } = applyLocalTsgoPolicy([], makeEnv({ ICLAW_LOCAL_CHECK: "0" }), ROOMY_HOST);
 
     expect(args).toEqual(["--declaration", "false"]);
   });
@@ -59,7 +59,7 @@ describe("local-heavy-check-runtime", () => {
       makeEnv({
         GOGC: "80",
         GOMEMLIMIT: "5GiB",
-        OPENCLAW_TSGO_PPROF_DIR: "/tmp/profile",
+        ICLAW_TSGO_PPROF_DIR: "/tmp/profile",
       }),
       CONSTRAINED_HOST,
     );
@@ -78,7 +78,7 @@ describe("local-heavy-check-runtime", () => {
   });
 
   it("keeps explicit tsgo declaration flags intact", () => {
-    const env = makeEnv({ OPENCLAW_LOCAL_CHECK_MODE: "full" });
+    const env = makeEnv({ ICLAW_LOCAL_CHECK_MODE: "full" });
     const longFlag = applyLocalTsgoPolicy(["--declaration"], env, ROOMY_HOST);
     const shortFlag = applyLocalTsgoPolicy(["-d"], env, ROOMY_HOST);
 
@@ -104,8 +104,8 @@ describe("local-heavy-check-runtime", () => {
     const { args } = applyLocalTsgoPolicy(
       [],
       makeEnv({
-        OPENCLAW_LOCAL_CHECK_MODE: "full",
-        OPENCLAW_TSGO_BUILD_INFO_FILE: ".artifacts/custom/tsgo.tsbuildinfo",
+        ICLAW_LOCAL_CHECK_MODE: "full",
+        ICLAW_TSGO_BUILD_INFO_FILE: ".artifacts/custom/tsgo.tsbuildinfo",
       }),
       ROOMY_HOST,
     );
@@ -122,7 +122,7 @@ describe("local-heavy-check-runtime", () => {
   it("avoids incremental cache reuse for ad hoc tsgo runs", () => {
     const { args } = applyLocalTsgoPolicy(
       ["--extendedDiagnostics"],
-      makeEnv({ OPENCLAW_LOCAL_CHECK_MODE: "full" }),
+      makeEnv({ ICLAW_LOCAL_CHECK_MODE: "full" }),
       ROOMY_HOST,
     );
 
@@ -133,7 +133,7 @@ describe("local-heavy-check-runtime", () => {
     const { args, env } = applyLocalTsgoPolicy(
       [],
       makeEnv({
-        OPENCLAW_LOCAL_CHECK_MODE: "throttled",
+        ICLAW_LOCAL_CHECK_MODE: "throttled",
       }),
       ROOMY_HOST,
     );
@@ -156,7 +156,7 @@ describe("local-heavy-check-runtime", () => {
     const { args, env } = applyLocalTsgoPolicy(
       [],
       makeEnv({
-        OPENCLAW_LOCAL_CHECK_MODE: "full",
+        ICLAW_LOCAL_CHECK_MODE: "full",
       }),
       ROOMY_HOST,
     );
@@ -188,10 +188,7 @@ describe("local-heavy-check-runtime", () => {
 
   it("allows forcing the tsgo lock back on", () => {
     expect(
-      shouldAcquireLocalHeavyCheckLockForTsgo(
-        ["--help"],
-        makeEnv({ OPENCLAW_TSGO_FORCE_LOCK: "1" }),
-      ),
+      shouldAcquireLocalHeavyCheckLockForTsgo(["--help"], makeEnv({ ICLAW_TSGO_FORCE_LOCK: "1" })),
     ).toBe(true);
   });
 
@@ -225,7 +222,7 @@ describe("local-heavy-check-runtime", () => {
     const { args } = applyLocalOxlintPolicy(
       [],
       makeEnv({
-        OPENCLAW_LOCAL_CHECK_MODE: "full",
+        ICLAW_LOCAL_CHECK_MODE: "full",
       }),
       ROOMY_HOST,
     );
@@ -277,7 +274,7 @@ describe("local-heavy-check-runtime", () => {
     expect(
       shouldAcquireLocalHeavyCheckLockForOxlint(["--type-aware", "--", "sample.ts"], {
         cwd,
-        env: makeEnv({ OPENCLAW_OXLINT_FORCE_LOCK: "1" }),
+        env: makeEnv({ ICLAW_OXLINT_FORCE_LOCK: "1" }),
       }),
     ).toBe(true);
   });
