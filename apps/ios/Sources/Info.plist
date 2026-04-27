@@ -23,9 +23,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(OPENCLAW_MARKETING_VERSION)</string>
+	<string>$(ICLAW_MARKETING_VERSION)</string>
 	<key>OpenClawCanonicalVersion</key>
-	<string>$(OPENCLAW_IOS_VERSION)</string>
+	<string>$(ICLAW_IOS_VERSION)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -38,7 +38,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>$(OPENCLAW_BUILD_VERSION)</string>
+	<string>$(ICLAW_BUILD_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSAppTransportSecurity</key>
@@ -69,13 +69,13 @@
 	<key>NSSupportsLiveActivities</key>
 	<true/>
 	<key>OpenClawPushAPNsEnvironment</key>
-	<string>$(OPENCLAW_PUSH_APNS_ENVIRONMENT)</string>
+	<string>$(ICLAW_PUSH_APNS_ENVIRONMENT)</string>
 	<key>OpenClawPushDistribution</key>
-	<string>$(OPENCLAW_PUSH_DISTRIBUTION)</string>
+	<string>$(ICLAW_PUSH_DISTRIBUTION)</string>
 	<key>OpenClawPushRelayBaseURL</key>
-	<string>$(OPENCLAW_PUSH_RELAY_BASE_URL)</string>
+	<string>$(ICLAW_PUSH_RELAY_BASE_URL)</string>
 	<key>OpenClawPushTransport</key>
-	<string>$(OPENCLAW_PUSH_TRANSPORT)</string>
+	<string>$(ICLAW_PUSH_TRANSPORT)</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

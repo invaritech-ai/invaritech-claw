@@ -203,10 +203,10 @@ fun SettingsSheet(viewModel: MainViewModel) {
 
   val smsPermissionAvailable =
     remember {
-      BuildConfig.OPENCLAW_ENABLE_SMS &&
+      BuildConfig.ICLAW_ENABLE_SMS &&
         context.packageManager?.hasSystemFeature(PackageManager.FEATURE_TELEPHONY) == true
     }
-  val callLogPermissionAvailable = remember { BuildConfig.OPENCLAW_ENABLE_CALL_LOG }
+  val callLogPermissionAvailable = remember { BuildConfig.ICLAW_ENABLE_CALL_LOG }
   val photosPermission =
     if (Build.VERSION.SDK_INT >= 33) {
       Manifest.permission.READ_MEDIA_IMAGES

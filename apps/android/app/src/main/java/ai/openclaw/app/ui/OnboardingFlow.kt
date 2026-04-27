@@ -242,10 +242,10 @@ fun OnboardingFlow(viewModel: MainViewModel, modifier: Modifier = Modifier) {
 
   val smsAvailable =
     remember(context) {
-      BuildConfig.OPENCLAW_ENABLE_SMS &&
+      BuildConfig.ICLAW_ENABLE_SMS &&
         context.packageManager?.hasSystemFeature(PackageManager.FEATURE_TELEPHONY) == true
     }
-  val callLogAvailable = remember { BuildConfig.OPENCLAW_ENABLE_CALL_LOG }
+  val callLogAvailable = remember { BuildConfig.ICLAW_ENABLE_CALL_LOG }
   val motionAvailable =
     remember(context) {
       hasMotionCapabilities(context)

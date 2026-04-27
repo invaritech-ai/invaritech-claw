@@ -2,10 +2,10 @@ import com.android.build.api.variant.impl.VariantOutputImpl
 
 val dnsjavaInetAddressResolverService = "META-INF/services/java.net.spi.InetAddressResolverProvider"
 
-val androidStoreFile = providers.gradleProperty("OPENCLAW_ANDROID_STORE_FILE").orNull?.takeIf { it.isNotBlank() }
-val androidStorePassword = providers.gradleProperty("OPENCLAW_ANDROID_STORE_PASSWORD").orNull?.takeIf { it.isNotBlank() }
-val androidKeyAlias = providers.gradleProperty("OPENCLAW_ANDROID_KEY_ALIAS").orNull?.takeIf { it.isNotBlank() }
-val androidKeyPassword = providers.gradleProperty("OPENCLAW_ANDROID_KEY_PASSWORD").orNull?.takeIf { it.isNotBlank() }
+val androidStoreFile = providers.gradleProperty("ICLAW_ANDROID_STORE_FILE").orNull?.takeIf { it.isNotBlank() }
+val androidStorePassword = providers.gradleProperty("ICLAW_ANDROID_STORE_PASSWORD").orNull?.takeIf { it.isNotBlank() }
+val androidKeyAlias = providers.gradleProperty("ICLAW_ANDROID_KEY_ALIAS").orNull?.takeIf { it.isNotBlank() }
+val androidKeyPassword = providers.gradleProperty("ICLAW_ANDROID_KEY_PASSWORD").orNull?.takeIf { it.isNotBlank() }
 val resolvedAndroidStoreFile =
     androidStoreFile?.let { storeFilePath ->
         if (storeFilePath.startsWith("~/")) {
@@ -26,9 +26,9 @@ val wantsAndroidReleaseBuild =
 
 if (wantsAndroidReleaseBuild && !hasAndroidReleaseSigning) {
     error(
-        "Missing Android release signing properties. Set OPENCLAW_ANDROID_STORE_FILE, " +
-            "OPENCLAW_ANDROID_STORE_PASSWORD, OPENCLAW_ANDROID_KEY_ALIAS, and " +
-            "OPENCLAW_ANDROID_KEY_PASSWORD in ~/.gradle/gradle.properties.",
+        "Missing Android release signing properties. Set ICLAW_ANDROID_STORE_FILE, " +
+            "ICLAW_ANDROID_STORE_PASSWORD, ICLAW_ANDROID_KEY_ALIAS, and " +
+            "ICLAW_ANDROID_KEY_PASSWORD in ~/.gradle/gradle.properties.",
     )
 }
 
@@ -78,13 +78,13 @@ android {
     productFlavors {
         create("play") {
             dimension = "store"
-            buildConfigField("boolean", "OPENCLAW_ENABLE_SMS", "false")
-            buildConfigField("boolean", "OPENCLAW_ENABLE_CALL_LOG", "false")
+            buildConfigField("boolean", "ICLAW_ENABLE_SMS", "false")
+            buildConfigField("boolean", "ICLAW_ENABLE_CALL_LOG", "false")
         }
         create("thirdParty") {
             dimension = "store"
-            buildConfigField("boolean", "OPENCLAW_ENABLE_SMS", "true")
-            buildConfigField("boolean", "OPENCLAW_ENABLE_CALL_LOG", "true")
+            buildConfigField("boolean", "ICLAW_ENABLE_SMS", "true")
+            buildConfigField("boolean", "ICLAW_ENABLE_CALL_LOG", "true")
         }
     }
 

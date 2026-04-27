@@ -53,7 +53,7 @@ class GatewayDiscovery(
   private val connectivity = context.getSystemService(ConnectivityManager::class.java)
   private val dns = DnsResolver.getInstance()
   private val serviceType = "_openclaw-gw._tcp."
-  private val wideAreaDomain = System.getenv("OPENCLAW_WIDE_AREA_DOMAIN")
+  private val wideAreaDomain = System.getenv("ICLAW_WIDE_AREA_DOMAIN")
   private val logTag = "OpenClaw/GatewayDiscovery"
 
   private val localById = ConcurrentHashMap<String, GatewayEndpoint>()

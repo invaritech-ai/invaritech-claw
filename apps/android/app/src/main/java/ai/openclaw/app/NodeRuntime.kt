@@ -97,8 +97,8 @@ class NodeRuntime(
 
   private val deviceHandler: DeviceHandler = DeviceHandler(
     appContext = appContext,
-    smsEnabled = BuildConfig.OPENCLAW_ENABLE_SMS,
-    callLogEnabled = BuildConfig.OPENCLAW_ENABLE_CALL_LOG,
+    smsEnabled = BuildConfig.ICLAW_ENABLE_SMS,
+    callLogEnabled = BuildConfig.ICLAW_ENABLE_CALL_LOG,
   )
 
   private val notificationsHandler: NotificationsHandler = NotificationsHandler(
@@ -147,10 +147,10 @@ class NodeRuntime(
     voiceWakeMode = { VoiceWakeMode.Off },
     motionActivityAvailable = { motionHandler.isActivityAvailable() },
     motionPedometerAvailable = { motionHandler.isPedometerAvailable() },
-    sendSmsAvailable = { BuildConfig.OPENCLAW_ENABLE_SMS && sms.canSendSms() },
-    readSmsAvailable = { BuildConfig.OPENCLAW_ENABLE_SMS && sms.canReadSms() },
-    smsSearchPossible = { BuildConfig.OPENCLAW_ENABLE_SMS && sms.hasTelephonyFeature() },
-    callLogAvailable = { BuildConfig.OPENCLAW_ENABLE_CALL_LOG },
+    sendSmsAvailable = { BuildConfig.ICLAW_ENABLE_SMS && sms.canSendSms() },
+    readSmsAvailable = { BuildConfig.ICLAW_ENABLE_SMS && sms.canReadSms() },
+    smsSearchPossible = { BuildConfig.ICLAW_ENABLE_SMS && sms.hasTelephonyFeature() },
+    callLogAvailable = { BuildConfig.ICLAW_ENABLE_CALL_LOG },
     hasRecordAudioPermission = { hasRecordAudioPermission() },
     manualTls = { manualTls.value },
   )
@@ -173,11 +173,11 @@ class NodeRuntime(
     isForeground = { _isForeground.value },
     cameraEnabled = { cameraEnabled.value },
     locationEnabled = { locationMode.value != LocationMode.Off },
-    sendSmsAvailable = { BuildConfig.OPENCLAW_ENABLE_SMS && sms.canSendSms() },
-    readSmsAvailable = { BuildConfig.OPENCLAW_ENABLE_SMS && sms.canReadSms() },
-    smsFeatureEnabled = { BuildConfig.OPENCLAW_ENABLE_SMS },
+    sendSmsAvailable = { BuildConfig.ICLAW_ENABLE_SMS && sms.canSendSms() },
+    readSmsAvailable = { BuildConfig.ICLAW_ENABLE_SMS && sms.canReadSms() },
+    smsFeatureEnabled = { BuildConfig.ICLAW_ENABLE_SMS },
     smsTelephonyAvailable = { sms.hasTelephonyFeature() },
-    callLogAvailable = { BuildConfig.OPENCLAW_ENABLE_CALL_LOG },
+    callLogAvailable = { BuildConfig.ICLAW_ENABLE_CALL_LOG },
     debugBuild = { BuildConfig.DEBUG },
     refreshNodeCanvasCapability = { nodeSession.refreshNodeCanvasCapability() },
     onCanvasA2uiPush = {

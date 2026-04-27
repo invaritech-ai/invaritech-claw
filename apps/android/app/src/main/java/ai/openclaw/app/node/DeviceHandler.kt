@@ -26,8 +26,8 @@ import kotlinx.serialization.json.put
 
 class DeviceHandler(
   private val appContext: Context,
-  private val smsEnabled: Boolean = BuildConfig.OPENCLAW_ENABLE_SMS,
-  private val callLogEnabled: Boolean = BuildConfig.OPENCLAW_ENABLE_CALL_LOG,
+  private val smsEnabled: Boolean = BuildConfig.ICLAW_ENABLE_SMS,
+  private val callLogEnabled: Boolean = BuildConfig.ICLAW_ENABLE_CALL_LOG,
 ) {
   companion object {
     internal fun hasAnySmsCapability(
