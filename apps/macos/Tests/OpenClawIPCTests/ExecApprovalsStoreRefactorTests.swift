@@ -11,7 +11,7 @@ struct ExecApprovalsStoreRefactorTests {
             .appendingPathComponent("openclaw-state-\(UUID().uuidString)", isDirectory: true)
         defer { try? FileManager().removeItem(at: stateDir) }
 
-        try await TestIsolation.withEnvValues(["OPENCLAW_STATE_DIR": stateDir.path]) {
+        try await TestIsolation.withEnvValues(["ICLAW_STATE_DIR": stateDir.path]) {
             try await body(stateDir)
         }
     }

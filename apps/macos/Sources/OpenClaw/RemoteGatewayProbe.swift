@@ -63,13 +63,13 @@ enum RemoteGatewayAuthIssue: Equatable {
         case .tokenRequired:
             "Paste the token configured on the gateway host. "
                 + "On the gateway host, run `openclaw config get gateway.auth.token`. "
-                + "If the gateway uses an environment variable instead, use `OPENCLAW_GATEWAY_TOKEN`."
+                + "If the gateway uses an environment variable instead, use `ICLAW_GATEWAY_TOKEN`."
         case .tokenMismatch:
-            "Check `gateway.auth.token` or `OPENCLAW_GATEWAY_TOKEN` on the gateway host and try again."
+            "Check `gateway.auth.token` or `ICLAW_GATEWAY_TOKEN` on the gateway host and try again."
         case .gatewayTokenNotConfigured:
             "This gateway is set to token auth, but no `gateway.auth.token` is configured on the gateway host. "
                 + "If the gateway uses an environment variable instead, "
-                + "set `OPENCLAW_GATEWAY_TOKEN` before starting the gateway."
+                + "set `ICLAW_GATEWAY_TOKEN` before starting the gateway."
         case .setupCodeExpired:
             "Scan or paste a fresh setup code from an already-paired OpenClaw client, then try again."
         case .passwordRequired:
@@ -101,7 +101,7 @@ enum RemoteGatewayAuthIssue: Equatable {
         case .tokenRequired:
             "This gateway requires an auth token from the gateway host."
         case .tokenMismatch:
-            "Gateway token mismatch. Check gateway.auth.token or OPENCLAW_GATEWAY_TOKEN on the gateway host."
+            "Gateway token mismatch. Check gateway.auth.token or ICLAW_GATEWAY_TOKEN on the gateway host."
         case .gatewayTokenNotConfigured:
             "This gateway has token auth enabled, but no gateway.auth.token is configured on the host."
         case .setupCodeExpired:

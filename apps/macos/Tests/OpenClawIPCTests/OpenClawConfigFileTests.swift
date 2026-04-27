@@ -15,7 +15,7 @@ struct OpenClawConfigFileTests {
     func `config path respects env override`() async {
         let override = self.makeConfigOverridePath()
 
-        await TestIsolation.withEnvValues(["OPENCLAW_CONFIG_PATH": override]) {
+        await TestIsolation.withEnvValues(["ICLAW_CONFIG_PATH": override]) {
             #expect(OpenClawConfigFile.url().path == override)
         }
     }
@@ -25,7 +25,7 @@ struct OpenClawConfigFileTests {
     func `remote gateway port parses and matches host`() async {
         let override = self.makeConfigOverridePath()
 
-        await TestIsolation.withEnvValues(["OPENCLAW_CONFIG_PATH": override]) {
+        await TestIsolation.withEnvValues(["ICLAW_CONFIG_PATH": override]) {
             OpenClawConfigFile.saveDict([
                 "gateway": [
                     "remote": [
@@ -45,7 +45,7 @@ struct OpenClawConfigFileTests {
     func `set remote gateway url preserves scheme`() async {
         let override = self.makeConfigOverridePath()
 
-        await TestIsolation.withEnvValues(["OPENCLAW_CONFIG_PATH": override]) {
+        await TestIsolation.withEnvValues(["ICLAW_CONFIG_PATH": override]) {
             OpenClawConfigFile.saveDict([
                 "gateway": [
                     "remote": [
@@ -65,7 +65,7 @@ struct OpenClawConfigFileTests {
     func `clear remote gateway url removes only url field`() async {
         let override = self.makeConfigOverridePath()
 
-        await TestIsolation.withEnvValues(["OPENCLAW_CONFIG_PATH": override]) {
+        await TestIsolation.withEnvValues(["ICLAW_CONFIG_PATH": override]) {
             OpenClawConfigFile.saveDict([
                 "gateway": [
                     "remote": [
@@ -89,8 +89,8 @@ struct OpenClawConfigFileTests {
             .path
 
         await TestIsolation.withEnvValues([
-            "OPENCLAW_CONFIG_PATH": nil,
-            "OPENCLAW_STATE_DIR": dir,
+            "ICLAW_CONFIG_PATH": nil,
+            "ICLAW_STATE_DIR": dir,
         ]) {
             #expect(OpenClawConfigFile.stateDirURL().path == dir)
             #expect(OpenClawConfigFile.url().path == "\(dir)/openclaw.json")
@@ -108,8 +108,8 @@ struct OpenClawConfigFileTests {
         defer { try? FileManager().removeItem(at: stateDir) }
 
         try await TestIsolation.withEnvValues([
-            "OPENCLAW_STATE_DIR": stateDir.path,
-            "OPENCLAW_CONFIG_PATH": configPath.path,
+            "ICLAW_STATE_DIR": stateDir.path,
+            "ICLAW_CONFIG_PATH": configPath.path,
         ]) {
             OpenClawConfigFile.saveDict([
                 "gateway": ["mode": "local"],
@@ -151,8 +151,8 @@ struct OpenClawConfigFileTests {
         defer { try? FileManager().removeItem(at: stateDir) }
 
         try await TestIsolation.withEnvValues([
-            "OPENCLAW_STATE_DIR": stateDir.path,
-            "OPENCLAW_CONFIG_PATH": configPath.path,
+            "ICLAW_STATE_DIR": stateDir.path,
+            "ICLAW_CONFIG_PATH": configPath.path,
         ]) {
             OpenClawConfigFile.saveDict([
                 "update": ["channel": "beta"],

@@ -9,8 +9,8 @@ struct GatewayLaunchAgentManagerTests {
         let plist: [String: Any] = [
             "ProgramArguments": ["openclaw", "gateway", "--port", "18789", "--bind", "loopback"],
             "EnvironmentVariables": [
-                "OPENCLAW_GATEWAY_TOKEN": " secret ",
-                "OPENCLAW_GATEWAY_PASSWORD": "pw",
+                "ICLAW_GATEWAY_TOKEN": " secret ",
+                "ICLAW_GATEWAY_PASSWORD": "pw",
             ],
         ]
         let data = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)

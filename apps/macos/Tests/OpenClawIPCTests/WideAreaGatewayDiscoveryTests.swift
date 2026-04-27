@@ -23,13 +23,13 @@ private final class NameserverQueryLog: @unchecked Sendable {
 @Suite(.serialized)
 struct WideAreaGatewayDiscoveryTests {
     @Test func `discovers beacon from tailnet dns sd fallback`() {
-        let originalWideAreaDomain = getenv("OPENCLAW_WIDE_AREA_DOMAIN").map { String(cString: $0) }
-        setenv("OPENCLAW_WIDE_AREA_DOMAIN", "openclaw.internal", 1)
+        let originalWideAreaDomain = getenv("ICLAW_WIDE_AREA_DOMAIN").map { String(cString: $0) }
+        setenv("ICLAW_WIDE_AREA_DOMAIN", "openclaw.internal", 1)
         defer {
             if let originalWideAreaDomain {
-                setenv("OPENCLAW_WIDE_AREA_DOMAIN", originalWideAreaDomain, 1)
+                setenv("ICLAW_WIDE_AREA_DOMAIN", originalWideAreaDomain, 1)
             } else {
-                unsetenv("OPENCLAW_WIDE_AREA_DOMAIN")
+                unsetenv("ICLAW_WIDE_AREA_DOMAIN")
             }
         }
         let statusJson = """
@@ -76,13 +76,13 @@ struct WideAreaGatewayDiscoveryTests {
     }
 
     @Test func `attacker peer cannot become nameserver`() {
-        let originalWideAreaDomain = getenv("OPENCLAW_WIDE_AREA_DOMAIN").map { String(cString: $0) }
-        setenv("OPENCLAW_WIDE_AREA_DOMAIN", "openclaw.internal", 1)
+        let originalWideAreaDomain = getenv("ICLAW_WIDE_AREA_DOMAIN").map { String(cString: $0) }
+        setenv("ICLAW_WIDE_AREA_DOMAIN", "openclaw.internal", 1)
         defer {
             if let originalWideAreaDomain {
-                setenv("OPENCLAW_WIDE_AREA_DOMAIN", originalWideAreaDomain, 1)
+                setenv("ICLAW_WIDE_AREA_DOMAIN", originalWideAreaDomain, 1)
             } else {
-                unsetenv("OPENCLAW_WIDE_AREA_DOMAIN")
+                unsetenv("ICLAW_WIDE_AREA_DOMAIN")
             }
         }
         let statusJson = """

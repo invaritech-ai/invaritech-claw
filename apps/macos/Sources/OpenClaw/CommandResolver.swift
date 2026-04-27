@@ -13,7 +13,7 @@ enum CommandResolver {
     static func gatewayEntrypoint(in root: URL) -> String? {
         let distEntry = root.appendingPathComponent("dist/index.js").path
         if FileManager().isReadableFile(atPath: distEntry) { return distEntry }
-        let openclawEntry = root.appendingPathComponent("openclaw.mjs").path
+        let openclawEntry = root.appendingPathComponent("iclaw.mjs").path
         if FileManager().isReadableFile(atPath: openclawEntry) { return openclawEntry }
         let binEntry = root.appendingPathComponent("bin/openclaw.js").path
         if FileManager().isReadableFile(atPath: binEntry) { return binEntry }
@@ -44,9 +44,9 @@ enum CommandResolver {
 
     static func errorCommand(with message: String) -> [String] {
         let script = """
-        cat <<'__OPENCLAW_ERR__' >&2
+        cat <<'__ICLAW_ERR__' >&2
         \(message)
-        __OPENCLAW_ERR__
+        __ICLAW_ERR__
         exit 1
         """
         return ["/bin/sh", "-c", script]
@@ -216,7 +216,7 @@ enum CommandResolver {
     static func nodeCliPath() -> String? {
         let root = self.projectRoot()
         let candidates = [
-            root.appendingPathComponent("openclaw.mjs").path,
+            root.appendingPathComponent("iclaw.mjs").path,
             root.appendingPathComponent("bin/openclaw.js").path,
         ]
         for candidate in candidates where FileManager().isReadableFile(atPath: candidate) {
@@ -283,7 +283,7 @@ enum CommandResolver {
         switch runtimeResult {
         case .success:
             let missingEntry = """
-            openclaw entrypoint missing (looked for dist/index.js or openclaw.mjs); run pnpm build.
+            openclaw entrypoint missing (looked for dist/index.js or iclaw.mjs); run pnpm build.
             """
             return self.errorCommand(with: missingEntry)
         case let .failure(error):
@@ -380,10 +380,10 @@ enum CommandResolver {
           else
             echo "Node >=22 required on remote host"; exit 127;
           fi
-        elif [ -n "${PRJ:-}" ] && [ -f "$PRJ/openclaw.mjs" ]; then
+        elif [ -n "${PRJ:-}" ] && [ -f "$PRJ/iclaw.mjs" ]; then
           if command -v node >/dev/null 2>&1; then
-            CLI="node $PRJ/openclaw.mjs"
-            node "$PRJ/openclaw.mjs" \(quotedArgs);
+            CLI="node $PRJ/iclaw.mjs"
+            node "$PRJ/iclaw.mjs" \(quotedArgs);
           else
             echo "Node >=22 required on remote host"; exit 127;
           fi
