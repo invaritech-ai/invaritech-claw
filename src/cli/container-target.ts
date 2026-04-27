@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import { consumeRootOptionToken, FLAG_TERMINATOR } from "../infra/cli-root-options.js";
 import { normalizeOptionalString } from "../shared/string-coerce.js";
 import { resolveCliArgvInvocation } from "./argv-invocation.js";
+import { resolveCliName } from "./cli-name.js";
 import { scanCliRootOptions } from "./root-option-scan.js";
 import { takeCliRootOptionValue } from "./root-option-value.js";
 
@@ -57,7 +58,7 @@ export function resolveCliContainerTarget(
   if (!parsed.ok) {
     throw new Error(parsed.error);
   }
-  return parsed.container ?? normalizeOptionalString(env.OPENCLAW_CONTAINER) ?? null;
+  return parsed.container ?? normalizeOptionalString(env.ICLAW_CONTAINER) ?? null;
 }
 
 function isContainerRunning(params: {
@@ -127,6 +128,7 @@ function buildContainerExecArgs(params: {
   exec: ContainerRuntimeExec;
   containerName: string;
   argv: string[];
+  cliName: string;
   stdinIsTTY: boolean;
   stdoutIsTTY: boolean;
 }): string[] {
@@ -137,11 +139,11 @@ function buildContainerExecArgs(params: {
     "exec",
     ...interactiveFlags,
     envFlag,
-    `OPENCLAW_CONTAINER_HINT=${params.containerName}`,
+    `ICLAW_CONTAINER_HINT=${params.containerName}`,
     envFlag,
-    "OPENCLAW_CLI_CONTAINER_BYPASS=1",
+    "ICLAW_CLI_CONTAINER_BYPASS=1",
     params.containerName,
-    "openclaw",
+    params.cliName,
     ...params.argv,
   ];
 }
@@ -150,31 +152,33 @@ function buildContainerExecEnv(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
   const next = { ...env };
   // Container-targeted CLI invocations should use the container's own profile
   // and gateway auth/runtime state rather than inheriting host overrides.
-  delete next.OPENCLAW_PROFILE;
-  delete next.OPENCLAW_GATEWAY_PORT;
-  delete next.OPENCLAW_GATEWAY_URL;
-  delete next.OPENCLAW_GATEWAY_TOKEN;
-  delete next.OPENCLAW_GATEWAY_PASSWORD;
+  delete next.ICLAW_PROFILE;
+  delete next.ICLAW_GATEWAY_PORT;
+  delete next.ICLAW_GATEWAY_URL;
+  delete next.ICLAW_GATEWAY_TOKEN;
+  delete next.ICLAW_GATEWAY_PASSWORD;
   // The child CLI should render container-aware follow-up commands via
-  // OPENCLAW_CONTAINER_HINT, but it should not treat itself as still
+  // ICLAW_CONTAINER_HINT, but it should not treat itself as still
   // container-targeted for validation/routing.
-  next.OPENCLAW_CONTAINER = "";
+  next.ICLAW_CONTAINER = "";
   return next;
 }
 
-function isBlockedContainerCommand(argv: string[]): boolean {
-  if (resolveCliArgvInvocation(["node", "openclaw", ...argv]).primary === "update") {
+function isBlockedContainerCommand(fullArgv: string[]): boolean {
+  const cliName = resolveCliName(fullArgv);
+  const tail = fullArgv.slice(2);
+  if (resolveCliArgvInvocation(["node", cliName, ...tail]).primary === "update") {
     return true;
   }
-  for (let i = 0; i < argv.length; i += 1) {
-    const arg = argv[i];
+  for (let i = 0; i < tail.length; i += 1) {
+    const arg = tail[i];
     if (!arg || arg === FLAG_TERMINATOR) {
       return false;
     }
     if (arg === "--update") {
       return true;
     }
-    const consumedRootOption = consumeRootOptionToken(argv, i);
+    const consumedRootOption = consumeRootOptionToken(tail, i);
     if (consumedRootOption > 0) {
       i += consumedRootOption - 1;
       continue;
@@ -197,7 +201,7 @@ export function maybeRunCliInContainer(
     stdoutIsTTY: deps?.stdoutIsTTY ?? process.stdout.isTTY,
   };
 
-  if (resolvedDeps.env.OPENCLAW_CLI_CONTAINER_BYPASS === "1") {
+  if (resolvedDeps.env.ICLAW_CLI_CONTAINER_BYPASS === "1") {
     return { handled: false, argv };
   }
 
@@ -209,9 +213,9 @@ export function maybeRunCliInContainer(
   if (!containerName) {
     return { handled: false, argv: parsed.argv };
   }
-  if (isBlockedContainerCommand(parsed.argv.slice(2))) {
+  if (isBlockedContainerCommand(parsed.argv)) {
     throw new Error(
-      "openclaw update is not supported with --container; rebuild or restart the container image instead.",
+      `${resolveCliName(parsed.argv)} update is not supported with --container; rebuild or restart the container image instead.`,
     );
   }
 
@@ -230,6 +234,7 @@ export function maybeRunCliInContainer(
       exec: runningContainer,
       containerName: runningContainer.containerName,
       argv: parsed.argv.slice(2),
+      cliName: resolveCliName(parsed.argv),
       stdinIsTTY: resolvedDeps.stdinIsTTY,
       stdoutIsTTY: resolvedDeps.stdoutIsTTY,
     }),

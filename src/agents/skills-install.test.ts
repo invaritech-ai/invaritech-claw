@@ -110,9 +110,9 @@ async function withWorkspaceCase(
 ): Promise<void> {
   const workspaceDir = await workspaceSuite.createCaseDir("case");
   const stateDir = path.join(workspaceDir, "state");
-  const envSnapshot = captureEnv(["OPENCLAW_STATE_DIR"]);
+  const envSnapshot = captureEnv(["ICLAW_STATE_DIR"]);
   try {
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    process.env.ICLAW_STATE_DIR = stateDir;
     await run({ workspaceDir, stateDir });
   } finally {
     envSnapshot.restore();

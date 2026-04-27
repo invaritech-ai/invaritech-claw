@@ -38,12 +38,7 @@ function mergeInstallInvocationEnv(params: {
       continue;
     }
     const upper = key.toUpperCase();
-    if (
-      upper === "HOME" ||
-      upper === "PATH" ||
-      upper === "TMPDIR" ||
-      upper.startsWith("OPENCLAW_")
-    ) {
+    if (upper === "HOME" || upper === "PATH" || upper === "TMPDIR" || upper.startsWith("ICLAW_")) {
       continue;
     }
     if (isDangerousHostEnvVarName(key) || isDangerousHostEnvOverrideVarName(key)) {

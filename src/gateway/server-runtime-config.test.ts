@@ -117,15 +117,15 @@ describe("resolveGatewayRuntimeConfig", () => {
     let originalToken: string | undefined;
 
     beforeEach(() => {
-      originalToken = process.env.OPENCLAW_GATEWAY_TOKEN;
-      delete process.env.OPENCLAW_GATEWAY_TOKEN;
+      originalToken = process.env.ICLAW_GATEWAY_TOKEN;
+      delete process.env.ICLAW_GATEWAY_TOKEN;
     });
 
     afterEach(() => {
       if (originalToken !== undefined) {
-        process.env.OPENCLAW_GATEWAY_TOKEN = originalToken;
+        process.env.ICLAW_GATEWAY_TOKEN = originalToken;
       } else {
-        delete process.env.OPENCLAW_GATEWAY_TOKEN;
+        delete process.env.ICLAW_GATEWAY_TOKEN;
       }
     });
 
@@ -159,7 +159,7 @@ describe("resolveGatewayRuntimeConfig", () => {
         name: "token mode without token",
         cfg: { gateway: { bind: "lan" as const, auth: { mode: "token" as const } } },
         expectedMessage:
-          "gateway auth mode is token, but no token was configured (set gateway.auth.token or OPENCLAW_GATEWAY_TOKEN)",
+          "gateway auth mode is token, but no token was configured (set gateway.auth.token or ICLAW_GATEWAY_TOKEN)",
       },
       {
         name: "lan binding with explicit none auth",
@@ -397,6 +397,72 @@ describe("resolveGatewayRuntimeConfig", () => {
       });
 
       expect(result.strictTransportSecurityHeader).toBe(expected);
+    });
+  });
+
+  describe("personal assistant hardening (lean / minimal)", () => {
+    const originalLean = process.env.ICLAW_LEAN_GATEWAY;
+    const originalMinimal = process.env.ICLAW_MINIMAL_ASSISTANT;
+
+    afterEach(() => {
+      if (originalLean === undefined) {
+        delete process.env.ICLAW_LEAN_GATEWAY;
+      } else {
+        process.env.ICLAW_LEAN_GATEWAY = originalLean;
+      }
+      if (originalMinimal === undefined) {
+        delete process.env.ICLAW_MINIMAL_ASSISTANT;
+      } else {
+        process.env.ICLAW_MINIMAL_ASSISTANT = originalMinimal;
+      }
+    });
+
+    it("rejects auth mode=none when lean is enabled", async () => {
+      process.env.ICLAW_LEAN_GATEWAY = "1";
+      await expect(
+        resolveGatewayRuntimeConfig({
+          cfg: {
+            gateway: {
+              bind: "loopback",
+              auth: { mode: "none" },
+            },
+          },
+          port: 18789,
+        }),
+      ).rejects.toThrow(
+        /ICLAW_LEAN_GATEWAY=1 or ICLAW_MINIMAL_ASSISTANT=1 requires gateway shared-secret auth/,
+      );
+    });
+
+    it("rejects auth mode=none when ICLAW_MINIMAL_ASSISTANT=1", async () => {
+      process.env.ICLAW_MINIMAL_ASSISTANT = "1";
+      await expect(
+        resolveGatewayRuntimeConfig({
+          cfg: {
+            gateway: {
+              bind: "loopback",
+              auth: { mode: "none" },
+            },
+          },
+          port: 18789,
+        }),
+      ).rejects.toThrow(
+        /ICLAW_LEAN_GATEWAY=1 or ICLAW_MINIMAL_ASSISTANT=1 requires gateway shared-secret auth/,
+      );
+    });
+
+    it("allows token auth when lean is enabled", async () => {
+      process.env.ICLAW_LEAN_GATEWAY = "1";
+      const result = await resolveGatewayRuntimeConfig({
+        cfg: {
+          gateway: {
+            bind: "loopback",
+            auth: TOKEN_AUTH,
+          },
+        },
+        port: 18789,
+      });
+      expect(result.authMode).toBe("token");
     });
   });
 });

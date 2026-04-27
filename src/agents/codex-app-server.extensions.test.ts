@@ -9,7 +9,7 @@ import {
   writeTempPlugin,
 } from "./test-helpers/temp-plugin-extension-fixtures.js";
 
-const originalBundledPluginsDir = process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
+const originalBundledPluginsDir = process.env.ICLAW_BUNDLED_PLUGINS_DIR;
 const tempDirs: string[] = [];
 
 function createTempDir(): string {
@@ -23,7 +23,7 @@ afterEach(() => {
 describe("Codex app-server extension factories", () => {
   it("includes plugin-registered Codex app-server extension factories and restores them from cache", async () => {
     const tmp = createTempDir();
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = tmp;
+    process.env.ICLAW_BUNDLED_PLUGINS_DIR = tmp;
 
     writeTempPlugin({
       dir: tmp,
@@ -77,7 +77,7 @@ describe("Codex app-server extension factories", () => {
 
   it("rejects Codex app-server extension factories from non-bundled plugins even when they declare the contract", () => {
     const tmp = createTempDir();
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.ICLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
 
     const pluginFile = writeTempPlugin({
       dir: tmp,
@@ -114,7 +114,7 @@ describe("Codex app-server extension factories", () => {
 
   it("rejects bundled plugins that omit the Codex app-server extension contract", () => {
     const tmp = createTempDir();
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = tmp;
+    process.env.ICLAW_BUNDLED_PLUGINS_DIR = tmp;
 
     writeTempPlugin({
       dir: tmp,
@@ -150,7 +150,7 @@ describe("Codex app-server extension factories", () => {
 
   it("rejects non-function Codex app-server extension factories from bundled plugins", () => {
     const tmp = createTempDir();
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = tmp;
+    process.env.ICLAW_BUNDLED_PLUGINS_DIR = tmp;
 
     writeTempPlugin({
       dir: tmp,

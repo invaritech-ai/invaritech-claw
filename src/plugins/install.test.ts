@@ -707,7 +707,7 @@ describe("installPluginFromArchive", () => {
       return;
     }
     expect(result.error).toContain("openclaw.extensions");
-    expect(result.code).toBe(PLUGIN_INSTALL_ERROR_CODE.MISSING_OPENCLAW_EXTENSIONS);
+    expect(result.code).toBe(PLUGIN_INSTALL_ERROR_CODE.MISSING_ICLAW_EXTENSIONS);
   });
 
   it("rejects legacy plugin package shape when openclaw.extensions is missing", async () => {
@@ -739,7 +739,7 @@ describe("installPluginFromArchive", () => {
     if (!result.ok) {
       expect(result.error).toContain("package.json missing openclaw.extensions");
       expect(result.error).toContain("update the plugin package");
-      expect(result.code).toBe(PLUGIN_INSTALL_ERROR_CODE.MISSING_OPENCLAW_EXTENSIONS);
+      expect(result.code).toBe(PLUGIN_INSTALL_ERROR_CODE.MISSING_ICLAW_EXTENSIONS);
       return;
     }
     expect.unreachable("expected install to fail without openclaw.extensions");
@@ -1273,7 +1273,7 @@ describe("installPluginFromArchive", () => {
   });
 
   it("fails package installs when manifest traversal exceeds the directory cap", async () => {
-    vi.stubEnv("OPENCLAW_INSTALL_SCAN_MAX_DIRECTORIES", "4");
+    vi.stubEnv("ICLAW_INSTALL_SCAN_MAX_DIRECTORIES", "4");
 
     const { pluginDir, extensionsDir } = setupPluginInstallDirs();
     fs.writeFileSync(
@@ -1301,7 +1301,7 @@ describe("installPluginFromArchive", () => {
   });
 
   it("fails package installs when manifest traversal exceeds the depth cap", async () => {
-    vi.stubEnv("OPENCLAW_INSTALL_SCAN_MAX_DEPTH", "2");
+    vi.stubEnv("ICLAW_INSTALL_SCAN_MAX_DEPTH", "2");
 
     const { pluginDir, extensionsDir } = setupPluginInstallDirs();
     fs.writeFileSync(
@@ -2377,10 +2377,31 @@ describe("linkOpenClawPeerDependencies (via installPluginFromDir)", () => {
     fs.writeFileSync(path.join(pluginDir, "index.js"), "export {};\n", "utf-8");
   }
 
-  it("creates a node_modules/openclaw symlink when peerDependencies declares openclaw", async () => {
+  it("creates a node_modules/iclaw symlink when peerDependencies declares iclaw", async () => {
     const { pluginDir, extensionsDir } = setupPluginInstallDirs();
     const fakeHostRoot = suiteTempRootTracker.makeTempDir();
     const run = vi.mocked(runCommandWithTimeout);
+    resolveRootMock.mockReturnValue(fakeHostRoot);
+
+    writePluginWithPeerDeps(pluginDir, { iclaw: "*" });
+
+    const { result } = await installFromDirWithWarnings({ pluginDir, extensionsDir });
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) {
+      return;
+    }
+
+    const symlinkPath = path.join(result.targetDir, "node_modules", "iclaw");
+    const stat = fs.lstatSync(symlinkPath);
+    expect(stat.isSymbolicLink()).toBe(true);
+    expect(fs.realpathSync(symlinkPath)).toBe(fs.realpathSync(fakeHostRoot));
+    expect(run).not.toHaveBeenCalled();
+  });
+
+  it("creates a node_modules/openclaw symlink when peerDependencies declares openclaw (legacy)", async () => {
+    const { pluginDir, extensionsDir } = setupPluginInstallDirs();
+    const fakeHostRoot = suiteTempRootTracker.makeTempDir();
     resolveRootMock.mockReturnValue(fakeHostRoot);
 
     writePluginWithPeerDeps(pluginDir, { openclaw: "*" });
@@ -2396,7 +2417,6 @@ describe("linkOpenClawPeerDependencies (via installPluginFromDir)", () => {
     const stat = fs.lstatSync(symlinkPath);
     expect(stat.isSymbolicLink()).toBe(true);
     expect(fs.realpathSync(symlinkPath)).toBe(fs.realpathSync(fakeHostRoot));
-    expect(run).not.toHaveBeenCalled();
   });
 
   it("does not create a symlink when peerDependencies is empty", async () => {
@@ -2413,8 +2433,8 @@ describe("linkOpenClawPeerDependencies (via installPluginFromDir)", () => {
     }
 
     const nodeModulesDir = path.join(result.targetDir, "node_modules");
-    const symlinkPath = path.join(nodeModulesDir, "openclaw");
-    expect(fs.existsSync(symlinkPath)).toBe(false);
+    expect(fs.existsSync(path.join(nodeModulesDir, "openclaw"))).toBe(false);
+    expect(fs.existsSync(path.join(nodeModulesDir, "iclaw"))).toBe(false);
   });
 
   it("is idempotent - re-installing replaces an existing symlink without error", async () => {
@@ -2422,7 +2442,7 @@ describe("linkOpenClawPeerDependencies (via installPluginFromDir)", () => {
     const fakeHostRoot = suiteTempRootTracker.makeTempDir();
     resolveRootMock.mockReturnValue(fakeHostRoot);
 
-    writePluginWithPeerDeps(pluginDir, { openclaw: "*" });
+    writePluginWithPeerDeps(pluginDir, { iclaw: "*" });
 
     // First install
     const { result: first } = await installFromDirWithWarnings({ pluginDir, extensionsDir });
@@ -2440,7 +2460,7 @@ describe("linkOpenClawPeerDependencies (via installPluginFromDir)", () => {
     if (!second.ok) {
       return;
     }
-    const symlinkPath = path.join(second.targetDir, "node_modules", "openclaw");
+    const symlinkPath = path.join(second.targetDir, "node_modules", "iclaw");
     expect(fs.lstatSync(symlinkPath).isSymbolicLink()).toBe(true);
   });
 
@@ -2448,11 +2468,11 @@ describe("linkOpenClawPeerDependencies (via installPluginFromDir)", () => {
     const { pluginDir, extensionsDir } = setupPluginInstallDirs();
     resolveRootMock.mockReturnValue(null);
 
-    writePluginWithPeerDeps(pluginDir, { openclaw: "*" });
+    writePluginWithPeerDeps(pluginDir, { iclaw: "*" });
 
     const { result, warnings } = await installFromDirWithWarnings({ pluginDir, extensionsDir });
 
     expect(result.ok).toBe(true);
-    expect(warnings.some((w) => w.includes("Could not locate openclaw package root"))).toBe(true);
+    expect(warnings.some((w) => w.includes("Could not locate iclaw package root"))).toBe(true);
   });
 });

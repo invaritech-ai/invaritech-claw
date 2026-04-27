@@ -90,7 +90,7 @@ describe("doctor plugin manifest legacy contract repair", () => {
     const migrations = collectLegacyPluginManifestContractMigrations({
       env: {
         ...process.env,
-        OPENCLAW_BUNDLED_PLUGINS_DIR: pluginsRoot,
+        ICLAW_BUNDLED_PLUGINS_DIR: pluginsRoot,
       },
     });
 
@@ -119,7 +119,7 @@ describe("doctor plugin manifest legacy contract repair", () => {
     await maybeRepairLegacyPluginManifestContracts({
       env: {
         ...process.env,
-        OPENCLAW_BUNDLED_PLUGINS_DIR: pluginsRoot,
+        ICLAW_BUNDLED_PLUGINS_DIR: pluginsRoot,
       },
       runtime: createRuntime(),
       prompter: createPrompter(),
@@ -156,7 +156,7 @@ describe("doctor plugin manifest legacy contract repair", () => {
     const migrations = collectLegacyPluginManifestContractMigrations({
       env: {
         ...process.env,
-        OPENCLAW_BUNDLED_PLUGINS_DIR: pluginsRoot,
+        ICLAW_BUNDLED_PLUGINS_DIR: pluginsRoot,
       },
     });
 

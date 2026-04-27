@@ -73,7 +73,7 @@ export function resolveTrajectoryFilePath(params: {
   sessionId: string;
 }): string {
   const env = params.env ?? process.env;
-  const dirOverride = env.OPENCLAW_TRAJECTORY_DIR?.trim();
+  const dirOverride = env.ICLAW_TRAJECTORY_DIR?.trim();
   if (dirOverride) {
     return resolveContainedPath(
       resolveUserPath(dirOverride),
@@ -203,8 +203,8 @@ export function createTrajectoryRuntimeRecorder(
 ): TrajectoryRuntimeRecorder | null {
   const env = params.env ?? process.env;
   // Trajectory capture is now default-on. The env var remains as an explicit
-  // override so operators can still disable recording with OPENCLAW_TRAJECTORY=0.
-  const enabled = parseBooleanValue(env.OPENCLAW_TRAJECTORY) ?? true;
+  // override so operators can still disable recording with ICLAW_TRAJECTORY=0.
+  const enabled = parseBooleanValue(env.ICLAW_TRAJECTORY) ?? true;
   if (!enabled) {
     return null;
   }

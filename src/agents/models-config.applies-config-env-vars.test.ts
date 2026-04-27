@@ -5,7 +5,7 @@ import { unsetEnv, withTempEnv } from "./models-config.e2e-harness.js";
 import { resolveProvidersForModelsJsonWithDeps } from "./models-config.plan.js";
 import type { ProviderConfig } from "./models-config.providers.secrets.js";
 
-const TEST_ENV_VAR = "OPENCLAW_MODELS_CONFIG_TEST_ENV";
+const TEST_ENV_VAR = "ICLAW_MODELS_CONFIG_TEST_ENV";
 
 function createImplicitOpenRouterProvider(): ProviderConfig {
   return {

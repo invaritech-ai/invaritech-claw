@@ -104,7 +104,7 @@ function expectedBuildSpawn() {
 }
 
 function statusCommandSpawn() {
-  return [process.execPath, "openclaw.mjs", "status"];
+  return [process.execPath, "iclaw.mjs", "status"];
 }
 
 function resolvePath(tmp: string, relativePath: string) {
@@ -219,7 +219,7 @@ async function runStatusCommand(params: {
     args: ["status"],
     env: {
       ...process.env,
-      OPENCLAW_RUNNER_LOG: "0",
+      ICLAW_RUNNER_LOG: "0",
       ...params.env,
     },
     spawn: params.spawn,
@@ -245,7 +245,7 @@ async function runQaCommand(params: {
     args: ["qa", "suite", "--transport", "qa-channel", "--provider-mode", "mock-openai"],
     env: {
       ...process.env,
-      OPENCLAW_RUNNER_LOG: "0",
+      ICLAW_RUNNER_LOG: "0",
       ...params.env,
     },
     spawn: params.spawn,
@@ -293,8 +293,8 @@ describe("run-node script", () => {
           args: ["--version"],
           env: {
             ...process.env,
-            OPENCLAW_FORCE_BUILD: "1",
-            OPENCLAW_RUNNER_LOG: "0",
+            ICLAW_FORCE_BUILD: "1",
+            ICLAW_RUNNER_LOG: "0",
           },
           spawn,
           execPath: process.execPath,
@@ -308,7 +308,7 @@ describe("run-node script", () => {
         await expect(fs.readFile(indexPath, "utf-8")).resolves.toContain("sentinel");
         expect(nodeCalls).toEqual([
           [process.execPath, "scripts/tsdown-build.mjs", "--no-clean"],
-          [process.execPath, "openclaw.mjs", "--version"],
+          [process.execPath, "iclaw.mjs", "--version"],
         ]);
       });
     },
@@ -341,7 +341,7 @@ describe("run-node script", () => {
       const exitCode = await runStatusCommand({
         tmp,
         spawn,
-        env: { OPENCLAW_FORCE_BUILD: "1" },
+        env: { ICLAW_FORCE_BUILD: "1" },
       });
 
       expect(exitCode).toBe(0);
@@ -380,8 +380,8 @@ describe("run-node script", () => {
           stdio: opts?.stdio,
         });
         return createPipedExitedProcess({
-          stdout: args[0] === "openclaw.mjs" ? "child stdout\n" : "",
-          stderr: args[0] === "openclaw.mjs" ? "child stderr\n" : "",
+          stdout: args[0] === "iclaw.mjs" ? "child stdout\n" : "",
+          stderr: args[0] === "iclaw.mjs" ? "child stderr\n" : "",
         });
       };
       const mutedStream = {
@@ -393,9 +393,9 @@ describe("run-node script", () => {
         args: ["status"],
         env: {
           ...process.env,
-          OPENCLAW_FORCE_BUILD: "1",
-          OPENCLAW_RUNNER_LOG: "1",
-          OPENCLAW_RUN_NODE_OUTPUT_LOG: outputPath,
+          ICLAW_FORCE_BUILD: "1",
+          ICLAW_RUNNER_LOG: "1",
+          ICLAW_RUN_NODE_OUTPUT_LOG: outputPath,
         },
         spawn,
         stderr: mutedStream,
@@ -408,8 +408,8 @@ describe("run-node script", () => {
       await expect(fs.readFile(outputPath, "utf-8")).resolves.toContain("child stdout\n");
       await expect(fs.readFile(outputPath, "utf-8")).resolves.toContain("child stderr\n");
       await expect(fs.readFile(outputPath, "utf-8")).resolves.toContain("[openclaw]");
-      expect(spawnCalls.at(-1)?.args).toEqual(["openclaw.mjs", "status"]);
-      expect(spawnCalls.at(-1)?.env.OPENCLAW_RUN_NODE_OUTPUT_LOG).toBe(outputPath);
+      expect(spawnCalls.at(-1)?.args).toEqual(["iclaw.mjs", "status"]);
+      expect(spawnCalls.at(-1)?.env.ICLAW_RUN_NODE_OUTPUT_LOG).toBe(outputPath);
       expect(spawnCalls.at(-1)?.stdio).toEqual(["inherit", "pipe", "pipe"]);
     });
   });
@@ -433,8 +433,8 @@ describe("run-node script", () => {
         args: ["status"],
         env: {
           ...process.env,
-          OPENCLAW_RUNNER_LOG: "0",
-          OPENCLAW_RUN_NODE_OUTPUT_LOG: outputPath,
+          ICLAW_RUNNER_LOG: "0",
+          ICLAW_RUN_NODE_OUTPUT_LOG: outputPath,
         },
         spawn,
         stderr: mutedStream,
@@ -466,7 +466,7 @@ describe("run-node script", () => {
         args: ["qa", "matrix"],
         env: {
           ...process.env,
-          OPENCLAW_RUNNER_LOG: "0",
+          ICLAW_RUNNER_LOG: "0",
         },
         spawn,
         stderr: mutedStream,
@@ -477,8 +477,8 @@ describe("run-node script", () => {
 
       expect(exitCode).toBe(0);
       const childArgs = spawnCalls.at(-1)?.args ?? [];
-      expect(childArgs).toEqual(["openclaw.mjs", "qa", "matrix"]);
-      expect(spawnCalls.at(-1)?.env.OPENCLAW_RUN_NODE_OUTPUT_LOG).toBeUndefined();
+      expect(childArgs).toEqual(["iclaw.mjs", "qa", "matrix"]);
+      expect(spawnCalls.at(-1)?.env.ICLAW_RUN_NODE_OUTPUT_LOG).toBeUndefined();
     });
   });
 
@@ -531,7 +531,7 @@ describe("run-node script", () => {
       expect(spawnCalls).toEqual([
         [
           process.execPath,
-          "openclaw.mjs",
+          "iclaw.mjs",
           "qa",
           "suite",
           "--transport",
@@ -565,7 +565,7 @@ describe("run-node script", () => {
         expectedBuildSpawn(),
         [
           process.execPath,
-          "openclaw.mjs",
+          "iclaw.mjs",
           "qa",
           "suite",
           "--transport",
@@ -600,8 +600,8 @@ describe("run-node script", () => {
         expect.objectContaining({
           cwd: tmp,
           env: expect.objectContaining({
-            OPENCLAW_BUILD_PRIVATE_QA: "1",
-            OPENCLAW_ENABLE_PRIVATE_QA_CLI: "1",
+            ICLAW_BUILD_PRIVATE_QA: "1",
+            ICLAW_ENABLE_PRIVATE_QA_CLI: "1",
           }),
         }),
       );
@@ -621,7 +621,7 @@ describe("run-node script", () => {
 
       const requirement = resolveBuildRequirement(
         createBuildRequirementDeps(tmp, {
-          env: { OPENCLAW_BUILD_PRIVATE_QA: "1" },
+          env: { ICLAW_BUILD_PRIVATE_QA: "1" },
           gitHead: "abc123\n",
           gitStatus: "",
         }),
@@ -653,7 +653,7 @@ describe("run-node script", () => {
         tmp,
         spawn,
         spawnSync,
-        env: { OPENCLAW_WATCH_MODE: "1" },
+        env: { ICLAW_WATCH_MODE: "1" },
         runRuntimePostBuild,
       });
 
@@ -759,7 +759,7 @@ describe("run-node script", () => {
             spawn,
             spawnSync,
             env: {
-              OPENCLAW_RUN_NODE_BUILD_LOCK_POLL_MS: "1",
+              ICLAW_RUN_NODE_BUILD_LOCK_POLL_MS: "1",
             },
             runRuntimePostBuild,
           }),
@@ -768,7 +768,7 @@ describe("run-node script", () => {
             spawn,
             spawnSync,
             env: {
-              OPENCLAW_RUN_NODE_BUILD_LOCK_POLL_MS: "1",
+              ICLAW_RUN_NODE_BUILD_LOCK_POLL_MS: "1",
             },
             runRuntimePostBuild,
           }),
@@ -795,8 +795,8 @@ describe("run-node script", () => {
         args: ["status"],
         env: {
           ...process.env,
-          OPENCLAW_FORCE_BUILD: "1",
-          OPENCLAW_RUNNER_LOG: "0",
+          ICLAW_FORCE_BUILD: "1",
+          ICLAW_RUNNER_LOG: "0",
         },
         spawn,
         execPath: process.execPath,
@@ -848,7 +848,7 @@ describe("run-node script", () => {
         args: ["status"],
         env: {
           ...process.env,
-          OPENCLAW_RUNNER_LOG: "0",
+          ICLAW_RUNNER_LOG: "0",
         },
         process: fakeProcess,
         spawn,
@@ -864,7 +864,7 @@ describe("run-node script", () => {
       expect(exitCode).toBe(143);
       expect(spawn).toHaveBeenCalledWith(
         process.execPath,
-        ["openclaw.mjs", "status"],
+        ["iclaw.mjs", "status"],
         expect.objectContaining({ stdio: "inherit" }),
       );
       expect(child.kill).toHaveBeenCalledWith("SIGTERM");
@@ -1246,7 +1246,7 @@ describe("run-node script", () => {
     const lockDeps = (tmp: string, fakeProcess: NodeJS.Process) => ({
       cwd: tmp,
       args: ["status"],
-      env: { OPENCLAW_RUNNER_LOG: "0" },
+      env: { ICLAW_RUNNER_LOG: "0" },
       fs: fsSync,
       process: fakeProcess,
       stderr: { write: () => true } as unknown as NodeJS.WriteStream,

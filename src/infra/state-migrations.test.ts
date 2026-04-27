@@ -59,7 +59,7 @@ vi.mock("../channels/plugins/bundled.js", () => {
         });
       },
       ({ cfg, env }: { cfg: OpenClawConfig; env: NodeJS.ProcessEnv }) => {
-        const root = env.OPENCLAW_STATE_DIR;
+        const root = env.ICLAW_STATE_DIR;
         if (!root) {
           return [];
         }
@@ -103,7 +103,7 @@ function createConfig(): OpenClawConfig {
 function createEnv(stateDir: string): NodeJS.ProcessEnv {
   return {
     ...process.env,
-    OPENCLAW_STATE_DIR: stateDir,
+    ICLAW_STATE_DIR: stateDir,
   };
 }
 

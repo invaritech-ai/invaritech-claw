@@ -210,6 +210,7 @@ describe("extension runtime dependency manifests", () => {
         for (const packageName of collectRuntimeImports(filePath)) {
           if (
             packageName === "openclaw" ||
+            packageName === "iclaw" ||
             packageName.startsWith("@openclaw/") ||
             BUILTIN_MODULES.has(packageName) ||
             declared.has(packageName) ||

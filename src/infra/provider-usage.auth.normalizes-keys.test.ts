@@ -330,7 +330,7 @@ describe("resolveProviderAuths key normalization", () => {
       ...EMPTY_PROVIDER_ENV,
       HOME: home,
       USERPROFILE: home,
-      OPENCLAW_STATE_DIR: path.join(home, ".openclaw"),
+      ICLAW_STATE_DIR: path.join(home, ".openclaw"),
       ...env,
     };
     const match = home.match(/^([A-Za-z]:)(.*)$/);

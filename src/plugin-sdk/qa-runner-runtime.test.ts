@@ -29,7 +29,7 @@ vi.mock("./facade-runtime.js", () => ({
 
 describe("plugin-sdk qa-runner-runtime", () => {
   const tempDirs: string[] = [];
-  const originalPrivateQaCli = process.env.OPENCLAW_ENABLE_PRIVATE_QA_CLI;
+  const originalPrivateQaCli = process.env.ICLAW_ENABLE_PRIVATE_QA_CLI;
 
   beforeEach(() => {
     loadPluginManifestRegistry.mockReset().mockReturnValue({
@@ -39,7 +39,7 @@ describe("plugin-sdk qa-runner-runtime", () => {
     loadBundledPluginPublicSurfaceModuleSync.mockReset();
     tryLoadActivatedBundledPluginPublicSurfaceModuleSync.mockReset();
     resolveOpenClawPackageRootSync.mockReset().mockReturnValue(null);
-    delete process.env.OPENCLAW_ENABLE_PRIVATE_QA_CLI;
+    delete process.env.ICLAW_ENABLE_PRIVATE_QA_CLI;
   });
 
   afterEach(() => {
@@ -85,8 +85,8 @@ describe("plugin-sdk qa-runner-runtime", () => {
       dirName: "matrix",
       artifactBasename: "test-api.js",
       env: expect.objectContaining({
-        OPENCLAW_ENABLE_PRIVATE_QA_CLI: "1",
-        OPENCLAW_BUNDLED_PLUGINS_DIR: path.join(sourceRoot, "extensions"),
+        ICLAW_ENABLE_PRIVATE_QA_CLI: "1",
+        ICLAW_BUNDLED_PLUGINS_DIR: path.join(sourceRoot, "extensions"),
       }),
     });
   });
@@ -204,16 +204,16 @@ describe("plugin-sdk qa-runner-runtime", () => {
     expect(loadPluginManifestRegistry).toHaveBeenCalledWith({
       cache: true,
       env: expect.objectContaining({
-        OPENCLAW_ENABLE_PRIVATE_QA_CLI: "1",
-        OPENCLAW_BUNDLED_PLUGINS_DIR: path.join(sourceRoot, "extensions"),
+        ICLAW_ENABLE_PRIVATE_QA_CLI: "1",
+        ICLAW_BUNDLED_PLUGINS_DIR: path.join(sourceRoot, "extensions"),
       }),
     });
     expect(loadBundledPluginPublicSurfaceModuleSync).toHaveBeenCalledWith({
       dirName: "qa-matrix",
       artifactBasename: "runtime-api.js",
       env: expect.objectContaining({
-        OPENCLAW_ENABLE_PRIVATE_QA_CLI: "1",
-        OPENCLAW_BUNDLED_PLUGINS_DIR: path.join(sourceRoot, "extensions"),
+        ICLAW_ENABLE_PRIVATE_QA_CLI: "1",
+        ICLAW_BUNDLED_PLUGINS_DIR: path.join(sourceRoot, "extensions"),
       }),
     });
   });

@@ -21,12 +21,12 @@ import { ensureAuthStoreFile } from "./paths.js";
 // isn't tested.
 
 describe("path-resolve helpers (direct-import coverage attribution)", () => {
-  const envSnapshot = captureEnv(["OPENCLAW_STATE_DIR"]);
+  const envSnapshot = captureEnv(["ICLAW_STATE_DIR"]);
   let stateDir = "";
 
   beforeEach(async () => {
     stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-path-direct-"));
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    process.env.ICLAW_STATE_DIR = stateDir;
   });
 
   afterEach(async () => {
@@ -43,7 +43,7 @@ describe("path-resolve helpers (direct-import coverage attribution)", () => {
 
   it("resolveAuthStorePath falls back to resolveOpenClawAgentDir when agentDir is omitted", () => {
     // Omitting agentDir exercises the `agentDir ?? resolveOpenClawAgentDir()`
-    // nullish branch. With OPENCLAW_STATE_DIR set to our tempdir, the
+    // nullish branch. With ICLAW_STATE_DIR set to our tempdir, the
     // resolved path must live under it.
     const resolved = resolveAuthStorePath();
     expect(resolved.startsWith(stateDir)).toBe(true);
@@ -102,12 +102,12 @@ describe("path-resolve helpers (direct-import coverage attribution)", () => {
 });
 
 describe("ensureAuthStoreFile (direct-import coverage attribution)", () => {
-  const envSnapshot = captureEnv(["OPENCLAW_STATE_DIR"]);
+  const envSnapshot = captureEnv(["ICLAW_STATE_DIR"]);
   let stateDir = "";
 
   beforeEach(async () => {
     stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-path-ensure-"));
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    process.env.ICLAW_STATE_DIR = stateDir;
   });
 
   afterEach(async () => {

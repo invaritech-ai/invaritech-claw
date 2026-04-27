@@ -220,7 +220,7 @@ function auditGatewayToken(
   }
   issues.push({
     code: SERVICE_AUDIT_CODES.gatewayTokenEmbedded,
-    message: "Gateway service embeds OPENCLAW_GATEWAY_TOKEN and should be reinstalled.",
+    message: "Gateway service embeds ICLAW_GATEWAY_TOKEN and should be reinstalled.",
     detail: "Run `openclaw gateway install --force` to remove embedded service token.",
     level: "recommended",
   });
@@ -231,7 +231,7 @@ function auditGatewayToken(
   issues.push({
     code: SERVICE_AUDIT_CODES.gatewayTokenMismatch,
     message:
-      "Gateway service OPENCLAW_GATEWAY_TOKEN does not match gateway.auth.token in openclaw.json",
+      "Gateway service ICLAW_GATEWAY_TOKEN does not match gateway.auth.token in openclaw.json",
     detail: "service token is stale",
     level: "recommended",
   });
@@ -241,10 +241,10 @@ export function readEmbeddedGatewayToken(command: GatewayServiceCommand): string
   if (!command) {
     return undefined;
   }
-  if (command.environmentValueSources?.OPENCLAW_GATEWAY_TOKEN === "file") {
+  if (command.environmentValueSources?.ICLAW_GATEWAY_TOKEN === "file") {
     return undefined;
   }
-  return normalizeOptionalString(command.environment?.OPENCLAW_GATEWAY_TOKEN);
+  return normalizeOptionalString(command.environment?.ICLAW_GATEWAY_TOKEN);
 }
 
 function getPathModule(platform: NodeJS.Platform) {

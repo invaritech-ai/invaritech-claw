@@ -10,7 +10,7 @@ import {
   writeTempPlugin,
 } from "./test-helpers/temp-plugin-extension-fixtures.js";
 
-const originalBundledPluginsDir = process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
+const originalBundledPluginsDir = process.env.ICLAW_BUNDLED_PLUGINS_DIR;
 const tempDirs: string[] = [];
 
 function createTempDir(): string {
@@ -24,7 +24,7 @@ afterEach(() => {
 describe("buildEmbeddedExtensionFactories", () => {
   it("includes plugin-registered embedded extension factories and restores them from cache", async () => {
     const tmp = createTempDir();
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = tmp;
+    process.env.ICLAW_BUNDLED_PLUGINS_DIR = tmp;
 
     writeTempPlugin({
       dir: tmp,
@@ -91,7 +91,7 @@ describe("buildEmbeddedExtensionFactories", () => {
 
   it("rejects embedded extension factories from non-bundled plugins even when they declare the Pi manifest contract", () => {
     const tmp = createTempDir();
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.ICLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
 
     const pluginFile = writeTempPlugin({
       dir: tmp,
@@ -139,7 +139,7 @@ describe("buildEmbeddedExtensionFactories", () => {
 
   it("rejects bundled plugins that omit the Pi embedded extension manifest contract", () => {
     const tmp = createTempDir();
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = tmp;
+    process.env.ICLAW_BUNDLED_PLUGINS_DIR = tmp;
 
     writeTempPlugin({
       dir: tmp,
@@ -177,7 +177,7 @@ describe("buildEmbeddedExtensionFactories", () => {
 
   it("rejects non-function embedded extension factories from bundled plugins", () => {
     const tmp = createTempDir();
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = tmp;
+    process.env.ICLAW_BUNDLED_PLUGINS_DIR = tmp;
 
     writeTempPlugin({
       dir: tmp,
@@ -217,7 +217,7 @@ describe("buildEmbeddedExtensionFactories", () => {
 
   it("contains embedded extension factory failures so one bad plugin cannot crash setup", async () => {
     const tmp = createTempDir();
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = tmp;
+    process.env.ICLAW_BUNDLED_PLUGINS_DIR = tmp;
 
     writeTempPlugin({
       dir: tmp,

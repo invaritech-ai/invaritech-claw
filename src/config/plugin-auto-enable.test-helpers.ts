@@ -28,7 +28,7 @@ export function makeTempDir(): string {
 export function makeIsolatedEnv(overrides: NodeJS.ProcessEnv = {}): NodeJS.ProcessEnv {
   const rootDir = makeTempDir();
   return {
-    OPENCLAW_STATE_DIR: path.join(rootDir, "state"),
+    ICLAW_STATE_DIR: path.join(rootDir, "state"),
     ...overrides,
   };
 }

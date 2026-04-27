@@ -88,7 +88,7 @@ describe("listBundledChannelCatalogEntries", () => {
   });
 
   it("falls back to dist/channel-catalog.json when the resolver returns undefined", () => {
-    // OPENCLAW_DISABLE_BUNDLED_PLUGINS, missing bundled tree, or an unresolvable
+    // ICLAW_DISABLE_BUNDLED_PLUGINS, missing bundled tree, or an unresolvable
     // package root all surface as undefined from resolveBundledPluginsDir. In
     // that case the loader should consult the shipped channel-catalog.json
     // rather than report zero bundled channels.
@@ -115,7 +115,7 @@ describe("listBundledChannelCatalogEntries", () => {
   });
 
   it("falls back to dist/channel-catalog.json when the resolved dir has no plugin package.jsons", () => {
-    // A stale staged dir or an OPENCLAW_BUNDLED_PLUGINS_DIR override pointing at
+    // A stale staged dir or an ICLAW_BUNDLED_PLUGINS_DIR override pointing at
     // an empty tree should not hide the shipped catalog entries. The loader's
     // own readdir returns nothing, bundledEntries is empty, and control falls
     // through to readOfficialCatalogFileSync.

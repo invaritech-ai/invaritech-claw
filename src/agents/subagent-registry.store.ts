@@ -32,7 +32,7 @@ type LegacySubagentRunRecord = PersistedSubagentRunRecord & {
 };
 
 function resolveSubagentStateDir(env: NodeJS.ProcessEnv = process.env): string {
-  const explicit = env.OPENCLAW_STATE_DIR?.trim();
+  const explicit = env.ICLAW_STATE_DIR?.trim();
   if (explicit) {
     return resolveStateDir(env);
   }

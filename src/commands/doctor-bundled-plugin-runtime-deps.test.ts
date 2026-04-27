@@ -343,7 +343,7 @@ describe("doctor bundled plugin runtime deps", () => {
     const stageDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-doctor-bundled-stage-"));
     writeJson(path.join(root, "package.json"), { name: "openclaw", version: "2026.4.22" });
     writeBundledChannelPlugin(root, "slack", { "@slack/web-api": "7.15.1" });
-    const env = { OPENCLAW_PLUGIN_STAGE_DIR: stageDir };
+    const env = { ICLAW_PLUGIN_STAGE_DIR: stageDir };
     const installed = createInstalledRuntimeDeps();
 
     await maybeRepairBundledPluginRuntimeDeps({

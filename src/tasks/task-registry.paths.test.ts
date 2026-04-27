@@ -16,7 +16,7 @@ describe("task registry paths", () => {
   it("prefers explicit state dir overrides over Vitest sharding", () => {
     expect(
       resolveTaskStateDir({
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-custom-state",
+        ICLAW_STATE_DIR: "/tmp/openclaw-custom-state",
         VITEST: "true",
         VITEST_POOL_ID: "7",
       } as NodeJS.ProcessEnv),

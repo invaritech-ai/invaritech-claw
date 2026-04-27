@@ -36,9 +36,9 @@ describe("secrets runtime snapshot gateway-auth integration", () => {
   it("fails fast at startup when gateway auth SecretRef is active and unresolved", async () => {
     await withEnvAsync(
       {
-        OPENCLAW_BUNDLED_PLUGINS_DIR: undefined,
-        OPENCLAW_DISABLE_PLUGIN_DISCOVERY_CACHE: "1",
-        OPENCLAW_VERSION: undefined,
+        ICLAW_BUNDLED_PLUGINS_DIR: undefined,
+        ICLAW_DISABLE_PLUGIN_DISCOVERY_CACHE: "1",
+        ICLAW_VERSION: undefined,
       },
       async () => {
         await expect(

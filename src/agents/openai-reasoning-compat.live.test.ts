@@ -12,7 +12,7 @@ const REQUIRE_PROFILE_KEYS = isLiveProfileKeyModeEnabled();
 const LIVE_CREDENTIAL_PRECEDENCE = REQUIRE_PROFILE_KEYS ? "profile-first" : "env-first";
 const DEFAULT_TARGET_MODEL_REF = "openai-codex/gpt-5.1-codex-mini";
 const TARGET_MODEL_REF =
-  process.env.OPENCLAW_LIVE_OPENAI_REASONING_COMPAT_MODEL?.trim() || DEFAULT_TARGET_MODEL_REF;
+  process.env.ICLAW_LIVE_OPENAI_REASONING_COMPAT_MODEL?.trim() || DEFAULT_TARGET_MODEL_REF;
 const describeLive = LIVE ? describe : describe.skip;
 
 function logProgress(message: string): void {
@@ -106,7 +106,7 @@ function resolveTargetModelRef(): { provider: string; modelId: string } {
   const modelId = rest.join("/").trim();
   if (!provider?.trim() || !modelId) {
     throw new Error(
-      `Invalid OPENCLAW_LIVE_OPENAI_REASONING_COMPAT_MODEL: ${JSON.stringify(TARGET_MODEL_REF)}`,
+      `Invalid ICLAW_LIVE_OPENAI_REASONING_COMPAT_MODEL: ${JSON.stringify(TARGET_MODEL_REF)}`,
     );
   }
   return {

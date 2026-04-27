@@ -7,7 +7,7 @@ export function resolveGatewayUrlOverrideSource(urlSource: string): "cli" | "env
   if (urlSource === "cli --url") {
     return "cli";
   }
-  if (urlSource === "env OPENCLAW_GATEWAY_URL") {
+  if (urlSource === "env ICLAW_GATEWAY_URL") {
     return "env";
   }
   return undefined;

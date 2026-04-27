@@ -17,10 +17,7 @@ function applyAnthropicDefaultsForTest(config: OpenClawConfig) {
 describe("config pruning defaults", () => {
   beforeEach(() => {
     clearBundledProviderPolicySurfaceCache();
-    vi.stubEnv(
-      "OPENCLAW_BUNDLED_PLUGINS_DIR",
-      path.resolve(import.meta.dirname, "../../extensions"),
-    );
+    vi.stubEnv("ICLAW_BUNDLED_PLUGINS_DIR", path.resolve(import.meta.dirname, "../../extensions"));
   });
 
   afterEach(() => {

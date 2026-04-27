@@ -36,7 +36,7 @@ describe("security audit hooks ingress findings", () => {
           hooks: { enabled: true, token: "shared-gateway-token-1234567890" },
         } satisfies OpenClawConfig,
         env: {
-          OPENCLAW_GATEWAY_TOKEN: "shared-gateway-token-1234567890",
+          ICLAW_GATEWAY_TOKEN: "shared-gateway-token-1234567890",
         } as NodeJS.ProcessEnv,
         expectedFinding: "hooks.token_reuse_gateway_token",
         expectedSeverity: "critical" as const,

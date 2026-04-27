@@ -8,10 +8,7 @@ import type { OpenClawConfig } from "./types.js";
 describe("applyModelDefaults", () => {
   beforeEach(() => {
     clearBundledProviderPolicySurfaceCache();
-    vi.stubEnv(
-      "OPENCLAW_BUNDLED_PLUGINS_DIR",
-      path.resolve(import.meta.dirname, "../../extensions"),
-    );
+    vi.stubEnv("ICLAW_BUNDLED_PLUGINS_DIR", path.resolve(import.meta.dirname, "../../extensions"));
   });
 
   afterEach(() => {

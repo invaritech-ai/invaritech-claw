@@ -11,7 +11,7 @@ describe("restart log conventions", () => {
   it("resolves profile-aware gateway logs and restart attempts together", () => {
     const env = {
       HOME: "/Users/test",
-      OPENCLAW_PROFILE: "work",
+      ICLAW_PROFILE: "work",
     };
 
     expect(resolveGatewayLogPaths(env)).toEqual({
@@ -24,10 +24,10 @@ describe("restart log conventions", () => {
     );
   });
 
-  it("honors OPENCLAW_STATE_DIR for restart attempts", () => {
+  it("honors ICLAW_STATE_DIR for restart attempts", () => {
     const env = {
       HOME: "/Users/test",
-      OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
+      ICLAW_STATE_DIR: "/tmp/openclaw-state",
     };
 
     expect(resolveGatewayRestartLogPath(env)).toBe(

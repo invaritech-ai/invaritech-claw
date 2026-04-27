@@ -35,9 +35,9 @@ export function installModelsConfigTestHooks(opts?: {
 
   beforeEach(() => {
     previousHome = process.env.HOME;
-    previousOpenClawAgentDir = process.env.OPENCLAW_AGENT_DIR;
+    previousOpenClawAgentDir = process.env.ICLAW_AGENT_DIR;
     previousPiCodingAgentDir = process.env.PI_CODING_AGENT_DIR;
-    delete process.env.OPENCLAW_AGENT_DIR;
+    delete process.env.ICLAW_AGENT_DIR;
     delete process.env.PI_CODING_AGENT_DIR;
     clearRuntimeConfigSnapshot();
     clearConfigCache();
@@ -53,9 +53,9 @@ export function installModelsConfigTestHooks(opts?: {
   afterEach(() => {
     process.env.HOME = previousHome;
     if (previousOpenClawAgentDir === undefined) {
-      delete process.env.OPENCLAW_AGENT_DIR;
+      delete process.env.ICLAW_AGENT_DIR;
     } else {
-      process.env.OPENCLAW_AGENT_DIR = previousOpenClawAgentDir;
+      process.env.ICLAW_AGENT_DIR = previousOpenClawAgentDir;
     }
     if (previousPiCodingAgentDir === undefined) {
       delete process.env.PI_CODING_AGENT_DIR;
@@ -106,13 +106,13 @@ export function unsetEnv(vars: string[]) {
 export const COPILOT_TOKEN_ENV_VARS = ["COPILOT_GITHUB_TOKEN", "GH_TOKEN", "GITHUB_TOKEN"];
 const COPILOT_DISCOVERY_ENV_VARS = [
   ...COPILOT_TOKEN_ENV_VARS,
-  "OPENCLAW_TEST_ONLY_PROVIDER_PLUGIN_IDS",
+  "ICLAW_TEST_ONLY_PROVIDER_PLUGIN_IDS",
 ];
 
 export async function withUnsetCopilotTokenEnv<T>(fn: () => Promise<T>): Promise<T> {
   return withTempEnv(COPILOT_DISCOVERY_ENV_VARS, async () => {
     unsetEnv(COPILOT_TOKEN_ENV_VARS);
-    process.env.OPENCLAW_TEST_ONLY_PROVIDER_PLUGIN_IDS = "github-copilot";
+    process.env.ICLAW_TEST_ONLY_PROVIDER_PLUGIN_IDS = "github-copilot";
     return fn();
   });
 }
@@ -138,14 +138,14 @@ export async function withCopilotGithubToken<T>(
     process.env.COPILOT_GITHUB_TOKEN = token;
     delete process.env.GH_TOKEN;
     delete process.env.GITHUB_TOKEN;
-    process.env.OPENCLAW_TEST_ONLY_PROVIDER_PLUGIN_IDS = "github-copilot";
+    process.env.ICLAW_TEST_ONLY_PROVIDER_PLUGIN_IDS = "github-copilot";
     const fetchMock = mockCopilotTokenExchangeSuccess();
     return fn(fetchMock);
   });
 }
 
 export const MODELS_CONFIG_IMPLICIT_ENV_VARS = [
-  "OPENCLAW_TEST_ONLY_PROVIDER_PLUGIN_IDS",
+  "ICLAW_TEST_ONLY_PROVIDER_PLUGIN_IDS",
   "VITEST",
   "NODE_ENV",
   "AI_GATEWAY_API_KEY",
@@ -161,7 +161,7 @@ export const MODELS_CONFIG_IMPLICIT_ENV_VARS = [
   "MOONSHOT_API_KEY",
   "NVIDIA_API_KEY",
   "OLLAMA_API_KEY",
-  "OPENCLAW_AGENT_DIR",
+  "ICLAW_AGENT_DIR",
   "OPENAI_API_KEY",
   "OPENROUTER_API_KEY",
   "PI_CODING_AGENT_DIR",
@@ -179,7 +179,7 @@ export const MODELS_CONFIG_IMPLICIT_ENV_VARS = [
   "KIMI_API_KEY",
   "KIMICODE_API_KEY",
   "GEMINI_API_KEY",
-  "OPENCLAW_BUNDLED_PLUGINS_DIR",
+  "ICLAW_BUNDLED_PLUGINS_DIR",
   "GOOGLE_APPLICATION_CREDENTIALS",
   "GOOGLE_CLOUD_LOCATION",
   "GOOGLE_CLOUD_PROJECT",
@@ -267,7 +267,7 @@ export function snapshotImplicitProviderEnv(env?: NodeJS.ProcessEnv): NodeJS.Pro
   // so those tests do not fall back to potentially stale dist-runtime wrappers.
   snapshot.VITEST ??= process.env.VITEST;
   snapshot.NODE_ENV ??= process.env.NODE_ENV;
-  snapshot.OPENCLAW_BUNDLED_PLUGINS_DIR ??=
+  snapshot.ICLAW_BUNDLED_PLUGINS_DIR ??=
     resolveBundledPluginsDir({ VITEST: "true" } as NodeJS.ProcessEnv) ?? undefined;
 
   return snapshot;
@@ -385,7 +385,7 @@ export async function resolveImplicitProvidersForTest(
     workspaceDir: params.workspaceDir,
   });
   if (inferredPluginIds.length > 0) {
-    env.OPENCLAW_TEST_ONLY_PROVIDER_PLUGIN_IDS = inferredPluginIds.join(",");
+    env.ICLAW_TEST_ONLY_PROVIDER_PLUGIN_IDS = inferredPluginIds.join(",");
   }
   return resolveImplicitProviders({
     ...params,

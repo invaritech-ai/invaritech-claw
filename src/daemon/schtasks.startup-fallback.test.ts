@@ -105,7 +105,7 @@ function expectStartupFallbackSpawn() {
   expect(options).toEqual(
     expect.objectContaining({
       detached: true,
-      env: expect.objectContaining({ OPENCLAW_GATEWAY_PORT: "18789" }),
+      env: expect.objectContaining({ ICLAW_GATEWAY_PORT: "18789" }),
       stdio: "ignore",
       windowsHide: true,
     }),
@@ -135,7 +135,7 @@ function installGatewayScheduledTask(env: Record<string, string>, stdout = new P
     env,
     stdout,
     programArguments: ["node", "gateway.js", "--port", "18789"],
-    environment: { OPENCLAW_GATEWAY_PORT: "18789" },
+    environment: { ICLAW_GATEWAY_PORT: "18789" },
   });
 }
 
@@ -473,7 +473,7 @@ describe("Windows startup fallback", () => {
 
       const stdout = new PassThrough();
       const envWithoutPort = { ...env };
-      delete envWithoutPort.OPENCLAW_GATEWAY_PORT;
+      delete envWithoutPort.ICLAW_GATEWAY_PORT;
       await stopScheduledTask({ env: envWithoutPort, stdout });
 
       expectGatewayTermination(5151);

@@ -43,7 +43,7 @@ export function readStateDirDotEnvVarsFromStateDir(stateDir: string): Record<str
 }
 
 /**
- * Read and parse `~/.openclaw/.env` (or `$OPENCLAW_STATE_DIR/.env`), returning
+ * Read and parse `~/.openclaw/.env` (or `$ICLAW_STATE_DIR/.env`), returning
  * a filtered record of key-value pairs suitable for embedding in a service
  * environment (LaunchAgent plist, systemd unit, Scheduled Task).
  */

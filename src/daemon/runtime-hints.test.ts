@@ -7,8 +7,8 @@ describe("buildPlatformRuntimeLogHints", () => {
       buildPlatformRuntimeLogHints({
         platform: "darwin",
         env: {
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
-          OPENCLAW_LOG_PREFIX: "gateway",
+          ICLAW_STATE_DIR: "/tmp/openclaw-state",
+          ICLAW_LOG_PREFIX: "gateway",
         },
         systemdServiceName: "openclaw-gateway",
         windowsTaskName: "OpenClaw Gateway",
@@ -25,7 +25,7 @@ describe("buildPlatformRuntimeLogHints", () => {
       buildPlatformRuntimeLogHints({
         platform: "linux",
         env: {
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
+          ICLAW_STATE_DIR: "/tmp/openclaw-state",
         },
         systemdServiceName: "openclaw-gateway",
         windowsTaskName: "OpenClaw Gateway",
@@ -38,7 +38,7 @@ describe("buildPlatformRuntimeLogHints", () => {
       buildPlatformRuntimeLogHints({
         platform: "win32",
         env: {
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
+          ICLAW_STATE_DIR: "/tmp/openclaw-state",
         },
         systemdServiceName: "openclaw-gateway",
         windowsTaskName: "OpenClaw Gateway",

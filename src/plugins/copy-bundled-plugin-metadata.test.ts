@@ -8,7 +8,7 @@ import {
 import { cleanupTempDirs, makeTempRepoRoot, writeJsonFile } from "../../test/helpers/temp-repo.js";
 
 const tempDirs: string[] = [];
-const excludeOptionalEnv = { OPENCLAW_INCLUDE_OPTIONAL_BUNDLED: "0" } as const;
+const excludeOptionalEnv = { ICLAW_INCLUDE_OPTIONAL_BUNDLED: "0" } as const;
 const copyBundledPluginMetadataWithEnv = copyBundledPluginMetadata as (params?: {
   repoRoot?: string;
   env?: NodeJS.ProcessEnv;
@@ -333,7 +333,7 @@ describe("copyBundledPluginMetadata", () => {
 
     copyBundledPluginMetadataWithEnv({
       repoRoot,
-      env: { OPENCLAW_BUILD_PRIVATE_QA: "1" } as NodeJS.ProcessEnv,
+      env: { ICLAW_BUILD_PRIVATE_QA: "1" } as NodeJS.ProcessEnv,
     });
 
     expect(fs.existsSync(path.join(staleDistDir, "openclaw.plugin.json"))).toBe(true);

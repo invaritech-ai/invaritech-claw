@@ -17,21 +17,21 @@ import {
 } from "./usage-format.js";
 
 describe("usage-format", () => {
-  const originalAgentDir = process.env.OPENCLAW_AGENT_DIR;
+  const originalAgentDir = process.env.ICLAW_AGENT_DIR;
   let agentDir: string;
 
   beforeEach(async () => {
     agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-usage-format-"));
-    process.env.OPENCLAW_AGENT_DIR = agentDir;
+    process.env.ICLAW_AGENT_DIR = agentDir;
     __resetUsageFormatCachesForTest();
     __resetGatewayModelPricingCacheForTest();
   });
 
   afterEach(async () => {
     if (originalAgentDir === undefined) {
-      delete process.env.OPENCLAW_AGENT_DIR;
+      delete process.env.ICLAW_AGENT_DIR;
     } else {
-      process.env.OPENCLAW_AGENT_DIR = originalAgentDir;
+      process.env.ICLAW_AGENT_DIR = originalAgentDir;
     }
     __resetUsageFormatCachesForTest();
     __resetGatewayModelPricingCacheForTest();

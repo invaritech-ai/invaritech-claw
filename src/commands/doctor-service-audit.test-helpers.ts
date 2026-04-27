@@ -11,7 +11,7 @@ export function readEmbeddedGatewayTokenForTest(
     environmentValueSources?: Record<string, "inline" | "file">;
   } | null,
 ) {
-  return command?.environmentValueSources?.OPENCLAW_GATEWAY_TOKEN === "file"
+  return command?.environmentValueSources?.ICLAW_GATEWAY_TOKEN === "file"
     ? undefined
-    : normalizeOptionalString(command?.environment?.OPENCLAW_GATEWAY_TOKEN);
+    : normalizeOptionalString(command?.environment?.ICLAW_GATEWAY_TOKEN);
 }

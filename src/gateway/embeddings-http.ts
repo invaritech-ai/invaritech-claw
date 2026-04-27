@@ -23,7 +23,7 @@ import type { ResolvedGatewayAuth } from "./auth.js";
 import { sendJson } from "./http-common.js";
 import { handleGatewayPostJsonEndpoint } from "./http-endpoint-helpers.js";
 import {
-  OPENCLAW_MODEL_ID,
+  ICLAW_MODEL_ID,
   getHeader,
   resolveAgentIdForRequest,
   resolveAgentIdFromModel,
@@ -240,7 +240,7 @@ export async function handleOpenAiEmbeddingsHttpRequest(
   }
 
   const cfg = loadConfig();
-  if (requestModel !== OPENCLAW_MODEL_ID && !resolveAgentIdFromModel(requestModel, cfg)) {
+  if (requestModel !== ICLAW_MODEL_ID && !resolveAgentIdFromModel(requestModel, cfg)) {
     sendJson(res, 400, {
       error: {
         message: "Invalid `model`. Use `openclaw` or `openclaw/<agentId>`.",

@@ -20,8 +20,8 @@ describe("security audit gateway config findings", () => {
     await Promise.all([
       withEnvAsync(
         {
-          OPENCLAW_GATEWAY_TOKEN: undefined,
-          OPENCLAW_GATEWAY_PASSWORD: undefined,
+          ICLAW_GATEWAY_TOKEN: undefined,
+          ICLAW_GATEWAY_PASSWORD: undefined,
         },
         async () => {
           const findings = collectGatewayConfigFindings(
@@ -50,7 +50,7 @@ describe("security audit gateway config findings", () => {
               password: {
                 source: "env",
                 provider: "default",
-                id: "OPENCLAW_GATEWAY_PASSWORD",
+                id: "ICLAW_GATEWAY_PASSWORD",
               },
             },
           },
@@ -66,7 +66,7 @@ describe("security audit gateway config findings", () => {
               token: {
                 source: "env",
                 provider: "default",
-                id: "OPENCLAW_GATEWAY_TOKEN",
+                id: "ICLAW_GATEWAY_TOKEN",
               },
             },
           },

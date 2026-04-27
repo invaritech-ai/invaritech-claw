@@ -36,9 +36,9 @@ function hasDiagnosticSourceSuffix(
 
 function buildDiscoveryEnv(stateDir: string): NodeJS.ProcessEnv {
   return {
-    OPENCLAW_STATE_DIR: stateDir,
-    OPENCLAW_HOME: undefined,
-    OPENCLAW_BUNDLED_PLUGINS_DIR: "/nonexistent/bundled/plugins",
+    ICLAW_STATE_DIR: stateDir,
+    ICLAW_HOME: undefined,
+    ICLAW_BUNDLED_PLUGINS_DIR: "/nonexistent/bundled/plugins",
   };
 }
 
@@ -48,7 +48,7 @@ function buildCachedDiscoveryEnv(
 ): NodeJS.ProcessEnv {
   return {
     ...buildDiscoveryEnv(stateDir),
-    OPENCLAW_PLUGIN_DISCOVERY_CACHE_MS: "5000",
+    ICLAW_PLUGIN_DISCOVERY_CACHE_MS: "5000",
     ...overrides,
   };
 }
@@ -383,7 +383,7 @@ describe("discoverOpenClawPlugins", () => {
     const { candidates, diagnostics } = discoverOpenClawPlugins({
       env: {
         ...buildDiscoveryEnv(stateDir),
-        OPENCLAW_BUNDLED_PLUGINS_DIR: bundledDir,
+        ICLAW_BUNDLED_PLUGINS_DIR: bundledDir,
       },
     });
 
@@ -991,9 +991,9 @@ describe("discoverOpenClawPlugins", () => {
       const result = discoverOpenClawPlugins({
         env: {
           ...process.env,
-          OPENCLAW_DISABLE_BUNDLED_PLUGINS: undefined,
-          OPENCLAW_STATE_DIR: stateDir,
-          OPENCLAW_BUNDLED_PLUGINS_DIR: bundledDir,
+          ICLAW_DISABLE_BUNDLED_PLUGINS: undefined,
+          ICLAW_STATE_DIR: stateDir,
+          ICLAW_BUNDLED_PLUGINS_DIR: bundledDir,
         },
       });
 
@@ -1080,7 +1080,7 @@ describe("discoverOpenClawPlugins", () => {
     });
 
     const env = buildCachedDiscoveryEnv(stateDir, {
-      OPENCLAW_BUNDLED_PLUGINS_DIR: bundledDir,
+      ICLAW_BUNDLED_PLUGINS_DIR: bundledDir,
     });
     const readdirSync = vi.spyOn(fs, "readdirSync");
     const countSharedRootReads = () =>

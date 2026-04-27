@@ -43,7 +43,7 @@ export type {
   NativeHookRelayRegistrationHandle,
 } from "../agents/harness/native-hook-relay.js";
 
-export { VERSION as OPENCLAW_VERSION } from "../version.js";
+export { VERSION as ICLAW_VERSION } from "../version.js";
 export { formatErrorMessage } from "../infra/errors.js";
 export { log as embeddedAgentLog } from "../agents/pi-embedded-runner/logger.js";
 export { resolveEmbeddedAgentRuntime } from "../agents/pi-embedded-runner/runtime.js";

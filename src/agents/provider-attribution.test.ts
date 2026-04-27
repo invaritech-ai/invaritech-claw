@@ -14,7 +14,7 @@ import {
 describe("provider attribution", () => {
   it("resolves the canonical OpenClaw product and runtime version", () => {
     const identity = resolveProviderAttributionIdentity({
-      OPENCLAW_VERSION: "2026.3.99",
+      ICLAW_VERSION: "2026.3.99",
     });
 
     expect(identity).toEqual({
@@ -25,7 +25,7 @@ describe("provider attribution", () => {
 
   it("returns a documented OpenRouter attribution policy", () => {
     const policy = resolveProviderAttributionPolicy("openrouter", {
-      OPENCLAW_VERSION: "2026.3.22",
+      ICLAW_VERSION: "2026.3.22",
     });
 
     expect(policy).toEqual({
@@ -48,7 +48,7 @@ describe("provider attribution", () => {
   it("normalizes aliases when resolving provider headers", () => {
     expect(
       resolveProviderAttributionHeaders("OpenRouter", {
-        OPENCLAW_VERSION: "2026.3.22",
+        ICLAW_VERSION: "2026.3.22",
       }),
     ).toEqual({
       "HTTP-Referer": "https://openclaw.ai",
@@ -58,7 +58,7 @@ describe("provider attribution", () => {
   });
 
   it("returns a hidden-spec OpenAI attribution policy", () => {
-    expect(resolveProviderAttributionPolicy("openai", { OPENCLAW_VERSION: "2026.3.22" })).toEqual({
+    expect(resolveProviderAttributionPolicy("openai", { ICLAW_VERSION: "2026.3.22" })).toEqual({
       provider: "openai",
       enabledByDefault: true,
       verification: "vendor-hidden-api-spec",
@@ -73,7 +73,7 @@ describe("provider attribution", () => {
         "User-Agent": "openclaw/2026.3.22",
       },
     });
-    expect(resolveProviderAttributionHeaders("openai", { OPENCLAW_VERSION: "2026.3.22" })).toEqual({
+    expect(resolveProviderAttributionHeaders("openai", { ICLAW_VERSION: "2026.3.22" })).toEqual({
       originator: "openclaw",
       version: "2026.3.22",
       "User-Agent": "openclaw/2026.3.22",
@@ -82,7 +82,7 @@ describe("provider attribution", () => {
 
   it("returns a hidden-spec OpenAI Codex attribution policy", () => {
     expect(
-      resolveProviderAttributionPolicy("openai-codex", { OPENCLAW_VERSION: "2026.3.22" }),
+      resolveProviderAttributionPolicy("openai-codex", { ICLAW_VERSION: "2026.3.22" }),
     ).toEqual({
       provider: "openai-codex",
       enabledByDefault: true,
@@ -102,7 +102,7 @@ describe("provider attribution", () => {
 
   it("lists the current attribution support matrix", () => {
     expect(
-      listProviderAttributionPolicies({ OPENCLAW_VERSION: "2026.3.22" }).map((policy) => [
+      listProviderAttributionPolicies({ ICLAW_VERSION: "2026.3.22" }).map((policy) => [
         policy.provider,
         policy.enabledByDefault,
         policy.verification,
@@ -130,7 +130,7 @@ describe("provider attribution", () => {
           transport: "stream",
           capability: "llm",
         },
-        { OPENCLAW_VERSION: "2026.3.22" },
+        { ICLAW_VERSION: "2026.3.22" },
       ),
     ).toMatchObject({
       endpointClass: "openai-public",
@@ -150,7 +150,7 @@ describe("provider attribution", () => {
           transport: "stream",
           capability: "llm",
         },
-        { OPENCLAW_VERSION: "2026.3.22" },
+        { ICLAW_VERSION: "2026.3.22" },
       ),
     ).toMatchObject({
       endpointClass: "custom",

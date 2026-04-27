@@ -12,7 +12,7 @@ import {
   sanitizeHostExecEnvWithDiagnostics,
   sanitizeSystemRunEnvOverrides,
 } from "./host-env-security.js";
-import { OPENCLAW_CLI_ENV_VALUE } from "./openclaw-exec-env.js";
+import { ICLAW_CLI_ENV_VALUE } from "./openclaw-exec-env.js";
 
 function findSystemCommandPath(command: string) {
   if (process.platform === "win32") {
@@ -333,7 +333,7 @@ describe("sanitizeHostExecEnv", () => {
     });
 
     expect(env).toEqual({
-      OPENCLAW_CLI: OPENCLAW_CLI_ENV_VALUE,
+      ICLAW_CLI: ICLAW_CLI_ENV_VALUE,
       PATH: "/usr/bin:/bin",
       AWS_CONFIG_FILE: "/tmp/aws-config",
       KUBECONFIG: "/tmp/kubeconfig",
@@ -450,7 +450,7 @@ describe("sanitizeHostExecEnv", () => {
     });
 
     expect(env.PATH).toBe("/usr/bin:/bin");
-    expect(env.OPENCLAW_CLI).toBe(OPENCLAW_CLI_ENV_VALUE);
+    expect(env.ICLAW_CLI).toBe(ICLAW_CLI_ENV_VALUE);
     expect(env.BASH_ENV).toBeUndefined();
     expect(env.BROWSER).toBeUndefined();
     expect(env.GIT_EDITOR).toBeUndefined();
@@ -565,7 +565,7 @@ describe("sanitizeHostExecEnv", () => {
     });
 
     expect(env.PATH).toBe("/usr/bin:/bin");
-    expect(env.OPENCLAW_CLI).toBe(OPENCLAW_CLI_ENV_VALUE);
+    expect(env.ICLAW_CLI).toBe(ICLAW_CLI_ENV_VALUE);
     expect(env.VIMINIT).toBeUndefined();
     expect(env.EXINIT).toBeUndefined();
     expect(env.LUA_INIT_5_4).toBeUndefined();
@@ -618,7 +618,7 @@ describe("sanitizeHostExecEnv", () => {
     });
 
     expect(env.PATH).toBe("/usr/bin:/bin");
-    expect(env.OPENCLAW_CLI).toBe(OPENCLAW_CLI_ENV_VALUE);
+    expect(env.ICLAW_CLI).toBe(ICLAW_CLI_ENV_VALUE);
     expect(env.VIMINIT).toBeUndefined();
     expect(env.HOSTALIASES).toBeUndefined();
     expect(env.AWS_CONTAINER_CREDENTIALS_FULL_URI).toBeUndefined();
@@ -658,7 +658,7 @@ describe("sanitizeHostExecEnv", () => {
     });
 
     expect(env).toEqual({
-      OPENCLAW_CLI: OPENCLAW_CLI_ENV_VALUE,
+      ICLAW_CLI: ICLAW_CLI_ENV_VALUE,
       PATH: "/usr/bin:/bin",
       HTTP_PROXY: "http://trusted-proxy.example.test:8080",
       HTTPS_PROXY: "http://trusted-proxy.example.test:8443",
@@ -698,7 +698,7 @@ describe("sanitizeHostExecEnv", () => {
     });
 
     expect(env.PATH).toBe("/usr/bin:/bin");
-    expect(env.OPENCLAW_CLI).toBe(OPENCLAW_CLI_ENV_VALUE);
+    expect(env.ICLAW_CLI).toBe(ICLAW_CLI_ENV_VALUE);
     expect(env.OK).toBe("1");
     expect(env.SHELLOPTS).toBeUndefined();
     expect(env.PS4).toBeUndefined();
@@ -717,7 +717,7 @@ describe("sanitizeHostExecEnv", () => {
     });
 
     expect(env.GOOD_KEY).toBe("ok");
-    expect(env.OPENCLAW_CLI).toBe(OPENCLAW_CLI_ENV_VALUE);
+    expect(env.ICLAW_CLI).toBe(ICLAW_CLI_ENV_VALUE);
     expect(env[" BAD KEY"]).toBeUndefined();
     expect(env["NOT-PORTABLE"]).toBeUndefined();
   });
@@ -734,7 +734,7 @@ describe("sanitizeHostExecEnv", () => {
     });
 
     expect(env.PATH).toBe("/custom/bin");
-    expect(env.OPENCLAW_CLI).toBe(OPENCLAW_CLI_ENV_VALUE);
+    expect(env.ICLAW_CLI).toBe(ICLAW_CLI_ENV_VALUE);
   });
 
   it("drops non-string inherited values while preserving non-portable inherited keys", () => {
@@ -749,7 +749,7 @@ describe("sanitizeHostExecEnv", () => {
     });
 
     expect(env).toEqual({
-      OPENCLAW_CLI: OPENCLAW_CLI_ENV_VALUE,
+      ICLAW_CLI: ICLAW_CLI_ENV_VALUE,
       PATH: "/usr/bin:/bin",
       GOOD: "1",
       "NOT-PORTABLE": "x",
@@ -1183,12 +1183,12 @@ describe("sanitizeSystemRunEnvOverrides", () => {
     const overrides = sanitizeSystemRunEnvOverrides({
       shellWrapper: false,
       overrides: {
-        OPENCLAW_TEST: "1",
+        ICLAW_TEST: "1",
         TOKEN: "abc",
       },
     });
     expect(overrides).toEqual({
-      OPENCLAW_TEST: "1",
+      ICLAW_TEST: "1",
       TOKEN: "abc",
     });
   });
@@ -1197,7 +1197,7 @@ describe("sanitizeSystemRunEnvOverrides", () => {
     const overrides = sanitizeSystemRunEnvOverrides({
       shellWrapper: true,
       overrides: {
-        OPENCLAW_TEST: "1",
+        ICLAW_TEST: "1",
         TOKEN: "abc",
         LANG: "C",
         LC_ALL: "C",

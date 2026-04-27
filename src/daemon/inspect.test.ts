@@ -20,11 +20,11 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=/usr/bin/node /home/openclaw/.npm-global/lib/node_modules/openclaw/dist/entry.js gateway --port 18789
+ExecStart=/usr/bin/node /home/openclaw/.npm-global/lib/node_modules/iclaw/dist/entry.js gateway --port 18789
 Restart=always
-Environment=OPENCLAW_SERVICE_MARKER=openclaw
-Environment=OPENCLAW_SERVICE_KIND=gateway
-Environment=OPENCLAW_SERVICE_VERSION=2026.3.8
+Environment=ICLAW_SERVICE_MARKER=openclaw
+Environment=ICLAW_SERVICE_KIND=gateway
+Environment=ICLAW_SERVICE_VERSION=2026.3.8
 
 [Install]
 WantedBy=default.target

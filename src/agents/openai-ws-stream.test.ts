@@ -3666,8 +3666,8 @@ describe("releaseWsSession / hasWsSession", () => {
       releaseWsSession("registry-test", {
         allowPool: true,
         env: {
-          OPENCLAW_OPENAI_WS_POOL: "1",
-          OPENCLAW_OPENAI_WS_SESSION_POOL_IDLE_MS: "1000",
+          ICLAW_OPENAI_WS_POOL: "1",
+          ICLAW_OPENAI_WS_SESSION_POOL_IDLE_MS: "1000",
         } as NodeJS.ProcessEnv,
       });
 

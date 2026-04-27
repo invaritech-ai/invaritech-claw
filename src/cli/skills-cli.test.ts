@@ -174,7 +174,7 @@ describe("skills-cli", () => {
       ]);
 
       const output = formatSkillInfo(report, "env-aware-skill", {});
-      expect(output).toContain("OPENCLAW_CONFIG_PATH");
+      expect(output).toContain("ICLAW_CONFIG_PATH");
       expect(output).toContain("default: ~/.openclaw/openclaw.json");
       expect(output).toContain("skills.entries.env-aware-skill.apiKey");
     });

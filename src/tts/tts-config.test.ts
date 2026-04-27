@@ -11,17 +11,17 @@ describe("shouldAttemptTtsPayload", () => {
   let prefsPath: string;
 
   beforeEach(() => {
-    originalPrefsPath = process.env.OPENCLAW_TTS_PREFS;
+    originalPrefsPath = process.env.ICLAW_TTS_PREFS;
     dir = mkdtempSync(path.join(tmpdir(), "openclaw-tts-config-"));
     prefsPath = path.join(dir, "tts.json");
-    process.env.OPENCLAW_TTS_PREFS = prefsPath;
+    process.env.ICLAW_TTS_PREFS = prefsPath;
   });
 
   afterEach(() => {
     if (originalPrefsPath === undefined) {
-      delete process.env.OPENCLAW_TTS_PREFS;
+      delete process.env.ICLAW_TTS_PREFS;
     } else {
-      process.env.OPENCLAW_TTS_PREFS = originalPrefsPath;
+      process.env.ICLAW_TTS_PREFS = originalPrefsPath;
     }
     rmSync(dir, { recursive: true, force: true });
   });

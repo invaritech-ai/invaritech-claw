@@ -9,7 +9,7 @@ const { prepareSecretsRuntimeSnapshot } = setupSecretsRuntimeSnapshotTestHooks()
 
 describe("secrets runtime snapshot request secret refs", () => {
   it("can skip auth-profile SecretRef resolution when includeAuthStoreRefs is false", async () => {
-    const missingEnvVar = `OPENCLAW_MISSING_AUTH_PROFILE_SECRET_${Date.now()}`;
+    const missingEnvVar = `ICLAW_MISSING_AUTH_PROFILE_SECRET_${Date.now()}`;
     delete process.env[missingEnvVar];
 
     const loadAuthStore = () =>

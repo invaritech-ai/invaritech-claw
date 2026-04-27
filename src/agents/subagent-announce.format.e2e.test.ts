@@ -197,8 +197,8 @@ describe("subagent announce formatting", () => {
     // constant picks it up. This fixes flaky Windows CI failures where the test
     // timeout budget is too tight without fast mode enabled.
     // See: https://github.com/openclaw/openclaw/issues/31298
-    previousFastTestEnv = process.env.OPENCLAW_TEST_FAST;
-    process.env.OPENCLAW_TEST_FAST = "1";
+    previousFastTestEnv = process.env.ICLAW_TEST_FAST;
+    process.env.ICLAW_TEST_FAST = "1";
     ({ runSubagentAnnounceFlow } = await import("./subagent-announce.js"));
   });
 
@@ -206,14 +206,14 @@ describe("subagent announce formatting", () => {
     subagentAnnounceDeliveryTesting.setDepsForTest();
     clearRuntimeConfigSnapshot();
     if (previousFastTestEnv === undefined) {
-      delete process.env.OPENCLAW_TEST_FAST;
+      delete process.env.ICLAW_TEST_FAST;
       return;
     }
-    process.env.OPENCLAW_TEST_FAST = previousFastTestEnv;
+    process.env.ICLAW_TEST_FAST = previousFastTestEnv;
   });
 
   beforeEach(() => {
-    // OPENCLAW_TEST_FAST is set in beforeAll before module import
+    // ICLAW_TEST_FAST is set in beforeAll before module import
     // to ensure the module-level constant picks it up.
     agentSpy
       .mockClear()

@@ -100,7 +100,8 @@ function isLikelyOpenClawCliProcess(argv: string[] = process.argv): boolean {
   const entryBasename = normalizeLowercaseStringOrEmpty(path.basename(argv[1] ?? ""));
   return (
     entryBasename === "openclaw" ||
-    entryBasename === "openclaw.mjs" ||
+    entryBasename === "iclaw" ||
+    entryBasename === "iclaw.mjs" ||
     entryBasename === "entry.js" ||
     entryBasename === "entry.mjs"
   );

@@ -43,7 +43,7 @@ let importPiSdk = defaultImportPiSdk;
 let modelSuppressionPromise: Promise<typeof import("./model-suppression.runtime.js")> | undefined;
 
 function shouldLogModelCatalogTiming(): boolean {
-  return process.env.OPENCLAW_DEBUG_INGRESS_TIMING === "1";
+  return process.env.ICLAW_DEBUG_INGRESS_TIMING === "1";
 }
 
 function loadModelSuppression() {

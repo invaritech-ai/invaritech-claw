@@ -6,7 +6,7 @@ import { resolveOpenClawPackageRootSync } from "../../infra/openclaw-root.js";
 const PRIVATE_QA_DIST_RELATIVE_PATH = path.join("dist", "plugin-sdk", "qa-lab.js");
 
 export function isPrivateQaCliEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
-  return env.OPENCLAW_ENABLE_PRIVATE_QA_CLI === "1";
+  return env.ICLAW_ENABLE_PRIVATE_QA_CLI === "1";
 }
 
 function resolvePrivateQaSourceModuleSpecifier(params?: {

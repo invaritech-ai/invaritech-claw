@@ -225,7 +225,7 @@ describe("edit tool recovery hardening", () => {
     });
   });
 
-  it("recovers tilde paths against the OS home even when OPENCLAW_HOME differs", async () => {
+  it("recovers tilde paths against the OS home even when ICLAW_HOME differs", async () => {
     tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-edit-recovery-"));
     const osHome = path.join(tmpDir, "home");
     const openclawHome = path.join(tmpDir, "openclaw-home");
@@ -234,10 +234,10 @@ describe("edit tool recovery hardening", () => {
 
     const previousHome = process.env.HOME;
     const previousUserProfile = process.env.USERPROFILE;
-    const previousOpenclawHome = process.env.OPENCLAW_HOME;
+    const previousOpenclawHome = process.env.ICLAW_HOME;
     process.env.HOME = osHome;
     process.env.USERPROFILE = osHome;
-    process.env.OPENCLAW_HOME = openclawHome;
+    process.env.ICLAW_HOME = openclawHome;
 
     try {
       const filePath = path.join(osHome, "demo.txt");
@@ -275,9 +275,9 @@ describe("edit tool recovery hardening", () => {
         process.env.USERPROFILE = previousUserProfile;
       }
       if (previousOpenclawHome === undefined) {
-        delete process.env.OPENCLAW_HOME;
+        delete process.env.ICLAW_HOME;
       } else {
-        process.env.OPENCLAW_HOME = previousOpenclawHome;
+        process.env.ICLAW_HOME = previousOpenclawHome;
       }
     }
   });

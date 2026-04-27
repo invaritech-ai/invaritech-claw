@@ -1156,7 +1156,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
         };
       }
 
-      const doctorEntry = path.join(gitRoot, "openclaw.mjs");
+      const doctorEntry = path.join(gitRoot, "iclaw.mjs");
       const doctorEntryExists = await fs
         .stat(doctorEntry)
         .then(() => true)
@@ -1186,7 +1186,7 @@ export async function runGatewayUpdate(opts: UpdateRunnerOptions = {}): Promise<
       const doctorNodePath = await resolveStableNodePath(process.execPath);
       const doctorArgv = [doctorNodePath, doctorEntry, "doctor", "--non-interactive", "--fix"];
       const doctorStep = await runStep(
-        step("openclaw doctor", doctorArgv, gitRoot, { OPENCLAW_UPDATE_IN_PROGRESS: "1" }),
+        step("openclaw doctor", doctorArgv, gitRoot, { ICLAW_UPDATE_IN_PROGRESS: "1" }),
       );
       steps.push(doctorStep);
 

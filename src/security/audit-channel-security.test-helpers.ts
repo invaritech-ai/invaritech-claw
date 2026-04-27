@@ -12,7 +12,7 @@ export async function withChannelSecurityStateDir(fn: (tmp: string) => Promise<v
     mode: 0o700,
   });
   try {
-    await withEnvAsync({ OPENCLAW_STATE_DIR: stateDir }, () => fn(stateDir));
+    await withEnvAsync({ ICLAW_STATE_DIR: stateDir }, () => fn(stateDir));
   } finally {
     await fs.rm(fixtureRoot, { recursive: true, force: true }).catch(() => undefined);
   }

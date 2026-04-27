@@ -66,8 +66,8 @@ describe("update-startup", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-01-17T10:00:00Z"));
     tempDir = await suiteRootTracker.make("case");
-    envSnapshot = captureEnv(["OPENCLAW_STATE_DIR", "NODE_ENV", "VITEST"]);
-    process.env.OPENCLAW_STATE_DIR = tempDir;
+    envSnapshot = captureEnv(["ICLAW_STATE_DIR", "NODE_ENV", "VITEST"]);
+    process.env.ICLAW_STATE_DIR = tempDir;
 
     process.env.NODE_ENV = "test";
 
@@ -401,7 +401,7 @@ describe("update-startup", () => {
       expect.objectContaining({
         timeoutMs: 45 * 60 * 1000,
         env: expect.objectContaining({
-          OPENCLAW_AUTO_UPDATE: "1",
+          ICLAW_AUTO_UPDATE: "1",
         }),
       }),
     );

@@ -314,7 +314,7 @@ function resolveSystemdStateDirectory(env: NodeJS.ProcessEnv): string | null {
 }
 
 function resolveBundledRuntimeDepsExternalBaseDir(env: NodeJS.ProcessEnv): string {
-  const explicit = env.OPENCLAW_PLUGIN_STAGE_DIR?.trim();
+  const explicit = env.ICLAW_PLUGIN_STAGE_DIR?.trim();
   if (explicit) {
     return resolveHomeRelativePath(explicit, { env, homedir: os.homedir });
   }
@@ -764,11 +764,7 @@ export function resolveBundledRuntimeDependencyPackageInstallRoot(
   options: { env?: NodeJS.ProcessEnv; forceExternal?: boolean } = {},
 ): string {
   const env = options.env ?? process.env;
-  if (
-    options.forceExternal ||
-    env.OPENCLAW_PLUGIN_STAGE_DIR?.trim() ||
-    env.STATE_DIRECTORY?.trim()
-  ) {
+  if (options.forceExternal || env.ICLAW_PLUGIN_STAGE_DIR?.trim() || env.STATE_DIRECTORY?.trim()) {
     return resolveExternalBundledRuntimeDepsInstallRoot({
       pluginRoot: path.join(packageRoot, "dist", "extensions", "__package__"),
       env,
@@ -787,11 +783,7 @@ export function resolveBundledRuntimeDependencyInstallRoot(
   options: { env?: NodeJS.ProcessEnv; forceExternal?: boolean } = {},
 ): string {
   const env = options.env ?? process.env;
-  if (
-    options.forceExternal ||
-    env.OPENCLAW_PLUGIN_STAGE_DIR?.trim() ||
-    env.STATE_DIRECTORY?.trim()
-  ) {
+  if (options.forceExternal || env.ICLAW_PLUGIN_STAGE_DIR?.trim() || env.STATE_DIRECTORY?.trim()) {
     return resolveExternalBundledRuntimeDepsInstallRoot({ pluginRoot, env });
   }
   return isWritableDirectory(pluginRoot)

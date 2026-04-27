@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   applyConfigOverrides,
   getConfigOverrides,
@@ -74,6 +74,47 @@ describe("runtime overrides", () => {
       commands: {
         debug: true,
       },
+    });
+  });
+
+  describe("ICLAW_LEAN_GATEWAY", () => {
+    const originalLean = process.env.ICLAW_LEAN_GATEWAY;
+
+    afterEach(() => {
+      if (originalLean === undefined) {
+        delete process.env.ICLAW_LEAN_GATEWAY;
+      } else {
+        process.env.ICLAW_LEAN_GATEWAY = originalLean;
+      }
+    });
+
+    it("applies lean profile before manual overrides", () => {
+      process.env.ICLAW_LEAN_GATEWAY = "1";
+      const cfg = {} as OpenClawConfig;
+      setConfigOverride("gateway.bind", "lan");
+      const next = applyConfigOverrides(cfg);
+      expect(next.gateway?.bind).toBe("lan");
+      expect(next.plugins?.allow).toEqual(["ollama"]);
+    });
+  });
+
+  describe("ICLAW_MINIMAL_ASSISTANT", () => {
+    const originalMinimal = process.env.ICLAW_MINIMAL_ASSISTANT;
+
+    afterEach(() => {
+      if (originalMinimal === undefined) {
+        delete process.env.ICLAW_MINIMAL_ASSISTANT;
+      } else {
+        process.env.ICLAW_MINIMAL_ASSISTANT = originalMinimal;
+      }
+    });
+
+    it("applies the same config hardening as lean", () => {
+      process.env.ICLAW_MINIMAL_ASSISTANT = "1";
+      const cfg = {} as OpenClawConfig;
+      const next = applyConfigOverrides(cfg);
+      expect(next.gateway?.bind).toBe("loopback");
+      expect(next.plugins?.allow).toEqual(["ollama"]);
     });
   });
 });

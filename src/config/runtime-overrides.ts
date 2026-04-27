@@ -1,5 +1,6 @@
 import { isPlainObject } from "../utils.js";
 import { parseConfigPath, setConfigValueAtPath, unsetConfigValueAtPath } from "./config-paths.js";
+import { applyLeanGatewayRuntimeProfile } from "./lean-gateway-profile.js";
 import { isBlockedObjectKey } from "./prototype-keys.js";
 import type { OpenClawConfig } from "./types.js";
 
@@ -84,8 +85,9 @@ export function unsetConfigOverride(pathRaw: string): {
 }
 
 export function applyConfigOverrides(cfg: OpenClawConfig): OpenClawConfig {
+  const withLean = applyLeanGatewayRuntimeProfile(cfg, process.env);
   if (!overrides || Object.keys(overrides).length === 0) {
-    return cfg;
+    return withLean;
   }
-  return mergeOverrides(cfg, overrides) as OpenClawConfig;
+  return mergeOverrides(withLean, overrides) as OpenClawConfig;
 }

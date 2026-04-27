@@ -43,7 +43,7 @@ function sharedMainOpsConfig(sharedStorePath: string): OpenClawConfig {
 async function migrateFixtureState(stateDir: string, cfg: OpenClawConfig = OPS_WORK_CONFIG) {
   return migrateOrphanedSessionKeys({
     cfg,
-    env: { OPENCLAW_STATE_DIR: stateDir },
+    env: { ICLAW_STATE_DIR: stateDir },
   });
 }
 
@@ -111,7 +111,7 @@ describe("migrateOrphanedSessionKeys", () => {
         "agent:main:main": { sessionId: "abc-123", updatedAt: 1000 },
       });
 
-      const env = { OPENCLAW_STATE_DIR: stateDir };
+      const env = { ICLAW_STATE_DIR: stateDir };
       await migrateOrphanedSessionKeys({ cfg: OPS_WORK_CONFIG, env });
       const result2 = await migrateOrphanedSessionKeys({ cfg: OPS_WORK_CONFIG, env });
 
@@ -174,7 +174,7 @@ describe("migrateOrphanedSessionKeys", () => {
 
       const result = await migrateOrphanedSessionKeys({
         cfg,
-        env: { OPENCLAW_STATE_DIR: stateDir },
+        env: { ICLAW_STATE_DIR: stateDir },
       });
 
       expect(result.changes).toHaveLength(0);

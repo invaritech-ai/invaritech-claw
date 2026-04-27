@@ -8,6 +8,10 @@ import {
 } from "../shared/string-coerce.js";
 import { resolveUserPath } from "../utils.js";
 import { detectBundleManifestFormat, loadBundleManifest } from "./bundle-manifest.js";
+import {
+  bundledStockAllowlistCacheKeyComponent,
+  shouldSkipBundledStockDirectory,
+} from "./bundled-discovery-filter.js";
 import type { PluginBundleFormat, PluginDiagnostic, PluginFormat } from "./manifest-types.js";
 import {
   DEFAULT_PLUGIN_ENTRY_CANDIDATES,
@@ -69,7 +73,7 @@ export function clearPluginDiscoveryCache(): void {
 }
 
 function resolveDiscoveryCacheMs(env: NodeJS.ProcessEnv): number {
-  const raw = env.OPENCLAW_PLUGIN_DISCOVERY_CACHE_MS?.trim();
+  const raw = env.ICLAW_PLUGIN_DISCOVERY_CACHE_MS?.trim();
   if (raw === "" || raw === "0") {
     return 0;
   }
@@ -84,7 +88,7 @@ function resolveDiscoveryCacheMs(env: NodeJS.ProcessEnv): number {
 }
 
 function shouldUseDiscoveryCache(env: NodeJS.ProcessEnv): boolean {
-  const disabled = env.OPENCLAW_DISABLE_PLUGIN_DISCOVERY_CACHE?.trim();
+  const disabled = env.ICLAW_DISABLE_PLUGIN_DISCOVERY_CACHE?.trim();
   if (disabled) {
     return false;
   }
@@ -105,7 +109,7 @@ function buildScopedDiscoveryCacheKey(params: {
   const workspaceKey = roots.workspace ?? "";
   const bundledRoot = roots.stock ?? "";
   const ownershipUid = params.ownershipUid ?? currentUid();
-  return `scoped::${workspaceKey}::${bundledRoot}::${ownershipUid ?? "none"}::${JSON.stringify(loadPaths)}`;
+  return `scoped::${workspaceKey}::${bundledRoot}::${ownershipUid ?? "none"}::${JSON.stringify(loadPaths)}::${bundledStockAllowlistCacheKeyComponent(params.env)}`;
 }
 
 function buildSharedDiscoveryCacheKey(params: {
@@ -116,7 +120,7 @@ function buildSharedDiscoveryCacheKey(params: {
   const configExtensionsRoot = roots.global ?? "";
   const bundledRoot = roots.stock ?? "";
   const ownershipUid = params.ownershipUid ?? currentUid();
-  return `shared::${ownershipUid ?? "none"}::${configExtensionsRoot}::${bundledRoot}`;
+  return `shared::${ownershipUid ?? "none"}::${configExtensionsRoot}::${bundledRoot}::${bundledStockAllowlistCacheKeyComponent(params.env)}`;
 }
 
 function currentUid(overrideUid?: number | null): number | null {
@@ -829,6 +833,9 @@ function discoverInDirectory(params: {
   recurseDirectories?: boolean;
   skipDirectories?: Set<string>;
   visitedDirectories?: Set<string>;
+  /** When true with `origin=bundled`, only whitelisted top-level stock dirs are scanned. */
+  applyBundledStockAllowlist?: boolean;
+  env?: NodeJS.ProcessEnv;
 }) {
   if (!fs.existsSync(params.dir)) {
     return;
@@ -877,6 +884,15 @@ function discoverInDirectory(params: {
       continue;
     }
     if (shouldIgnoreScannedDirectory(entry.name)) {
+      continue;
+    }
+    if (
+      shouldSkipBundledStockDirectory({
+        dirName: entry.name,
+        applyBundledStockAllowlist: params.applyBundledStockAllowlist === true,
+        env: params.env ?? process.env,
+      })
+    ) {
       continue;
     }
 
@@ -966,6 +982,7 @@ function discoverInDirectory(params: {
       discoverInDirectory({
         ...params,
         dir: fullPath,
+        applyBundledStockAllowlist: false,
       });
     }
   }
@@ -1107,6 +1124,7 @@ function discoverFromPath(params: {
       candidates: params.candidates,
       diagnostics: params.diagnostics,
       seen: params.seen,
+      env: params.env,
     });
     return;
   }
@@ -1169,6 +1187,7 @@ export function discoverOpenClawPlugins(params: {
           candidates: result.candidates,
           diagnostics: result.diagnostics,
           seen,
+          env,
         });
       }
       return result;
@@ -1192,6 +1211,8 @@ export function discoverOpenClawPlugins(params: {
           candidates: result.candidates,
           diagnostics: result.diagnostics,
           seen,
+          applyBundledStockAllowlist: true,
+          env,
         });
       }
       // Keep auto-discovered global extensions behind bundled plugins.
@@ -1203,6 +1224,7 @@ export function discoverOpenClawPlugins(params: {
         candidates: result.candidates,
         diagnostics: result.diagnostics,
         seen,
+        env,
       });
       return result;
     },

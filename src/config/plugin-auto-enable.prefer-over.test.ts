@@ -51,11 +51,11 @@ describe("plugin auto-enable preferOver", () => {
     const channelId = "cache-drift-channel";
     writeBundledChannelPackage(rootDir, channelId);
 
-    vi.stubEnv("OPENCLAW_BUNDLED_PLUGINS_DIR", rootDir);
+    vi.stubEnv("ICLAW_BUNDLED_PLUGINS_DIR", rootDir);
     const { normalizeChatChannelId } = await import("../channels/ids.js");
     expect(normalizeChatChannelId(channelId)).toBe(channelId);
 
-    vi.stubEnv("OPENCLAW_BUNDLED_PLUGINS_DIR", path.join(rootDir, "missing"));
+    vi.stubEnv("ICLAW_BUNDLED_PLUGINS_DIR", path.join(rootDir, "missing"));
     const { materializePluginAutoEnableCandidates } = await import("./plugin-auto-enable.js");
 
     const result = materializePluginAutoEnableCandidates({
@@ -78,8 +78,8 @@ describe("plugin auto-enable preferOver", () => {
         },
       ],
       env: {
-        OPENCLAW_STATE_DIR: path.join(rootDir, "state"),
-        OPENCLAW_BUNDLED_PLUGINS_DIR: path.join(rootDir, "missing"),
+        ICLAW_STATE_DIR: path.join(rootDir, "state"),
+        ICLAW_BUNDLED_PLUGINS_DIR: path.join(rootDir, "missing"),
       },
       manifestRegistry: EMPTY_MANIFEST_REGISTRY,
     });

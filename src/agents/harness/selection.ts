@@ -328,7 +328,7 @@ export function resolveAgentHarnessPolicy(params: {
     sessionKey: params.sessionKey,
   });
   const defaultsPolicy = params.config?.agents?.defaults?.embeddedHarness;
-  const runtime = env.OPENCLAW_AGENT_RUNTIME?.trim()
+  const runtime = env.ICLAW_AGENT_RUNTIME?.trim()
     ? resolveEmbeddedAgentRuntime(env)
     : normalizeEmbeddedAgentRuntime(agentPolicy?.runtime ?? defaultsPolicy?.runtime);
   return {

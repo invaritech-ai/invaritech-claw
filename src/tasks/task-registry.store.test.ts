@@ -40,7 +40,7 @@ function createStoredTask(): TaskRecord {
 
 describe("task-registry store runtime", () => {
   afterEach(() => {
-    delete process.env.OPENCLAW_STATE_DIR;
+    delete process.env.ICLAW_STATE_DIR;
     resetTaskRegistryForTests();
     resetTaskFlowRegistryForTests({ persist: false });
   });
@@ -278,7 +278,7 @@ describe("task-registry store runtime", () => {
       return;
     }
     const stateDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-task-store-"));
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    process.env.ICLAW_STATE_DIR = stateDir;
 
     createTaskRecord({
       runtime: "cron",
@@ -303,7 +303,7 @@ describe("task-registry store runtime", () => {
 
   it("migrates legacy ownerless cron rows to system scope", () => {
     const stateDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-task-store-legacy-"));
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    process.env.ICLAW_STATE_DIR = stateDir;
     const sqlitePath = resolveTaskRegistrySqlitePath(process.env);
     mkdirSync(path.dirname(sqlitePath), { recursive: true });
     const { DatabaseSync } = requireNodeSqlite();
@@ -385,7 +385,7 @@ describe("task-registry store runtime", () => {
 
   it("keeps legacy requester_session_key rows writable after restore", () => {
     const stateDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-task-store-legacy-write-"));
-    process.env.OPENCLAW_STATE_DIR = stateDir;
+    process.env.ICLAW_STATE_DIR = stateDir;
     const sqlitePath = resolveTaskRegistrySqlitePath(process.env);
     mkdirSync(path.dirname(sqlitePath), { recursive: true });
     const { DatabaseSync } = requireNodeSqlite();

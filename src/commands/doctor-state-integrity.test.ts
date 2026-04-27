@@ -22,17 +22,17 @@ const noteMock = vi.fn();
 
 type EnvSnapshot = {
   HOME?: string;
-  OPENCLAW_HOME?: string;
-  OPENCLAW_STATE_DIR?: string;
-  OPENCLAW_OAUTH_DIR?: string;
+  ICLAW_HOME?: string;
+  ICLAW_STATE_DIR?: string;
+  ICLAW_OAUTH_DIR?: string;
 };
 
 function captureEnv(): EnvSnapshot {
   return {
     HOME: process.env.HOME,
-    OPENCLAW_HOME: process.env.OPENCLAW_HOME,
-    OPENCLAW_STATE_DIR: process.env.OPENCLAW_STATE_DIR,
-    OPENCLAW_OAUTH_DIR: process.env.OPENCLAW_OAUTH_DIR,
+    ICLAW_HOME: process.env.ICLAW_HOME,
+    ICLAW_STATE_DIR: process.env.ICLAW_STATE_DIR,
+    ICLAW_OAUTH_DIR: process.env.ICLAW_OAUTH_DIR,
   };
 }
 
@@ -63,9 +63,9 @@ function stateIntegrityText(): string {
 }
 
 function createAgentDir(agentId: string, includeNestedAgentDir = true) {
-  const stateDir = process.env.OPENCLAW_STATE_DIR;
+  const stateDir = process.env.ICLAW_STATE_DIR;
   if (!stateDir) {
-    throw new Error("OPENCLAW_STATE_DIR is not set");
+    throw new Error("ICLAW_STATE_DIR is not set");
   }
   const targetDir = includeNestedAgentDir
     ? path.join(stateDir, "agents", agentId, "agent")
@@ -123,10 +123,10 @@ describe("doctor state integrity oauth dir checks", () => {
     envSnapshot = captureEnv();
     tempHome = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-doctor-state-integrity-"));
     process.env.HOME = tempHome;
-    process.env.OPENCLAW_HOME = tempHome;
-    process.env.OPENCLAW_STATE_DIR = path.join(tempHome, ".openclaw");
-    delete process.env.OPENCLAW_OAUTH_DIR;
-    fs.mkdirSync(process.env.OPENCLAW_STATE_DIR, { recursive: true, mode: 0o700 });
+    process.env.ICLAW_HOME = tempHome;
+    process.env.ICLAW_STATE_DIR = path.join(tempHome, ".openclaw");
+    delete process.env.ICLAW_OAUTH_DIR;
+    fs.mkdirSync(process.env.ICLAW_STATE_DIR, { recursive: true, mode: 0o700 });
     noteMock.mockClear();
   });
 
@@ -168,8 +168,8 @@ describe("doctor state integrity oauth dir checks", () => {
     expect(confirmRuntimeRepair).toHaveBeenCalledWith(OAUTH_PROMPT_MATCHER);
   });
 
-  it("prompts for oauth dir when OPENCLAW_OAUTH_DIR is explicitly configured", async () => {
-    process.env.OPENCLAW_OAUTH_DIR = path.join(tempHome, ".oauth");
+  it("prompts for oauth dir when ICLAW_OAUTH_DIR is explicitly configured", async () => {
+    process.env.ICLAW_OAUTH_DIR = path.join(tempHome, ".oauth");
     const cfg: OpenClawConfig = {};
     const confirmRuntimeRepair = await runStateIntegrity(cfg);
     expect(confirmRuntimeRepair).toHaveBeenCalledWith(OAUTH_PROMPT_MATCHER);
@@ -254,7 +254,7 @@ describe("doctor state integrity oauth dir checks", () => {
 
     const realpathNative = fs.realpathSync.native.bind(fs.realpathSync);
     const resolvedResearchAgentDir = realpathNative(
-      path.join(process.env.OPENCLAW_STATE_DIR ?? "", "agents", "Research", "agent"),
+      path.join(process.env.ICLAW_STATE_DIR ?? "", "agents", "Research", "agent"),
     );
     const realpathSpy = vi
       .spyOn(fs.realpathSync, "native")

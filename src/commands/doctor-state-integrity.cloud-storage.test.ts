@@ -84,10 +84,10 @@ describe("detectMacCloudSyncedStateDir", () => {
     expect(result).toBeNull();
   });
 
-  it("anchors cloud detection to OS homedir when OPENCLAW_HOME is overridden", () => {
+  it("anchors cloud detection to OS homedir when ICLAW_HOME is overridden", () => {
     const stateDir = path.join(home, "Library", "CloudStorage", "iCloud Drive", ".openclaw");
-    const originalOpenClawHome = process.env.OPENCLAW_HOME;
-    process.env.OPENCLAW_HOME = "/tmp/openclaw-home-override";
+    const originalOpenClawHome = process.env.ICLAW_HOME;
+    process.env.ICLAW_HOME = "/tmp/openclaw-home-override";
     const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue(home);
     try {
       const result = detectMacCloudSyncedStateDir(stateDir, {
@@ -101,9 +101,9 @@ describe("detectMacCloudSyncedStateDir", () => {
     } finally {
       homedirSpy.mockRestore();
       if (originalOpenClawHome === undefined) {
-        delete process.env.OPENCLAW_HOME;
+        delete process.env.ICLAW_HOME;
       } else {
-        process.env.OPENCLAW_HOME = originalOpenClawHome;
+        process.env.ICLAW_HOME = originalOpenClawHome;
       }
     }
   });

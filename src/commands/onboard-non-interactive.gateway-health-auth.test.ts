@@ -20,13 +20,13 @@ async function writeSecureFile(filePath: string, content: string): Promise<void>
 }
 
 describe("resolveGatewayHealthProbeToken", () => {
-  const originalGatewayToken = process.env.OPENCLAW_GATEWAY_TOKEN;
+  const originalGatewayToken = process.env.ICLAW_GATEWAY_TOKEN;
 
   afterEach(() => {
     if (originalGatewayToken === undefined) {
-      delete process.env.OPENCLAW_GATEWAY_TOKEN;
+      delete process.env.ICLAW_GATEWAY_TOKEN;
     } else {
-      process.env.OPENCLAW_GATEWAY_TOKEN = originalGatewayToken;
+      process.env.ICLAW_GATEWAY_TOKEN = originalGatewayToken;
     }
   });
 
@@ -34,7 +34,7 @@ describe("resolveGatewayHealthProbeToken", () => {
     await withTempDir(async (dir) => {
       const tokenPath = path.join(dir, "gateway-token.txt");
       await writeSecureFile(tokenPath, "file-secret-token\n");
-      process.env.OPENCLAW_GATEWAY_TOKEN = "stale-env-token";
+      process.env.ICLAW_GATEWAY_TOKEN = "stale-env-token";
 
       const resolved = await resolveGatewayHealthProbeToken({
         gateway: {
@@ -62,9 +62,9 @@ describe("resolveGatewayHealthProbeToken", () => {
     });
   });
 
-  it("does not fall back to stale OPENCLAW_GATEWAY_TOKEN when a SecretRef is unresolved", async () => {
+  it("does not fall back to stale ICLAW_GATEWAY_TOKEN when a SecretRef is unresolved", async () => {
     await withTempDir(async (dir) => {
-      process.env.OPENCLAW_GATEWAY_TOKEN = "stale-env-token";
+      process.env.ICLAW_GATEWAY_TOKEN = "stale-env-token";
 
       const resolved = await resolveGatewayHealthProbeToken({
         gateway: {

@@ -106,7 +106,7 @@ export async function loadAndMaybeMigrateDoctorConfig(params: {
       [
         "- hooks.internal.handlers: legacy inline hook modules are no longer part of the public config surface.",
         "- Migrate each entry to a managed or workspace hook directory with HOOK.md + handler.js, then enable it through hooks.internal.entries.<hookKey> as needed.",
-        "- openclaw doctor --fix does not rewrite this shape automatically.",
+        `- ${formatCliCommand("openclaw doctor --fix")} does not rewrite this shape automatically.`,
       ].join("\n"),
       "Legacy config keys detected",
     );

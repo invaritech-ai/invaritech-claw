@@ -341,7 +341,7 @@ describe("plugin-sdk root alias", () => {
   it("ignores unsafe private local-only plugin-sdk subpaths in the CJS root alias", () => {
     const packageRoot = path.dirname(path.dirname(path.dirname(rootAliasPath)));
     const lazyModule = loadRootAliasWithStubs({
-      env: { OPENCLAW_ENABLE_PRIVATE_QA_CLI: "1" },
+      env: { ICLAW_ENABLE_PRIVATE_QA_CLI: "1" },
       privateLocalOnlySubpaths: ["qa-lab", "../escape", "nested/path"],
       existingPaths: [path.join(packageRoot, "src", "plugin-sdk", "qa-lab.ts")],
       monolithicExports: {

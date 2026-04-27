@@ -4,7 +4,7 @@ import { isMainThread, threadId } from "node:worker_threads";
 import { resolveStateDir } from "../config/paths.js";
 
 export function resolveTaskStateDir(env: NodeJS.ProcessEnv = process.env): string {
-  const explicit = env.OPENCLAW_STATE_DIR?.trim();
+  const explicit = env.ICLAW_STATE_DIR?.trim();
   if (explicit) {
     return resolveStateDir(env);
   }

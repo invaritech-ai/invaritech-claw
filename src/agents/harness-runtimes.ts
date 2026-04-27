@@ -27,7 +27,7 @@ export function collectConfiguredAgentHarnessRuntimes(
       pushRuntime((agent.embeddedHarness as Record<string, unknown> | undefined)?.runtime);
     }
   }
-  pushRuntime(env.OPENCLAW_AGENT_RUNTIME);
+  pushRuntime(env.ICLAW_AGENT_RUNTIME);
 
   return [...runtimes].toSorted((left, right) => left.localeCompare(right));
 }

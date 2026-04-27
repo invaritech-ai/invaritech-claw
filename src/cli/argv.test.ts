@@ -224,7 +224,7 @@ describe("argv helpers", () => {
     },
     {
       name: "returns null when no command exists",
-      argv: ["node", "openclaw"],
+      argv: ["node", "iclaw"],
       expected: null,
     },
     {

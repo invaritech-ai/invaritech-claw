@@ -53,18 +53,18 @@ vi.mock("./usage.js", () => ({
 }));
 
 async function withAuthStateDir<T>(run: (params: { stateDir: string }) => Promise<T>): Promise<T> {
-  const previousStateDir = process.env.OPENCLAW_STATE_DIR;
+  const previousStateDir = process.env.ICLAW_STATE_DIR;
   const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-auth-"));
   const stateDir = path.join(tempRoot, "state");
-  process.env.OPENCLAW_STATE_DIR = stateDir;
+  process.env.ICLAW_STATE_DIR = stateDir;
   try {
     await fs.mkdir(stateDir, { recursive: true });
     return await run({ stateDir });
   } finally {
     if (previousStateDir === undefined) {
-      delete process.env.OPENCLAW_STATE_DIR;
+      delete process.env.ICLAW_STATE_DIR;
     } else {
-      process.env.OPENCLAW_STATE_DIR = previousStateDir;
+      process.env.ICLAW_STATE_DIR = previousStateDir;
     }
     await fs.rm(tempRoot, { recursive: true, force: true });
   }

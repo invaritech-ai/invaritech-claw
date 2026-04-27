@@ -267,7 +267,7 @@ describe("handleControlUiHttpRequest", () => {
 
   async function withPairedOperatorDeviceToken<T>(params: { fn: (token: string) => Promise<T> }) {
     const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ui-device-token-"));
-    vi.stubEnv("OPENCLAW_HOME", tempHome);
+    vi.stubEnv("ICLAW_HOME", tempHome);
     try {
       const deviceId = "control-ui-device";
       const requested = await requestDevicePairing({

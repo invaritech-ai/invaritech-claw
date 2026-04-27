@@ -48,7 +48,7 @@ function resolveTtsPrefsPathValue(prefsPath: string | undefined): string {
   if (configuredPath) {
     return resolveUserPath(configuredPath);
   }
-  const envPath = normalizeOptionalString(process.env.OPENCLAW_TTS_PREFS);
+  const envPath = normalizeOptionalString(process.env.ICLAW_TTS_PREFS);
   if (envPath) {
     return resolveUserPath(envPath);
   }

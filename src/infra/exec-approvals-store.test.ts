@@ -28,7 +28,7 @@ let resolveExecApprovalsSocketPath: ExecApprovalsModule["resolveExecApprovalsSoc
 let saveExecApprovals: ExecApprovalsModule["saveExecApprovals"];
 
 const tempDirs: string[] = [];
-const originalOpenClawHome = process.env.OPENCLAW_HOME;
+const originalOpenClawHome = process.env.ICLAW_HOME;
 
 beforeAll(async () => {
   ({
@@ -55,9 +55,9 @@ beforeEach(() => {
 afterEach(() => {
   vi.restoreAllMocks();
   if (originalOpenClawHome === undefined) {
-    delete process.env.OPENCLAW_HOME;
+    delete process.env.ICLAW_HOME;
   } else {
-    process.env.OPENCLAW_HOME = originalOpenClawHome;
+    process.env.ICLAW_HOME = originalOpenClawHome;
   }
   for (const dir of tempDirs.splice(0)) {
     fs.rmSync(dir, { recursive: true, force: true });
@@ -67,7 +67,7 @@ afterEach(() => {
 function createHomeDir(): string {
   const dir = makeTempDir();
   tempDirs.push(dir);
-  process.env.OPENCLAW_HOME = dir;
+  process.env.ICLAW_HOME = dir;
   return dir;
 }
 
@@ -192,7 +192,7 @@ describe("exec approvals store helpers", () => {
     const linkedHome = `${realHome}-link`;
     tempDirs.push(realHome);
     fs.symlinkSync(realHome, linkedHome);
-    process.env.OPENCLAW_HOME = linkedHome;
+    process.env.ICLAW_HOME = linkedHome;
 
     expect(() =>
       saveExecApprovals({ version: 1, defaults: { security: "full" }, agents: {} }),

@@ -62,7 +62,7 @@ describe("resolveStatusTtsSnapshot", () => {
     });
   });
 
-  it("derives the default prefs path from OPENCLAW_CONFIG_PATH when set", async () => {
+  it("derives the default prefs path from ICLAW_CONFIG_PATH when set", async () => {
     await withTempHome(
       async (home) => {
         const stateDir = path.join(home, ".openclaw-dev");
@@ -78,7 +78,7 @@ describe("resolveStatusTtsSnapshot", () => {
           }),
         );
 
-        vi.stubEnv("OPENCLAW_CONFIG_PATH", path.join(stateDir, "openclaw.json"));
+        vi.stubEnv("ICLAW_CONFIG_PATH", path.join(stateDir, "openclaw.json"));
         try {
           expect(
             resolveStatusTtsSnapshot({
@@ -98,7 +98,7 @@ describe("resolveStatusTtsSnapshot", () => {
           vi.unstubAllEnvs();
         }
       },
-      { env: { OPENCLAW_STATE_DIR: undefined } },
+      { env: { ICLAW_STATE_DIR: undefined } },
     );
   });
 });

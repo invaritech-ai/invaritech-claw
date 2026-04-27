@@ -1,8 +1,8 @@
 import { createRequire } from "node:module";
 import { normalizeOptionalString } from "./shared/string-coerce.js";
 
-declare const __OPENCLAW_VERSION__: string | undefined;
-const CORE_PACKAGE_NAME = "openclaw";
+declare const __ICLAW_VERSION__: string | undefined;
+const CORE_PACKAGE_NAMES = new Set(["openclaw", "iclaw"]);
 
 const PACKAGE_JSON_CANDIDATES = [
   "../package.json",
@@ -31,7 +31,7 @@ function readVersionFromJsonCandidates(
         if (!version) {
           continue;
         }
-        if (opts.requirePackageName && parsed.name !== CORE_PACKAGE_NAME) {
+        if (opts.requirePackageName && !CORE_PACKAGE_NAMES.has(String(parsed.name ?? ""))) {
           continue;
         }
         return version;
@@ -112,12 +112,12 @@ function resolveVersionFromRuntimeSources(params: {
 }): string {
   const preferredCandidates =
     params.preference === "env-first"
-      ? [params.env["OPENCLAW_VERSION"], params.runtimeVersion]
-      : [params.runtimeVersion, params.env["OPENCLAW_VERSION"]];
+      ? [params.env["ICLAW_VERSION"], params.runtimeVersion]
+      : [params.runtimeVersion, params.env["ICLAW_VERSION"]];
   return (
     firstNonEmpty(
       ...preferredCandidates,
-      params.env["OPENCLAW_SERVICE_VERSION"],
+      params.env["ICLAW_SERVICE_VERSION"],
       params.env["npm_package_version"],
     ) ?? params.fallback
   );
@@ -129,7 +129,8 @@ export function resolveRuntimeServiceVersion(
 ): string {
   return resolveVersionFromRuntimeSources({
     env,
-    runtimeVersion: resolveUsableRuntimeVersion(VERSION),
+    // Use the in-process build identity (including 0.0.0) before service/package markers.
+    runtimeVersion: normalizeOptionalString(VERSION),
     fallback,
     preference: "env-first",
   });
@@ -139,13 +140,14 @@ export function resolveCompatibilityHostVersion(
   env: RuntimeVersionEnv = process.env as RuntimeVersionEnv,
   fallback = RUNTIME_SERVICE_VERSION_FALLBACK,
 ): string {
-  const explicitCompatibilityVersion = firstNonEmpty(env.OPENCLAW_COMPATIBILITY_HOST_VERSION);
+  const explicitCompatibilityVersion = firstNonEmpty(env.ICLAW_COMPATIBILITY_HOST_VERSION);
   if (explicitCompatibilityVersion) {
     return explicitCompatibilityVersion;
   }
   return resolveVersionFromRuntimeSources({
     env,
-    runtimeVersion: resolveUsableRuntimeVersion(VERSION),
+    // Prefer bundled CLI version (including 0.0.0 in dev) over stale ICLAW_* from the parent shell.
+    runtimeVersion: normalizeOptionalString(VERSION),
     fallback,
     preference: env === (process.env as RuntimeVersionEnv) ? "runtime-first" : "env-first",
   });
@@ -156,6 +158,6 @@ export function resolveCompatibilityHostVersion(
 // - Dev/npm builds: package.json.
 export const VERSION = resolveBinaryVersion({
   moduleUrl: import.meta.url,
-  injectedVersion: typeof __OPENCLAW_VERSION__ === "string" ? __OPENCLAW_VERSION__ : undefined,
-  bundledVersion: process.env.OPENCLAW_BUNDLED_VERSION,
+  injectedVersion: typeof __ICLAW_VERSION__ === "string" ? __ICLAW_VERSION__ : undefined,
+  bundledVersion: process.env.ICLAW_BUNDLED_VERSION,
 });

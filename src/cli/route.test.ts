@@ -48,10 +48,10 @@ describe("tryRouteCli", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    originalDisableRouteFirst = process.env.OPENCLAW_DISABLE_ROUTE_FIRST;
-    originalHideBanner = process.env.OPENCLAW_HIDE_BANNER;
-    delete process.env.OPENCLAW_DISABLE_ROUTE_FIRST;
-    delete process.env.OPENCLAW_HIDE_BANNER;
+    originalDisableRouteFirst = process.env.ICLAW_DISABLE_ROUTE_FIRST;
+    originalHideBanner = process.env.ICLAW_HIDE_BANNER;
+    delete process.env.ICLAW_DISABLE_ROUTE_FIRST;
+    delete process.env.ICLAW_HIDE_BANNER;
     originalForceStderr = loggingState.forceConsoleToStderr;
     loggingState.forceConsoleToStderr = false;
     findRoutedCommandMock.mockReturnValue({
@@ -65,14 +65,14 @@ describe("tryRouteCli", () => {
       loggingState.forceConsoleToStderr = originalForceStderr;
     }
     if (originalDisableRouteFirst === undefined) {
-      delete process.env.OPENCLAW_DISABLE_ROUTE_FIRST;
+      delete process.env.ICLAW_DISABLE_ROUTE_FIRST;
     } else {
-      process.env.OPENCLAW_DISABLE_ROUTE_FIRST = originalDisableRouteFirst;
+      process.env.ICLAW_DISABLE_ROUTE_FIRST = originalDisableRouteFirst;
     }
     if (originalHideBanner === undefined) {
-      delete process.env.OPENCLAW_HIDE_BANNER;
+      delete process.env.ICLAW_HIDE_BANNER;
     } else {
-      process.env.OPENCLAW_HIDE_BANNER = originalHideBanner;
+      process.env.ICLAW_HIDE_BANNER = originalHideBanner;
     }
   });
 
@@ -144,8 +144,8 @@ describe("tryRouteCli", () => {
     expect(ensurePluginRegistryLoadedMock).toHaveBeenCalledWith({ scope: "channels" });
   });
 
-  it("respects OPENCLAW_HIDE_BANNER for routed commands", async () => {
-    process.env.OPENCLAW_HIDE_BANNER = "1";
+  it("respects ICLAW_HIDE_BANNER for routed commands", async () => {
+    process.env.ICLAW_HIDE_BANNER = "1";
 
     await expect(tryRouteCli(["node", "openclaw", "status"])).resolves.toBe(true);
 

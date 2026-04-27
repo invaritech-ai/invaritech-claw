@@ -54,7 +54,7 @@ const defaultProgramArguments = ["node", "-e", "process.exit(0)"];
 function createDefaultLaunchdEnv(): Record<string, string | undefined> {
   return {
     HOME: "/Users/test",
-    OPENCLAW_PROFILE: "default",
+    ICLAW_PROFILE: "default",
   };
 }
 
@@ -340,7 +340,7 @@ describe("launchctl list detection", () => {
   it("detects the resolved label in launchctl list", async () => {
     state.listOutput = "123 0 ai.openclaw.gateway\n";
     const listed = await isLaunchAgentListed({
-      env: { HOME: "/Users/test", OPENCLAW_PROFILE: "default" },
+      env: { HOME: "/Users/test", ICLAW_PROFILE: "default" },
     });
     expect(listed).toBe(true);
   });
@@ -348,7 +348,7 @@ describe("launchctl list detection", () => {
   it("returns false when the label is missing", async () => {
     state.listOutput = "123 0 com.other.service\n";
     const listed = await isLaunchAgentListed({
-      env: { HOME: "/Users/test", OPENCLAW_PROFILE: "default" },
+      env: { HOME: "/Users/test", ICLAW_PROFILE: "default" },
     });
     expect(listed).toBe(false);
   });
@@ -649,7 +649,7 @@ describe("launchd install", () => {
   it("restarts LaunchAgent with kickstart and no bootout", async () => {
     const env = {
       ...createDefaultLaunchdEnv(),
-      OPENCLAW_GATEWAY_PORT: "18789",
+      ICLAW_GATEWAY_PORT: "18789",
     };
     const result = await restartLaunchAgent({
       env,
@@ -670,7 +670,7 @@ describe("launchd install", () => {
   it("uses the configured gateway port for stale cleanup", async () => {
     const env = {
       ...createDefaultLaunchdEnv(),
-      OPENCLAW_GATEWAY_PORT: "19001",
+      ICLAW_GATEWAY_PORT: "19001",
     };
 
     await restartLaunchAgent({
@@ -819,38 +819,38 @@ describe("launchd install", () => {
 describe("resolveLaunchAgentPlistPath", () => {
   it.each([
     {
-      name: "uses default label when OPENCLAW_PROFILE is unset",
+      name: "uses default label when ICLAW_PROFILE is unset",
       env: { HOME: "/Users/test" },
       expected: "/Users/test/Library/LaunchAgents/ai.openclaw.gateway.plist",
     },
     {
-      name: "uses profile-specific label when OPENCLAW_PROFILE is set to a custom value",
-      env: { HOME: "/Users/test", OPENCLAW_PROFILE: "jbphoenix" },
+      name: "uses profile-specific label when ICLAW_PROFILE is set to a custom value",
+      env: { HOME: "/Users/test", ICLAW_PROFILE: "jbphoenix" },
       expected: "/Users/test/Library/LaunchAgents/ai.openclaw.jbphoenix.plist",
     },
     {
-      name: "prefers OPENCLAW_LAUNCHD_LABEL over OPENCLAW_PROFILE",
+      name: "prefers ICLAW_LAUNCHD_LABEL over ICLAW_PROFILE",
       env: {
         HOME: "/Users/test",
-        OPENCLAW_PROFILE: "jbphoenix",
-        OPENCLAW_LAUNCHD_LABEL: "com.custom.label",
+        ICLAW_PROFILE: "jbphoenix",
+        ICLAW_LAUNCHD_LABEL: "com.custom.label",
       },
       expected: "/Users/test/Library/LaunchAgents/com.custom.label.plist",
     },
     {
-      name: "trims whitespace from OPENCLAW_LAUNCHD_LABEL",
+      name: "trims whitespace from ICLAW_LAUNCHD_LABEL",
       env: {
         HOME: "/Users/test",
-        OPENCLAW_LAUNCHD_LABEL: "  com.custom.label  ",
+        ICLAW_LAUNCHD_LABEL: "  com.custom.label  ",
       },
       expected: "/Users/test/Library/LaunchAgents/com.custom.label.plist",
     },
     {
-      name: "ignores empty OPENCLAW_LAUNCHD_LABEL and falls back to profile",
+      name: "ignores empty ICLAW_LAUNCHD_LABEL and falls back to profile",
       env: {
         HOME: "/Users/test",
-        OPENCLAW_PROFILE: "myprofile",
-        OPENCLAW_LAUNCHD_LABEL: "   ",
+        ICLAW_PROFILE: "myprofile",
+        ICLAW_LAUNCHD_LABEL: "   ",
       },
       expected: "/Users/test/Library/LaunchAgents/ai.openclaw.myprofile.plist",
     },
@@ -862,7 +862,7 @@ describe("resolveLaunchAgentPlistPath", () => {
     expect(() =>
       resolveLaunchAgentPlistPath({
         HOME: "/Users/test",
-        OPENCLAW_LAUNCHD_LABEL: "../evil/label",
+        ICLAW_LAUNCHD_LABEL: "../evil/label",
       }),
     ).toThrow("Invalid launchd label");
   });

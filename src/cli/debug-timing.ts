@@ -1,6 +1,6 @@
 import { performance } from "node:perf_hooks";
 
-const CLI_DEBUG_TIMING_ENV = "OPENCLAW_DEBUG_TIMING";
+const CLI_DEBUG_TIMING_ENV = "ICLAW_DEBUG_TIMING";
 
 type TimingDetailValue = string | number | boolean | null | undefined;
 type TimingDetails = Record<string, TimingDetailValue>;

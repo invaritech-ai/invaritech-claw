@@ -349,7 +349,7 @@ describe("applyPluginAutoEnable core", () => {
   it("auto-enables an opt-in plugin when an agent harness runtime is forced by env", () => {
     const result = applyPluginAutoEnable({
       config: {},
-      env: makeIsolatedEnv({ OPENCLAW_AGENT_RUNTIME: "codex" }),
+      env: makeIsolatedEnv({ ICLAW_AGENT_RUNTIME: "codex" }),
       manifestRegistry: makeRegistry([
         {
           id: "codex",

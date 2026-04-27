@@ -97,10 +97,10 @@ describe("media store redirects", () => {
   let home = "";
 
   beforeAll(async () => {
-    envSnapshot = captureEnv(["OPENCLAW_STATE_DIR"]);
+    envSnapshot = captureEnv(["ICLAW_STATE_DIR"]);
     await homeRootTracker.setup();
     home = await homeRootTracker.make("state");
-    process.env.OPENCLAW_STATE_DIR = home;
+    process.env.ICLAW_STATE_DIR = home;
   });
 
   beforeEach(() => {

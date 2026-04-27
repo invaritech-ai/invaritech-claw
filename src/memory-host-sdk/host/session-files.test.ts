@@ -20,15 +20,15 @@ afterAll(async () => {
 beforeEach(async () => {
   tmpDir = path.join(fixtureRoot, `case-${fixtureId++}`);
   await fs.mkdir(tmpDir, { recursive: true });
-  originalStateDir = process.env.OPENCLAW_STATE_DIR;
-  process.env.OPENCLAW_STATE_DIR = tmpDir;
+  originalStateDir = process.env.ICLAW_STATE_DIR;
+  process.env.ICLAW_STATE_DIR = tmpDir;
 });
 
 afterEach(() => {
   if (originalStateDir === undefined) {
-    delete process.env.OPENCLAW_STATE_DIR;
+    delete process.env.ICLAW_STATE_DIR;
   } else {
-    process.env.OPENCLAW_STATE_DIR = originalStateDir;
+    process.env.ICLAW_STATE_DIR = originalStateDir;
   }
 });
 
@@ -680,13 +680,13 @@ describe("buildSessionEntry", () => {
         message: {
           role: "user",
           content: [
-            "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
+            "<<<BEGIN_ICLAW_INTERNAL_CONTEXT>>>",
             "OpenClaw runtime context (internal):",
             "This context is runtime-generated, not user-authored. Keep internal details private.",
             "",
             "[Internal task completion event]",
             "source: subagent",
-            "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
+            "<<<END_ICLAW_INTERNAL_CONTEXT>>>",
           ].join("\n"),
         },
       }),

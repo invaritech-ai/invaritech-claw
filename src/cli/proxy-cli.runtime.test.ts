@@ -26,22 +26,22 @@ vi.mock("../proxy-capture/proxy-server.js", () => ({
 
 describe("proxy cli runtime", () => {
   const envKeys = [
-    "OPENCLAW_DEBUG_PROXY_DB_PATH",
-    "OPENCLAW_DEBUG_PROXY_BLOB_DIR",
-    "OPENCLAW_DEBUG_PROXY_CERT_DIR",
-    "OPENCLAW_DEBUG_PROXY_SESSION_ID",
-    "OPENCLAW_DEBUG_PROXY_ENABLED",
+    "ICLAW_DEBUG_PROXY_DB_PATH",
+    "ICLAW_DEBUG_PROXY_BLOB_DIR",
+    "ICLAW_DEBUG_PROXY_CERT_DIR",
+    "ICLAW_DEBUG_PROXY_SESSION_ID",
+    "ICLAW_DEBUG_PROXY_ENABLED",
   ] as const;
   const savedEnv = Object.fromEntries(envKeys.map((key) => [key, process.env[key]]));
   let tempDir = "";
 
   beforeEach(() => {
     tempDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-proxy-cli-runtime-"));
-    process.env.OPENCLAW_DEBUG_PROXY_DB_PATH = path.join(tempDir, "capture.sqlite");
-    process.env.OPENCLAW_DEBUG_PROXY_BLOB_DIR = path.join(tempDir, "blobs");
-    process.env.OPENCLAW_DEBUG_PROXY_CERT_DIR = path.join(tempDir, "certs");
-    delete process.env.OPENCLAW_DEBUG_PROXY_ENABLED;
-    delete process.env.OPENCLAW_DEBUG_PROXY_SESSION_ID;
+    process.env.ICLAW_DEBUG_PROXY_DB_PATH = path.join(tempDir, "capture.sqlite");
+    process.env.ICLAW_DEBUG_PROXY_BLOB_DIR = path.join(tempDir, "blobs");
+    process.env.ICLAW_DEBUG_PROXY_CERT_DIR = path.join(tempDir, "certs");
+    delete process.env.ICLAW_DEBUG_PROXY_ENABLED;
+    delete process.env.ICLAW_DEBUG_PROXY_SESSION_ID;
     serverStopSpy.mockClear();
     spawnMock.mockReset();
   });
@@ -82,8 +82,8 @@ describe("proxy cli runtime", () => {
     expect(serverStopSpy).toHaveBeenCalledTimes(1);
 
     const store = getDebugProxyCaptureStore(
-      process.env.OPENCLAW_DEBUG_PROXY_DB_PATH!,
-      process.env.OPENCLAW_DEBUG_PROXY_BLOB_DIR!,
+      process.env.ICLAW_DEBUG_PROXY_DB_PATH!,
+      process.env.ICLAW_DEBUG_PROXY_BLOB_DIR!,
     );
     const [session] = store.listSessions(5);
     expect(session?.mode).toBe("proxy-run");

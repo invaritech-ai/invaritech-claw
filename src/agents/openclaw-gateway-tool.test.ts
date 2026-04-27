@@ -103,41 +103,38 @@ describe("gateway tool", () => {
     const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-test-"));
 
     try {
-      await withEnvAsync(
-        { OPENCLAW_STATE_DIR: stateDir, OPENCLAW_PROFILE: "isolated" },
-        async () => {
-          const tool = requireGatewayTool();
+      await withEnvAsync({ ICLAW_STATE_DIR: stateDir, ICLAW_PROFILE: "isolated" }, async () => {
+        const tool = requireGatewayTool();
 
-          const result = await tool.execute("call1", {
-            action: "restart",
-            delayMs: 0,
-          });
-          expect(result.details).toMatchObject({
-            ok: true,
-            pid: process.pid,
-            signal: "SIGUSR1",
-            delayMs: 0,
-          });
+        const result = await tool.execute("call1", {
+          action: "restart",
+          delayMs: 0,
+        });
+        expect(result.details).toMatchObject({
+          ok: true,
+          pid: process.pid,
+          signal: "SIGUSR1",
+          delayMs: 0,
+        });
 
-          expect(kill).not.toHaveBeenCalled();
-          expect(sigusr1Handler).not.toHaveBeenCalled();
-          await vi.waitFor(() => expect(sigusr1Handler).toHaveBeenCalledTimes(1), {
-            interval: 1,
-            timeout: 1_000,
-          });
-          expect(kill).not.toHaveBeenCalled();
+        expect(kill).not.toHaveBeenCalled();
+        expect(sigusr1Handler).not.toHaveBeenCalled();
+        await vi.waitFor(() => expect(sigusr1Handler).toHaveBeenCalledTimes(1), {
+          interval: 1,
+          timeout: 1_000,
+        });
+        expect(kill).not.toHaveBeenCalled();
 
-          const sentinelPath = path.join(stateDir, "restart-sentinel.json");
-          const raw = await fs.readFile(sentinelPath, "utf-8");
-          const parsed = JSON.parse(raw) as {
-            payload?: { kind?: string; doctorHint?: string | null };
-          };
-          expect(parsed.payload?.kind).toBe("restart");
-          expect(parsed.payload?.doctorHint).toBe(
-            "Run: openclaw --profile isolated doctor --non-interactive",
-          );
-        },
-      );
+        const sentinelPath = path.join(stateDir, "restart-sentinel.json");
+        const raw = await fs.readFile(sentinelPath, "utf-8");
+        const parsed = JSON.parse(raw) as {
+          payload?: { kind?: string; doctorHint?: string | null };
+        };
+        expect(parsed.payload?.kind).toBe("restart");
+        expect(parsed.payload?.doctorHint).toBe(
+          "Run: openclaw --profile isolated doctor --non-interactive",
+        );
+      });
     } finally {
       process.removeListener("SIGUSR1", sigusr1Handler);
       kill.mockRestore();

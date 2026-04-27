@@ -17,18 +17,18 @@ export async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise
     return await withTempHomeBase(fn, {
       prefix: "openclaw-config-",
       env: {
-        OPENCLAW_CONFIG_PATH: undefined,
-        OPENCLAW_BUNDLED_PLUGINS_DIR: undefined,
-        OPENCLAW_DISABLE_BUNDLED_PLUGINS: undefined,
-        OPENCLAW_DISABLE_PLUGIN_DISCOVERY_CACHE: undefined,
-        OPENCLAW_DISABLE_PLUGIN_MANIFEST_CACHE: undefined,
-        OPENCLAW_PLUGIN_CATALOG_PATHS: undefined,
-        OPENCLAW_MPM_CATALOG_PATHS: undefined,
-        OPENCLAW_PLUGIN_DISCOVERY_CACHE_MS: undefined,
-        OPENCLAW_PLUGIN_MANIFEST_CACHE_MS: undefined,
-        OPENCLAW_LOAD_SHELL_ENV: undefined,
-        OPENCLAW_DEFER_SHELL_ENV_FALLBACK: undefined,
-        OPENCLAW_SHELL_ENV_TIMEOUT_MS: undefined,
+        ICLAW_CONFIG_PATH: undefined,
+        ICLAW_BUNDLED_PLUGINS_DIR: undefined,
+        ICLAW_DISABLE_BUNDLED_PLUGINS: undefined,
+        ICLAW_DISABLE_PLUGIN_DISCOVERY_CACHE: undefined,
+        ICLAW_DISABLE_PLUGIN_MANIFEST_CACHE: undefined,
+        ICLAW_PLUGIN_CATALOG_PATHS: undefined,
+        ICLAW_MPM_CATALOG_PATHS: undefined,
+        ICLAW_PLUGIN_DISCOVERY_CACHE_MS: undefined,
+        ICLAW_PLUGIN_MANIFEST_CACHE_MS: undefined,
+        ICLAW_LOAD_SHELL_ENV: undefined,
+        ICLAW_DEFER_SHELL_ENV_FALLBACK: undefined,
+        ICLAW_SHELL_ENV_TIMEOUT_MS: undefined,
         ANTHROPIC_API_KEY: undefined,
         ANTHROPIC_OAUTH_TOKEN: undefined,
       },
@@ -52,9 +52,9 @@ export async function writeStateDirDotEnv(
     stateDir?: string;
   },
 ): Promise<{ dotEnvPath: string; stateDir: string }> {
-  const stateDir = params?.stateDir ?? params?.env?.OPENCLAW_STATE_DIR?.trim();
+  const stateDir = params?.stateDir ?? params?.env?.ICLAW_STATE_DIR?.trim();
   if (!stateDir) {
-    throw new Error("Expected OPENCLAW_STATE_DIR or explicit stateDir for .env test setup");
+    throw new Error("Expected ICLAW_STATE_DIR or explicit stateDir for .env test setup");
   }
   const dotEnvPath = path.join(stateDir, ".env");
   await fs.mkdir(path.dirname(dotEnvPath), { recursive: true });

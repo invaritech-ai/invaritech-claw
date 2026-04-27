@@ -7,13 +7,13 @@ import { clearPluginManifestRegistryCache } from "../plugins/manifest-registry.j
 import { resetFacadeRuntimeStateForTest } from "./facade-runtime.js";
 
 const ORIGINAL_ENV = {
-  OPENCLAW_DISABLE_BUNDLED_PLUGINS: process.env.OPENCLAW_DISABLE_BUNDLED_PLUGINS,
-  OPENCLAW_CONFIG_PATH: process.env.OPENCLAW_CONFIG_PATH,
-  OPENCLAW_DISABLE_PLUGIN_DISCOVERY_CACHE: process.env.OPENCLAW_DISABLE_PLUGIN_DISCOVERY_CACHE,
-  OPENCLAW_DISABLE_PLUGIN_MANIFEST_CACHE: process.env.OPENCLAW_DISABLE_PLUGIN_MANIFEST_CACHE,
-  OPENCLAW_PLUGIN_DISCOVERY_CACHE_MS: process.env.OPENCLAW_PLUGIN_DISCOVERY_CACHE_MS,
-  OPENCLAW_PLUGIN_MANIFEST_CACHE_MS: process.env.OPENCLAW_PLUGIN_MANIFEST_CACHE_MS,
-  OPENCLAW_TEST_FAST: process.env.OPENCLAW_TEST_FAST,
+  ICLAW_DISABLE_BUNDLED_PLUGINS: process.env.ICLAW_DISABLE_BUNDLED_PLUGINS,
+  ICLAW_CONFIG_PATH: process.env.ICLAW_CONFIG_PATH,
+  ICLAW_DISABLE_PLUGIN_DISCOVERY_CACHE: process.env.ICLAW_DISABLE_PLUGIN_DISCOVERY_CACHE,
+  ICLAW_DISABLE_PLUGIN_MANIFEST_CACHE: process.env.ICLAW_DISABLE_PLUGIN_MANIFEST_CACHE,
+  ICLAW_PLUGIN_DISCOVERY_CACHE_MS: process.env.ICLAW_PLUGIN_DISCOVERY_CACHE_MS,
+  ICLAW_PLUGIN_MANIFEST_CACHE_MS: process.env.ICLAW_PLUGIN_MANIFEST_CACHE_MS,
+  ICLAW_TEST_FAST: process.env.ICLAW_TEST_FAST,
 } as const;
 
 const tempDirs: string[] = [];
@@ -33,12 +33,12 @@ function resetQaRunnerRuntimeState() {
 describe("plugin-sdk qa-runner-runtime linked plugin smoke", () => {
   beforeEach(() => {
     resetQaRunnerRuntimeState();
-    process.env.OPENCLAW_DISABLE_BUNDLED_PLUGINS = "1";
-    process.env.OPENCLAW_DISABLE_PLUGIN_DISCOVERY_CACHE = "1";
-    process.env.OPENCLAW_DISABLE_PLUGIN_MANIFEST_CACHE = "1";
-    process.env.OPENCLAW_PLUGIN_DISCOVERY_CACHE_MS = "0";
-    process.env.OPENCLAW_PLUGIN_MANIFEST_CACHE_MS = "0";
-    process.env.OPENCLAW_TEST_FAST = "1";
+    process.env.ICLAW_DISABLE_BUNDLED_PLUGINS = "1";
+    process.env.ICLAW_DISABLE_PLUGIN_DISCOVERY_CACHE = "1";
+    process.env.ICLAW_DISABLE_PLUGIN_MANIFEST_CACHE = "1";
+    process.env.ICLAW_PLUGIN_DISCOVERY_CACHE_MS = "0";
+    process.env.ICLAW_PLUGIN_MANIFEST_CACHE_MS = "0";
+    process.env.ICLAW_TEST_FAST = "1";
   });
 
   afterEach(() => {
@@ -67,7 +67,7 @@ describe("plugin-sdk qa-runner-runtime linked plugin smoke", () => {
       }),
       "utf8",
     );
-    process.env.OPENCLAW_CONFIG_PATH = configPath;
+    process.env.ICLAW_CONFIG_PATH = configPath;
 
     fs.mkdirSync(pluginDir, { recursive: true });
     fs.writeFileSync(

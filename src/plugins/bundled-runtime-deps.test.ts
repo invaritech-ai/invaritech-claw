@@ -154,10 +154,10 @@ describe("installBundledRuntimeDeps", () => {
       throw error;
     });
 
-    expect(isWritableDirectory("/usr/lib/node_modules/openclaw")).toBe(false);
+    expect(isWritableDirectory("/usr/lib/node_modules/iclaw")).toBe(false);
     expect(accessSpy).not.toHaveBeenCalled();
     expect(mkdirSpy).toHaveBeenCalledWith(
-      path.join("/usr/lib/node_modules/openclaw", ".openclaw-write-probe-"),
+      path.join("/usr/lib/node_modules/iclaw", ".openclaw-write-probe-"),
     );
   });
 
@@ -547,7 +547,7 @@ describe("ensureBundledPluginRuntimeDeps", () => {
       }),
     );
 
-    const env = { OPENCLAW_PLUGIN_STAGE_DIR: stageDir };
+    const env = { ICLAW_PLUGIN_STAGE_DIR: stageDir };
     const calls: BundledRuntimeDepsInstallParams[] = [];
     const result = ensureBundledPluginRuntimeDeps({
       env,
@@ -614,7 +614,7 @@ describe("ensureBundledPluginRuntimeDeps", () => {
       JSON.stringify({ dependencies: { "beta-runtime": "2.0.0" } }),
     );
 
-    const env = { OPENCLAW_PLUGIN_STAGE_DIR: stageDir };
+    const env = { ICLAW_PLUGIN_STAGE_DIR: stageDir };
     const calls: BundledRuntimeDepsInstallParams[] = [];
     const installDeps = (params: BundledRuntimeDepsInstallParams) => {
       calls.push(params);
@@ -701,7 +701,7 @@ describe("ensureBundledPluginRuntimeDeps", () => {
 
     const calls: BundledRuntimeDepsInstallParams[] = [];
     const result = ensureBundledPluginRuntimeDeps({
-      env: { OPENCLAW_PLUGIN_STAGE_DIR: stageDir },
+      env: { ICLAW_PLUGIN_STAGE_DIR: stageDir },
       installDeps: (params) => {
         calls.push(params);
       },
@@ -714,7 +714,7 @@ describe("ensureBundledPluginRuntimeDeps", () => {
       retainSpecs: ["tokenjuice@0.6.1"],
     });
     const installRoot = resolveBundledRuntimeDependencyInstallRoot(pluginRoot, {
-      env: { OPENCLAW_PLUGIN_STAGE_DIR: stageDir },
+      env: { ICLAW_PLUGIN_STAGE_DIR: stageDir },
     });
     expect(calls).toEqual([
       {
@@ -882,7 +882,7 @@ describe("ensureBundledPluginRuntimeDeps", () => {
     const calls: BundledRuntimeDepsInstallParams[] = [];
 
     const result = ensureBundledPluginRuntimeDeps({
-      env: { OPENCLAW_PLUGIN_STAGE_DIR: stageDir },
+      env: { ICLAW_PLUGIN_STAGE_DIR: stageDir },
       installDeps: (params) => {
         calls.push(params);
       },
@@ -897,7 +897,7 @@ describe("ensureBundledPluginRuntimeDeps", () => {
     expect(calls).toEqual([
       {
         installRoot: resolveBundledRuntimeDependencyInstallRoot(pluginRoot, {
-          env: { OPENCLAW_PLUGIN_STAGE_DIR: stageDir },
+          env: { ICLAW_PLUGIN_STAGE_DIR: stageDir },
         }),
         missingSpecs: ["tokenjuice@0.6.1"],
         installSpecs: ["tokenjuice@0.6.1"],
@@ -930,7 +930,7 @@ describe("ensureBundledPluginRuntimeDeps", () => {
 
     const calls: BundledRuntimeDepsInstallParams[] = [];
     const result = ensureBundledPluginRuntimeDeps({
-      env: { OPENCLAW_PLUGIN_STAGE_DIR: stageDir },
+      env: { ICLAW_PLUGIN_STAGE_DIR: stageDir },
       installDeps: (params) => {
         calls.push(params);
       },
@@ -943,7 +943,7 @@ describe("ensureBundledPluginRuntimeDeps", () => {
       retainSpecs: ["tokenjuice@0.6.1"],
     });
     const installRoot = resolveBundledRuntimeDependencyInstallRoot(pluginRoot, {
-      env: { OPENCLAW_PLUGIN_STAGE_DIR: stageDir },
+      env: { ICLAW_PLUGIN_STAGE_DIR: stageDir },
     });
     expect(calls).toEqual([
       {

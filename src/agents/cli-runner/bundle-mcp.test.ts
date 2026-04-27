@@ -17,11 +17,11 @@ let bundleProbeServerPath = "";
 let envSnapshot: ReturnType<typeof captureEnv> | undefined;
 
 beforeAll(async () => {
-  envSnapshot = captureEnv(["OPENCLAW_BUNDLED_PLUGINS_DIR"]);
+  envSnapshot = captureEnv(["ICLAW_BUNDLED_PLUGINS_DIR"]);
   bundleProbeHomeDir = await tempHarness.createTempDir("openclaw-cli-bundle-mcp-home-");
   bundleProbeWorkspaceDir = await tempHarness.createTempDir("openclaw-cli-bundle-mcp-workspace-");
   const emptyBundledDir = await tempHarness.createTempDir("openclaw-cli-bundle-mcp-bundled-");
-  process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = emptyBundledDir;
+  process.env.ICLAW_BUNDLED_PLUGINS_DIR = emptyBundledDir;
   ({ serverPath: bundleProbeServerPath } = await createBundleProbePlugin(bundleProbeHomeDir));
 });
 
@@ -171,7 +171,7 @@ describe("prepareCliBundleMcpConfig", () => {
             type: "http",
             url: "http://127.0.0.1:23119/mcp",
             headers: {
-              Authorization: "Bearer ${OPENCLAW_MCP_TOKEN}",
+              Authorization: "Bearer ${ICLAW_MCP_TOKEN}",
             },
           },
         },
@@ -185,7 +185,7 @@ describe("prepareCliBundleMcpConfig", () => {
     };
     expect(Object.keys(raw.mcpServers ?? {}).toSorted()).toEqual(["bundleProbe", "openclaw"]);
     expect(raw.mcpServers?.openclaw?.url).toBe("http://127.0.0.1:23119/mcp");
-    expect(raw.mcpServers?.openclaw?.headers?.Authorization).toBe("Bearer ${OPENCLAW_MCP_TOKEN}");
+    expect(raw.mcpServers?.openclaw?.headers?.Authorization).toBe("Bearer ${ICLAW_MCP_TOKEN}");
 
     await prepared.cleanup?.();
   });
@@ -198,7 +198,7 @@ describe("prepareCliBundleMcpConfig", () => {
             type: "http",
             url: "http://127.0.0.1:23119/mcp",
             headers: {
-              Authorization: "Bearer ${OPENCLAW_MCP_TOKEN}",
+              Authorization: "Bearer ${ICLAW_MCP_TOKEN}",
             },
           },
         },
@@ -211,7 +211,7 @@ describe("prepareCliBundleMcpConfig", () => {
             type: "http",
             url: "http://127.0.0.1:24567/mcp",
             headers: {
-              Authorization: "Bearer ${OPENCLAW_MCP_TOKEN}",
+              Authorization: "Bearer ${ICLAW_MCP_TOKEN}",
             },
           },
         },
@@ -233,7 +233,7 @@ describe("prepareCliBundleMcpConfig", () => {
             type: "http",
             url: "http://127.0.0.1:23119/mcp",
             headers: {
-              Authorization: "Bearer ${OPENCLAW_MCP_TOKEN}",
+              Authorization: "Bearer ${ICLAW_MCP_TOKEN}",
             },
           },
         },
@@ -246,7 +246,7 @@ describe("prepareCliBundleMcpConfig", () => {
             type: "http",
             url: "http://127.0.0.1:23119/other",
             headers: {
-              Authorization: "Bearer ${OPENCLAW_MCP_TOKEN}",
+              Authorization: "Bearer ${ICLAW_MCP_TOKEN}",
             },
           },
         },
@@ -272,14 +272,14 @@ describe("prepareCliBundleMcpConfig", () => {
       workspaceDir,
       config: { plugins: { enabled: false } },
       env: {
-        OPENCLAW_MCP_TOKEN: "loopback-token-123",
-        OPENCLAW_MCP_SESSION_KEY: "agent:main:telegram:group:chat123",
+        ICLAW_MCP_TOKEN: "loopback-token-123",
+        ICLAW_MCP_SESSION_KEY: "agent:main:telegram:group:chat123",
       },
     });
 
     expect(prepared.env).toEqual({
-      OPENCLAW_MCP_TOKEN: "loopback-token-123",
-      OPENCLAW_MCP_SESSION_KEY: "agent:main:telegram:group:chat123",
+      ICLAW_MCP_TOKEN: "loopback-token-123",
+      ICLAW_MCP_SESSION_KEY: "agent:main:telegram:group:chat123",
     });
 
     await prepared.cleanup?.();
@@ -316,8 +316,8 @@ describe("prepareCliBundleMcpConfig", () => {
             type: "http",
             url: "http://127.0.0.1:23119/mcp",
             headers: {
-              Authorization: "Bearer ${OPENCLAW_MCP_TOKEN}",
-              "x-session-key": "${OPENCLAW_MCP_SESSION_KEY}",
+              Authorization: "Bearer ${ICLAW_MCP_TOKEN}",
+              "x-session-key": "${ICLAW_MCP_SESSION_KEY}",
             },
           },
         },
@@ -328,14 +328,14 @@ describe("prepareCliBundleMcpConfig", () => {
       "exec",
       "--json",
       "-c",
-      'mcp_servers={ openclaw = { url = "http://127.0.0.1:23119/mcp", default_tools_approval_mode = "approve", bearer_token_env_var = "OPENCLAW_MCP_TOKEN", env_http_headers = { x-session-key = "OPENCLAW_MCP_SESSION_KEY" } } }',
+      'mcp_servers={ openclaw = { url = "http://127.0.0.1:23119/mcp", default_tools_approval_mode = "approve", bearer_token_env_var = "ICLAW_MCP_TOKEN", env_http_headers = { x-session-key = "ICLAW_MCP_SESSION_KEY" } } }',
     ]);
     expect(prepared.backend.resumeArgs).toEqual([
       "exec",
       "resume",
       "{sessionId}",
       "-c",
-      'mcp_servers={ openclaw = { url = "http://127.0.0.1:23119/mcp", default_tools_approval_mode = "approve", bearer_token_env_var = "OPENCLAW_MCP_TOKEN", env_http_headers = { x-session-key = "OPENCLAW_MCP_SESSION_KEY" } } }',
+      'mcp_servers={ openclaw = { url = "http://127.0.0.1:23119/mcp", default_tools_approval_mode = "approve", bearer_token_env_var = "ICLAW_MCP_TOKEN", env_http_headers = { x-session-key = "ICLAW_MCP_SESSION_KEY" } } }',
     ]);
     expect(prepared.cleanup).toBeUndefined();
   });
@@ -356,18 +356,18 @@ describe("prepareCliBundleMcpConfig", () => {
             type: "http",
             url: "http://127.0.0.1:23119/mcp",
             headers: {
-              Authorization: "Bearer ${OPENCLAW_MCP_TOKEN}",
+              Authorization: "Bearer ${ICLAW_MCP_TOKEN}",
             },
           },
         },
       },
       env: {
-        OPENCLAW_MCP_TOKEN: "loopback-token-123",
+        ICLAW_MCP_TOKEN: "loopback-token-123",
       },
     });
 
     expect(prepared.backend.args).toEqual(["--prompt", "{prompt}"]);
-    expect(prepared.env?.OPENCLAW_MCP_TOKEN).toBe("loopback-token-123");
+    expect(prepared.env?.ICLAW_MCP_TOKEN).toBe("loopback-token-123");
     expect(typeof prepared.env?.GEMINI_CLI_SYSTEM_SETTINGS_PATH).toBe("string");
     const raw = JSON.parse(
       await fs.readFile(prepared.env?.GEMINI_CLI_SYSTEM_SETTINGS_PATH as string, "utf-8"),

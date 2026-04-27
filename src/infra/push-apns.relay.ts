@@ -111,17 +111,17 @@ export function resolveApnsRelayConfigFromEnv(
   gatewayConfig?: GatewayConfig,
 ): ApnsRelayConfigResolution {
   const configuredRelay = gatewayConfig?.push?.apns?.relay;
-  const envBaseUrl = normalizeNonEmptyString(env.OPENCLAW_APNS_RELAY_BASE_URL);
+  const envBaseUrl = normalizeNonEmptyString(env.ICLAW_APNS_RELAY_BASE_URL);
   const configBaseUrl = normalizeNonEmptyString(configuredRelay?.baseUrl);
   const baseUrl = envBaseUrl ?? configBaseUrl;
   const baseUrlSource = envBaseUrl
-    ? "OPENCLAW_APNS_RELAY_BASE_URL"
+    ? "ICLAW_APNS_RELAY_BASE_URL"
     : "gateway.push.apns.relay.baseUrl";
   if (!baseUrl) {
     return {
       ok: false,
       error:
-        "APNs relay config missing: set gateway.push.apns.relay.baseUrl or OPENCLAW_APNS_RELAY_BASE_URL",
+        "APNs relay config missing: set gateway.push.apns.relay.baseUrl or ICLAW_APNS_RELAY_BASE_URL",
     };
   }
 
@@ -133,9 +133,9 @@ export function resolveApnsRelayConfigFromEnv(
     if (!parsed.hostname) {
       throw new Error("host required");
     }
-    if (parsed.protocol === "http:" && !readAllowHttp(env.OPENCLAW_APNS_RELAY_ALLOW_HTTP)) {
+    if (parsed.protocol === "http:" && !readAllowHttp(env.ICLAW_APNS_RELAY_ALLOW_HTTP)) {
       throw new Error(
-        "http relay URLs require OPENCLAW_APNS_RELAY_ALLOW_HTTP=true (development only)",
+        "http relay URLs require ICLAW_APNS_RELAY_ALLOW_HTTP=true (development only)",
       );
     }
     if (parsed.protocol === "http:" && !isLoopbackRelayHostname(parsed.hostname)) {
@@ -152,7 +152,7 @@ export function resolveApnsRelayConfigFromEnv(
       value: {
         baseUrl: parsed.toString().replace(/\/+$/, ""),
         timeoutMs: normalizeTimeoutMs(
-          env.OPENCLAW_APNS_RELAY_TIMEOUT_MS ?? configuredRelay?.timeoutMs,
+          env.ICLAW_APNS_RELAY_TIMEOUT_MS ?? configuredRelay?.timeoutMs,
         ),
       },
     };

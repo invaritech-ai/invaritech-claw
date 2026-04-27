@@ -13,7 +13,7 @@ type ExternalCatalogChannelEntry = {
   preferOver: string[];
 };
 
-const ENV_CATALOG_PATHS = ["OPENCLAW_PLUGIN_CATALOG_PATHS", "OPENCLAW_MPM_CATALOG_PATHS"];
+const ENV_CATALOG_PATHS = ["ICLAW_PLUGIN_CATALOG_PATHS", "ICLAW_MPM_CATALOG_PATHS"];
 
 function splitEnvPaths(value: string): string[] {
   const trimmed = normalizeOptionalString(value) ?? "";

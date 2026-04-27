@@ -50,9 +50,9 @@ export function cleanupTempPluginTestEnvironment(
   clearPluginLoaderCache();
   setActivePluginRegistry(createEmptyPluginRegistry());
   if (originalBundledPluginsDir === undefined) {
-    delete process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
+    delete process.env.ICLAW_BUNDLED_PLUGINS_DIR;
   } else {
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = originalBundledPluginsDir;
+    process.env.ICLAW_BUNDLED_PLUGINS_DIR = originalBundledPluginsDir;
   }
 }
 

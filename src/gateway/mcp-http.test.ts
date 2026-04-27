@@ -370,11 +370,9 @@ describe("createMcpLoopbackServerConfig", () => {
       mcpServers?: Record<string, { url?: string; headers?: Record<string, string> }>;
     };
     expect(config.mcpServers?.openclaw?.url).toBe("http://127.0.0.1:23119/mcp");
-    expect(config.mcpServers?.openclaw?.headers?.Authorization).toBe(
-      "Bearer ${OPENCLAW_MCP_TOKEN}",
-    );
+    expect(config.mcpServers?.openclaw?.headers?.Authorization).toBe("Bearer ${ICLAW_MCP_TOKEN}");
     expect(config.mcpServers?.openclaw?.headers?.["x-openclaw-message-channel"]).toBe(
-      "${OPENCLAW_MCP_MESSAGE_CHANNEL}",
+      "${ICLAW_MCP_MESSAGE_CHANNEL}",
     );
     expect(config.mcpServers?.openclaw?.headers?.["x-openclaw-sender-is-owner"]).toBeUndefined();
   });

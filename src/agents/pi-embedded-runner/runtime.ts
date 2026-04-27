@@ -18,13 +18,13 @@ export function normalizeEmbeddedAgentRuntime(raw: string | undefined): Embedded
 export function resolveEmbeddedAgentRuntime(
   env: NodeJS.ProcessEnv = process.env,
 ): EmbeddedAgentRuntime {
-  return normalizeEmbeddedAgentRuntime(env.OPENCLAW_AGENT_RUNTIME?.trim());
+  return normalizeEmbeddedAgentRuntime(env.ICLAW_AGENT_RUNTIME?.trim());
 }
 
 export function resolveEmbeddedAgentHarnessFallback(
   env: NodeJS.ProcessEnv = process.env,
 ): EmbeddedAgentHarnessFallback | undefined {
-  const raw = env.OPENCLAW_AGENT_HARNESS_FALLBACK?.trim().toLowerCase();
+  const raw = env.ICLAW_AGENT_HARNESS_FALLBACK?.trim().toLowerCase();
   if (raw === "pi" || raw === "none") {
     return raw;
   }

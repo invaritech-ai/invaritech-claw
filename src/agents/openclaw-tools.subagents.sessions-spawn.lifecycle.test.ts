@@ -24,8 +24,8 @@ import {
 } from "./subagent-registry.js";
 
 const fastModeEnv = vi.hoisted(() => {
-  const previous = process.env.OPENCLAW_TEST_FAST;
-  process.env.OPENCLAW_TEST_FAST = "1";
+  const previous = process.env.ICLAW_TEST_FAST;
+  process.env.ICLAW_TEST_FAST = "1";
   return { previous };
 });
 
@@ -198,10 +198,10 @@ describe("openclaw-tools: subagents (sessions_spawn lifecycle)", () => {
 
   afterAll(() => {
     if (fastModeEnv.previous === undefined) {
-      delete process.env.OPENCLAW_TEST_FAST;
+      delete process.env.ICLAW_TEST_FAST;
       return;
     }
-    process.env.OPENCLAW_TEST_FAST = fastModeEnv.previous;
+    process.env.ICLAW_TEST_FAST = fastModeEnv.previous;
   });
 
   it("sessions_spawn runs cleanup flow after subagent completion", async () => {

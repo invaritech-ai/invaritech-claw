@@ -40,16 +40,16 @@ function resolveInstallerVersionCases(params: {
       "-c",
       `${versionHelperSource}
 for openclaw_bin in "\${@:3}"; do
-  OPENCLAW_BIN="$openclaw_bin"
+  ICLAW_BIN="$openclaw_bin"
   resolve_openclaw_version
 done
 (
   cd "$2"
-  FAKE_OPENCLAW_BIN="\${@:1:1}" bash -s <<'OPENCLAW_STDIN_INSTALLER'
+  FAKE_ICLAW_BIN="\${@:1:1}" bash -s <<'ICLAW_STDIN_INSTALLER'
 ${versionHelperSource}
-OPENCLAW_BIN="$FAKE_OPENCLAW_BIN"
+ICLAW_BIN="$FAKE_ICLAW_BIN"
 resolve_openclaw_version
-OPENCLAW_STDIN_INSTALLER
+ICLAW_STDIN_INSTALLER
 )`,
       "openclaw-version-test",
       params.stdinCliPath,
@@ -61,7 +61,7 @@ OPENCLAW_STDIN_INSTALLER
       encoding: "utf-8",
       env: {
         ...process.env,
-        OPENCLAW_INSTALL_SH_NO_RUN: "1",
+        ICLAW_INSTALL_SH_NO_RUN: "1",
       },
     },
   );

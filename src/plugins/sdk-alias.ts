@@ -64,14 +64,22 @@ function hasTrustedOpenClawRootIndicator(params: {
     return false;
   }
   const hasCliEntryExport = Object.prototype.hasOwnProperty.call(packageExports, "./cli-entry");
-  const hasOpenClawBin =
+  const binRecord =
+    typeof params.packageJson.bin === "object" && params.packageJson.bin !== null
+      ? params.packageJson.bin
+      : null;
+  const binString = normalizeLowercaseStringOrEmpty(
+    typeof params.packageJson.bin === "string" ? params.packageJson.bin : "",
+  );
+  const hasHostCliBin =
     (typeof params.packageJson.bin === "string" &&
-      normalizeLowercaseStringOrEmpty(params.packageJson.bin).includes("openclaw")) ||
-    (typeof params.packageJson.bin === "object" &&
-      params.packageJson.bin !== null &&
-      typeof params.packageJson.bin.openclaw === "string");
-  const hasOpenClawEntrypoint = fs.existsSync(path.join(params.packageRoot, "openclaw.mjs"));
-  return hasCliEntryExport || hasOpenClawBin || hasOpenClawEntrypoint;
+      (binString.includes("openclaw") || binString.includes("iclaw"))) ||
+    (binRecord !== null &&
+      (typeof binRecord.openclaw === "string" || typeof binRecord.iclaw === "string"));
+  const hasHostCliEntrypoint =
+    fs.existsSync(path.join(params.packageRoot, "iclaw.mjs")) ||
+    fs.existsSync(path.join(params.packageRoot, "openclaw.mjs"));
+  return hasCliEntryExport || hasHostCliBin || hasHostCliEntrypoint;
 }
 
 function readPluginSdkSubpathsFromPackageRoot(packageRoot: string): string[] | null {
@@ -307,7 +315,7 @@ function readPrivateLocalOnlyPluginSdkSubpaths(packageRoot: string): string[] {
 }
 
 function shouldIncludePrivateLocalOnlyPluginSdkSubpaths() {
-  return process.env.OPENCLAW_ENABLE_PRIVATE_QA_CLI === "1";
+  return process.env.ICLAW_ENABLE_PRIVATE_QA_CLI === "1";
 }
 
 function hasPluginSdkSubpathArtifact(packageRoot: string, subpath: string) {

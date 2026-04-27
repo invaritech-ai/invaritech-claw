@@ -24,21 +24,21 @@ vi.mock("./builtin-pi.js", () => ({
   }),
 }));
 
-const originalRuntime = process.env.OPENCLAW_AGENT_RUNTIME;
-const originalHarnessFallback = process.env.OPENCLAW_AGENT_HARNESS_FALLBACK;
+const originalRuntime = process.env.ICLAW_AGENT_RUNTIME;
+const originalHarnessFallback = process.env.ICLAW_AGENT_HARNESS_FALLBACK;
 
 afterEach(() => {
   clearAgentHarnesses();
   piRunAttempt.mockClear();
   if (originalRuntime == null) {
-    delete process.env.OPENCLAW_AGENT_RUNTIME;
+    delete process.env.ICLAW_AGENT_RUNTIME;
   } else {
-    process.env.OPENCLAW_AGENT_RUNTIME = originalRuntime;
+    process.env.ICLAW_AGENT_RUNTIME = originalRuntime;
   }
   if (originalHarnessFallback == null) {
-    delete process.env.OPENCLAW_AGENT_HARNESS_FALLBACK;
+    delete process.env.ICLAW_AGENT_HARNESS_FALLBACK;
   } else {
-    process.env.OPENCLAW_AGENT_HARNESS_FALLBACK = originalHarnessFallback;
+    process.env.ICLAW_AGENT_HARNESS_FALLBACK = originalHarnessFallback;
   }
 });
 
@@ -101,7 +101,7 @@ function registerFailingCodexHarness(): void {
 
 describe("runAgentHarnessAttemptWithFallback", () => {
   it("falls back to the PI harness when a forced plugin harness is unavailable", async () => {
-    process.env.OPENCLAW_AGENT_RUNTIME = "codex";
+    process.env.ICLAW_AGENT_RUNTIME = "codex";
 
     const result = await runAgentHarnessAttemptWithFallback(createAttemptParams());
 
@@ -110,7 +110,7 @@ describe("runAgentHarnessAttemptWithFallback", () => {
   });
 
   it("falls back to the PI harness in auto mode when no plugin harness matches", async () => {
-    process.env.OPENCLAW_AGENT_RUNTIME = "auto";
+    process.env.ICLAW_AGENT_RUNTIME = "auto";
 
     const result = await runAgentHarnessAttemptWithFallback(createAttemptParams());
 
@@ -119,7 +119,7 @@ describe("runAgentHarnessAttemptWithFallback", () => {
   });
 
   it("surfaces an auto-selected plugin harness failure instead of replaying through PI", async () => {
-    process.env.OPENCLAW_AGENT_RUNTIME = "auto";
+    process.env.ICLAW_AGENT_RUNTIME = "auto";
     registerFailingCodexHarness();
 
     await expect(runAgentHarnessAttemptWithFallback(createAttemptParams())).rejects.toThrow(
@@ -129,7 +129,7 @@ describe("runAgentHarnessAttemptWithFallback", () => {
   });
 
   it("surfaces a forced plugin harness failure instead of replaying through PI", async () => {
-    process.env.OPENCLAW_AGENT_RUNTIME = "codex";
+    process.env.ICLAW_AGENT_RUNTIME = "codex";
     registerFailingCodexHarness();
 
     await expect(runAgentHarnessAttemptWithFallback(createAttemptParams())).rejects.toThrow(
@@ -139,7 +139,7 @@ describe("runAgentHarnessAttemptWithFallback", () => {
   });
 
   it("annotates non-ok harness result classifications for outer model fallback", async () => {
-    process.env.OPENCLAW_AGENT_RUNTIME = "auto";
+    process.env.ICLAW_AGENT_RUNTIME = "auto";
     const classify = vi.fn(() => "empty" as const);
     registerAgentHarness(
       {
@@ -167,8 +167,8 @@ describe("runAgentHarnessAttemptWithFallback", () => {
   });
 
   it("honors env fallback override over config fallback", async () => {
-    process.env.OPENCLAW_AGENT_RUNTIME = "auto";
-    process.env.OPENCLAW_AGENT_HARNESS_FALLBACK = "none";
+    process.env.ICLAW_AGENT_RUNTIME = "auto";
+    process.env.ICLAW_AGENT_HARNESS_FALLBACK = "none";
 
     await expect(
       runAgentHarnessAttemptWithFallback(
@@ -181,7 +181,7 @@ describe("runAgentHarnessAttemptWithFallback", () => {
 
 describe("selectAgentHarness", () => {
   it("auto-selects the highest-priority plugin harness without duplicate support probes", () => {
-    process.env.OPENCLAW_AGENT_RUNTIME = "auto";
+    process.env.ICLAW_AGENT_RUNTIME = "auto";
     const lowPrioritySupports = vi.fn(() => ({
       supported: true as const,
       priority: 10,
@@ -303,7 +303,7 @@ describe("selectAgentHarness", () => {
   });
 
   it("keeps an existing session pinned to its plugin harness even when env now forces PI", () => {
-    process.env.OPENCLAW_AGENT_RUNTIME = "pi";
+    process.env.ICLAW_AGENT_RUNTIME = "pi";
     registerFailingCodexHarness();
 
     expect(

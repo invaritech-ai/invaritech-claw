@@ -41,7 +41,7 @@ function writeBundledPluginFixture(id: string) {
 afterEach(() => {
   vi.resetModules();
   vi.doUnmock("./jiti-loader-cache.js");
-  delete process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
+  delete process.env.ICLAW_BUNDLED_PLUGINS_DIR;
   for (const dir of tempDirs.splice(0)) {
     fs.rmSync(dir, { recursive: true, force: true });
   }
@@ -75,7 +75,7 @@ describe("createPluginJitiLoader", () => {
     );
 
     const pluginRoot = writeBundledPluginFixture("demo");
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = pluginRoot;
+    process.env.ICLAW_BUNDLED_PLUGINS_DIR = pluginRoot;
 
     loadOpenClawPlugins({
       cache: false,

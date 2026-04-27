@@ -34,7 +34,7 @@ function listBundledExtensionPackageJsonPaths(env: NodeJS.ProcessEnv = process.e
   // dist-runtime/extensions when paired with dist, etc.). See
   // src/plugins/bundled-dir.ts for the full candidate-order policy and
   // src/plugins/bundled-dir.test.ts for the precedence coverage. Reusing the
-  // resolver also picks up OPENCLAW_BUNDLED_PLUGINS_DIR overrides and the
+  // resolver also picks up ICLAW_BUNDLED_PLUGINS_DIR overrides and the
   // bun --compile sibling layout for free.
   const extensionsRoot = resolveBundledPluginsDir(env);
   if (!extensionsRoot) {
