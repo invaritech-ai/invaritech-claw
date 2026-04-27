@@ -29,6 +29,8 @@ Supported channels include: WhatsApp, Telegram, Slack, Discord, Google Chat, Sig
 
 New install? Start here: [Getting started](https://docs.openclaw.ai/start/getting-started)
 
+**Minimal assistant (CLI + TUI + skills + API, Ollama-focused):** set `ICLAW_MINIMAL_ASSISTANT=1` so only the bundled **ollama** extension is discovered and defaults stay loopback-first. See [docs/help/minimal-assistant.md](docs/help/minimal-assistant.md).
+
 Preferred setup: run `openclaw onboard` in your terminal.
 OpenClaw Onboard guides you step by step through setting up the gateway, workspace, channels, and skills. It is the recommended CLI setup path and works on **macOS, Linux, and Windows (via WSL2; strongly recommended)**.
 Works with npm, pnpm, or bun.

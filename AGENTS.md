@@ -57,7 +57,7 @@ Scoped guides:
 
 - Runtime: Node 22+. Keep Node and Bun paths working.
 - Install: `pnpm install` (Bun supported; keep lockfiles/patches aligned if touched).
-- Dev CLI: `pnpm openclaw ...` or `pnpm dev`.
+- Dev CLI: `pnpm iclaw ...` or `pnpm dev`.
 - Build: `pnpm build`
 - Smart local gate: `pnpm check:changed` (scoped typecheck/lint/guards + relevant tests)
 - Explain smart gate: `pnpm changed:lanes --json`
@@ -67,7 +67,7 @@ Scoped guides:
 - Changed tests only: `pnpm test:changed`
 - Local serial loop: `pnpm test:serial`
 - Extension tests: `pnpm test:extensions` or `pnpm test extensions` = all extension shards; `pnpm test extensions/<id>` = one extension lane. Heavy channels/OpenAI have dedicated shards.
-- Shard timing artifact: `.artifacts/vitest-shard-timings.json`; auto-used for balanced shard ordering. Disable with `OPENCLAW_TEST_PROJECTS_TIMINGS=0`.
+- Shard timing artifact: `.artifacts/vitest-shard-timings.json`; auto-used for balanced shard ordering. Disable with `ICLAW_TEST_PROJECTS_TIMINGS=0`.
 - Targeted tests: `pnpm test <path-or-filter> [vitest args...]`; do not call raw `vitest`.
 - Coverage: `pnpm test:coverage`
 - Format check/fix: `pnpm format:check` / `pnpm format`
@@ -84,7 +84,7 @@ Scoped guides:
   - `pnpm lint:core`, `pnpm lint:extensions`, `pnpm lint:scripts`
   - `pnpm lint:apps`: Swift/app surface, separate from TS lint
   - `pnpm lint:all`: legacy comparison lane
-- Local heavy-check behavior: `OPENCLAW_LOCAL_CHECK=1` default; `OPENCLAW_LOCAL_CHECK_MODE=throttled|full`; `OPENCLAW_LOCAL_CHECK=0` for CI/shared runs.
+- Local heavy-check behavior: `ICLAW_LOCAL_CHECK=1` default; `ICLAW_LOCAL_CHECK_MODE=throttled|full`; `ICLAW_LOCAL_CHECK=0` for CI/shared runs.
 - Local validation is local-first. Do not default to Blacksmith/Testbox for routine OpenClaw iteration; it burns warm caches and startup time. Use repo `pnpm` lanes first, then reach for remote CI/Testbox only for parity-only failures, secrets/services, or when explicitly requested.
 
 ## GitHub API
@@ -151,8 +151,8 @@ Scoped guides:
 - Import-dominated test time is a boundary smell; shrink import surface before adding cases.
 - Replacing slow integration coverage: extract production composition into a named helper and test that helper.
 - Do not modify baseline/inventory/ignore/snapshot/expected-failure files to silence checks without explicit approval.
-- Do not set test workers above 16. For memory pressure: `OPENCLAW_VITEST_MAX_WORKERS=1 pnpm test`.
-- Live: `OPENCLAW_LIVE_TEST=1 pnpm test:live`; full logs `OPENCLAW_LIVE_TEST_QUIET=0`.
+- Do not set test workers above 16. For memory pressure: `ICLAW_VITEST_MAX_WORKERS=1 pnpm test`.
+- Live: `ICLAW_LIVE_TEST=1 pnpm test:live`; full logs `ICLAW_LIVE_TEST_QUIET=0`.
 - Full testing guide: `docs/help/testing.md`.
 
 ## Docs / Changelog
@@ -195,7 +195,7 @@ Scoped guides:
 - mac logs: `./scripts/clawlog.sh`.
 - Version bump touches: `package.json`, `apps/android/app/build.gradle.kts`, `apps/ios/version.json` then `pnpm ios:version:sync`, `apps/macos/.../Info.plist`, `docs/install/updating.md`. Appcast only for Sparkle release.
 - iOS Team ID: `security find-identity -p codesigning -v`; fallback `defaults read com.apple.dt.Xcode IDEProvisioningTeamIdentifiers`.
-- Mobile LAN pairing: plaintext `ws://` is loopback-only by default. Trusted private-network `ws://` needs `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1`; Tailscale/public use `wss://` or a tunnel.
+- Mobile LAN pairing: plaintext `ws://` is loopback-only by default. Trusted private-network `ws://` needs `ICLAW_ALLOW_INSECURE_PRIVATE_WS=1`; Tailscale/public use `wss://` or a tunnel.
 - A2UI hash `src/canvas-host/a2ui/.bundle.hash`: generated; ignore unless running `pnpm canvas:a2ui:bundle`; commit separately.
 
 ## External Ops
