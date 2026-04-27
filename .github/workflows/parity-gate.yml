@@ -42,17 +42,17 @@ jobs:
       # followthrough gate that expects a fast post-approval read within a 30s
       # agent.wait timeout.
       QA_PARITY_CONCURRENCY: "1"
-      OPENCLAW_QA_TRANSPORT_READY_TIMEOUT_MS: "180000"
+      ICLAW_QA_TRANSPORT_READY_TIMEOUT_MS: "180000"
       OPENAI_API_KEY: ""
       ANTHROPIC_API_KEY: ""
-      OPENCLAW_LIVE_OPENAI_KEY: ""
-      OPENCLAW_LIVE_ANTHROPIC_KEY: ""
-      OPENCLAW_LIVE_GEMINI_KEY: ""
-      OPENCLAW_LIVE_SETUP_TOKEN_VALUE: ""
+      ICLAW_LIVE_OPENAI_KEY: ""
+      ICLAW_LIVE_ANTHROPIC_KEY: ""
+      ICLAW_LIVE_GEMINI_KEY: ""
+      ICLAW_LIVE_SETUP_TOKEN_VALUE: ""
       # The parity suite is a private QA command. Build that exact runtime up
       # front so CI never tests a public dist plus a later no-clean QA overlay.
-      OPENCLAW_BUILD_PRIVATE_QA: "1"
-      OPENCLAW_ENABLE_PRIVATE_QA_CLI: "1"
+      ICLAW_BUILD_PRIVATE_QA: "1"
+      ICLAW_ENABLE_PRIVATE_QA_CLI: "1"
     steps:
       - name: Checkout PR
         uses: actions/checkout@v6
@@ -77,7 +77,7 @@ jobs:
       # of paying for a separate full-runtime preflight that has been flaky in CI.
       - name: Run GPT-5.4 lane
         run: |
-          pnpm openclaw qa suite \
+          pnpm iclaw qa suite \
             --provider-mode mock-openai \
             --parity-pack agentic \
             --concurrency "${QA_PARITY_CONCURRENCY}" \
@@ -87,7 +87,7 @@ jobs:
 
       - name: Run Opus 4.6 lane
         run: |
-          pnpm openclaw qa suite \
+          pnpm iclaw qa suite \
             --provider-mode mock-openai \
             --parity-pack agentic \
             --concurrency "${QA_PARITY_CONCURRENCY}" \
@@ -97,7 +97,7 @@ jobs:
 
       - name: Generate parity report
         run: |
-          pnpm openclaw qa parity-report \
+          pnpm iclaw qa parity-report \
             --repo-root . \
             --candidate-summary .artifacts/qa-e2e/gpt54/qa-suite-summary.json \
             --baseline-summary .artifacts/qa-e2e/opus46/qa-suite-summary.json \

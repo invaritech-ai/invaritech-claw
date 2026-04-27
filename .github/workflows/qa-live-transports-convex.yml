@@ -31,8 +31,8 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
   NODE_VERSION: "24.x"
   PNPM_VERSION: "10.33.0"
-  OPENCLAW_BUILD_PRIVATE_QA: "1"
-  OPENCLAW_ENABLE_PRIVATE_QA_CLI: "1"
+  ICLAW_BUILD_PRIVATE_QA: "1"
+  ICLAW_ENABLE_PRIVATE_QA_CLI: "1"
 
 jobs:
   authorize_actor:
@@ -132,13 +132,13 @@ jobs:
     timeout-minutes: 30
     env:
       QA_PARITY_CONCURRENCY: "1"
-      OPENCLAW_QA_TRANSPORT_READY_TIMEOUT_MS: "180000"
+      ICLAW_QA_TRANSPORT_READY_TIMEOUT_MS: "180000"
       OPENAI_API_KEY: ""
       ANTHROPIC_API_KEY: ""
-      OPENCLAW_LIVE_OPENAI_KEY: ""
-      OPENCLAW_LIVE_ANTHROPIC_KEY: ""
-      OPENCLAW_LIVE_GEMINI_KEY: ""
-      OPENCLAW_LIVE_SETUP_TOKEN_VALUE: ""
+      ICLAW_LIVE_OPENAI_KEY: ""
+      ICLAW_LIVE_ANTHROPIC_KEY: ""
+      ICLAW_LIVE_GEMINI_KEY: ""
+      ICLAW_LIVE_SETUP_TOKEN_VALUE: ""
     steps:
       - name: Checkout selected ref
         uses: actions/checkout@v6
@@ -235,7 +235,7 @@ jobs:
         shell: bash
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_REDACT_PUBLIC_METADATA: "1"
+          ICLAW_QA_REDACT_PUBLIC_METADATA: "1"
         run: |
           set -euo pipefail
 
@@ -282,8 +282,8 @@ jobs:
       - name: Validate required QA credential env
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
+          ICLAW_QA_CONVEX_SITE_URL: ${{ secrets.ICLAW_QA_CONVEX_SITE_URL }}
+          ICLAW_QA_CONVEX_SECRET_CI: ${{ secrets.ICLAW_QA_CONVEX_SECRET_CI }}
         shell: bash
         run: |
           set -euo pipefail
@@ -297,8 +297,8 @@ jobs:
           }
 
           require_var OPENAI_API_KEY
-          require_var OPENCLAW_QA_CONVEX_SITE_URL
-          require_var OPENCLAW_QA_CONVEX_SECRET_CI
+          require_var ICLAW_QA_CONVEX_SITE_URL
+          require_var ICLAW_QA_CONVEX_SECRET_CI
 
       - name: Build private QA runtime
         run: pnpm build
@@ -308,10 +308,10 @@ jobs:
         shell: bash
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
-          OPENCLAW_QA_REDACT_PUBLIC_METADATA: "1"
-          OPENCLAW_QA_TELEGRAM_CAPTURE_CONTENT: "1"
+          ICLAW_QA_CONVEX_SITE_URL: ${{ secrets.ICLAW_QA_CONVEX_SITE_URL }}
+          ICLAW_QA_CONVEX_SECRET_CI: ${{ secrets.ICLAW_QA_CONVEX_SECRET_CI }}
+          ICLAW_QA_REDACT_PUBLIC_METADATA: "1"
+          ICLAW_QA_TELEGRAM_CAPTURE_CONTENT: "1"
           INPUT_SCENARIO: ${{ github.event_name == 'workflow_dispatch' && inputs.scenario || '' }}
         run: |
           set -euo pipefail
@@ -374,8 +374,8 @@ jobs:
       - name: Validate required QA credential env
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
+          ICLAW_QA_CONVEX_SITE_URL: ${{ secrets.ICLAW_QA_CONVEX_SITE_URL }}
+          ICLAW_QA_CONVEX_SECRET_CI: ${{ secrets.ICLAW_QA_CONVEX_SECRET_CI }}
         shell: bash
         run: |
           set -euo pipefail
@@ -389,8 +389,8 @@ jobs:
           }
 
           require_var OPENAI_API_KEY
-          require_var OPENCLAW_QA_CONVEX_SITE_URL
-          require_var OPENCLAW_QA_CONVEX_SECRET_CI
+          require_var ICLAW_QA_CONVEX_SITE_URL
+          require_var ICLAW_QA_CONVEX_SECRET_CI
 
       - name: Build private QA runtime
         run: pnpm build
@@ -400,10 +400,10 @@ jobs:
         shell: bash
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
-          OPENCLAW_QA_REDACT_PUBLIC_METADATA: "1"
-          OPENCLAW_QA_DISCORD_CAPTURE_CONTENT: "1"
+          ICLAW_QA_CONVEX_SITE_URL: ${{ secrets.ICLAW_QA_CONVEX_SITE_URL }}
+          ICLAW_QA_CONVEX_SECRET_CI: ${{ secrets.ICLAW_QA_CONVEX_SECRET_CI }}
+          ICLAW_QA_REDACT_PUBLIC_METADATA: "1"
+          ICLAW_QA_DISCORD_CAPTURE_CONTENT: "1"
           INPUT_SCENARIO: ${{ github.event_name == 'workflow_dispatch' && inputs.discord_scenario || '' }}
         run: |
           set -euo pipefail

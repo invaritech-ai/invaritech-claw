@@ -147,8 +147,8 @@ jobs:
           PACKAGE_SPEC: ${{ inputs.package_spec }}
           PROVIDER_MODE: ${{ inputs.provider_mode }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
+          ICLAW_QA_CONVEX_SITE_URL: ${{ secrets.ICLAW_QA_CONVEX_SITE_URL }}
+          ICLAW_QA_CONVEX_SECRET_CI: ${{ secrets.ICLAW_QA_CONVEX_SECRET_CI }}
         shell: bash
         run: |
           set -euo pipefail
@@ -166,8 +166,8 @@ jobs:
             fi
           }
 
-          require_var OPENCLAW_QA_CONVEX_SITE_URL
-          require_var OPENCLAW_QA_CONVEX_SECRET_CI
+          require_var ICLAW_QA_CONVEX_SITE_URL
+          require_var ICLAW_QA_CONVEX_SECRET_CI
           if [[ "${PROVIDER_MODE}" == "live-frontier" ]]; then
             require_var OPENAI_API_KEY
           fi
@@ -177,25 +177,25 @@ jobs:
         shell: bash
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_SKIP_DOCKER_BUILD: "1"
-          OPENCLAW_DOCKER_E2E_IMAGE: ${{ needs.prepare_docker_e2e_image.outputs.image }}
-          OPENCLAW_NPM_TELEGRAM_PACKAGE_SPEC: ${{ inputs.package_spec }}
-          OPENCLAW_NPM_TELEGRAM_PROVIDER_MODE: ${{ inputs.provider_mode }}
-          OPENCLAW_NPM_TELEGRAM_CREDENTIAL_SOURCE: convex
-          OPENCLAW_NPM_TELEGRAM_CREDENTIAL_ROLE: ci
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
-          OPENCLAW_QA_REDACT_PUBLIC_METADATA: "1"
+          ICLAW_SKIP_DOCKER_BUILD: "1"
+          ICLAW_DOCKER_E2E_IMAGE: ${{ needs.prepare_docker_e2e_image.outputs.image }}
+          ICLAW_NPM_TELEGRAM_PACKAGE_SPEC: ${{ inputs.package_spec }}
+          ICLAW_NPM_TELEGRAM_PROVIDER_MODE: ${{ inputs.provider_mode }}
+          ICLAW_NPM_TELEGRAM_CREDENTIAL_SOURCE: convex
+          ICLAW_NPM_TELEGRAM_CREDENTIAL_ROLE: ci
+          ICLAW_QA_CONVEX_SITE_URL: ${{ secrets.ICLAW_QA_CONVEX_SITE_URL }}
+          ICLAW_QA_CONVEX_SECRET_CI: ${{ secrets.ICLAW_QA_CONVEX_SECRET_CI }}
+          ICLAW_QA_REDACT_PUBLIC_METADATA: "1"
           INPUT_SCENARIO: ${{ inputs.scenario }}
         run: |
           set -euo pipefail
 
           output_dir=".artifacts/qa-e2e/npm-telegram-beta-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           echo "output_dir=${output_dir}" >> "$GITHUB_OUTPUT"
-          export OPENCLAW_NPM_TELEGRAM_OUTPUT_DIR="${output_dir}"
+          export ICLAW_NPM_TELEGRAM_OUTPUT_DIR="${output_dir}"
 
           if [[ -n "${INPUT_SCENARIO// }" ]]; then
-            export OPENCLAW_NPM_TELEGRAM_SCENARIOS="${INPUT_SCENARIO}"
+            export ICLAW_NPM_TELEGRAM_SCENARIOS="${INPUT_SCENARIO}"
           fi
 
           pnpm test:docker:npm-telegram-live

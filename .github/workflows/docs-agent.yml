@@ -139,11 +139,11 @@ jobs:
       - name: Ensure docs agent key exists
         if: steps.gate.outputs.run_agent == 'true'
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENCLAW_DOCS_AGENT_OPENAI_API_KEY || secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.ICLAW_DOCS_AGENT_OPENAI_API_KEY || secrets.OPENAI_API_KEY }}
         run: |
           set -euo pipefail
           if [ -z "${OPENAI_API_KEY:-}" ]; then
-            echo "Missing OPENCLAW_DOCS_AGENT_OPENAI_API_KEY or OPENAI_API_KEY secret." >&2
+            echo "Missing ICLAW_DOCS_AGENT_OPENAI_API_KEY or OPENAI_API_KEY secret." >&2
             exit 1
           fi
 
@@ -154,7 +154,7 @@ jobs:
           DOCS_AGENT_BASE_SHA: ${{ steps.gate.outputs.review_base_sha }}
           DOCS_AGENT_HEAD_SHA: ${{ steps.gate.outputs.review_head_sha }}
         with:
-          openai-api-key: ${{ secrets.OPENCLAW_DOCS_AGENT_OPENAI_API_KEY || secrets.OPENAI_API_KEY }}
+          openai-api-key: ${{ secrets.ICLAW_DOCS_AGENT_OPENAI_API_KEY || secrets.OPENAI_API_KEY }}
           prompt-file: .github/codex/prompts/docs-agent.md
           model: gpt-5.4
           effort: medium

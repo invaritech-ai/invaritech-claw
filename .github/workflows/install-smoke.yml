@@ -54,11 +54,11 @@ jobs:
       - name: Build install-smoke CI manifest
         id: manifest
         env:
-          OPENCLAW_CI_EVENT_NAME: ${{ github.event_name }}
-          OPENCLAW_CI_WORKFLOW_BUN_GLOBAL_INSTALL_SMOKE: ${{ inputs.run_bun_global_install_smoke || 'false' }}
+          ICLAW_CI_EVENT_NAME: ${{ github.event_name }}
+          ICLAW_CI_WORKFLOW_BUN_GLOBAL_INSTALL_SMOKE: ${{ inputs.run_bun_global_install_smoke || 'false' }}
         run: |
-          event_name="${OPENCLAW_CI_EVENT_NAME:-}"
-          workflow_bun_global_install_smoke="${OPENCLAW_CI_WORKFLOW_BUN_GLOBAL_INSTALL_SMOKE:-false}"
+          event_name="${ICLAW_CI_EVENT_NAME:-}"
+          workflow_bun_global_install_smoke="${ICLAW_CI_WORKFLOW_BUN_GLOBAL_INSTALL_SMOKE:-false}"
           docs_only=false
           run_fast_install_smoke=true
           run_full_install_smoke=true
@@ -103,8 +103,8 @@ jobs:
           context: .
           file: ./Dockerfile
           build-args: |
-            OPENCLAW_DOCKER_APT_UPGRADE=0
-            OPENCLAW_EXTENSIONS=matrix
+            ICLAW_DOCKER_APT_UPGRADE=0
+            ICLAW_EXTENSIONS=matrix
           tags: |
             openclaw-dockerfile-smoke:local
             openclaw-ext-smoke:local
@@ -118,8 +118,8 @@ jobs:
 
       - name: Run Docker gateway network e2e
         env:
-          OPENCLAW_GATEWAY_NETWORK_E2E_IMAGE: openclaw-dockerfile-smoke:local
-          OPENCLAW_GATEWAY_NETWORK_E2E_SKIP_BUILD: "1"
+          ICLAW_GATEWAY_NETWORK_E2E_IMAGE: openclaw-dockerfile-smoke:local
+          ICLAW_GATEWAY_NETWORK_E2E_SKIP_BUILD: "1"
         run: bash scripts/e2e/gateway-network-docker.sh
 
       - name: Smoke test Dockerfile with matrix extension build arg
@@ -187,7 +187,7 @@ jobs:
       # explicit gha cache directives so local tags still load cleanly.
       - name: Run QR package install smoke
         env:
-          OPENCLAW_QR_SMOKE_FORCE_INSTALL: "1"
+          ICLAW_QR_SMOKE_FORCE_INSTALL: "1"
         run: bash scripts/e2e/qr-import-docker.sh
 
       # Build once with the matrix extension and tag both smoke names. This
@@ -198,8 +198,8 @@ jobs:
           context: .
           file: ./Dockerfile
           build-args: |
-            OPENCLAW_DOCKER_APT_UPGRADE=0
-            OPENCLAW_EXTENSIONS=matrix
+            ICLAW_DOCKER_APT_UPGRADE=0
+            ICLAW_EXTENSIONS=matrix
           tags: |
             openclaw-dockerfile-smoke:local
             openclaw-ext-smoke:local
@@ -213,8 +213,8 @@ jobs:
 
       - name: Run Docker gateway network e2e
         env:
-          OPENCLAW_GATEWAY_NETWORK_E2E_IMAGE: openclaw-dockerfile-smoke:local
-          OPENCLAW_GATEWAY_NETWORK_E2E_SKIP_BUILD: "1"
+          ICLAW_GATEWAY_NETWORK_E2E_IMAGE: openclaw-dockerfile-smoke:local
+          ICLAW_GATEWAY_NETWORK_E2E_SKIP_BUILD: "1"
         run: bash scripts/e2e/gateway-network-docker.sh
 
       - name: Smoke test Dockerfile with matrix extension build arg
@@ -291,24 +291,24 @@ jobs:
       - name: Run Bun global install image-provider smoke
         if: needs.preflight.outputs.run_bun_global_install_smoke == 'true'
         env:
-          OPENCLAW_BUN_GLOBAL_SMOKE_DIST_IMAGE: openclaw-dockerfile-smoke:local
-          OPENCLAW_BUN_GLOBAL_SMOKE_HOST_BUILD: "0"
+          ICLAW_BUN_GLOBAL_SMOKE_DIST_IMAGE: openclaw-dockerfile-smoke:local
+          ICLAW_BUN_GLOBAL_SMOKE_HOST_BUILD: "0"
         run: bash scripts/e2e/bun-global-install-smoke.sh
 
       - name: Run installer docker tests
         env:
-          OPENCLAW_INSTALL_URL: https://openclaw.ai/install.sh
-          OPENCLAW_INSTALL_CLI_URL: https://openclaw.ai/install-cli.sh
-          OPENCLAW_NO_ONBOARD: "1"
-          OPENCLAW_INSTALL_SMOKE_SKIP_CLI: "1"
-          OPENCLAW_INSTALL_SMOKE_SKIP_IMAGE_BUILD: "1"
-          OPENCLAW_INSTALL_NONROOT_SKIP_IMAGE_BUILD: "1"
-          OPENCLAW_INSTALL_SMOKE_SKIP_NONROOT: "0"
-          OPENCLAW_INSTALL_SMOKE_SKIP_NPM_GLOBAL: "1"
-          OPENCLAW_INSTALL_SMOKE_SKIP_PREVIOUS: "1"
-          OPENCLAW_INSTALL_SMOKE_UPDATE_BASELINE: latest
-          OPENCLAW_INSTALL_SMOKE_UPDATE_DIST_IMAGE: openclaw-dockerfile-smoke:local
-          OPENCLAW_INSTALL_SMOKE_UPDATE_SKIP_LOCAL_BUILD: "1"
+          ICLAW_INSTALL_URL: https://openclaw.ai/install.sh
+          ICLAW_INSTALL_CLI_URL: https://openclaw.ai/install-cli.sh
+          ICLAW_NO_ONBOARD: "1"
+          ICLAW_INSTALL_SMOKE_SKIP_CLI: "1"
+          ICLAW_INSTALL_SMOKE_SKIP_IMAGE_BUILD: "1"
+          ICLAW_INSTALL_NONROOT_SKIP_IMAGE_BUILD: "1"
+          ICLAW_INSTALL_SMOKE_SKIP_NONROOT: "0"
+          ICLAW_INSTALL_SMOKE_SKIP_NPM_GLOBAL: "1"
+          ICLAW_INSTALL_SMOKE_SKIP_PREVIOUS: "1"
+          ICLAW_INSTALL_SMOKE_UPDATE_BASELINE: latest
+          ICLAW_INSTALL_SMOKE_UPDATE_DIST_IMAGE: openclaw-dockerfile-smoke:local
+          ICLAW_INSTALL_SMOKE_UPDATE_SKIP_LOCAL_BUILD: "1"
         run: bash scripts/test-install-sh-docker.sh
 
   docker-e2e-fast:
@@ -336,5 +336,5 @@ jobs:
 
       - name: Run fast bundled plugin Docker E2E
         env:
-          OPENCLAW_BUNDLED_CHANNEL_DEPS_E2E_IMAGE: openclaw-bundled-channel-fast:local
+          ICLAW_BUNDLED_CHANNEL_DEPS_E2E_IMAGE: openclaw-bundled-channel-fast:local
         run: timeout 120s pnpm test:docker:bundled-channel-deps:fast

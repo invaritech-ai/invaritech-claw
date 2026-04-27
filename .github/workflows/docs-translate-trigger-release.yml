@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Trigger locale translates in publish repo
         env:
-          GH_TOKEN: ${{ secrets.OPENCLAW_DOCS_SYNC_TOKEN }}
+          GH_TOKEN: ${{ secrets.ICLAW_DOCS_SYNC_TOKEN }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
           set -euo pipefail

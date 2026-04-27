@@ -147,9 +147,9 @@ jobs:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
-      OPENCLAW_DISCORD_SMOKE_BOT_TOKEN: ${{ secrets.OPENCLAW_DISCORD_SMOKE_BOT_TOKEN }}
-      OPENCLAW_DISCORD_SMOKE_GUILD_ID: ${{ secrets.OPENCLAW_DISCORD_SMOKE_GUILD_ID }}
-      OPENCLAW_DISCORD_SMOKE_CHANNEL_ID: ${{ secrets.OPENCLAW_DISCORD_SMOKE_CHANNEL_ID }}
+      ICLAW_DISCORD_SMOKE_BOT_TOKEN: ${{ secrets.ICLAW_DISCORD_SMOKE_BOT_TOKEN }}
+      ICLAW_DISCORD_SMOKE_GUILD_ID: ${{ secrets.ICLAW_DISCORD_SMOKE_GUILD_ID }}
+      ICLAW_DISCORD_SMOKE_CHANNEL_ID: ${{ secrets.ICLAW_DISCORD_SMOKE_CHANNEL_ID }}
 
   live_and_e2e_release_checks:
     needs: [resolve_target]
@@ -181,11 +181,11 @@ jobs:
       MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
       OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
       OPENCODE_ZEN_API_KEY: ${{ secrets.OPENCODE_ZEN_API_KEY }}
-      OPENCLAW_LIVE_BROWSER_CDP_URL: ${{ secrets.OPENCLAW_LIVE_BROWSER_CDP_URL }}
-      OPENCLAW_LIVE_SETUP_TOKEN: ${{ secrets.OPENCLAW_LIVE_SETUP_TOKEN }}
-      OPENCLAW_LIVE_SETUP_TOKEN_MODEL: ${{ secrets.OPENCLAW_LIVE_SETUP_TOKEN_MODEL }}
-      OPENCLAW_LIVE_SETUP_TOKEN_PROFILE: ${{ secrets.OPENCLAW_LIVE_SETUP_TOKEN_PROFILE }}
-      OPENCLAW_LIVE_SETUP_TOKEN_VALUE: ${{ secrets.OPENCLAW_LIVE_SETUP_TOKEN_VALUE }}
+      ICLAW_LIVE_BROWSER_CDP_URL: ${{ secrets.ICLAW_LIVE_BROWSER_CDP_URL }}
+      ICLAW_LIVE_SETUP_TOKEN: ${{ secrets.ICLAW_LIVE_SETUP_TOKEN }}
+      ICLAW_LIVE_SETUP_TOKEN_MODEL: ${{ secrets.ICLAW_LIVE_SETUP_TOKEN_MODEL }}
+      ICLAW_LIVE_SETUP_TOKEN_PROFILE: ${{ secrets.ICLAW_LIVE_SETUP_TOKEN_PROFILE }}
+      ICLAW_LIVE_SETUP_TOKEN_VALUE: ${{ secrets.ICLAW_LIVE_SETUP_TOKEN_VALUE }}
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -201,13 +201,13 @@ jobs:
       BYTEPLUS_ACCESS_KEY_ID: ${{ secrets.BYTEPLUS_ACCESS_KEY_ID }}
       BYTEPLUS_SECRET_ACCESS_KEY: ${{ secrets.BYTEPLUS_SECRET_ACCESS_KEY }}
       CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-      OPENCLAW_CODEX_AUTH_JSON: ${{ secrets.OPENCLAW_CODEX_AUTH_JSON }}
-      OPENCLAW_CODEX_CONFIG_TOML: ${{ secrets.OPENCLAW_CODEX_CONFIG_TOML }}
-      OPENCLAW_CLAUDE_JSON: ${{ secrets.OPENCLAW_CLAUDE_JSON }}
-      OPENCLAW_CLAUDE_CREDENTIALS_JSON: ${{ secrets.OPENCLAW_CLAUDE_CREDENTIALS_JSON }}
-      OPENCLAW_CLAUDE_SETTINGS_JSON: ${{ secrets.OPENCLAW_CLAUDE_SETTINGS_JSON }}
-      OPENCLAW_CLAUDE_SETTINGS_LOCAL_JSON: ${{ secrets.OPENCLAW_CLAUDE_SETTINGS_LOCAL_JSON }}
-      OPENCLAW_GEMINI_SETTINGS_JSON: ${{ secrets.OPENCLAW_GEMINI_SETTINGS_JSON }}
+      ICLAW_CODEX_AUTH_JSON: ${{ secrets.ICLAW_CODEX_AUTH_JSON }}
+      ICLAW_CODEX_CONFIG_TOML: ${{ secrets.ICLAW_CODEX_CONFIG_TOML }}
+      ICLAW_CLAUDE_JSON: ${{ secrets.ICLAW_CLAUDE_JSON }}
+      ICLAW_CLAUDE_CREDENTIALS_JSON: ${{ secrets.ICLAW_CLAUDE_CREDENTIALS_JSON }}
+      ICLAW_CLAUDE_SETTINGS_JSON: ${{ secrets.ICLAW_CLAUDE_SETTINGS_JSON }}
+      ICLAW_CLAUDE_SETTINGS_LOCAL_JSON: ${{ secrets.ICLAW_CLAUDE_SETTINGS_LOCAL_JSON }}
+      ICLAW_GEMINI_SETTINGS_JSON: ${{ secrets.ICLAW_GEMINI_SETTINGS_JSON }}
       FIREWORKS_API_KEY: ${{ secrets.FIREWORKS_API_KEY }}
 
   qa_lab_parity_release_checks:
@@ -219,15 +219,15 @@ jobs:
       contents: read
     env:
       QA_PARITY_CONCURRENCY: "1"
-      OPENCLAW_QA_TRANSPORT_READY_TIMEOUT_MS: "180000"
+      ICLAW_QA_TRANSPORT_READY_TIMEOUT_MS: "180000"
       OPENAI_API_KEY: ""
       ANTHROPIC_API_KEY: ""
-      OPENCLAW_LIVE_OPENAI_KEY: ""
-      OPENCLAW_LIVE_ANTHROPIC_KEY: ""
-      OPENCLAW_LIVE_GEMINI_KEY: ""
-      OPENCLAW_LIVE_SETUP_TOKEN_VALUE: ""
-      OPENCLAW_BUILD_PRIVATE_QA: "1"
-      OPENCLAW_ENABLE_PRIVATE_QA_CLI: "1"
+      ICLAW_LIVE_OPENAI_KEY: ""
+      ICLAW_LIVE_ANTHROPIC_KEY: ""
+      ICLAW_LIVE_GEMINI_KEY: ""
+      ICLAW_LIVE_SETUP_TOKEN_VALUE: ""
+      ICLAW_BUILD_PRIVATE_QA: "1"
+      ICLAW_ENABLE_PRIVATE_QA_CLI: "1"
     steps:
       - name: Checkout selected ref
         uses: actions/checkout@v6
@@ -294,8 +294,8 @@ jobs:
       pull-requests: read
     environment: qa-live-shared
     env:
-      OPENCLAW_BUILD_PRIVATE_QA: "1"
-      OPENCLAW_ENABLE_PRIVATE_QA_CLI: "1"
+      ICLAW_BUILD_PRIVATE_QA: "1"
+      ICLAW_ENABLE_PRIVATE_QA_CLI: "1"
     steps:
       - name: Checkout selected ref
         uses: actions/checkout@v6
@@ -330,7 +330,7 @@ jobs:
         shell: bash
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_REDACT_PUBLIC_METADATA: "1"
+          ICLAW_QA_REDACT_PUBLIC_METADATA: "1"
         run: |
           set -euo pipefail
 
@@ -364,8 +364,8 @@ jobs:
       pull-requests: read
     environment: qa-live-shared
     env:
-      OPENCLAW_BUILD_PRIVATE_QA: "1"
-      OPENCLAW_ENABLE_PRIVATE_QA_CLI: "1"
+      ICLAW_BUILD_PRIVATE_QA: "1"
+      ICLAW_ENABLE_PRIVATE_QA_CLI: "1"
     steps:
       - name: Checkout selected ref
         uses: actions/checkout@v6
@@ -383,8 +383,8 @@ jobs:
       - name: Validate required QA credential env
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
+          ICLAW_QA_CONVEX_SITE_URL: ${{ secrets.ICLAW_QA_CONVEX_SITE_URL }}
+          ICLAW_QA_CONVEX_SECRET_CI: ${{ secrets.ICLAW_QA_CONVEX_SECRET_CI }}
         shell: bash
         run: |
           set -euo pipefail
@@ -398,8 +398,8 @@ jobs:
           }
 
           require_var OPENAI_API_KEY
-          require_var OPENCLAW_QA_CONVEX_SITE_URL
-          require_var OPENCLAW_QA_CONVEX_SECRET_CI
+          require_var ICLAW_QA_CONVEX_SITE_URL
+          require_var ICLAW_QA_CONVEX_SECRET_CI
 
       - name: Build private QA runtime
         run: pnpm build
@@ -409,10 +409,10 @@ jobs:
         shell: bash
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENCLAW_QA_CONVEX_SITE_URL: ${{ secrets.OPENCLAW_QA_CONVEX_SITE_URL }}
-          OPENCLAW_QA_CONVEX_SECRET_CI: ${{ secrets.OPENCLAW_QA_CONVEX_SECRET_CI }}
-          OPENCLAW_QA_REDACT_PUBLIC_METADATA: "1"
-          OPENCLAW_QA_TELEGRAM_CAPTURE_CONTENT: "1"
+          ICLAW_QA_CONVEX_SITE_URL: ${{ secrets.ICLAW_QA_CONVEX_SITE_URL }}
+          ICLAW_QA_CONVEX_SECRET_CI: ${{ secrets.ICLAW_QA_CONVEX_SECRET_CI }}
+          ICLAW_QA_REDACT_PUBLIC_METADATA: "1"
+          ICLAW_QA_TELEGRAM_CAPTURE_CONTENT: "1"
         run: |
           set -euo pipefail
 

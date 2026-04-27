@@ -97,11 +97,11 @@ on:
         required: false
       MINIMAX_API_KEY:
         required: false
-      OPENCLAW_DISCORD_SMOKE_BOT_TOKEN:
+      ICLAW_DISCORD_SMOKE_BOT_TOKEN:
         required: false
-      OPENCLAW_DISCORD_SMOKE_GUILD_ID:
+      ICLAW_DISCORD_SMOKE_GUILD_ID:
         required: false
-      OPENCLAW_DISCORD_SMOKE_CHANNEL_ID:
+      ICLAW_DISCORD_SMOKE_CHANNEL_ID:
         required: false
 
 permissions: read-all
@@ -114,7 +114,7 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
   NODE_VERSION: "24.x"
   PNPM_VERSION: "10.32.1"
-  OPENCLAW_REPOSITORY: openclaw/openclaw
+  ICLAW_REPOSITORY: openclaw/openclaw
   TSX_VERSION: "4.21.0"
 
 jobs:
@@ -160,7 +160,7 @@ jobs:
           CALLER_REPOSITORY: ${{ github.repository }}
           CURRENT_SHA: ${{ github.sha }}
           WORKFLOW_CONTEXT_REF: ${{ github.workflow_ref }}
-          WORKFLOW_REPOSITORY: ${{ env.OPENCLAW_REPOSITORY }}
+          WORKFLOW_REPOSITORY: ${{ env.ICLAW_REPOSITORY }}
         run: |
           set -euo pipefail
           resolve_unique_remote_ref() {
@@ -253,7 +253,7 @@ jobs:
       - name: Checkout workflow repo
         uses: actions/checkout@v6
         with:
-          repository: ${{ env.OPENCLAW_REPOSITORY }}
+          repository: ${{ env.ICLAW_REPOSITORY }}
           ref: ${{ steps.workflow_ref.outputs.value }}
           path: workflow
           fetch-depth: 1
@@ -262,7 +262,7 @@ jobs:
       - name: Checkout public source ref
         uses: actions/checkout@v6
         with:
-          repository: ${{ env.OPENCLAW_REPOSITORY }}
+          repository: ${{ env.ICLAW_REPOSITORY }}
           ref: ${{ inputs.ref }}
           path: source
           fetch-depth: 0
@@ -366,9 +366,9 @@ jobs:
           INPUT_UBUNTU_RUNNER: ${{ inputs.ubuntu_runner }}
           INPUT_WINDOWS_RUNNER: ${{ inputs.windows_runner }}
           INPUT_MACOS_RUNNER: ${{ inputs.macos_runner }}
-          VAR_UBUNTU_RUNNER: ${{ vars.OPENCLAW_RELEASE_CHECKS_UBUNTU_RUNNER }}
-          VAR_WINDOWS_RUNNER: ${{ vars.OPENCLAW_RELEASE_CHECKS_WINDOWS_RUNNER }}
-          VAR_MACOS_RUNNER: ${{ vars.OPENCLAW_RELEASE_CHECKS_MACOS_RUNNER }}
+          VAR_UBUNTU_RUNNER: ${{ vars.ICLAW_RELEASE_CHECKS_UBUNTU_RUNNER }}
+          VAR_WINDOWS_RUNNER: ${{ vars.ICLAW_RELEASE_CHECKS_WINDOWS_RUNNER }}
+          VAR_MACOS_RUNNER: ${{ vars.ICLAW_RELEASE_CHECKS_MACOS_RUNNER }}
         run: |
           MATRIX_JSON="$(pnpm dlx "tsx@${TSX_VERSION}" workflow/scripts/openclaw-cross-os-release-checks.ts \
             --resolve-matrix \
@@ -391,7 +391,7 @@ jobs:
       - name: Checkout workflow repo
         uses: actions/checkout@v6
         with:
-          repository: ${{ env.OPENCLAW_REPOSITORY }}
+          repository: ${{ env.ICLAW_REPOSITORY }}
           ref: ${{ needs.prepare.outputs.workflow_ref }}
           path: workflow
           fetch-depth: 1
@@ -427,14 +427,14 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
-          OPENCLAW_DISCORD_SMOKE_BOT_TOKEN: ${{ secrets.OPENCLAW_DISCORD_SMOKE_BOT_TOKEN }}
-          OPENCLAW_DISCORD_SMOKE_GUILD_ID: ${{ secrets.OPENCLAW_DISCORD_SMOKE_GUILD_ID }}
-          OPENCLAW_DISCORD_SMOKE_CHANNEL_ID: ${{ secrets.OPENCLAW_DISCORD_SMOKE_CHANNEL_ID }}
-          OPENCLAW_RELEASE_CHECK_OS: ${{ matrix.os_id }}
-          OPENCLAW_RELEASE_CHECK_RUNNER: ${{ matrix.runner }}
+          ICLAW_DISCORD_SMOKE_BOT_TOKEN: ${{ secrets.ICLAW_DISCORD_SMOKE_BOT_TOKEN }}
+          ICLAW_DISCORD_SMOKE_GUILD_ID: ${{ secrets.ICLAW_DISCORD_SMOKE_GUILD_ID }}
+          ICLAW_DISCORD_SMOKE_CHANNEL_ID: ${{ secrets.ICLAW_DISCORD_SMOKE_CHANNEL_ID }}
+          ICLAW_RELEASE_CHECK_OS: ${{ matrix.os_id }}
+          ICLAW_RELEASE_CHECK_RUNNER: ${{ matrix.runner }}
         run: |
           DISCORD_ARGS=()
-          if [[ -n "${OPENCLAW_DISCORD_SMOKE_BOT_TOKEN}" ]] && [[ -n "${OPENCLAW_DISCORD_SMOKE_GUILD_ID}" ]] && [[ -n "${OPENCLAW_DISCORD_SMOKE_CHANNEL_ID}" ]]; then
+          if [[ -n "${ICLAW_DISCORD_SMOKE_BOT_TOKEN}" ]] && [[ -n "${ICLAW_DISCORD_SMOKE_GUILD_ID}" ]] && [[ -n "${ICLAW_DISCORD_SMOKE_CHANNEL_ID}" ]]; then
             DISCORD_ARGS+=(--run-discord-roundtrip true)
           fi
           pnpm dlx "tsx@${TSX_VERSION}" workflow/scripts/openclaw-cross-os-release-checks.ts \
