@@ -3,12 +3,5 @@
   "compilerOptions": {
     "tsBuildInfoFile": ".artifacts/tsgo-cache/extensions-test.tsbuildinfo"
   },
-  "include": [
-    "src/**/*.d.ts",
-    "ui/**/*.d.ts",
-    "extensions/**/*.d.ts",
-    "extensions/**/*.test.ts",
-    "extensions/**/*.test.tsx",
-    "packages/**/*.d.ts"
-  ]
+  "include": ["src/**/*", "test/**/*", "scripts/**/*"]
 }

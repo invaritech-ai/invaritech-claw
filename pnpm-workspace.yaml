@@ -1,8 +1,5 @@
 packages:
   - .
-  - ui
-  - packages/*
-  - extensions/*
 
 minimumReleaseAge: 2880
 
