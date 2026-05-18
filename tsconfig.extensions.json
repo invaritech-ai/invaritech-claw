@@ -3,7 +3,7 @@
   "compilerOptions": {
     "tsBuildInfoFile": ".artifacts/tsgo-cache/extensions.tsbuildinfo"
   },
-  "include": ["src/**/*", "test/**/*", "scripts/**/*"],
+  "include": ["extensions/**/src/**/*"],
   "exclude": [
     "node_modules",
     "dist",
@@ -13,7 +13,6 @@
     "**/*test-helpers.ts",
     "**/*test-harness.ts",
     "**/*test-support.ts",
-    "extensions/**/src/test-support/**",
-    "test/**"
+    "extensions/**/src/test-support/**"
   ]
 }

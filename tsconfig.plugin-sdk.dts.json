@@ -11,11 +11,6 @@
     "rootDir": ".",
     "tsBuildInfoFile": "dist/plugin-sdk/.tsbuildinfo"
   },
-  "include": [
-    "src/plugin-sdk/**/*.ts",
-    "src/video-generation/dashscope-compatible.ts",
-    "src/video-generation/types.ts",
-    "src/types/**/*.d.ts"
-  ],
+  "include": ["src/**/*", "test/**/*", "scripts/**/*"],
   "exclude": ["node_modules", "dist", "src/**/*.test.ts"]
 }
