@@ -472,10 +472,10 @@ The TUI talks to the same run API as headless clients. Embedded-only shortcuts c
 
 **Files:**
 
-- Modify: `docs/superpowers/plans/2026-05-18-iclaw-v1-headless-architecture.md`
+- Modify: `docs/plan/iclaw-v1-headless-architecture.md`
 - Create: `docs/README.md`
 
-- [ ] **Step 1: Add a short docs index**
+- [x] **Step 1: Add a short docs index**
 
 Create `docs/README.md`:
 
@@ -494,7 +494,7 @@ Start here:
 - `security.md` for tool and approval policy
 ```
 
-- [ ] **Step 2: Verify docs are discoverable**
+- [x] **Step 2: Verify docs are discoverable**
 
 Run:
 
@@ -504,10 +504,10 @@ rg -n "iclaw is a headless API automation agent" docs/README.md
 
 Expected: one match.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
-git add docs/README.md docs/superpowers/plans/2026-05-18-iclaw-v1-headless-architecture.md
+git add docs/README.md docs/plan/iclaw-v1-headless-architecture.md
 git commit -m "docs: define iclaw v1 headless architecture"
 ```
 
