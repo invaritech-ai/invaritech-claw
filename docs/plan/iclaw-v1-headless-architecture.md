@@ -520,7 +520,7 @@ git commit -m "docs: define iclaw v1 headless architecture"
 - Modify: `tsconfig.json`
 - Modify: `tsconfig.*.json`
 
-- [ ] **Step 1: Remove workspace packages from pnpm workspace**
+- [x] **Step 1: Remove workspace packages from pnpm workspace**
 
 Set `pnpm-workspace.yaml` package list to:
 
@@ -531,7 +531,7 @@ packages:
 
 Keep `minimumReleaseAge`, `minimumReleaseAgeExclude`, `onlyBuiltDependencies`, and `ignoredBuiltDependencies`.
 
-- [ ] **Step 2: Narrow package metadata**
+- [x] **Step 2: Narrow package metadata**
 
 Set root package metadata:
 
@@ -548,7 +548,7 @@ Set root package metadata:
 
 Remove exports that point to broad plugin SDK surfaces not retained by v1.
 
-- [ ] **Step 3: Narrow TypeScript includes**
+- [x] **Step 3: Narrow TypeScript includes**
 
 Keep TypeScript includes focused on:
 
@@ -558,7 +558,7 @@ Keep TypeScript includes focused on:
 }
 ```
 
-- [ ] **Step 4: Run package sanity checks**
+- [x] **Step 4: Run package sanity checks**
 
 Run:
 
@@ -569,7 +569,14 @@ pnpm build
 
 Expected: lockfile updates cleanly and build either passes or reports only imports from surfaces scheduled for deletion in the next task.
 
-- [ ] **Step 5: Commit**
+Observed result in this trim stage:
+
+- `pnpm install --lockfile-only` completed and updated `pnpm-lock.yaml`.
+- `pnpm build` reports only unresolved entries from removed extension surfaces:
+  - `extensions/telegram/src/audit.ts`
+  - `extensions/telegram/src/token.ts`
+
+- [x] **Step 5: Commit**
 
 ```bash
 git add package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.json tsconfig.*.json
