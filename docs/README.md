@@ -2,7 +2,7 @@
 
 iclaw is a headless API automation agent with a terminal operator console.
 
-Start here:
+Planned docs (created in later tasks):
 
 - `config.md` for configuration
 - `api.md` for native HTTP APIs
