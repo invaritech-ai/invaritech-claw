@@ -1363,11 +1363,9 @@
     "ios:version": "node --import tsx scripts/ios-version.ts --json",
     "ios:version:check": "node --import tsx scripts/ios-sync-versioning.ts --check",
     "ios:version:pin": "node --import tsx scripts/ios-pin-version.ts",
-    "ios:version:sync": "node --import tsx scripts/ios-sync-versioning.ts --write",
     "lint": "node scripts/run-oxlint-shards.mjs",
     "lint:agent:ingress-owner": "node scripts/check-ingress-agent-owner-context.mjs",
     "lint:all": "node scripts/run-oxlint.mjs",
-    "lint:apps": "pnpm lint:swift",
     "lint:auth:no-pairing-store-group": "node scripts/check-no-pairing-store-group-auth.mjs",
     "lint:auth:pairing-account-scope": "node scripts/check-pairing-account-scope.mjs",
     "lint:core": "node scripts/run-oxlint.mjs --tsconfig tsconfig.oxlint.core.json src ui packages",
@@ -1484,7 +1482,6 @@
     "test:docker:live-models:gemini": "ICLAW_LIVE_PROVIDERS=google-gemini-cli ICLAW_LIVE_MODELS=google-gemini-cli/gemini-3.1-pro-preview bash scripts/test-live-models-docker.sh",
     "test:docker:mcp-channels": "bash scripts/e2e/mcp-channels-docker.sh",
     "test:docker:npm-onboard-channel-agent": "bash scripts/e2e/npm-onboard-channel-agent-docker.sh",
-    "test:docker:npm-telegram-live": "bash scripts/e2e/npm-telegram-live-docker.sh",
     "test:docker:onboard": "bash scripts/e2e/onboard-docker.sh",
     "test:docker:openai-web-search-minimal": "bash scripts/e2e/openai-web-search-minimal-docker.sh",
     "test:docker:openwebui": "bash scripts/e2e/openwebui-docker.sh",
@@ -1692,7 +1689,6 @@
       "@napi-rs/canvas",
       "@tloncorp/api",
       "@tloncorp/tlon-skill",
-      "@whiskeysockets/baileys",
       "authenticate-pam",
       "esbuild",
       "node-llama-cpp",
@@ -1714,8 +1710,6 @@
         "prism-media>opusscript": "^0.0.8 || ^0.1.1"
       }
     },
-    "patchedDependencies": {
-      "@whiskeysockets/baileys@7.0.0-rc.9": "patches/@whiskeysockets__baileys@7.0.0-rc.9.patch"
-    }
+    "patchedDependencies": {}
   }
 }

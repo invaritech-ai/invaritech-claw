@@ -3,13 +3,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { RELEASE_METADATA_PATHS } from "./changed-lanes.mjs";
 
-const VERSION_ONLY_TEXT_PATHS = new Set([
-  "apps/android/app/build.gradle.kts",
-  "apps/ios/Config/Version.xcconfig",
-  "apps/ios/version.json",
-  "apps/macos/Sources/OpenClaw/Resources/Info.plist",
-  "src/config/schema.base.generated.ts",
-]);
+const VERSION_ONLY_TEXT_PATHS = new Set(["src/config/schema.base.generated.ts"]);
 
 function normalizePath(input) {
   return String(input ?? "")

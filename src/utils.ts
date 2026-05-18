@@ -2,11 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { resolveStateDir } from "./config/paths.js";
-import {
-  resolveEffectiveHomeDir,
-  resolveHomeRelativePath,
-  resolveRequiredHomeDir,
-} from "./infra/home-dir.js";
+import { resolveEffectiveHomeDir, resolveHomeRelativePath } from "./infra/home-dir.js";
 import { isPlainObject } from "./infra/plain-object.js";
 
 export async function ensureDir(dir: string) {

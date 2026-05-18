@@ -16,12 +16,6 @@ const PUBLIC_EXTENSION_CONTRACT_RE =
   /^(?:src\/plugin-sdk\/|src\/plugins\/contracts\/|src\/channels\/plugins\/|scripts\/lib\/plugin-sdk-entrypoints\.json$|scripts\/sync-plugin-sdk-exports\.mjs$|scripts\/generate-plugin-sdk-api-baseline\.ts$)/u;
 export const RELEASE_METADATA_PATHS = new Set([
   "CHANGELOG.md",
-  "apps/android/app/build.gradle.kts",
-  "apps/ios/CHANGELOG.md",
-  "apps/ios/Config/Version.xcconfig",
-  "apps/ios/fastlane/metadata/en-US/release_notes.txt",
-  "apps/ios/version.json",
-  "apps/macos/Sources/OpenClaw/Resources/Info.plist",
   "docs/.generated/config-baseline.sha256",
   "docs/install/updating.md",
   "package.json",

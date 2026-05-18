@@ -28,8 +28,6 @@ export function attachGatewayWsHandlers(params: GatewayWsRuntimeParams) {
     preauthConnectionBudget: params.preauthConnectionBudget,
     port: params.port,
     gatewayHost: params.gatewayHost,
-    canvasHostEnabled: params.canvasHostEnabled,
-    canvasHostServerPort: params.canvasHostServerPort,
     resolvedAuth: params.resolvedAuth,
     getResolvedAuth: params.getResolvedAuth,
     getRequiredSharedGatewaySessionGeneration: params.getRequiredSharedGatewaySessionGeneration,

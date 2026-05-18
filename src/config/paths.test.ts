@@ -141,18 +141,7 @@ describe("state + config path candidates", () => {
     const home = "/home/test";
     const resolvedHome = path.resolve(home);
     const candidates = resolveDefaultConfigCandidates({} as NodeJS.ProcessEnv, () => home);
-    const expected = [
-      path.join(resolvedHome, ".iclaw", "iclaw.json"),
-      path.join(resolvedHome, ".iclaw", "clawdbot.json"),
-      path.join(resolvedHome, ".iclaw", "openclaw.json"),
-      path.join(resolvedHome, ".clawdbot", "iclaw.json"),
-      path.join(resolvedHome, ".clawdbot", "clawdbot.json"),
-      path.join(resolvedHome, ".clawdbot", "openclaw.json"),
-      path.join(resolvedHome, ".openclaw", "iclaw.json"),
-      path.join(resolvedHome, ".openclaw", "clawdbot.json"),
-      path.join(resolvedHome, ".openclaw", "openclaw.json"),
-    ];
-    expect(candidates).toEqual(expected);
+    expect(candidates).toEqual([path.join(resolvedHome, ".iclaw", "iclaw.json")]);
   });
 
   it("prefers ~/.iclaw when it exists and legacy dir is missing", async () => {
@@ -164,12 +153,12 @@ describe("state + config path candidates", () => {
     });
   });
 
-  it("falls back to existing legacy state dir when ~/.iclaw is missing", async () => {
+  it("ignores existing legacy state dirs during default state resolution", async () => {
     await withTempDir({ prefix: "openclaw-state-legacy-" }, async (root) => {
       const legacyDir = path.join(root, ".clawdbot");
       await fs.mkdir(legacyDir, { recursive: true });
       const resolved = resolveStateDir({} as NodeJS.ProcessEnv, () => root);
-      expect(resolved).toBe(legacyDir);
+      expect(resolved).toBe(path.join(root, ".iclaw"));
     });
   });
 
@@ -195,7 +184,7 @@ describe("state + config path candidates", () => {
     });
   });
 
-  it("CONFIG_PATH prefers existing config when present", async () => {
+  it("ignores existing legacy config files during default config resolution", async () => {
     await withTempDir({ prefix: "iclaw-config-" }, async (root) => {
       const legacyDir = path.join(root, ".openclaw");
       await fs.mkdir(legacyDir, { recursive: true });
@@ -203,7 +192,7 @@ describe("state + config path candidates", () => {
       await fs.writeFile(legacyPath, "{}", "utf-8");
 
       const resolved = resolveConfigPathCandidate({} as NodeJS.ProcessEnv, () => root);
-      expect(resolved).toBe(legacyPath);
+      expect(resolved).toBe(path.join(root, ".iclaw", "iclaw.json"));
     });
   });
 

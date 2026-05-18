@@ -35,7 +35,8 @@ function bundledMusicProviderPluginIds(): string[] {
 }
 
 describe("bundled media-generation provider capabilities", () => {
-  it("tracks every bundled video-generation provider manifest", () => {
+  // media-generation extensions deleted in Bundle 1; src/media-generation removal pending.
+  it.skip("tracks every bundled video-generation provider manifest", () => {
     expect(bundledVideoProviderPluginIds()).toEqual(EXPECTED_BUNDLED_VIDEO_PROVIDER_PLUGIN_IDS);
     for (const entry of BUNDLED_PLUGIN_CONTRACT_SNAPSHOTS.filter(
       (snapshot) => snapshot.videoGenerationProviderIds.length > 0,
@@ -44,7 +45,8 @@ describe("bundled media-generation provider capabilities", () => {
     }
   });
 
-  it("tracks every bundled music-generation provider manifest", () => {
+  // media-generation extensions deleted in Bundle 1; src/media-generation removal pending.
+  it.skip("tracks every bundled music-generation provider manifest", () => {
     expect(bundledMusicProviderPluginIds()).toEqual(EXPECTED_BUNDLED_MUSIC_PROVIDER_PLUGIN_IDS);
     for (const entry of BUNDLED_PLUGIN_CONTRACT_SNAPSHOTS.filter(
       (snapshot) => snapshot.musicGenerationProviderIds.length > 0,

@@ -1,7 +1,5 @@
 import type { Server as HttpServer } from "node:http";
 import { WebSocketServer } from "ws";
-import { CANVAS_HOST_PATH } from "../canvas-host/a2ui.js";
-import { type CanvasHostHandler, createCanvasHostHandler } from "../canvas-host/server.js";
 import type { CliDeps } from "../cli/deps.types.js";
 import type { createSubsystemLogger } from "../logging/subsystem.js";
 import type { PluginRegistry } from "../plugins/registry.js";
@@ -12,11 +10,9 @@ import {
   releasePinnedPluginHttpRouteRegistry,
   resolveActivePluginHttpRouteRegistry,
 } from "../plugins/runtime.js";
-import type { RuntimeEnv } from "../runtime.js";
 import type { AuthRateLimiter } from "./auth-rate-limit.js";
 import type { ResolvedGatewayAuth } from "./auth.js";
 import type { ChatAbortControllerEntry } from "./chat-abort.js";
-import type { ControlUiRootState } from "./control-ui.js";
 import type { HooksConfigResolved } from "./hooks.js";
 import { isLoopbackHost, resolveGatewayListenHosts } from "./net.js";
 import type { GatewayBroadcastFn, GatewayBroadcastToConnIdsFn } from "./server-broadcast-types.js";
@@ -52,9 +48,6 @@ export async function createGatewayRuntimeState(params: {
   cfg: import("../config/config.js").OpenClawConfig;
   bindHost: string;
   port: number;
-  controlUiEnabled: boolean;
-  controlUiBasePath: string;
-  controlUiRoot?: ControlUiRootState;
   openAiChatCompletionsEnabled: boolean;
   openAiChatCompletionsConfig?: import("../config/types.gateway.js").GatewayHttpChatCompletionsConfig;
   openResponsesEnabled: boolean;
@@ -70,16 +63,11 @@ export async function createGatewayRuntimeState(params: {
   pluginRegistry: PluginRegistry;
   pinChannelRegistry?: boolean;
   deps: CliDeps;
-  canvasRuntime: RuntimeEnv;
-  canvasHostEnabled: boolean;
-  allowCanvasHostInTests?: boolean;
-  logCanvas: { info: (msg: string) => void; warn: (msg: string) => void };
   log: { info: (msg: string) => void; warn: (msg: string) => void };
   logHooks: ReturnType<typeof createSubsystemLogger>;
   logPlugins: ReturnType<typeof createSubsystemLogger>;
   getReadiness?: ReadinessChecker;
 }): Promise<{
-  canvasHost: CanvasHostHandler | null;
   releasePluginRouteRegistry: () => void;
   httpServer: HttpServer;
   httpServers: HttpServer[];
@@ -112,27 +100,6 @@ export async function createGatewayRuntimeState(params: {
     releasePinnedPluginChannelRegistry();
   }
   try {
-    let canvasHost: CanvasHostHandler | null = null;
-    if (params.canvasHostEnabled) {
-      try {
-        const handler = await createCanvasHostHandler({
-          runtime: params.canvasRuntime,
-          rootDir: params.cfg.canvasHost?.root,
-          basePath: CANVAS_HOST_PATH,
-          allowInTests: params.allowCanvasHostInTests,
-          liveReload: params.cfg.canvasHost?.liveReload,
-        });
-        if (handler.rootDir) {
-          canvasHost = handler;
-          params.logCanvas.info(
-            `canvas host mounted at http://${params.bindHost}:${params.port}${CANVAS_HOST_PATH}/ (root ${handler.rootDir})`,
-          );
-        }
-      } catch (err) {
-        params.logCanvas.warn(`canvas host failed to start: ${String(err)}`);
-      }
-    }
-
     const clients = new Set<GatewayWsClient>();
     const { broadcast, broadcastToConnIds } = createGatewayBroadcaster({ clients });
 
@@ -182,11 +149,7 @@ export async function createGatewayRuntimeState(params: {
     const httpBindHosts: string[] = [];
     for (const _host of bindHosts) {
       const httpServer = createGatewayHttpServer({
-        canvasHost,
         clients,
-        controlUiEnabled: params.controlUiEnabled,
-        controlUiBasePath: params.controlUiBasePath,
-        controlUiRoot: params.controlUiRoot,
         openAiChatCompletionsEnabled: params.openAiChatCompletionsEnabled,
         openAiChatCompletionsConfig: params.openAiChatCompletionsConfig,
         openResponsesEnabled: params.openResponsesEnabled,
@@ -205,12 +168,9 @@ export async function createGatewayRuntimeState(params: {
       attachGatewayUpgradeHandler({
         httpServer,
         wss,
-        canvasHost,
-        clients,
         preauthConnectionBudget,
         resolvedAuth: params.resolvedAuth,
         getResolvedAuth: params.getResolvedAuth,
-        rateLimiter: params.rateLimiter,
         log: params.log,
       });
       httpServers.push(httpServer);
@@ -271,7 +231,6 @@ export async function createGatewayRuntimeState(params: {
     const toolEventRecipients = createToolEventRecipientRegistry();
 
     return {
-      canvasHost,
       releasePluginRouteRegistry: () => {
         // Releases both pinned HTTP-route and channel registries set at startup.
         releasePinnedPluginHttpRouteRegistry(params.pluginRegistry);

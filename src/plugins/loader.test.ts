@@ -2880,7 +2880,8 @@ module.exports = { id: "throws-after-import", register() {} };`,
     clearPluginInteractiveHandlers();
   });
 
-  it("can scope bundled provider loads to deepseek without hanging", () => {
+  // deepseek provider extension deleted in Bundle 1; scope-load test no longer applies.
+  it.skip("can scope bundled provider loads to deepseek without hanging", () => {
     const scoped = loadOpenClawPlugins({
       cache: false,
       activate: false,

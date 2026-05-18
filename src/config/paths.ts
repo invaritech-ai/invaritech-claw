@@ -1,4 +1,3 @@
-import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { resolveHomeRelativePath, resolveRequiredHomeDir } from "../infra/home-dir.js";
@@ -18,9 +17,9 @@ export function resolveIsNixMode(env: NodeJS.ProcessEnv = process.env): boolean 
 export const isNixMode = resolveIsNixMode();
 
 /**
- * When enabled (`ICLAW_STRICT_HOME=1|true|yes|on`), iclaw never falls back to legacy
- * `~/.openclaw` / `~/.clawdbot` for state or legacy config filenames; config is
- * `~/.iclaw/iclaw.json` (or `ICLAW_STATE_DIR` / `ICLAW_CONFIG_PATH` overrides only).
+ * Legacy compatibility switch retained for config/tooling callers that still check it.
+ * Runtime path resolution is canonical regardless: `~/.iclaw/iclaw.json` unless
+ * `ICLAW_STATE_DIR` or `ICLAW_CONFIG_PATH` is set.
  *
  * Intentionally does not import `infra/env` (matches `isTruthyEnvValue`) to avoid a
  * load cycle with `utils` → `paths` → `env` → … → `utils`.
@@ -41,11 +40,10 @@ export function resolveIclawStrictHome(env: NodeJS.ProcessEnv = process.env): bo
   }
 }
 
-// Legacy state dirs (pre-iclaw defaults and migration sources).
+// Legacy state dirs are migration sources only. Runtime defaults stay canonical.
 const LEGACY_STATE_DIRNAMES = [".clawdbot", ".openclaw"] as const;
 const NEW_STATE_DIRNAME = ".iclaw";
 const CONFIG_FILENAME = "iclaw.json";
-const LEGACY_CONFIG_FILENAMES = ["clawdbot.json", "openclaw.json"] as const;
 
 function resolveDefaultHomeDir(): string {
   return resolveRequiredHomeDir(process.env, os.homedir);
@@ -79,7 +77,7 @@ export function resolveNewStateDir(homedir: () => string = resolveDefaultHomeDir
 /**
  * State directory for mutable data (sessions, logs, caches).
  * Can be overridden via ICLAW_STATE_DIR.
- * Default: ~/.iclaw (falls back to legacy ~/.openclaw or ~/.clawdbot when present).
+ * Default: ~/.iclaw.
  */
 export function resolveStateDir(
   env: NodeJS.ProcessEnv = process.env,
@@ -90,29 +88,7 @@ export function resolveStateDir(
   if (override) {
     return resolveUserPath(override, env, effectiveHomedir);
   }
-  if (resolveIclawStrictHome(env)) {
-    return newStateDir(effectiveHomedir);
-  }
-  const newDir = newStateDir(effectiveHomedir);
-  if (env.ICLAW_TEST_FAST === "1") {
-    return newDir;
-  }
-  const legacyDirs = legacyStateDirs(effectiveHomedir);
-  const hasNew = fs.existsSync(newDir);
-  if (hasNew) {
-    return newDir;
-  }
-  const existingLegacy = legacyDirs.find((dir) => {
-    try {
-      return fs.existsSync(dir);
-    } catch {
-      return false;
-    }
-  });
-  if (existingLegacy) {
-    return existingLegacy;
-  }
-  return newDir;
+  return newStateDir(effectiveHomedir);
 }
 
 function resolveUserPath(
@@ -142,35 +118,17 @@ export function resolveCanonicalConfigPath(
 }
 
 /**
- * Resolve the active config path by preferring existing config candidates
- * before falling back to the canonical path.
+ * Resolve the active config path from canonical iclaw locations and explicit overrides.
  */
 export function resolveConfigPathCandidate(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = envHomedir(env),
 ): string {
-  if (resolveIclawStrictHome(env)) {
-    return resolveCanonicalConfigPath(env, resolveStateDir(env, homedir));
-  }
-  if (env.ICLAW_TEST_FAST === "1") {
-    return resolveCanonicalConfigPath(env, resolveStateDir(env, homedir));
-  }
-  const candidates = resolveDefaultConfigCandidates(env, homedir);
-  const existing = candidates.find((candidate) => {
-    try {
-      return fs.existsSync(candidate);
-    } catch {
-      return false;
-    }
-  });
-  if (existing) {
-    return existing;
-  }
   return resolveCanonicalConfigPath(env, resolveStateDir(env, homedir));
 }
 
 /**
- * Active config path (prefers existing config files).
+ * Active config path.
  */
 export function resolveConfigPath(
   env: NodeJS.ProcessEnv = process.env,
@@ -184,31 +142,6 @@ export function resolveConfigPath(
   if (env.ICLAW_TEST_FAST === "1") {
     return path.join(stateDir, CONFIG_FILENAME);
   }
-  if (resolveIclawStrictHome(env)) {
-    return path.join(stateDir, CONFIG_FILENAME);
-  }
-  const stateOverride = env.ICLAW_STATE_DIR?.trim();
-  const candidates = [
-    path.join(stateDir, CONFIG_FILENAME),
-    ...LEGACY_CONFIG_FILENAMES.map((name) => path.join(stateDir, name)),
-  ];
-  const existing = candidates.find((candidate) => {
-    try {
-      return fs.existsSync(candidate);
-    } catch {
-      return false;
-    }
-  });
-  if (existing) {
-    return existing;
-  }
-  if (stateOverride) {
-    return path.join(stateDir, CONFIG_FILENAME);
-  }
-  const defaultStateDir = resolveStateDir(env, homedir);
-  if (path.resolve(stateDir) === path.resolve(defaultStateDir)) {
-    return resolveConfigPathCandidate(env, homedir);
-  }
   return path.join(stateDir, CONFIG_FILENAME);
 }
 
@@ -216,7 +149,7 @@ export const CONFIG_PATH = resolveConfigPathCandidate();
 
 /**
  * Resolve default config path candidates across default locations.
- * Order: explicit config path → state-dir-derived paths → new default.
+ * Order: explicit config path -> state-dir-derived canonical path -> new default.
  */
 export function resolveDefaultConfigCandidates(
   env: NodeJS.ProcessEnv = process.env,
@@ -232,23 +165,16 @@ export function resolveDefaultConfigCandidates(
     return [path.join(resolveStateDir(env, homedir), CONFIG_FILENAME)];
   }
 
-  const candidates: string[] = [];
   const stateDirOverride = env.ICLAW_STATE_DIR?.trim();
   if (stateDirOverride) {
     const resolved = resolveUserPath(stateDirOverride, env, effectiveHomedir);
-    candidates.push(path.join(resolved, CONFIG_FILENAME));
-    candidates.push(...LEGACY_CONFIG_FILENAMES.map((name) => path.join(resolved, name)));
+    return [path.join(resolved, CONFIG_FILENAME)];
   }
 
-  const defaultDirs = [newStateDir(effectiveHomedir), ...legacyStateDirs(effectiveHomedir)];
-  for (const dir of defaultDirs) {
-    candidates.push(path.join(dir, CONFIG_FILENAME));
-    candidates.push(...LEGACY_CONFIG_FILENAMES.map((name) => path.join(dir, name)));
-  }
-  return candidates;
+  return [path.join(newStateDir(effectiveHomedir), CONFIG_FILENAME)];
 }
 
-/** Default gateway listen port when unset in config and env (iclaw fork; avoids clashing with OpenClaw 18789). */
+/** Default gateway listen port when unset in config and env. */
 export const DEFAULT_GATEWAY_PORT = 32768;
 
 /**

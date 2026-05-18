@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 import { normalizeOptionalString } from "./shared/string-coerce.js";
 
 declare const __ICLAW_VERSION__: string | undefined;
-const CORE_PACKAGE_NAMES = new Set(["openclaw", "iclaw"]);
+const CORE_PACKAGE_NAMES = new Set(["iclaw"]);
 
 const PACKAGE_JSON_CANDIDATES = [
   "../package.json",
@@ -31,7 +31,7 @@ function readVersionFromJsonCandidates(
         if (!version) {
           continue;
         }
-        if (opts.requirePackageName && !CORE_PACKAGE_NAMES.has(String(parsed.name ?? ""))) {
+        if (opts.requirePackageName && !CORE_PACKAGE_NAMES.has(parsed.name ?? "")) {
           continue;
         }
         return version;
@@ -153,7 +153,7 @@ export function resolveCompatibilityHostVersion(
   });
 }
 
-// Single source of truth for the current OpenClaw version.
+// Single source of truth for the current iclaw version.
 // - Embedded/bundled builds: injected define or env var.
 // - Dev/npm builds: package.json.
 export const VERSION = resolveBinaryVersion({

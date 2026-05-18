@@ -153,16 +153,16 @@
 
 ### Paths — TUI-only fork note
 
-| Path                                   | Purpose                      | Auth                              | TUI-only fork                                                                    |
-| -------------------------------------- | ---------------------------- | --------------------------------- | -------------------------------------------------------------------------------- |
-| `/{controlUi.basePath}/` (often `/`)   | Control UI SPA               | Operator control-ui read gate     | **Remove** when product is TUI-only (no browser operator UI).                    |
-| `/__openclaw__/control-ui-config.json` | Control UI bootstrap JSON    | Same                              | **Remove** with Control UI.                                                      |
-| `/__openclaw__/assistant-media`        | Assistant media previews     | Operator auth                     | **Remove** with Control UI.                                                      |
-| `/{basePath}/avatar/{agentId}`         | Avatars                      | Operator auth                     | **Remove** with Control UI.                                                      |
-| `/__openclaw__/a2ui`                   | A2UI static bundle           | Canvas auth (token or capability) | **Keep** per slim-gateway canvas goal unless Phase 4 drops all canvas consumers. |
-| `/__openclaw__/canvas`                 | User canvas documents        | Canvas auth                       | **Keep** / **slim** per `canvasHost` usage in Phase 4.                           |
-| `/__openclaw__/ws`                     | Canvas live reload / WS lane | Canvas auth                       | Tied to A2UI/canvas; drop only if canvas stack removed.                          |
-| `/__openclaw__/cap/<token>/...`        | Scoped canvas URLs           | Capability + live client          | **Keep** only if node-embedded canvas remains.                                   |
+| Path                                   | Purpose                      | Auth                              | TUI-only fork                                                                                       |
+| -------------------------------------- | ---------------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `/{controlUi.basePath}/` (often `/`)   | Control UI SPA               | Operator control-ui read gate     | **Remove** when product is TUI-only (no browser operator UI).                                       |
+| `/__openclaw__/control-ui-config.json` | Control UI bootstrap JSON    | Same                              | **Remove** with Control UI.                                                                         |
+| `/__openclaw__/assistant-media`        | Assistant media previews     | Operator auth                     | **Remove** with Control UI.                                                                         |
+| `/{basePath}/avatar/{agentId}`         | Avatars                      | Operator auth                     | **Remove** with Control UI.                                                                         |
+| `/__openclaw__/a2ui`                   | A2UI static bundle           | Canvas auth (token or capability) | **Keep** per slim-gateway canvas goal unless the surface-trimming phase drops all canvas consumers. |
+| `/__openclaw__/canvas`                 | User canvas documents        | Canvas auth                       | **Keep** / **slim** per `canvasHost` usage in the surface-trimming phase.                           |
+| `/__openclaw__/ws`                     | Canvas live reload / WS lane | Canvas auth                       | Tied to A2UI/canvas; drop only if canvas stack removed.                                             |
+| `/__openclaw__/cap/<token>/...`        | Scoped canvas URLs           | Capability + live client          | **Keep** only if node-embedded canvas remains.                                                      |
 
 ---
 
@@ -281,7 +281,7 @@
 | `zalo`                     | `@openclaw/zalo`                           | channel   | `zalo`                  |                            |
 | `zalouser`                 | `@openclaw/zalouser`                       | channel   | `zalouser`              |                            |
 
-**Non-package siblings (explore summary):** `active-memory/`, `device-pair/`, `phone-control/`, `thread-ownership/`, `talk-voice/` (manifest-only), `shared/`, `test-support/`, plus docs/config under `extensions/`. Re-audit when deleting extensions in Phase 2+.
+**Non-package siblings (explore summary):** `active-memory/`, `device-pair/`, `phone-control/`, `thread-ownership/`, `talk-voice/` (manifest-only), `shared/`, `test-support/`, plus docs/config under `extensions/`. Re-audit when trimming the remaining extension surface in the later product-surface phases.
 
 ---
 
@@ -314,10 +314,10 @@ Source: [`plans/2026-04-26-iclaw-hard-fork-design.md`](plans/2026-04-26-iclaw-ha
    **Decision:** Both. **Remote:** `GatewayChatClient` over WebSocket (default when not `--local` and not `terminal`/`chat` alias). **Embedded:** `EmbeddedTuiBackend` with `--local` or those aliases; uses in-process `src/gateway/**` modules (no separate gateway process).
 
 2. **Remove Control UI HTTP entirely vs keep only canvas/A2UI?**  
-   **Decision (direction):** For **TUI-only product**, **remove** Control UI routes (SPA, bootstrap, assistant-media, avatar) in a later **slim gateway** phase. **Retain** `__openclaw__` canvas/A2UI/canvas-host paths per slim-gateway design until Phase 4 narrows HTTP surface. Path renames (`__openclaw__` → `__iclaw__`) belong to rebrand phases, not Phase 0.
+   **Decision (direction):** For **TUI-only product**, **remove** Control UI routes (SPA, bootstrap, assistant-media, avatar) in a later **slim gateway** phase. **Retain** `__openclaw__` canvas/A2UI/canvas-host paths per slim-gateway design until the surface-trimming phase narrows HTTP surface. Path renames (`__openclaw__` → `__iclaw__`) belong to rebrand phases, not Phase 0.
 
 3. **Memory plugins (`memory-core`, etc.) — in or out for v1?**  
-   **Still open — recommend Phase 3+ product call.** Fork contract limits **providers** to Ollama + OpenRouter; memory plugins are not LLM providers. **Default:** keep inventory and defer “memory in/out” until provider/channel deletion stabilizes; document dependency if agents rely on memory tools in your preset.
+   **Still open — recommend a later product call.** Fork contract limits **providers** to Ollama + OpenRouter; memory plugins are not LLM providers. **Default:** keep inventory and defer “memory in/out” until provider and surface cleanup stabilizes; document dependency if agents rely on memory tools in your preset.
 
 ---
 

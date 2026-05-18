@@ -17,17 +17,14 @@ describe("channel registry helpers", () => {
     resetPluginRuntimeStateForTest();
   });
 
-  it("keeps Feishu first in the current default order", () => {
-    const channels = listChatChannels();
-    expect(channels[0]?.id).toBe("feishu");
-  });
+  // feishu/msteams/telegram extensions deleted in Bundle 1; src/channels trim pending in Bundle 2.
+  it.skip("keeps Feishu first in the current default order", () => {});
 
-  it("includes MS Teams in the bundled channel list", () => {
-    const channels = listChatChannels();
-    expect(channels.some((channel) => channel.id === "msteams")).toBe(true);
-  });
+  // feishu/msteams/telegram extensions deleted in Bundle 1; src/channels trim pending in Bundle 2.
+  it.skip("includes MS Teams in the bundled channel list", () => {});
 
-  it("formats Telegram selection lines without a docs prefix and with website extras", () => {
+  // feishu/msteams/telegram extensions deleted in Bundle 1; src/channels trim pending in Bundle 2.
+  it.skip("formats Telegram selection lines without a docs prefix and with website extras", () => {
     const telegram = listChatChannels().find((channel) => channel.id === "telegram");
     if (!telegram) {
       throw new Error("Missing Telegram channel metadata.");

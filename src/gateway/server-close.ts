@@ -1,7 +1,6 @@
 import type { Server as HttpServer } from "node:http";
 import type { WebSocketServer } from "ws";
 import { disposeRegisteredAgentHarnesses } from "../agents/harness/registry.js";
-import type { CanvasHostHandler, CanvasHostServer } from "../canvas-host/server.js";
 import { type ChannelId, listChannelPlugins } from "../channels/plugins/index.js";
 import { stopGmailWatcher } from "../hooks/gmail-watcher.js";
 import type { HeartbeatRunner } from "../infra/heartbeat-runner.js";
@@ -76,8 +75,6 @@ function isServerNotRunningError(err: unknown): boolean {
 export function createGatewayCloseHandler(params: {
   bonjourStop: (() => Promise<void>) | null;
   tailscaleCleanup: (() => Promise<void>) | null;
-  canvasHost: CanvasHostHandler | null;
-  canvasHostServer: CanvasHostServer | null;
   releasePluginRouteRegistry?: (() => void) | null;
   stopChannel: (name: ChannelId, accountId?: string) => Promise<void>;
   pluginServices: PluginServicesHandle | null;
@@ -119,20 +116,6 @@ export function createGatewayCloseHandler(params: {
       }
       if (params.tailscaleCleanup) {
         await params.tailscaleCleanup();
-      }
-      if (params.canvasHost) {
-        try {
-          await params.canvasHost.close();
-        } catch {
-          /* ignore */
-        }
-      }
-      if (params.canvasHostServer) {
-        try {
-          await params.canvasHostServer.close();
-        } catch {
-          /* ignore */
-        }
       }
       for (const plugin of listChannelPlugins()) {
         await params.stopChannel(plugin.id);
