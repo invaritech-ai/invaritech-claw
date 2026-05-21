@@ -7,6 +7,12 @@ type OpenRouterProviderInput = {
 };
 
 const OPENROUTER_DEFAULT_BASE_URL = "https://openrouter.ai/api/v1";
+type ToolCallState = {
+  name?: string;
+  callId?: string;
+  argumentsText: string;
+  emitted: boolean;
+};
 
 function parseMaybeJson(value: string | undefined): unknown {
   if (!value) {
@@ -23,42 +29,115 @@ function parseMaybeJson(value: string | undefined): unknown {
   }
 }
 
-function readToolCallDelta(choice: unknown): ModelStreamEvent[] {
+function readToolCallDelta(choice: unknown, toolCallStates: Map<number, ToolCallState>): void {
   if (!choice || typeof choice !== "object") {
-    return [];
+    return;
   }
   const delta = (choice as { delta?: unknown }).delta;
   if (!delta || typeof delta !== "object") {
-    return [];
+    return;
   }
   const toolCalls = (delta as { tool_calls?: unknown }).tool_calls;
   if (!Array.isArray(toolCalls)) {
-    return [];
+    return;
   }
 
-  const events: ModelStreamEvent[] = [];
-  for (const item of toolCalls) {
+  for (const [toolCallArrayIndex, item] of toolCalls.entries()) {
     if (!item || typeof item !== "object") {
       continue;
     }
+    const indexValue = (item as { index?: unknown }).index;
+    const toolCallIndex =
+      typeof indexValue === "number" && Number.isInteger(indexValue)
+        ? indexValue
+        : toolCallArrayIndex;
+
+    const existing = toolCallStates.get(toolCallIndex);
+    const toolCallState: ToolCallState = existing ?? {
+      argumentsText: "",
+      emitted: false,
+    };
+
+    const callId = (item as { id?: unknown }).id;
+    if (typeof callId === "string" && callId.trim().length > 0) {
+      toolCallState.callId = callId;
+    }
+
     const fn = (item as { function?: unknown }).function;
     if (!fn || typeof fn !== "object") {
+      toolCallStates.set(toolCallIndex, toolCallState);
       continue;
     }
     const name = (fn as { name?: unknown }).name;
-    if (typeof name !== "string" || name.trim().length === 0) {
+    if (typeof name === "string" && name.trim().length > 0) {
+      toolCallState.name = name;
+    }
+    const argsFragment = (fn as { arguments?: unknown }).arguments;
+    if (typeof argsFragment === "string") {
+      toolCallState.argumentsText += argsFragment;
+    }
+
+    toolCallStates.set(toolCallIndex, toolCallState);
+  }
+}
+
+function flushPendingToolCalls(toolCallStates: Map<number, ToolCallState>): ModelStreamEvent[] {
+  const events: ModelStreamEvent[] = [];
+  for (const toolCallState of toolCallStates.values()) {
+    if (!toolCallState.name || toolCallState.emitted) {
       continue;
     }
-    const args = parseMaybeJson((fn as { arguments?: unknown }).arguments as string | undefined);
-    const callId = (item as { id?: unknown }).id;
+    const argumentsValue = parseMaybeJson(toolCallState.argumentsText);
     events.push({
       type: "tool_call",
-      name,
-      arguments: args,
-      callId: typeof callId === "string" && callId.trim().length > 0 ? callId : undefined,
+      name: toolCallState.name,
+      arguments: argumentsValue,
+      callId: toolCallState.callId,
     });
+    toolCallState.emitted = true;
   }
   return events;
+}
+
+function readFinishReason(choice: unknown): string | null {
+  if (!choice || typeof choice !== "object") {
+    return null;
+  }
+  const finishReason = (choice as { finish_reason?: unknown }).finish_reason;
+  return typeof finishReason === "string" ? finishReason : null;
+}
+
+function findSseEventBoundary(buffer: string): { index: number; separatorLength: number } | null {
+  const lfBoundary = buffer.indexOf("\n\n");
+  const crlfBoundary = buffer.indexOf("\r\n\r\n");
+  if (lfBoundary === -1 && crlfBoundary === -1) {
+    return null;
+  }
+  if (lfBoundary === -1) {
+    return { index: crlfBoundary, separatorLength: 4 };
+  }
+  if (crlfBoundary === -1) {
+    return { index: lfBoundary, separatorLength: 2 };
+  }
+  if (crlfBoundary <= lfBoundary) {
+    return { index: crlfBoundary, separatorLength: 4 };
+  }
+  return { index: lfBoundary, separatorLength: 2 };
+}
+
+function extractSseDataLines(rawEvent: string): string[] {
+  const dataLines: string[] = [];
+  for (const line of rawEvent.split(/\r?\n/u)) {
+    if (!line.startsWith("data:")) {
+      continue;
+    }
+    let value = line.slice("data:".length);
+    if (value.startsWith(" ")) {
+      value = value.slice(1);
+    }
+    dataLines.push(value);
+  }
+  return dataLines;
 }
 
 function readTextDelta(choice: unknown): string | null {
@@ -86,16 +165,13 @@ async function* iterateSseData(body: ReadableStream<Uint8Array>): AsyncIterable<
     buffer += decoder.decode(value, { stream: true });
 
     while (true) {
-      const boundary = buffer.indexOf("\n\n");
-      if (boundary === -1) {
+      const boundary = findSseEventBoundary(buffer);
+      if (!boundary) {
         break;
       }
-      const rawEvent = buffer.slice(0, boundary);
-      buffer = buffer.slice(boundary + 2);
-      const dataLines = rawEvent
-        .split("\n")
-        .filter((line) => line.startsWith("data: "))
-        .map((line) => line.slice("data: ".length));
+      const rawEvent = buffer.slice(0, boundary.index);
+      buffer = buffer.slice(boundary.index + boundary.separatorLength);
+      const dataLines = extractSseDataLines(rawEvent);
       if (dataLines.length > 0) {
         yield dataLines.join("\n");
       }
@@ -104,10 +180,7 @@ async function* iterateSseData(body: ReadableStream<Uint8Array>): AsyncIterable<
 
   const trailing = buffer.trim();
   if (trailing.length > 0) {
-    const dataLines = trailing
-      .split("\n")
-      .filter((line) => line.startsWith("data: "))
-      .map((line) => line.slice("data: ".length));
+    const dataLines = extractSseDataLines(trailing);
     if (dataLines.length > 0) {
       yield dataLines.join("\n");
     }
@@ -121,6 +194,7 @@ export function createOpenRouterProvider(input: OpenRouterProviderInput): ModelP
   return {
     id: "openrouter",
     async *stream(streamInput: ModelStreamInput): AsyncIterable<ModelStreamEvent> {
+      const pendingToolCalls = new Map<number, ToolCallState>();
       const response = await fetchFn(`${baseUrl}/chat/completions`, {
         method: "POST",
         headers: {
@@ -143,7 +217,7 @@ export function createOpenRouterProvider(input: OpenRouterProviderInput): ModelP
       }
 
       for await (const data of iterateSseData(response.body)) {
-        if (data === "[DONE]") {
+        if (data.trim() === "[DONE]") {
           break;
         }
 
@@ -154,10 +228,17 @@ export function createOpenRouterProvider(input: OpenRouterProviderInput): ModelP
           if (textDelta) {
             yield { type: "output_text_delta", text: textDelta };
           }
-          for (const event of readToolCallDelta(choice)) {
-            yield event;
+          readToolCallDelta(choice, pendingToolCalls);
+          if (readFinishReason(choice) === "tool_calls") {
+            for (const event of flushPendingToolCalls(pendingToolCalls)) {
+              yield event;
+            }
           }
         }
+      }
+
+      for (const event of flushPendingToolCalls(pendingToolCalls)) {
+        yield event;
       }
 
       yield { type: "done" };
