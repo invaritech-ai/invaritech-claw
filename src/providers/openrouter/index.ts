@@ -107,6 +107,17 @@ function readFinishReason(choice: unknown): string | null {
   return typeof finishReason === "string" ? finishReason : null;
 }
 
+function readErrorMessage(value: unknown): string | null {
+  if (!value || typeof value !== "object") {
+    return null;
+  }
+  const message = (value as { message?: unknown }).message;
+  if (typeof message === "string" && message.trim().length > 0) {
+    return message;
+  }
+  return null;
+}
+
 function findSseEventBoundary(buffer: string): { index: number; separatorLength: number } | null {
   const lfBoundary = buffer.indexOf("\n\n");
   const crlfBoundary = buffer.indexOf("\r\n\r\n");
@@ -221,9 +232,21 @@ export function createOpenRouterProvider(input: OpenRouterProviderInput): ModelP
           break;
         }
 
-        const parsed = JSON.parse(data) as { choices?: unknown };
+        const parsed = JSON.parse(data) as { choices?: unknown; error?: unknown };
+        const topLevelErrorMessage = readErrorMessage(parsed.error);
+        if (topLevelErrorMessage) {
+          throw new Error(`openrouter stream failed: ${topLevelErrorMessage}`);
+        }
         const choices = Array.isArray(parsed.choices) ? parsed.choices : [];
         for (const choice of choices) {
+          if (readFinishReason(choice) === "error") {
+            const choiceErrorMessage = readErrorMessage((choice as { error?: unknown }).error);
+            throw new Error(
+              choiceErrorMessage
+                ? `openrouter stream failed: ${choiceErrorMessage}`
+                : "openrouter stream failed: finish_reason=error",
+            );
+          }
           const textDelta = readTextDelta(choice);
           if (textDelta) {
             yield { type: "output_text_delta", text: textDelta };

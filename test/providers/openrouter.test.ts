@@ -165,4 +165,36 @@ describe("openrouter provider", () => {
       { type: "done" },
     ]);
   });
+
+  it("throws when the stream returns an error chunk", async () => {
+    const fetchFn = vi.fn(async () => {
+      const body = createSseBody([
+        JSON.stringify({
+          choices: [{ delta: { content: "partial" } }],
+        }),
+        JSON.stringify({
+          error: { message: "upstream overloaded" },
+        }),
+      ]);
+
+      return new Response(body, {
+        status: 200,
+        headers: { "content-type": "text/event-stream" },
+      });
+    });
+
+    const provider = createOpenRouterProvider({
+      apiKey: "or-test-key",
+      fetchFn,
+    });
+
+    await expect(async () => {
+      for await (const _event of provider.stream({
+        model: "anthropic/claude-sonnet-4.6",
+        messages: [{ role: "user", content: "hello" }],
+      })) {
+        // consume
+      }
+    }).rejects.toThrow("openrouter stream failed: upstream overloaded");
+  });
 });
