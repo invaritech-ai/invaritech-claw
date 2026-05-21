@@ -90,22 +90,33 @@ export function updateRunStatus(
     finishedAtMs?: number | null;
   },
 ): void {
+  const hasResultJson = params.resultJson !== undefined;
+  const hasErrorJson = params.errorJson !== undefined;
+  const hasApprovalId = params.approvalId !== undefined;
+  const hasStartedAtMs = params.startedAtMs !== undefined;
+  const hasFinishedAtMs = params.finishedAtMs !== undefined;
+
   db.prepare(
     `UPDATE runs
      SET status = ?,
-         result_json = ?,
-         error_json = ?,
-         approval_id = ?,
-         started_at_ms = ?,
-         finished_at_ms = ?
+         result_json = CASE WHEN ? THEN ? ELSE result_json END,
+         error_json = CASE WHEN ? THEN ? ELSE error_json END,
+         approval_id = CASE WHEN ? THEN ? ELSE approval_id END,
+         started_at_ms = CASE WHEN ? THEN ? ELSE started_at_ms END,
+         finished_at_ms = CASE WHEN ? THEN ? ELSE finished_at_ms END
      WHERE id = ?`,
   ).run(
     params.status,
-    params.resultJson ?? null,
-    params.errorJson ?? null,
-    params.approvalId ?? null,
-    params.startedAtMs ?? null,
-    params.finishedAtMs ?? null,
+    hasResultJson ? 1 : 0,
+    hasResultJson ? params.resultJson : null,
+    hasErrorJson ? 1 : 0,
+    hasErrorJson ? params.errorJson : null,
+    hasApprovalId ? 1 : 0,
+    hasApprovalId ? params.approvalId : null,
+    hasStartedAtMs ? 1 : 0,
+    hasStartedAtMs ? params.startedAtMs : null,
+    hasFinishedAtMs ? 1 : 0,
+    hasFinishedAtMs ? params.finishedAtMs : null,
     params.runId,
   );
 }

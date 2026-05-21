@@ -1,6 +1,7 @@
 import type { DatabaseSync } from "node:sqlite";
 
 const V1_MIGRATION_ID = "2026-05-18-v1";
+const V2_MIGRATION_ID = "2026-05-21-run-idempotency-trigger-id-normalize";
 
 type MigrationDefinition = {
   id: string;
@@ -35,7 +36,7 @@ CREATE TABLE runs (
 );
 CREATE INDEX idx_runs_agent_created ON runs(agent_id, created_at_ms DESC);
 CREATE INDEX idx_runs_status_created ON runs(status, created_at_ms DESC);
-CREATE UNIQUE INDEX idx_runs_idempotency ON runs(trigger_type, trigger_id, idempotency_key) WHERE idempotency_key IS NOT NULL;
+CREATE UNIQUE INDEX idx_runs_idempotency ON runs(trigger_type, COALESCE(trigger_id, ''), idempotency_key) WHERE idempotency_key IS NOT NULL;
 CREATE TABLE run_events (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   run_id TEXT NOT NULL,
@@ -115,6 +116,13 @@ CREATE TABLE kv_state (
 );
 `,
   },
+  {
+    id: V2_MIGRATION_ID,
+    sql: `
+DROP INDEX IF EXISTS idx_runs_idempotency;
+CREATE UNIQUE INDEX idx_runs_idempotency ON runs(trigger_type, COALESCE(trigger_id, ''), idempotency_key) WHERE idempotency_key IS NOT NULL;
+`,
+  },
 ];
 
 function hasSchemaMigrationsTable(db: DatabaseSync): boolean {
@@ -164,4 +172,4 @@ export function runMigrations(db: DatabaseSync): void {
   }
 }
 
-export { V1_MIGRATION_ID };
+export { V1_MIGRATION_ID, V2_MIGRATION_ID };
