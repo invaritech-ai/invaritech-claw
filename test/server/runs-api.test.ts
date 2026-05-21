@@ -162,4 +162,46 @@ describe("runs API routes", () => {
       expect(cancelledRun.status).toBe("cancelled");
     });
   });
+
+  it("returns deterministic 409 for duplicate create conflicts", async () => {
+    if (listenBlocked) {
+      return;
+    }
+
+    await withLoopbackEnv(async () => {
+      const first = await fetch(`${baseUrl}/runs`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          agentId: "main",
+          triggerType: "api",
+          triggerId: "req-1",
+          idempotencyKey: "idem-1",
+          input: { text: "hello" },
+        }),
+      });
+      expect(first.status).toBe(201);
+    });
+
+    await withLoopbackEnv(async () => {
+      const second = await fetch(`${baseUrl}/runs`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          agentId: "main",
+          triggerType: "api",
+          triggerId: "req-1",
+          idempotencyKey: "idem-1",
+          input: { text: "hello again" },
+        }),
+      });
+      expect(second.status).toBe(409);
+      const payload = (await second.json()) as {
+        error: { code: string; reason: string; message: string };
+      };
+      expect(payload.error.code).toBe("run_conflict");
+      expect(payload.error.reason).toBe("duplicate_idempotency");
+      expect(payload.error.message).toBe("run idempotency key already exists");
+    });
+  });
 });

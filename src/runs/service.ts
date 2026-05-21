@@ -11,6 +11,82 @@ import {
 import type { RunEventRecord, RunRecord } from "../storage/schema.js";
 import type { AppendRunEventInput, CreateRunInput, ListRunsInput, Run, RunEvent } from "./types.js";
 
+type SqliteError = Error & {
+  code?: string;
+  errno?: number;
+  errcode?: number;
+  errstr?: string;
+};
+
+export class RunConflictError extends Error {
+  code = "run_conflict" as const;
+  reason: "duplicate_run_id" | "duplicate_idempotency";
+
+  constructor(reason: "duplicate_run_id" | "duplicate_idempotency") {
+    super(
+      reason === "duplicate_run_id"
+        ? "run id already exists"
+        : "run idempotency key already exists",
+    );
+    this.name = "RunConflictError";
+    this.reason = reason;
+  }
+}
+
+export class RunNotFoundError extends Error {
+  code = "run_not_found" as const;
+  runId: string;
+
+  constructor(runId: string) {
+    super(`run not found: ${runId}`);
+    this.name = "RunNotFoundError";
+    this.runId = runId;
+  }
+}
+
+export function isRunConflictError(error: unknown): error is RunConflictError {
+  return error instanceof RunConflictError;
+}
+
+export function isRunNotFoundError(error: unknown): error is RunNotFoundError {
+  return error instanceof RunNotFoundError;
+}
+
+function isSqliteConstraintError(error: unknown): error is SqliteError {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+  const sqliteError = error as SqliteError;
+  if (typeof sqliteError.code === "string" && sqliteError.code.startsWith("SQLITE_CONSTRAINT")) {
+    return true;
+  }
+  if (sqliteError.errstr?.toLowerCase() === "constraint failed") {
+    return true;
+  }
+  return sqliteError.errcode === 2067 || sqliteError.errcode === 1555;
+}
+
+function mapCreateConflictError(error: unknown): RunConflictError | undefined {
+  if (!isSqliteConstraintError(error)) {
+    return undefined;
+  }
+  const message = error.message.toLowerCase();
+  if (message.includes("runs.id")) {
+    return new RunConflictError("duplicate_run_id");
+  }
+  if (message.includes("idx_runs_idempotency") || message.includes("idempotency")) {
+    return new RunConflictError("duplicate_idempotency");
+  }
+  return new RunConflictError("duplicate_idempotency");
+}
+
+function getNextRunEventSeq(db: DatabaseSync, runId: string): number {
+  const row = db
+    .prepare("SELECT COALESCE(MAX(seq), 0) AS max_seq FROM run_events WHERE run_id = ?")
+    .get(runId) as { max_seq: number };
+  return row.max_seq + 1;
+}
+
 function serializeJson(value: unknown): string {
   const serialized = JSON.stringify(value);
   return serialized === undefined ? "null" : serialized;
@@ -87,7 +163,15 @@ export function createRunService(db: DatabaseSync) {
         startedAtMs: null,
         finishedAtMs: null,
       };
-      insertRun(db, record);
+      try {
+        insertRun(db, record);
+      } catch (error) {
+        const conflict = mapCreateConflictError(error);
+        if (conflict) {
+          throw conflict;
+        }
+        throw error;
+      }
       return mapRunRecord(record);
     },
 
@@ -101,7 +185,11 @@ export function createRunService(db: DatabaseSync) {
     },
 
     appendEvent(runId: string, event: AppendRunEventInput): RunEvent {
-      const nextSeq = event.seq ?? listRunEvents(db, runId).length + 1;
+      const run = getRunById(db, runId);
+      if (!run) {
+        throw new RunNotFoundError(runId);
+      }
+      const nextSeq = event.seq ?? getNextRunEventSeq(db, runId);
       const created = appendRunEvent(db, {
         runId,
         seq: nextSeq,

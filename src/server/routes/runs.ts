@@ -1,5 +1,5 @@
 import type { Express } from "express";
-import type { RunService } from "../../runs/service.js";
+import { isRunConflictError, type RunService } from "../../runs/service.js";
 import type { RunTriggerType } from "../../storage/schema.js";
 
 const RUN_TRIGGER_TYPES: ReadonlySet<RunTriggerType> = new Set([
@@ -58,15 +58,28 @@ export function attachRunRoutes(app: Express, runService: RunService): void {
       return;
     }
 
-    const run = runService.createRun({
-      agentId,
-      triggerType: body.triggerType,
-      triggerId: asOptionalString(body.triggerId),
-      input: body.input,
-      idempotencyKey: asOptionalString(body.idempotencyKey),
-    });
-
-    res.status(201).json(run);
+    try {
+      const run = runService.createRun({
+        agentId,
+        triggerType: body.triggerType,
+        triggerId: asOptionalString(body.triggerId),
+        input: body.input,
+        idempotencyKey: asOptionalString(body.idempotencyKey),
+      });
+      res.status(201).json(run);
+    } catch (error) {
+      if (isRunConflictError(error)) {
+        res.status(409).json({
+          error: {
+            code: error.code,
+            reason: error.reason,
+            message: error.message,
+          },
+        });
+        return;
+      }
+      throw error;
+    }
   });
 
   app.get("/runs", (req, res) => {
