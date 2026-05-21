@@ -83,12 +83,11 @@ export function resolveStateDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = envHomedir(env),
 ): string {
-  const effectiveHomedir = () => resolveRequiredHomeDir(env, homedir);
   const override = env.ICLAW_STATE_DIR?.trim();
   if (override) {
-    return resolveUserPath(override, env, effectiveHomedir);
+    return override;
   }
-  return newStateDir(effectiveHomedir);
+  return newStateDir(() => resolveRequiredHomeDir(env, homedir));
 }
 
 function resolveUserPath(
@@ -133,11 +132,11 @@ export function resolveConfigPathCandidate(
 export function resolveConfigPath(
   env: NodeJS.ProcessEnv = process.env,
   stateDir: string = resolveStateDir(env, envHomedir(env)),
-  homedir: () => string = envHomedir(env),
+  _homedir: () => string = envHomedir(env),
 ): string {
   const override = env.ICLAW_CONFIG_PATH?.trim();
   if (override) {
-    return resolveUserPath(override, env, homedir);
+    return override;
   }
   if (env.ICLAW_TEST_FAST === "1") {
     return path.join(stateDir, CONFIG_FILENAME);
@@ -151,7 +150,7 @@ export function resolveSqlitePath(
 ): string {
   const override = env.ICLAW_SQLITE_PATH?.trim();
   if (override) {
-    return resolveUserPath(override, env, envHomedir(env));
+    return override;
   }
   return path.join(stateDir, "state.sqlite");
 }
