@@ -65,6 +65,13 @@ export function getScheduleById(db: DatabaseSync, scheduleId: string): ScheduleR
   return row ? mapScheduleRow(row) : undefined;
 }
 
+export function listSchedules(db: DatabaseSync, limit = 100): ScheduleRecord[] {
+  const rows = db
+    .prepare("SELECT * FROM schedules ORDER BY created_at_ms DESC LIMIT ?")
+    .all(limit) as ScheduleRow[];
+  return rows.map(mapScheduleRow);
+}
+
 export function listDueSchedules(db: DatabaseSync, nowMs: number, limit = 100): ScheduleRecord[] {
   const rows = db
     .prepare(
@@ -91,4 +98,8 @@ export function updateScheduleRunState(
      SET last_run_id = ?, next_run_at_ms = ?, updated_at_ms = ?
      WHERE id = ?`,
   ).run(params.lastRunId, params.nextRunAtMs, params.updatedAtMs, params.scheduleId);
+}
+
+export function deleteSchedule(db: DatabaseSync, scheduleId: string): void {
+  db.prepare("DELETE FROM schedules WHERE id = ?").run(scheduleId);
 }
