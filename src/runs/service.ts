@@ -3,6 +3,7 @@ import type { DatabaseSync } from "node:sqlite";
 import {
   appendRunEvent,
   getRunById,
+  getRunByTriggerIdempotencyKey,
   insertRun,
   listRunEvents,
   listRunsByAgent,
@@ -177,6 +178,15 @@ export function createRunService(db: DatabaseSync) {
 
     getRun(runId: string): Run | undefined {
       const record = getRunById(db, runId);
+      return record ? mapRunRecord(record) : undefined;
+    },
+
+    getRunByTriggerIdempotencyKey(input: {
+      triggerType: RunRecord["triggerType"];
+      triggerId: string | null;
+      idempotencyKey: string;
+    }): Run | undefined {
+      const record = getRunByTriggerIdempotencyKey(db, input);
       return record ? mapRunRecord(record) : undefined;
     },
 

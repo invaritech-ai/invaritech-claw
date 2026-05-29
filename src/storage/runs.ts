@@ -126,6 +126,25 @@ export function getRunById(db: DatabaseSync, runId: string): RunRecord | undefin
   return row ? mapRunRow(row) : undefined;
 }
 
+export function getRunByTriggerIdempotencyKey(
+  db: DatabaseSync,
+  params: {
+    triggerType: RunRecord["triggerType"];
+    triggerId: string | null;
+    idempotencyKey: string;
+  },
+): RunRecord | undefined {
+  const row = db
+    .prepare(
+      `SELECT * FROM runs
+       WHERE trigger_type = ?
+         AND COALESCE(trigger_id, '') = COALESCE(?, '')
+         AND idempotency_key = ?`,
+    )
+    .get(params.triggerType, params.triggerId, params.idempotencyKey) as RunRow | undefined;
+  return row ? mapRunRow(row) : undefined;
+}
+
 export function listRunsByAgent(db: DatabaseSync, agentId: string, limit = 100): RunRecord[] {
   const rows = db
     .prepare("SELECT * FROM runs WHERE agent_id = ? ORDER BY created_at_ms DESC LIMIT ?")

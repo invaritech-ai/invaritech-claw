@@ -72,6 +72,13 @@ export function getWebhookById(db: DatabaseSync, webhookId: string): WebhookReco
   return row ? mapWebhookRow(row) : undefined;
 }
 
+export function listWebhooks(db: DatabaseSync, limit = 100): WebhookRecord[] {
+  const rows = db
+    .prepare("SELECT * FROM webhooks ORDER BY created_at_ms DESC LIMIT ?")
+    .all(limit) as WebhookRow[];
+  return rows.map(mapWebhookRow);
+}
+
 export function getWebhookByPath(db: DatabaseSync, webhookPath: string): WebhookRecord | undefined {
   const row = db.prepare("SELECT * FROM webhooks WHERE path = ?").get(webhookPath) as
     | WebhookRow
@@ -103,5 +110,16 @@ export function getWebhookDeliveryById(
   const row = db.prepare("SELECT * FROM webhook_deliveries WHERE id = ?").get(deliveryId) as
     | WebhookDeliveryRow
     | undefined;
+  return row ? mapWebhookDeliveryRow(row) : undefined;
+}
+
+export function getWebhookDeliveryByIdempotencyKey(
+  db: DatabaseSync,
+  webhookId: string,
+  idempotencyKey: string,
+): WebhookDeliveryRecord | undefined {
+  const row = db
+    .prepare("SELECT * FROM webhook_deliveries WHERE webhook_id = ? AND idempotency_key = ?")
+    .get(webhookId, idempotencyKey) as WebhookDeliveryRow | undefined;
   return row ? mapWebhookDeliveryRow(row) : undefined;
 }
