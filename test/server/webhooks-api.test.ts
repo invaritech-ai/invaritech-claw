@@ -26,8 +26,10 @@ async function startServer(): Promise<{ baseUrl: string; close: () => Promise<vo
   const app = express();
   app.use(express.json());
   attachWebhookRoutes(app, webhooks);
-  const server = await new Promise<Server>((resolve) => {
-    const srv = app.listen(0, "127.0.0.1", () => resolve(srv));
+  const server = await new Promise<Server>((resolve, reject) => {
+    const srv = app.listen(0, "127.0.0.1");
+    srv.once("listening", () => resolve(srv));
+    srv.once("error", reject);
   });
   const address = server.address() as AddressInfo;
   return {

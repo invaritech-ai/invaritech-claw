@@ -21,7 +21,7 @@ function createSseBody(events: string[], options: SseBodyOptions = {}): Readable
 
 describe("openrouter provider", () => {
   it("posts to OpenRouter chat completions with auth and streams deltas", async () => {
-    const fetchFn = vi.fn(async () => {
+    const fetchFn = vi.fn(async (_url: Parameters<typeof fetch>[0], _init?: RequestInit) => {
       const body = createSseBody([
         JSON.stringify({
           choices: [{ delta: { content: "Hello" } }],
@@ -89,7 +89,7 @@ describe("openrouter provider", () => {
   });
 
   it("handles CRLF framing and split tool call deltas", async () => {
-    const fetchFn = vi.fn(async () => {
+    const fetchFn = vi.fn(async (_url: Parameters<typeof fetch>[0], _init?: RequestInit) => {
       const body = createSseBody(
         [
           JSON.stringify({

@@ -14,8 +14,9 @@ function createNdjsonBody(rows: Array<Record<string, unknown>>): ReadableStream<
 
 describe("ollama provider", () => {
   it("posts to /api/chat and streams model deltas", async () => {
-    const fetchFn = vi.fn(async (url: string) => {
-      if (url.endsWith("/api/chat")) {
+    const fetchFn = vi.fn(async (url: Parameters<typeof fetch>[0], init?: RequestInit) => {
+      void init;
+      if (String(url).endsWith("/api/chat")) {
         const body = createNdjsonBody([
           { message: { content: "Hi" }, done: false },
           {
@@ -74,8 +75,9 @@ describe("ollama provider", () => {
   });
 
   it("lists models from /api/tags", async () => {
-    const fetchFn = vi.fn(async (url: string) => {
-      if (url.endsWith("/api/tags")) {
+    const fetchFn = vi.fn(async (url: Parameters<typeof fetch>[0], init?: RequestInit) => {
+      void init;
+      if (String(url).endsWith("/api/tags")) {
         return new Response(
           JSON.stringify({
             models: [

@@ -60,8 +60,10 @@ describe("approval service", () => {
       const app = express();
       app.use(express.json());
       attachApprovalRoutes(app, approvals);
-      const server = await new Promise<import("node:http").Server>((resolve) => {
-        const srv = app.listen(0, "127.0.0.1", () => resolve(srv));
+      const server = await new Promise<import("node:http").Server>((resolve, reject) => {
+        const srv = app.listen(0, "127.0.0.1");
+        srv.once("listening", () => resolve(srv));
+        srv.once("error", reject);
       });
       try {
         const address = server.address() as AddressInfo;

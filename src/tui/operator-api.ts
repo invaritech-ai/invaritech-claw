@@ -93,7 +93,7 @@ export function createNativeOperatorApiClient(input: {
     } = {},
   ): Promise<T> {
     const url = appendQuery(new URL(path.replace(/^\//u, ""), baseUrl), options.query);
-    const headers: Record<string, string> = { ...(options.headers ?? {}) };
+    const headers: Record<string, string> = { ...options.headers };
     let body: string | undefined;
     if (options.body !== undefined) {
       headers["content-type"] = "application/json";

@@ -1,119 +1,47 @@
-"gateway":
+"api":
   - changed-files:
       - any-glob-to-any-file:
-          - "src/gateway/**"
-          - "src/daemon/**"
-          - "docs/gateway/**"
+          - "src/server/**"
+          - "src/webhooks/**"
+
+"agents":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/agent/**"
+          - "src/runs/**"
+
+"config":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/config/**"
+
+"scheduler":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/scheduler/**"
+
+"storage":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/storage/**"
+
+"tui":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/tui/**"
+
+"providers":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "src/providers/**"
+
+"tests":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "test/**"
 
 "docs":
   - changed-files:
       - any-glob-to-any-file:
           - "docs/**"
-          - "docs.acp.md"
-
-"cli":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "src/cli/**"
-
-"commands":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "src/commands/**"
-
-"scripts":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "scripts/**"
-
-"docker":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "Dockerfile"
-          - "Dockerfile.*"
-          - "docker-compose.yml"
-          - "docker-setup.sh"
-          - "setup-podman.sh"
-          - ".dockerignore"
-          - "scripts/docker/setup.sh"
-          - "scripts/podman/setup.sh"
-          - "scripts/**/*docker*"
-          - "scripts/**/Dockerfile*"
-          - "scripts/sandbox-*.sh"
-          - "src/agents/sandbox*.ts"
-          - "src/commands/sandbox*.ts"
-          - "src/cli/sandbox-cli.ts"
-          - "src/docker-setup.test.ts"
-          - "src/config/**/*sandbox*"
-          - "docs/cli/sandbox.md"
-          - "docs/gateway/sandbox*.md"
-          - "docs/install/docker.md"
-          - "docs/multi-agent-sandbox-tools.md"
-
-"agents":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "src/agents/**"
-
-"security":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "docs/cli/security.md"
-          - "docs/gateway/security.md"
-
-"extensions: llm-task":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "extensions/llm-task/**"
-"extensions: memory-core":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "extensions/memory-core/**"
-"extensions: memory-lancedb":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "extensions/memory-lancedb/**"
-"extensions: memory-wiki":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "extensions/memory-wiki/**"
-"extensions: tokenjuice":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "extensions/tokenjuice/**"
-"extensions: webhooks":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "extensions/webhooks/**"
-"extensions: ollama":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "extensions/ollama/**"
-"extensions: openrouter":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "extensions/openrouter/**"
-"extensions: browser":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "extensions/browser/**"
-"extensions: media-understanding-core":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "extensions/media-understanding-core/**"
-"extensions: active-memory":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "extensions/active-memory/**"
-"extensions: thread-ownership":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "extensions/thread-ownership/**"
-"extensions: diffs":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "extensions/diffs/**"
-"extensions: openshell":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "extensions/openshell/**"
+          - "README.md"

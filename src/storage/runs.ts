@@ -95,6 +95,11 @@ export function updateRunStatus(
   const hasApprovalId = params.approvalId !== undefined;
   const hasStartedAtMs = params.startedAtMs !== undefined;
   const hasFinishedAtMs = params.finishedAtMs !== undefined;
+  const resultJson = params.resultJson ?? null;
+  const errorJson = params.errorJson ?? null;
+  const approvalId = params.approvalId ?? null;
+  const startedAtMs = params.startedAtMs ?? null;
+  const finishedAtMs = params.finishedAtMs ?? null;
 
   db.prepare(
     `UPDATE runs
@@ -108,15 +113,15 @@ export function updateRunStatus(
   ).run(
     params.status,
     hasResultJson ? 1 : 0,
-    hasResultJson ? params.resultJson : null,
+    resultJson,
     hasErrorJson ? 1 : 0,
-    hasErrorJson ? params.errorJson : null,
+    errorJson,
     hasApprovalId ? 1 : 0,
-    hasApprovalId ? params.approvalId : null,
+    approvalId,
     hasStartedAtMs ? 1 : 0,
-    hasStartedAtMs ? params.startedAtMs : null,
+    startedAtMs,
     hasFinishedAtMs ? 1 : 0,
-    hasFinishedAtMs ? params.finishedAtMs : null,
+    finishedAtMs,
     params.runId,
   );
 }

@@ -167,10 +167,8 @@ export function createOllamaProvider(input: OllamaProviderInput): ModelProvider 
           if (!idCandidate) {
             return null;
           }
-          return {
-            id: idCandidate,
-            name: typeof entry.name === "string" ? entry.name : undefined,
-          };
+          const name = typeof entry.name === "string" ? entry.name : undefined;
+          return name ? { id: idCandidate, name } : { id: idCandidate };
         })
         .filter((entry): entry is { id: string; name?: string } => entry !== null);
     },

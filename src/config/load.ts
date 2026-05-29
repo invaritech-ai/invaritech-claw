@@ -1,15 +1,13 @@
-import fs from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import JSON5 from "json5";
-import { resolveConfigPath } from "./paths.js";
 import { parseIclawConfig } from "./schema.js";
 import type { IclawConfig } from "./types.js";
 
-export function loadIclawConfig(env: NodeJS.ProcessEnv = process.env): IclawConfig {
-  return loadIclawConfigFromPath(resolveConfigPath(env));
+export function loadIclawConfig(configPath: string): IclawConfig {
+  const raw = readFileSync(configPath, "utf8");
+  return parseIclawConfig(JSON5.parse(raw));
 }
 
-export function loadIclawConfigFromPath(configPath: string): IclawConfig {
-  const raw = fs.readFileSync(configPath, "utf8");
-  const parsed = JSON5.parse(raw);
-  return parseIclawConfig(parsed);
+export function loadIclawConfigIfExists(configPath: string): IclawConfig | undefined {
+  return existsSync(configPath) ? loadIclawConfig(configPath) : undefined;
 }
