@@ -1,53 +1,25 @@
 import type { Run } from "../runs/types.js";
-import type { Schedule, CreateScheduleInput, PatchScheduleInput } from "../scheduler/types.js";
-import type { ApprovalStatus } from "../storage/schema.js";
-import type { Webhook } from "../webhooks/types.js";
-
-export type ApprovalView = {
-  id: string;
-  runId: string;
-  status: ApprovalStatus;
-  request: unknown;
-  decision: unknown | null;
-  expiresAtMs: number;
-  createdAtMs: number;
-  decidedAtMs: number | null;
-};
+import type { RunTriggerType } from "../storage/schema.js";
 
 export type OperatorStatus = {
   ok: boolean;
   serverTimeMs?: number;
   databasePath?: string;
-  providerHealth?: Record<string, unknown>;
   [key: string]: unknown;
 };
 
-export type WebhookDeliveryResponse = {
-  runId: string;
-  deliveryId: string;
-  duplicate: boolean;
-};
-
-export type DeliverWebhookInput = {
-  webhookId: string;
-  secret: string;
-  body: unknown;
-  idempotencyKey?: string;
-  idempotencyHeader?: string;
-};
-
 export type NativeOperatorApiClient = {
+  createRun(input: {
+    agentId: string;
+    triggerType: RunTriggerType;
+    triggerId?: string | null;
+    input?: unknown;
+    idempotencyKey?: string | null;
+    execute?: boolean;
+  }): Promise<Run>;
   listRuns(input: { agentId: string; limit?: number }): Promise<Run[]>;
   getRun(runId: string): Promise<Run>;
   cancelRun(runId: string): Promise<Run>;
-  listSchedules(limit?: number): Promise<Schedule[]>;
-  createSchedule(input: CreateScheduleInput): Promise<Schedule>;
-  patchSchedule(scheduleId: string, input: PatchScheduleInput): Promise<Schedule>;
-  runScheduleNow(scheduleId: string): Promise<Run>;
-  listWebhooks(limit?: number): Promise<Webhook[]>;
-  deliverWebhook(input: DeliverWebhookInput): Promise<WebhookDeliveryResponse>;
-  approveApproval(approvalId: string, decision?: unknown): Promise<ApprovalView>;
-  rejectApproval(approvalId: string, decision?: unknown): Promise<ApprovalView>;
   getStatus(): Promise<OperatorStatus>;
 };
 
@@ -118,6 +90,13 @@ export function createNativeOperatorApiClient(input: {
   }
 
   return {
+    async createRun(run) {
+      return await requestJson<Run>("/runs", {
+        method: "POST",
+        body: run,
+      });
+    },
+
     async listRuns({ agentId, limit }) {
       const response = await requestJson<{ runs: Run[] }>("/runs", {
         query: { agentId, limit },
@@ -134,78 +113,6 @@ export function createNativeOperatorApiClient(input: {
         method: "POST",
         body: {},
       });
-    },
-
-    async listSchedules(limit) {
-      const response = await requestJson<{ schedules: Schedule[] }>("/schedules", {
-        query: { limit },
-      });
-      return response.schedules;
-    },
-
-    async createSchedule(schedule) {
-      return await requestJson<Schedule>("/schedules", {
-        method: "POST",
-        body: schedule,
-      });
-    },
-
-    async patchSchedule(scheduleId, schedule) {
-      return await requestJson<Schedule>(`/schedules/${encodeURIComponent(scheduleId)}`, {
-        method: "PATCH",
-        body: schedule,
-      });
-    },
-
-    async runScheduleNow(scheduleId) {
-      return await requestJson<Run>(`/schedules/${encodeURIComponent(scheduleId)}/run`, {
-        method: "POST",
-        body: {},
-      });
-    },
-
-    async listWebhooks(limit) {
-      const response = await requestJson<{ webhooks: Webhook[] }>("/webhooks", {
-        query: { limit },
-      });
-      return response.webhooks;
-    },
-
-    async deliverWebhook(delivery) {
-      const headers: Record<string, string> = {
-        "x-iclaw-webhook-secret": delivery.secret,
-      };
-      if (delivery.idempotencyKey) {
-        headers[delivery.idempotencyHeader ?? "x-idempotency-key"] = delivery.idempotencyKey;
-      }
-      return await requestJson<WebhookDeliveryResponse>(
-        `/webhooks/${encodeURIComponent(delivery.webhookId)}`,
-        {
-          method: "POST",
-          headers,
-          body: delivery.body,
-        },
-      );
-    },
-
-    async approveApproval(approvalId, decision) {
-      return await requestJson<ApprovalView>(
-        `/approvals/${encodeURIComponent(approvalId)}/approve`,
-        {
-          method: "POST",
-          body: { decision },
-        },
-      );
-    },
-
-    async rejectApproval(approvalId, decision) {
-      return await requestJson<ApprovalView>(
-        `/approvals/${encodeURIComponent(approvalId)}/reject`,
-        {
-          method: "POST",
-          body: { decision },
-        },
-      );
     },
 
     async getStatus() {

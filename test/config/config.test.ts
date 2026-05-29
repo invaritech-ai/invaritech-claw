@@ -8,7 +8,6 @@ describe("iclaw config", () => {
         main: {
           model: "openrouter/anthropic/claude-sonnet-4.6",
           system: "You are precise.",
-          tools: ["http.request"],
         },
       },
       providers: {
@@ -24,7 +23,7 @@ describe("iclaw config", () => {
   it("rejects unknown providers", () => {
     expect(() =>
       parseIclawConfig({
-        agents: { main: { model: "other/model", tools: [] } },
+        agents: { main: { model: "other/model" } },
         providers: { other: {} },
       }),
     ).toThrow(/provider/i);

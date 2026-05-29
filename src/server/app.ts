@@ -1,30 +1,28 @@
 import type { Server } from "node:http";
 import express, { type Express } from "express";
-import { createApprovalService } from "../approvals/service.js";
+import type { IclawConfig } from "../config/types.js";
 import { createRunService } from "../runs/service.js";
-import { createSchedulerService } from "../scheduler/service.js";
 import { openIclawDatabase } from "../storage/sqlite.js";
-import { createWebhookService } from "../webhooks/service.js";
-import { attachApprovalRoutes } from "./routes/approvals.js";
+import { createConfiguredProviders } from "./providers.js";
 import { attachRunRoutes } from "./routes/runs.js";
-import { attachScheduleRoutes } from "./routes/schedules.js";
-import { attachWebhookRoutes } from "./routes/webhooks.js";
 
 export type IclawServices = ReturnType<typeof createIclawServices>;
 
-export function createIclawServices(input: { dbPath: string }) {
+export function createIclawServices(input: { dbPath: string; config?: IclawConfig }) {
   const db = openIclawDatabase(input.dbPath);
   const runService = createRunService(db);
-  const schedulerService = createSchedulerService({ db, runService });
-  const webhookService = createWebhookService({ db, runService });
-  const approvalService = createApprovalService(db);
+  const config = input.config ?? {
+    agents: {},
+    providers: {},
+    server: { host: "127.0.0.1", port: 32768 },
+    storage: {},
+  };
   return {
-    approvalService,
+    config,
     db,
     dbPath: input.dbPath,
+    providers: createConfiguredProviders({ config }),
     runService,
-    schedulerService,
-    webhookService,
   };
 }
 
@@ -40,10 +38,10 @@ export function createIclawApp(input: { services: IclawServices }): Express {
     });
   });
 
-  attachRunRoutes(app, input.services.runService);
-  attachScheduleRoutes(app, input.services.schedulerService);
-  attachWebhookRoutes(app, input.services.webhookService);
-  attachApprovalRoutes(app, input.services.approvalService);
+  attachRunRoutes(app, input.services.runService, {
+    agents: input.services.config.agents,
+    providers: input.services.providers,
+  });
 
   app.use(
     (error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
@@ -55,6 +53,7 @@ export function createIclawApp(input: { services: IclawServices }): Express {
 }
 
 export async function startIclawServer(input: {
+  config?: IclawConfig;
   dbPath: string;
   host: string;
   port: number;
@@ -65,7 +64,7 @@ export async function startIclawServer(input: {
   services: IclawServices;
   url: string;
 }> {
-  const services = createIclawServices({ dbPath: input.dbPath });
+  const services = createIclawServices({ dbPath: input.dbPath, config: input.config });
   const app = createIclawApp({ services });
   const server = await new Promise<Server>((resolve, reject) => {
     const listener = app

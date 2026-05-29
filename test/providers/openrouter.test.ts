@@ -26,23 +26,6 @@ describe("openrouter provider", () => {
         JSON.stringify({
           choices: [{ delta: { content: "Hello" } }],
         }),
-        JSON.stringify({
-          choices: [
-            {
-              delta: {
-                tool_calls: [
-                  {
-                    id: "call_1",
-                    function: {
-                      name: "http.request",
-                      arguments: JSON.stringify({ url: "https://example.com" }),
-                    },
-                  },
-                ],
-              },
-            },
-          ],
-        }),
         "[DONE]",
       ]);
 
@@ -76,60 +59,15 @@ describe("openrouter provider", () => {
       },
     });
 
-    expect(events).toEqual([
-      { type: "output_text_delta", text: "Hello" },
-      {
-        type: "tool_call",
-        name: "http.request",
-        arguments: { url: "https://example.com" },
-        callId: "call_1",
-      },
-      { type: "done" },
-    ]);
+    expect(events).toEqual([{ type: "output_text_delta", text: "Hello" }, { type: "done" }]);
   });
 
-  it("handles CRLF framing and split tool call deltas", async () => {
+  it("handles CRLF framing", async () => {
     const fetchFn = vi.fn(async (_url: Parameters<typeof fetch>[0], _init?: RequestInit) => {
       const body = createSseBody(
         [
           JSON.stringify({
             choices: [{ delta: { content: "Hello" } }],
-          }),
-          JSON.stringify({
-            choices: [
-              {
-                finish_reason: null,
-                delta: {
-                  tool_calls: [
-                    {
-                      index: 0,
-                      id: "call_1",
-                      function: {
-                        name: "http.request",
-                        arguments: '{"url":"https://',
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          }),
-          JSON.stringify({
-            choices: [
-              {
-                finish_reason: "tool_calls",
-                delta: {
-                  tool_calls: [
-                    {
-                      index: 0,
-                      function: {
-                        arguments: 'example.com"}',
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
           }),
           "[DONE]",
         ],
@@ -154,16 +92,7 @@ describe("openrouter provider", () => {
       events.push(event);
     }
 
-    expect(events).toEqual([
-      { type: "output_text_delta", text: "Hello" },
-      {
-        type: "tool_call",
-        name: "http.request",
-        arguments: { url: "https://example.com" },
-        callId: "call_1",
-      },
-      { type: "done" },
-    ]);
+    expect(events).toEqual([{ type: "output_text_delta", text: "Hello" }, { type: "done" }]);
   });
 
   it("throws when the stream returns an error chunk", async () => {

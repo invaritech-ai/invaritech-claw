@@ -1,7 +1,7 @@
 export type ProviderId = "openrouter" | "ollama";
 
 export type ModelMessage = {
-  role: "system" | "user" | "assistant" | "tool";
+  role: "system" | "user" | "assistant";
   content: string;
 };
 
@@ -11,11 +11,7 @@ export type ModelStreamInput = {
   signal?: AbortSignal;
 };
 
-export type ModelStreamEvent =
-  | { type: "output_text_delta"; text: string }
-  | { type: "tool_call"; name: string; arguments?: unknown; callId?: string }
-  | { type: "approval_wait"; approvalId: string; reason?: string }
-  | { type: "done" };
+export type ModelStreamEvent = { type: "output_text_delta"; text: string } | { type: "done" };
 
 export type ModelProvider = {
   id: "openrouter" | "ollama";

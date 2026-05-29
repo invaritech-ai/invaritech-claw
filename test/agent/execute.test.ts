@@ -29,7 +29,7 @@ describe("provider model resolution", () => {
 });
 
 describe("executeRun", () => {
-  it("persists start/delta/tool/success run events in order", async () => {
+  it("persists start, delta, and success run events in order", async () => {
     const tempDir = mkdtempSync(path.join(os.tmpdir(), "iclaw-agent-execute-test-"));
     const dbPath = path.join(tempDir, "state.sqlite");
 
@@ -47,11 +47,6 @@ describe("executeRun", () => {
         async *stream() {
           yield { type: "output_text_delta", text: "Hello" };
           yield { type: "output_text_delta", text: " world" };
-          yield {
-            type: "tool_call",
-            name: "http.request",
-            arguments: { url: "https://example.com" },
-          };
           yield { type: "done" };
         },
       };
@@ -69,16 +64,10 @@ describe("executeRun", () => {
         "run.started",
         "model.output.delta",
         "model.output.delta",
-        "tool.call",
         "run.succeeded",
       ]);
       expect(events[1]?.payload).toEqual({ text: "Hello" });
       expect(events[2]?.payload).toEqual({ text: " world" });
-      expect(events[3]?.payload).toEqual({
-        name: "http.request",
-        arguments: { url: "https://example.com" },
-        callId: null,
-      });
       expect(result.status).toBe("succeeded");
       expect(result.result).toEqual({ outputText: "Hello world" });
 

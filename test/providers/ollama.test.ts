@@ -19,20 +19,6 @@ describe("ollama provider", () => {
       if (String(url).endsWith("/api/chat")) {
         const body = createNdjsonBody([
           { message: { content: "Hi" }, done: false },
-          {
-            message: {
-              content: "",
-              tool_calls: [
-                {
-                  function: {
-                    name: "state.set",
-                    arguments: JSON.stringify({ key: "x", value: "1" }),
-                  },
-                },
-              ],
-            },
-            done: false,
-          },
           { done: true },
         ]);
         return new Response(body, { status: 200 });
@@ -63,15 +49,7 @@ describe("ollama provider", () => {
       },
     });
 
-    expect(events).toEqual([
-      { type: "output_text_delta", text: "Hi" },
-      {
-        type: "tool_call",
-        name: "state.set",
-        arguments: { key: "x", value: "1" },
-      },
-      { type: "done" },
-    ]);
+    expect(events).toEqual([{ type: "output_text_delta", text: "Hi" }, { type: "done" }]);
   });
 
   it("lists models from /api/tags", async () => {

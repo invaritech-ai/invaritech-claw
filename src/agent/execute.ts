@@ -5,7 +5,7 @@ import type { ModelMessage } from "./types.js";
 
 type MinimalRunService = Pick<
   RunService,
-  "appendEvent" | "markRunning" | "markSucceeded" | "markFailed" | "markWaitingApproval" | "getRun"
+  "appendEvent" | "markRunning" | "markSucceeded" | "markFailed" | "getRun"
 >;
 
 export type ExecuteRunInput = {
@@ -33,16 +33,16 @@ function requireRun(runService: MinimalRunService, runId: string): Run {
 }
 
 export async function executeRun(input: ExecuteRunInput): Promise<Run> {
-  const { provider, model } = resolveProviderForModel(input.model, input.providers);
-  input.runService.markRunning(input.runId);
-  input.runService.appendEvent(input.runId, {
-    type: "run.started",
-    payload: { provider: provider.id, model },
-  });
-
   let combinedOutput = "";
 
   try {
+    const { provider, model } = resolveProviderForModel(input.model, input.providers);
+    input.runService.markRunning(input.runId);
+    input.runService.appendEvent(input.runId, {
+      type: "run.started",
+      payload: { provider: provider.id, model },
+    });
+
     for await (const event of provider.stream({
       model,
       messages: input.messages,
@@ -55,30 +55,6 @@ export async function executeRun(input: ExecuteRunInput): Promise<Run> {
           payload: { text: event.text },
         });
         continue;
-      }
-
-      if (event.type === "tool_call") {
-        input.runService.appendEvent(input.runId, {
-          type: "tool.call",
-          payload: {
-            name: event.name,
-            arguments: event.arguments ?? null,
-            callId: event.callId ?? null,
-          },
-        });
-        continue;
-      }
-
-      if (event.type === "approval_wait") {
-        input.runService.markWaitingApproval(input.runId, event.approvalId);
-        input.runService.appendEvent(input.runId, {
-          type: "run.waiting_approval",
-          payload: {
-            approvalId: event.approvalId,
-            reason: event.reason ?? null,
-          },
-        });
-        return requireRun(input.runService, input.runId);
       }
     }
 

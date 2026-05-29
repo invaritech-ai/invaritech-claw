@@ -14,7 +14,6 @@ const AgentConfigSchema = z
   .object({
     model: z.string().min(1),
     system: z.string().optional(),
-    tools: z.array(z.string().min(1)).default([]),
   })
   .strict();
 

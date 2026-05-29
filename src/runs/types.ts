@@ -9,7 +9,6 @@ export type Run = {
   input: unknown;
   result: unknown | null;
   error: unknown | null;
-  approvalId: string | null;
   idempotencyKey: string | null;
   createdAtMs: number;
   startedAtMs: number | null;

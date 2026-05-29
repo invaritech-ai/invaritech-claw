@@ -1,6 +1,7 @@
 import { loadIclawConfigIfExists } from "../config/load.js";
 import { resolveConfigPath, resolveSqlitePath } from "../config/paths.js";
 import type { IclawConfig } from "../config/types.js";
+import { runInteractiveOperatorConsole } from "../tui/interactive.js";
 import { createNativeOperatorApiClient } from "../tui/operator-api.js";
 import {
   buildOperatorActiveView,
@@ -26,7 +27,7 @@ function printHelp(): void {
 
 Usage:
   iclaw server [--host <host>] [--port <port>] [--config <path>]
-  iclaw tui [--base-url <url>] [--view <chat|runs|schedules|webhooks|status>]
+  iclaw tui [--base-url <url>] [--agent <agent>] [--view <chat|runs|status>]
   iclaw --help
   iclaw --version
 `);
@@ -55,6 +56,7 @@ async function runServer(args: string[]): Promise<void> {
   }
 
   const server = await startIclawServer({
+    config,
     dbPath: resolveSqlitePath(config),
     host,
     port,
@@ -62,8 +64,10 @@ async function runServer(args: string[]): Promise<void> {
   process.stdout.write(`iclaw server listening on ${server.url}\n`);
   process.stdout.write(`config: ${configPath}\n`);
 
+  const keepAlive = setInterval(() => undefined, 60 * 60 * 1000);
   await new Promise<void>((resolve) => {
     const shutdown = () => {
+      clearInterval(keepAlive);
       void server.close().finally(resolve);
     };
     process.once("SIGINT", shutdown);
@@ -73,8 +77,18 @@ async function runServer(args: string[]): Promise<void> {
 
 async function runTui(args: string[]): Promise<void> {
   const baseUrl = readFlag(args, "--base-url") ?? "http://127.0.0.1:32768";
-  const activeView = (readFlag(args, "--view") ?? "status") as OperatorView;
   const client = createNativeOperatorApiClient({ baseUrl });
+  const view = readFlag(args, "--view");
+  if (!view) {
+    await runInteractiveOperatorConsole({
+      agentId: readFlag(args, "--agent") ?? "main",
+      client,
+      input: process.stdin,
+      output: process.stdout,
+    });
+    return;
+  }
+  const activeView = view as OperatorView;
   const state = await refreshOperatorView(
     switchOperatorView(createOperatorConsoleState(), activeView),
     client,

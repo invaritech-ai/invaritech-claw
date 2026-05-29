@@ -6,6 +6,7 @@ import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
 import express from "express";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import type { ModelProvider } from "../../src/agent/types.js";
 import { createRunService, type RunService } from "../../src/runs/service.js";
 import { attachRunRoutes } from "../../src/server/routes/runs.js";
 import { openIclawDatabase } from "../../src/storage/sqlite.js";
@@ -202,6 +203,144 @@ describe("runs API routes", () => {
       expect(payload.error.code).toBe("run_conflict");
       expect(payload.error.reason).toBe("duplicate_idempotency");
       expect(payload.error.message).toBe("run idempotency key already exists");
+    });
+  });
+
+  it("executes runs when requested", async () => {
+    if (listenBlocked) {
+      return;
+    }
+
+    const provider: ModelProvider = {
+      id: "ollama",
+      async *stream() {
+        yield { type: "output_text_delta", text: "hello" };
+        yield { type: "output_text_delta", text: " there" };
+        yield { type: "done" };
+      },
+    };
+
+    const executableApp = express();
+    executableApp.use(express.json());
+    attachRunRoutes(executableApp, runService, {
+      agents: {
+        main: {
+          model: "ollama/llama3.2",
+          system: "Be direct.",
+        },
+      },
+      providers: { ollama: provider },
+    });
+
+    await new Promise<void>((resolve) => server?.close(() => resolve()));
+    server = await new Promise<Server>((resolve, reject) => {
+      const nextServer = executableApp.listen(0, "127.0.0.1");
+      nextServer.once("listening", () => resolve(nextServer));
+      nextServer.once("error", reject);
+    });
+    baseUrl = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+
+    await withLoopbackEnv(async () => {
+      const response = await fetch(`${baseUrl}/runs`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          agentId: "main",
+          triggerType: "api",
+          input: { text: "hello from test" },
+          execute: true,
+        }),
+      });
+      expect(response.status).toBe(201);
+      const run = (await response.json()) as { id: string; status: string; result: unknown };
+      expect(run.status).toBe("succeeded");
+      expect(run.result).toEqual({ outputText: "hello there" });
+
+      const events = runService.listEvents(run.id);
+      expect(events.map((event) => event.type)).toEqual([
+        "run.started",
+        "model.output.delta",
+        "model.output.delta",
+        "run.succeeded",
+      ]);
+    });
+  });
+
+  it("returns 400 for executable runs with unknown agents", async () => {
+    if (listenBlocked) {
+      return;
+    }
+
+    const executableApp = express();
+    executableApp.use(express.json());
+    attachRunRoutes(executableApp, runService, {
+      agents: {},
+      providers: {},
+    });
+
+    await new Promise<void>((resolve) => server?.close(() => resolve()));
+    server = await new Promise<Server>((resolve, reject) => {
+      const nextServer = executableApp.listen(0, "127.0.0.1");
+      nextServer.once("listening", () => resolve(nextServer));
+      nextServer.once("error", reject);
+    });
+    baseUrl = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+
+    await withLoopbackEnv(async () => {
+      const response = await fetch(`${baseUrl}/runs`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          agentId: "missing",
+          triggerType: "api",
+          input: { text: "hello" },
+          execute: true,
+        }),
+      });
+      expect(response.status).toBe(400);
+      expect(await response.json()).toEqual({ error: "unknown agent: missing" });
+    });
+  });
+
+  it("records a clear failure when the configured provider is missing", async () => {
+    if (listenBlocked) {
+      return;
+    }
+
+    const executableApp = express();
+    executableApp.use(express.json());
+    attachRunRoutes(executableApp, runService, {
+      agents: {
+        main: {
+          model: "ollama/llama3.2",
+        },
+      },
+      providers: {},
+    });
+
+    await new Promise<void>((resolve) => server?.close(() => resolve()));
+    server = await new Promise<Server>((resolve, reject) => {
+      const nextServer = executableApp.listen(0, "127.0.0.1");
+      nextServer.once("listening", () => resolve(nextServer));
+      nextServer.once("error", reject);
+    });
+    baseUrl = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+
+    await withLoopbackEnv(async () => {
+      const response = await fetch(`${baseUrl}/runs`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          agentId: "main",
+          triggerType: "api",
+          input: { text: "hello" },
+          execute: true,
+        }),
+      });
+      expect(response.status).toBe(201);
+      const run = (await response.json()) as { status: string; error: { message: string } };
+      expect(run.status).toBe("failed");
+      expect(run.error.message).toBe("provider is not configured: ollama");
     });
   });
 });

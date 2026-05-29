@@ -14,13 +14,11 @@ describe("openIclawDatabase", () => {
       const rows = db
         .prepare("SELECT name FROM sqlite_master WHERE type = 'table'")
         .all() as Array<{ name: string }>;
-      const tableNames = new Set(rows.map((row) => row.name));
+      const tableNames = new Set(
+        rows.map((row) => row.name).filter((name) => name !== "sqlite_sequence"),
+      );
 
-      expect(tableNames.has("runs")).toBe(true);
-      expect(tableNames.has("run_events")).toBe(true);
-      expect(tableNames.has("schedules")).toBe(true);
-      expect(tableNames.has("webhooks")).toBe(true);
-      expect(tableNames.has("approvals")).toBe(true);
+      expect(tableNames).toEqual(new Set(["schema_migrations", "runs", "run_events"]));
 
       db.close();
     } finally {

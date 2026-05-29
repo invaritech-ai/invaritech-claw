@@ -3,7 +3,6 @@ export type SecretRef = { env: string } | { value: string };
 export type AgentConfig = {
   model: string;
   system?: string;
-  tools: string[];
 };
 
 export type OpenRouterProviderConfig = {

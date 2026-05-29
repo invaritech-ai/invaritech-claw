@@ -7,13 +7,10 @@
     "iclaw": "iclaw.mjs"
   },
   "files": [
-    "CHANGELOG.md",
     "LICENSE",
     "README.md",
     "dist/",
-    "docs/",
-    "iclaw.mjs",
-    "scripts/preinstall-package-manager-warning.mjs"
+    "iclaw.mjs"
   ],
   "type": "module",
   "main": "dist/index.js",
@@ -29,14 +26,11 @@
     "build": "node scripts/build-all.mjs",
     "check": "pnpm tsgo && pnpm build && pnpm test",
     "check:changed": "node scripts/check-changed.mjs",
-    "check:no-conflict-markers": "node scripts/check-no-conflict-markers.mjs",
     "dev": "node scripts/run-node.mjs",
     "format": "oxfmt --write --threads=1",
     "format:check": "oxfmt --check --threads=1",
     "iclaw": "node scripts/run-node.mjs",
     "lint": "oxlint --deny-warnings src test",
-    "preinstall": "node scripts/preinstall-package-manager-warning.mjs",
-    "prepare": "command -v git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/null 2>&1 && git config core.hooksPath git-hooks || exit 0",
     "start": "node scripts/run-node.mjs",
     "test": "node scripts/test-projects.mjs",
     "test:changed": "node scripts/test-projects.mjs --changed origin/main",
@@ -45,7 +39,6 @@
     "tsgo:prod": "node scripts/run-tsgo.mjs -p tsconfig.core.json"
   },
   "dependencies": {
-    "croner": "^10.0.1",
     "express": "^5.2.1",
     "json5": "^2.2.3",
     "zod": "^4.3.6"

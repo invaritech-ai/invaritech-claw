@@ -110,7 +110,6 @@ function mapRunRecord(record: RunRecord): Run {
     input: deserializeJson(record.inputJson),
     result: deserializeJson(record.resultJson),
     error: deserializeJson(record.errorJson),
-    approvalId: record.approvalId,
     idempotencyKey: record.idempotencyKey,
     createdAtMs: record.createdAtMs,
     startedAtMs: record.startedAtMs,
@@ -158,7 +157,6 @@ export function createRunService(db: DatabaseSync) {
         inputJson: serializeJson(input.input),
         resultJson: null,
         errorJson: null,
-        approvalId: null,
         idempotencyKey: input.idempotencyKey ?? null,
         createdAtMs: now,
         startedAtMs: null,
@@ -239,14 +237,6 @@ export function createRunService(db: DatabaseSync) {
         resultJson: null,
         errorJson: serializeJson(error),
         finishedAtMs,
-      });
-    },
-
-    markWaitingApproval(runId: string, approvalId: string): Run | undefined {
-      return updateAndReadRun(db, runId, {
-        runId,
-        status: "waiting_approval",
-        approvalId,
       });
     },
 

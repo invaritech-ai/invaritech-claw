@@ -11,11 +11,11 @@ The v1 shape is intentionally small:
 - local HTTP API
 - TUI/operator console entrypoint
 - OpenRouter and Ollama providers
-- schedules, webhooks, runs, approvals, and a small deny-by-default tool registry
+- runs created by the API or TUI
 
 ## Status
 
-This is a hard-fork v1 foundation. It does not include compatibility shims, migration helpers, channel integrations, companion apps, browser control, media, voice, memory, MCP, or a broad provider catalog.
+This is a hard-fork v1 foundation for the smallest usable loop: configure a provider, start the server, open the TUI, submit a prompt, and inspect persisted runs.
 
 ## Install
 
@@ -36,7 +36,6 @@ Create `~/.iclaw/iclaw.json`:
     main: {
       model: "ollama/llama3.2",
       system: "You are a concise automation agent.",
-      tools: [],
     },
   },
   providers: {
@@ -69,10 +68,14 @@ curl -sS http://127.0.0.1:32768/health
 Open an operator view:
 
 ```bash
+pnpm iclaw tui --agent main
+```
+
+Or print a specific operator view as JSON:
+
+```bash
 pnpm iclaw tui --view status
 pnpm iclaw tui --view runs
-pnpm iclaw tui --view schedules
-pnpm iclaw tui --view webhooks
 ```
 
 Create a run:
@@ -80,7 +83,7 @@ Create a run:
 ```bash
 curl -sS http://127.0.0.1:32768/runs \
   -H 'content-type: application/json' \
-  -d '{"agentId":"main","triggerType":"api","input":{"text":"hello"}}'
+  -d '{"agentId":"main","triggerType":"api","execute":true,"input":{"text":"hello"}}'
 ```
 
 ## Commands
@@ -89,18 +92,8 @@ curl -sS http://127.0.0.1:32768/runs \
 pnpm iclaw --help
 pnpm iclaw --version
 pnpm iclaw server [--host <host>] [--port <port>] [--config <path>]
-pnpm iclaw tui [--base-url <url>] [--view <chat|runs|schedules|webhooks|status>]
+pnpm iclaw tui [--base-url <url>] [--view <chat|runs|status>]
 ```
-
-## Docs
-
-- [Config](docs/config.md)
-- [API](docs/api.md)
-- [Schedules](docs/schedules.md)
-- [Webhooks](docs/webhooks.md)
-- [Providers](docs/providers.md)
-- [Security](docs/security.md)
-- [Architecture plan](docs/plan/iclaw-v1-headless-architecture.md)
 
 ## Development
 

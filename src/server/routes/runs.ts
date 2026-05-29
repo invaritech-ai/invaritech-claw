@@ -1,13 +1,12 @@
-import type { Express } from "express";
+import type { Express, NextFunction, Request, Response } from "express";
+import { executeRun } from "../../agent/execute.js";
+import type { ProviderRegistry } from "../../agent/model.js";
+import type { ModelMessage } from "../../agent/types.js";
+import type { AgentConfig } from "../../config/types.js";
 import { isRunConflictError, type RunService } from "../../runs/service.js";
 import type { RunTriggerType } from "../../storage/schema.js";
 
-const RUN_TRIGGER_TYPES: ReadonlySet<RunTriggerType> = new Set([
-  "tui",
-  "api",
-  "webhook",
-  "schedule",
-]);
+const RUN_TRIGGER_TYPES: ReadonlySet<RunTriggerType> = new Set(["tui", "api"]);
 
 type CreateRunBody = {
   agentId?: unknown;
@@ -15,6 +14,7 @@ type CreateRunBody = {
   triggerId?: unknown;
   input?: unknown;
   idempotencyKey?: unknown;
+  execute?: unknown;
 };
 
 function isString(value: unknown): value is string {
@@ -44,8 +44,38 @@ function parsePositiveLimit(value: unknown): number | undefined {
   return parsed;
 }
 
-export function attachRunRoutes(app: Express, runService: RunService): void {
-  app.post("/runs", (req, res) => {
+type RunExecutionConfig = {
+  agents: Record<string, AgentConfig>;
+  providers: ProviderRegistry;
+};
+
+function readPromptText(input: unknown): string | null {
+  if (!input || typeof input !== "object") {
+    return null;
+  }
+  const text = (input as { text?: unknown }).text;
+  if (!isString(text)) {
+    return null;
+  }
+  const trimmed = text.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+function buildMessages(agent: AgentConfig, prompt: string): ModelMessage[] {
+  const messages: ModelMessage[] = [];
+  if (agent.system?.trim()) {
+    messages.push({ role: "system", content: agent.system.trim() });
+  }
+  messages.push({ role: "user", content: prompt });
+  return messages;
+}
+
+export function attachRunRoutes(
+  app: Express,
+  runService: RunService,
+  execution?: RunExecutionConfig,
+): void {
+  async function postRun(req: Request, res: Response): Promise<void> {
     const body = (req.body ?? {}) as CreateRunBody;
     const agentId = asOptionalString(body.agentId);
     if (!agentId) {
@@ -58,14 +88,35 @@ export function attachRunRoutes(app: Express, runService: RunService): void {
       return;
     }
 
+    const shouldExecute = body.execute === true;
+    const agent = shouldExecute ? execution?.agents[agentId] : undefined;
+    if (shouldExecute && !agent) {
+      res.status(400).json({ error: `unknown agent: ${agentId}` });
+      return;
+    }
+    const promptText = shouldExecute ? readPromptText(body.input) : null;
+    if (shouldExecute && !promptText) {
+      res.status(400).json({ error: "input.text is required for execution" });
+      return;
+    }
+
     try {
-      const run = runService.createRun({
+      let run = runService.createRun({
         agentId,
         triggerType: body.triggerType,
         triggerId: asOptionalString(body.triggerId),
         input: body.input,
         idempotencyKey: asOptionalString(body.idempotencyKey),
       });
+      if (shouldExecute && agent && promptText) {
+        run = await executeRun({
+          runId: run.id,
+          model: agent.model,
+          messages: buildMessages(agent, promptText),
+          providers: execution?.providers ?? {},
+          runService,
+        });
+      }
       res.status(201).json(run);
     } catch (error) {
       if (isRunConflictError(error)) {
@@ -80,6 +131,10 @@ export function attachRunRoutes(app: Express, runService: RunService): void {
       }
       throw error;
     }
+  }
+
+  app.post("/runs", (req: Request, res: Response, next: NextFunction) => {
+    void postRun(req, res).catch(next);
   });
 
   app.get("/runs", (req, res) => {

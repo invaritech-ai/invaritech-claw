@@ -1,13 +1,9 @@
 import type { Run } from "../runs/types.js";
-import type { Schedule } from "../scheduler/types.js";
-import type { Webhook } from "../webhooks/types.js";
-import type { ApprovalView, NativeOperatorApiClient, OperatorStatus } from "./operator-api.js";
-import { buildRunsView, getRunApprovalActions } from "./views/runs.js";
-import { buildSchedulesView } from "./views/schedules.js";
+import type { NativeOperatorApiClient, OperatorStatus } from "./operator-api.js";
+import { buildRunsView } from "./views/runs.js";
 import { buildStatusView } from "./views/status.js";
-import { buildWebhooksView } from "./views/webhooks.js";
 
-export const OPERATOR_VIEWS = ["chat", "runs", "schedules", "webhooks", "status"] as const;
+export const OPERATOR_VIEWS = ["chat", "runs", "status"] as const;
 
 export type OperatorView = (typeof OPERATOR_VIEWS)[number];
 
@@ -15,8 +11,6 @@ export type OperatorConsoleState = {
   activeView: OperatorView;
   selectedAgentId: string;
   runs: Run[];
-  schedules: Schedule[];
-  webhooks: Webhook[];
   status: OperatorStatus | null;
   lastUpdatedAtMs: number | null;
   error: string | null;
@@ -30,8 +24,6 @@ export function createOperatorConsoleState(input?: {
     activeView: input?.activeView ?? "chat",
     selectedAgentId: input?.selectedAgentId ?? "main",
     runs: [],
-    schedules: [],
-    webhooks: [],
     status: null,
     lastUpdatedAtMs: null,
     error: null,
@@ -65,20 +57,6 @@ export async function refreshOperatorView(
           error: null,
           lastUpdatedAtMs: nowMs,
         };
-      case "schedules":
-        return {
-          ...state,
-          schedules: await client.listSchedules(),
-          error: null,
-          lastUpdatedAtMs: nowMs,
-        };
-      case "webhooks":
-        return {
-          ...state,
-          webhooks: await client.listWebhooks(),
-          error: null,
-          lastUpdatedAtMs: nowMs,
-        };
       case "status":
         return {
           ...state,
@@ -102,33 +80,56 @@ export function buildOperatorActiveView(state: OperatorConsoleState) {
       return { title: "Chat" as const };
     case "runs":
       return buildRunsView(state.runs);
-    case "schedules":
-      return buildSchedulesView(state.schedules);
-    case "webhooks":
-      return buildWebhooksView(state.webhooks);
     case "status":
       return buildStatusView(state.status);
   }
 }
 
-export function getWaitingRunApprovalControls(run: Run) {
-  return getRunApprovalActions(run);
+function readOutputText(run: Run): string {
+  const result = run.result;
+  if (result && typeof result === "object") {
+    const outputText = (result as { outputText?: unknown }).outputText;
+    if (typeof outputText === "string") {
+      return outputText;
+    }
+  }
+  if (run.error && typeof run.error === "object") {
+    const message = (run.error as { message?: unknown }).message;
+    if (typeof message === "string") {
+      return `error: ${message}`;
+    }
+  }
+  return JSON.stringify(run, null, 2);
 }
 
-export async function approveRun(
-  run: Run,
-  client: NativeOperatorApiClient,
-  decision?: unknown,
-): Promise<ApprovalView | undefined> {
-  const action = getRunApprovalActions(run).find((candidate) => candidate.kind === "approve");
-  return action ? await client.approveApproval(action.approvalId, decision) : undefined;
+export async function runOperatorPrompt(input: {
+  agentId: string;
+  client: NativeOperatorApiClient;
+  prompt: string;
+}): Promise<string> {
+  const run = await input.client.createRun({
+    agentId: input.agentId,
+    triggerType: "tui",
+    input: { text: input.prompt },
+    execute: true,
+  });
+  return readOutputText(run);
 }
 
-export async function rejectRun(
-  run: Run,
-  client: NativeOperatorApiClient,
-  decision?: unknown,
-): Promise<ApprovalView | undefined> {
-  const action = getRunApprovalActions(run).find((candidate) => candidate.kind === "reject");
-  return action ? await client.rejectApproval(action.approvalId, decision) : undefined;
+export async function runOperatorCommand(input: {
+  agentId: string;
+  client: NativeOperatorApiClient;
+  command: string;
+}): Promise<string | null> {
+  const command = input.command.trim();
+  if (command === "/exit" || command === "/quit") {
+    return null;
+  }
+  if (command === "/status") {
+    return JSON.stringify(await input.client.getStatus(), null, 2);
+  }
+  if (command === "/runs") {
+    return JSON.stringify(await input.client.listRuns({ agentId: input.agentId }), null, 2);
+  }
+  return `unknown command: ${command}`;
 }

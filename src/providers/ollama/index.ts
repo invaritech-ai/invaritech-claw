@@ -5,61 +5,12 @@ type OllamaProviderInput = {
   fetchFn?: typeof fetch;
 };
 
-function parseMaybeJson(value: string | undefined): unknown {
-  if (!value) {
-    return undefined;
-  }
-  const trimmed = value.trim();
-  if (trimmed.length === 0) {
-    return undefined;
-  }
-  try {
-    return JSON.parse(trimmed) as unknown;
-  } catch {
-    return trimmed;
-  }
-}
-
 function normalizeBaseUrl(baseUrl: string): string {
   const trimmed = baseUrl.trim();
   if (trimmed.length === 0) {
     throw new Error("ollama baseUrl is required");
   }
   return trimmed.replace(/\/+$/, "");
-}
-
-function readToolCallEvents(chunk: unknown): ModelStreamEvent[] {
-  if (!chunk || typeof chunk !== "object") {
-    return [];
-  }
-  const message = (chunk as { message?: unknown }).message;
-  if (!message || typeof message !== "object") {
-    return [];
-  }
-  const toolCalls = (message as { tool_calls?: unknown }).tool_calls;
-  if (!Array.isArray(toolCalls)) {
-    return [];
-  }
-
-  const events: ModelStreamEvent[] = [];
-  for (const item of toolCalls) {
-    if (!item || typeof item !== "object") {
-      continue;
-    }
-    const fn = (item as { function?: unknown }).function;
-    if (!fn || typeof fn !== "object") {
-      continue;
-    }
-    const name = (fn as { name?: unknown }).name;
-    if (typeof name !== "string" || name.trim().length === 0) {
-      continue;
-    }
-    const argsRaw = (fn as { arguments?: unknown }).arguments;
-    const args =
-      typeof argsRaw === "string" ? parseMaybeJson(argsRaw) : (argsRaw as unknown | undefined);
-    events.push({ type: "tool_call", name, arguments: args });
-  }
-  return events;
 }
 
 async function* iterateJsonLines(body: ReadableStream<Uint8Array>): AsyncIterable<string> {
@@ -136,9 +87,6 @@ export function createOllamaProvider(input: OllamaProviderInput): ModelProvider 
         const textDelta = readTextDelta(chunk);
         if (textDelta) {
           yield { type: "output_text_delta", text: textDelta };
-        }
-        for (const event of readToolCallEvents(chunk)) {
-          yield event;
         }
       }
 

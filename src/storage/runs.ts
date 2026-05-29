@@ -10,7 +10,6 @@ type RunRow = {
   input_json: string;
   result_json: string | null;
   error_json: string | null;
-  approval_id: string | null;
   idempotency_key: string | null;
   created_at_ms: number;
   started_at_ms: number | null;
@@ -36,7 +35,6 @@ function mapRunRow(row: RunRow): RunRecord {
     inputJson: row.input_json,
     resultJson: row.result_json,
     errorJson: row.error_json,
-    approvalId: row.approval_id,
     idempotencyKey: row.idempotency_key,
     createdAtMs: row.created_at_ms,
     startedAtMs: row.started_at_ms,
@@ -59,8 +57,8 @@ export function insertRun(db: DatabaseSync, run: RunRecord): void {
   db.prepare(
     `INSERT INTO runs (
       id, agent_id, trigger_type, trigger_id, status, input_json, result_json, error_json,
-      approval_id, idempotency_key, created_at_ms, started_at_ms, finished_at_ms
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      idempotency_key, created_at_ms, started_at_ms, finished_at_ms
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   ).run(
     run.id,
     run.agentId,
@@ -70,7 +68,6 @@ export function insertRun(db: DatabaseSync, run: RunRecord): void {
     run.inputJson,
     run.resultJson,
     run.errorJson,
-    run.approvalId,
     run.idempotencyKey,
     run.createdAtMs,
     run.startedAtMs,
@@ -85,19 +82,16 @@ export function updateRunStatus(
     status: RunStatus;
     resultJson?: string | null;
     errorJson?: string | null;
-    approvalId?: string | null;
     startedAtMs?: number | null;
     finishedAtMs?: number | null;
   },
 ): void {
   const hasResultJson = params.resultJson !== undefined;
   const hasErrorJson = params.errorJson !== undefined;
-  const hasApprovalId = params.approvalId !== undefined;
   const hasStartedAtMs = params.startedAtMs !== undefined;
   const hasFinishedAtMs = params.finishedAtMs !== undefined;
   const resultJson = params.resultJson ?? null;
   const errorJson = params.errorJson ?? null;
-  const approvalId = params.approvalId ?? null;
   const startedAtMs = params.startedAtMs ?? null;
   const finishedAtMs = params.finishedAtMs ?? null;
 
@@ -106,7 +100,6 @@ export function updateRunStatus(
      SET status = ?,
          result_json = CASE WHEN ? THEN ? ELSE result_json END,
          error_json = CASE WHEN ? THEN ? ELSE error_json END,
-         approval_id = CASE WHEN ? THEN ? ELSE approval_id END,
          started_at_ms = CASE WHEN ? THEN ? ELSE started_at_ms END,
          finished_at_ms = CASE WHEN ? THEN ? ELSE finished_at_ms END
      WHERE id = ?`,
@@ -116,8 +109,6 @@ export function updateRunStatus(
     resultJson,
     hasErrorJson ? 1 : 0,
     errorJson,
-    hasApprovalId ? 1 : 0,
-    approvalId,
     hasStartedAtMs ? 1 : 0,
     startedAtMs,
     hasFinishedAtMs ? 1 : 0,
