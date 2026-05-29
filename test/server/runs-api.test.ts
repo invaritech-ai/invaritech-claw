@@ -62,7 +62,7 @@ let baseUrl = "";
 let listenBlocked = false;
 
 beforeEach(async () => {
-  tempDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-runs-api-test-"));
+  tempDir = mkdtempSync(path.join(os.tmpdir(), "iclaw-runs-api-test-"));
   const dbPath = path.join(tempDir, "state.sqlite");
   db = openIclawDatabase(dbPath);
   runService = createRunService(db);

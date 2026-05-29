@@ -1124,21 +1124,21 @@ git commit -m "refactor: trim iclaw to v1 headless surface"
 - Create: `docs/providers.md`
 - Create: `docs/security.md`
 
-- [ ] **Step 1: Write focused docs**
+- [x] **Step 1: Write focused docs**
 
 Create concise Markdown docs for config, API, schedules, webhooks, providers, and security.
 
-- [ ] **Step 2: Run legacy name sweep**
+- [x] **Step 2: Run legacy name sweep**
 
 Run:
 
 ```bash
-rg -n "OpenClaw|openclaw|@openclaw|\\.openclaw" .
+rg -n "Open[C]law|open[C]law|@open[C]law|\\.open[C]law" .
 ```
 
 Expected: no matches in retained product code or user-facing docs. Matches are allowed only in historical planning docs that explicitly discuss the fork.
 
-- [ ] **Step 3: Run validation**
+- [x] **Step 3: Run validation**
 
 Run:
 
@@ -1150,7 +1150,7 @@ pnpm check:changed
 
 Expected: all retained v1 gates pass.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add -A

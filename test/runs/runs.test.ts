@@ -7,7 +7,7 @@ import { openIclawDatabase } from "../../src/storage/sqlite.js";
 
 describe("run service", () => {
   it("creates a queued run and records run.queued event", () => {
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-runs-test-"));
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "iclaw-runs-test-"));
     const dbPath = path.join(tempDir, "state.sqlite");
 
     try {
@@ -37,7 +37,7 @@ describe("run service", () => {
   });
 
   it("raises duplicate idempotency conflicts deterministically", () => {
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-runs-test-"));
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "iclaw-runs-test-"));
     const dbPath = path.join(tempDir, "state.sqlite");
 
     try {
@@ -69,7 +69,7 @@ describe("run service", () => {
   });
 
   it("auto-sequences events from max existing seq plus one", () => {
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-runs-test-"));
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "iclaw-runs-test-"));
     const dbPath = path.join(tempDir, "state.sqlite");
 
     try {
@@ -101,7 +101,7 @@ describe("run service", () => {
   });
 
   it("rejects appending events for unknown runs", () => {
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-runs-test-"));
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "iclaw-runs-test-"));
     const dbPath = path.join(tempDir, "state.sqlite");
 
     try {

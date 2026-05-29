@@ -30,7 +30,7 @@ describe("provider model resolution", () => {
 
 describe("executeRun", () => {
   it("persists start/delta/tool/success run events in order", async () => {
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-execute-test-"));
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "iclaw-agent-execute-test-"));
     const dbPath = path.join(tempDir, "state.sqlite");
 
     try {

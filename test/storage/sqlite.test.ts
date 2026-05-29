@@ -6,7 +6,7 @@ import { openIclawDatabase } from "../../src/storage/sqlite.js";
 
 describe("openIclawDatabase", () => {
   it("creates the v1 sqlite tables", () => {
-    const tempDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-storage-sqlite-test-"));
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "iclaw-storage-sqlite-test-"));
     const dbPath = path.join(tempDir, "state.sqlite");
 
     try {
