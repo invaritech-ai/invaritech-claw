@@ -52,6 +52,24 @@ import { buildWaitingStatusMessage, defaultWaitingPhrases } from "./tui-waiting.
 
 export { resolveFinalAssistantText } from "./tui-formatters.js";
 export type { TuiOptions } from "./tui-types.js";
+export { createNativeOperatorApiClient } from "./operator-api.js";
+export type {
+  ApprovalView,
+  NativeOperatorApiClient,
+  OperatorStatus,
+  WebhookDeliveryResponse,
+} from "./operator-api.js";
+export {
+  approveRun,
+  buildOperatorActiveView,
+  createOperatorConsoleState,
+  getWaitingRunApprovalControls,
+  OPERATOR_VIEWS,
+  refreshOperatorView,
+  rejectRun,
+  switchOperatorView,
+} from "./operator-console.js";
+export type { OperatorConsoleState, OperatorView } from "./operator-console.js";
 export {
   createEditorSubmitHandler,
   createSubmitBurstCoalescer,
