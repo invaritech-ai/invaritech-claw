@@ -315,7 +315,7 @@ export function listMessagesByThread(
 ): MessageRecord[] {
   const rows = db
     .prepare(
-      "SELECT * FROM messages WHERE thread_id = ? ORDER BY created_at_ms ASC, id ASC LIMIT ?",
+      "SELECT * FROM messages WHERE thread_id = ? ORDER BY created_at_ms ASC, rowid ASC LIMIT ?",
     )
     .all(threadId, limit) as MessageRow[];
   return rows.map(mapMessageRow);
@@ -623,4 +623,46 @@ export function listInvocationMemories(
     )
     .all(invocationId) as ModelInvocationMemoryRow[];
   return rows.map(mapModelInvocationMemoryRow);
+}
+
+export function listLatestThreadInvocationMemories(
+  db: DatabaseSync,
+  threadId: string,
+): Array<{ invocationMemory: ModelInvocationMemoryRecord; memory: MemoryRecord }> {
+  const invocation = db
+    .prepare(
+      `SELECT id
+       FROM model_invocations
+       WHERE thread_id = ?
+         AND kind = 'chat'
+         AND status = 'succeeded'
+         AND assistant_message_id IS NOT NULL
+       ORDER BY finished_at_ms DESC, created_at_ms DESC, id DESC
+       LIMIT 1`,
+    )
+    .get(threadId) as { id: string } | undefined;
+
+  if (!invocation) {
+    return [];
+  }
+
+  const rows = db
+    .prepare(
+      `SELECT
+         model_invocation_memories.invocation_id,
+         model_invocation_memories.memory_id,
+         model_invocation_memories.rank,
+         model_invocation_memories.score,
+         memories.*
+       FROM model_invocation_memories
+       JOIN memories ON memories.id = model_invocation_memories.memory_id
+       WHERE model_invocation_memories.invocation_id = ?
+       ORDER BY model_invocation_memories.rank ASC, model_invocation_memories.memory_id ASC`,
+    )
+    .all(invocation.id) as Array<ModelInvocationMemoryRow & MemoryRow>;
+
+  return rows.map((row) => ({
+    invocationMemory: mapModelInvocationMemoryRow(row),
+    memory: mapMemoryRow(row),
+  }));
 }

@@ -10,6 +10,7 @@ import type {
   ModelInvocationRecord,
   ModelInvocationStatus,
   ThreadRecord,
+  ThreadSummaryRecord,
 } from "../storage/schema.js";
 import {
   getLatestThreadSummary,
@@ -20,10 +21,12 @@ import {
   insertMessage,
   insertModelInvocation,
   insertModelInvocationMemory,
+  insertThreadSummary,
   insertThread,
   listActiveThreads,
   listActiveMemoriesByIdPrefix,
   listInvocationMemories,
+  listLatestThreadInvocationMemories,
   listMessagesByThread,
   searchMemories,
   updateMemory,
@@ -205,6 +208,25 @@ export function createThreadService(input: { db: DatabaseSync; config: IclawConf
       return getLatestThreadSummary(db, threadId);
     },
 
+    storeSummary(summaryInput: {
+      threadId: string;
+      summaryText: string;
+      coveredThroughMessageId?: string | null;
+      sourceSummaryId?: string | null;
+    }): ThreadSummaryRecord {
+      requireThread(db, summaryInput.threadId);
+      const summary: ThreadSummaryRecord = {
+        id: crypto.randomUUID(),
+        threadId: summaryInput.threadId,
+        summaryText: summaryInput.summaryText,
+        coveredThroughMessageId: summaryInput.coveredThroughMessageId ?? null,
+        sourceSummaryId: summaryInput.sourceSummaryId ?? null,
+        createdAtMs: Date.now(),
+      };
+      insertThreadSummary(db, summary);
+      return summary;
+    },
+
     remember(memoryInput: {
       scope: MemoryScope;
       threadId?: string | null;
@@ -323,6 +345,11 @@ export function createThreadService(input: { db: DatabaseSync; config: IclawConf
 
     listInvocationMemories(invocationId: string) {
       return listInvocationMemories(db, invocationId);
+    },
+
+    listLatestThreadInvocationMemories(threadId: string) {
+      requireThread(db, threadId);
+      return listLatestThreadInvocationMemories(db, threadId);
     },
   };
 }

@@ -1,7 +1,7 @@
 import { Readable, Writable } from "node:stream";
 import { describe, expect, it, vi } from "vitest";
-import type { Run } from "../../src/runs/types.js";
 import { runInteractiveOperatorConsole } from "../../src/tui/interactive.js";
+import type { LegacyRun } from "../../src/tui/legacy-run-types.js";
 import {
   createNativeOperatorApiClient,
   type NativeOperatorApiClient,
@@ -16,7 +16,7 @@ import {
   switchOperatorView,
 } from "../../src/tui/operator-console.js";
 
-function sampleRun(input: Partial<Run> = {}): Run {
+function sampleRun(input: Partial<LegacyRun> = {}): LegacyRun {
   return {
     id: "run-1",
     agentId: "main",

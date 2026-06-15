@@ -122,6 +122,19 @@ describe("thread storage repository", () => {
     });
   });
 
+  it("orders same-millisecond messages by insertion order", () => {
+    withDatabase((db) => {
+      insertThread(db, baseThread());
+      insertMessage(db, baseMessage({ id: "message-z", role: "user", createdAtMs: 1_100 }));
+      insertMessage(db, baseMessage({ id: "message-a", role: "assistant", createdAtMs: 1_100 }));
+
+      expect(listMessagesByThread(db, "thread-1").map((message) => message.id)).toEqual([
+        "message-z",
+        "message-a",
+      ]);
+    });
+  });
+
   it("archives threads without deleting messages", () => {
     withDatabase((db) => {
       insertThread(db, baseThread());

@@ -1,5 +1,4 @@
-import type { Run } from "../runs/types.js";
-import type { RunTriggerType } from "../storage/schema.js";
+import type { LegacyRun, LegacyRunTriggerType } from "./legacy-run-types.js";
 
 export type OperatorStatus = {
   ok: boolean;
@@ -11,15 +10,15 @@ export type OperatorStatus = {
 export type NativeOperatorApiClient = {
   createRun(input: {
     agentId: string;
-    triggerType: RunTriggerType;
+    triggerType: LegacyRunTriggerType;
     triggerId?: string | null;
     input?: unknown;
     idempotencyKey?: string | null;
     execute?: boolean;
-  }): Promise<Run>;
-  listRuns(input: { agentId: string; limit?: number }): Promise<Run[]>;
-  getRun(runId: string): Promise<Run>;
-  cancelRun(runId: string): Promise<Run>;
+  }): Promise<LegacyRun>;
+  listRuns(input: { agentId: string; limit?: number }): Promise<LegacyRun[]>;
+  getRun(runId: string): Promise<LegacyRun>;
+  cancelRun(runId: string): Promise<LegacyRun>;
   getStatus(): Promise<OperatorStatus>;
 };
 
@@ -91,25 +90,25 @@ export function createNativeOperatorApiClient(input: {
 
   return {
     async createRun(run) {
-      return await requestJson<Run>("/runs", {
+      return await requestJson<LegacyRun>("/runs", {
         method: "POST",
         body: run,
       });
     },
 
     async listRuns({ agentId, limit }) {
-      const response = await requestJson<{ runs: Run[] }>("/runs", {
+      const response = await requestJson<{ runs: LegacyRun[] }>("/runs", {
         query: { agentId, limit },
       });
       return response.runs;
     },
 
     async getRun(runId) {
-      return await requestJson<Run>(`/runs/${encodeURIComponent(runId)}`);
+      return await requestJson<LegacyRun>(`/runs/${encodeURIComponent(runId)}`);
     },
 
     async cancelRun(runId) {
-      return await requestJson<Run>(`/runs/${encodeURIComponent(runId)}/cancel`, {
+      return await requestJson<LegacyRun>(`/runs/${encodeURIComponent(runId)}/cancel`, {
         method: "POST",
         body: {},
       });

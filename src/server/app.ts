@@ -1,28 +1,24 @@
 import type { Server } from "node:http";
 import express, { type Express } from "express";
+import { parseIclawConfig } from "../config/schema.js";
 import type { IclawConfig } from "../config/types.js";
-import { createRunService } from "../runs/service.js";
 import { openIclawDatabase } from "../storage/sqlite.js";
+import { createThreadService } from "../threads/service.js";
 import { createConfiguredProviders } from "./providers.js";
-import { attachRunRoutes } from "./routes/runs.js";
+import { attachThreadRoutes } from "./routes/threads.js";
 
 export type IclawServices = ReturnType<typeof createIclawServices>;
 
 export function createIclawServices(input: { dbPath: string; config?: IclawConfig }) {
   const db = openIclawDatabase(input.dbPath);
-  const runService = createRunService(db);
-  const config = input.config ?? {
-    agents: {},
-    providers: {},
-    server: { host: "127.0.0.1", port: 32768 },
-    storage: {},
-  };
+  const config = input.config ?? parseIclawConfig({});
+  const threadService = createThreadService({ db, config });
   return {
     config,
     db,
     dbPath: input.dbPath,
     providers: createConfiguredProviders({ config }),
-    runService,
+    threadService,
   };
 }
 
@@ -38,9 +34,10 @@ export function createIclawApp(input: { services: IclawServices }): Express {
     });
   });
 
-  attachRunRoutes(app, input.services.runService, {
-    agents: input.services.config.agents,
+  attachThreadRoutes(app, {
+    config: input.services.config,
     providers: input.services.providers,
+    threadService: input.services.threadService,
   });
 
   app.use(

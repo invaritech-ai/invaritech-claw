@@ -1,4 +1,4 @@
-import type { Run } from "../runs/types.js";
+import type { LegacyRun } from "./legacy-run-types.js";
 import type { NativeOperatorApiClient, OperatorStatus } from "./operator-api.js";
 import { buildRunsView } from "./views/runs.js";
 import { buildStatusView } from "./views/status.js";
@@ -10,7 +10,7 @@ export type OperatorView = (typeof OPERATOR_VIEWS)[number];
 export type OperatorConsoleState = {
   activeView: OperatorView;
   selectedAgentId: string;
-  runs: Run[];
+  runs: LegacyRun[];
   status: OperatorStatus | null;
   lastUpdatedAtMs: number | null;
   error: string | null;
@@ -85,7 +85,7 @@ export function buildOperatorActiveView(state: OperatorConsoleState) {
   }
 }
 
-function readOutputText(run: Run): string {
+function readOutputText(run: LegacyRun): string {
   const result = run.result;
   if (result && typeof result === "object") {
     const outputText = (result as { outputText?: unknown }).outputText;
