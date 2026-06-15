@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { openIclawDatabase } from "../../src/storage/sqlite.js";
 
 describe("openIclawDatabase", () => {
-  it("creates the v1 sqlite tables", () => {
+  it("creates the thread memory v1 sqlite tables", () => {
     const tempDir = mkdtempSync(path.join(os.tmpdir(), "iclaw-storage-sqlite-test-"));
     const dbPath = path.join(tempDir, "state.sqlite");
 
@@ -18,7 +18,27 @@ describe("openIclawDatabase", () => {
         rows.map((row) => row.name).filter((name) => name !== "sqlite_sequence"),
       );
 
-      expect(tableNames).toEqual(new Set(["schema_migrations", "runs", "run_events"]));
+      expect(tableNames).toEqual(
+        new Set([
+          "background_jobs",
+          "memories",
+          "memories_fts",
+          "memories_fts_config",
+          "memories_fts_content",
+          "memories_fts_data",
+          "memories_fts_docsize",
+          "memories_fts_idx",
+          "memory_events",
+          "model_invocation_memories",
+          "model_invocations",
+          "messages",
+          "schema_migrations",
+          "thread_summaries",
+          "threads",
+        ]),
+      );
+      expect(tableNames.has("runs")).toBe(false);
+      expect(tableNames.has("run_events")).toBe(false);
 
       db.close();
     } finally {

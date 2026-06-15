@@ -1,6 +1,6 @@
 import type { DatabaseSync } from "node:sqlite";
 
-const V1_MIGRATION_ID = "2026-05-29-minimal-runs";
+const V1_MIGRATION_ID = "2026-06-15-thread-memory-v1";
 
 type MigrationDefinition = {
   id: string;
@@ -12,33 +12,98 @@ const MIGRATIONS: MigrationDefinition[] = [
     id: V1_MIGRATION_ID,
     sql: `
 CREATE TABLE schema_migrations (id TEXT PRIMARY KEY, applied_at_ms INTEGER NOT NULL);
-CREATE TABLE runs (
+CREATE TABLE threads (
   id TEXT PRIMARY KEY,
-  agent_id TEXT NOT NULL,
-  trigger_type TEXT NOT NULL CHECK (trigger_type IN ('tui', 'api')),
-  trigger_id TEXT,
-  status TEXT NOT NULL CHECK (status IN ('queued', 'running', 'succeeded', 'failed', 'cancelled')),
-  input_json TEXT NOT NULL,
-  result_json TEXT,
-  error_json TEXT,
-  idempotency_key TEXT,
+  title TEXT NOT NULL,
+  objective TEXT,
+  active_model_ref TEXT NOT NULL,
   created_at_ms INTEGER NOT NULL,
-  started_at_ms INTEGER,
+  updated_at_ms INTEGER NOT NULL,
+  archived_at_ms INTEGER
+);
+
+CREATE TABLE messages (
+  id TEXT PRIMARY KEY,
+  thread_id TEXT NOT NULL REFERENCES threads(id) ON DELETE CASCADE,
+  role TEXT NOT NULL CHECK (role IN ('user', 'assistant', 'system')),
+  content_text TEXT NOT NULL,
+  model_ref TEXT,
+  status TEXT NOT NULL CHECK (status IN ('complete', 'failed_partial')),
+  created_at_ms INTEGER NOT NULL
+);
+
+CREATE TABLE thread_summaries (
+  id TEXT PRIMARY KEY,
+  thread_id TEXT NOT NULL REFERENCES threads(id) ON DELETE CASCADE,
+  summary_text TEXT NOT NULL,
+  covered_through_message_id TEXT,
+  source_summary_id TEXT,
+  created_at_ms INTEGER NOT NULL
+);
+
+CREATE TABLE memories (
+  id TEXT PRIMARY KEY,
+  scope TEXT NOT NULL CHECK (scope IN ('thread', 'global')),
+  thread_id TEXT,
+  type TEXT NOT NULL CHECK (type IN ('fact', 'preference', 'decision', 'constraint', 'principle', 'milestone')),
+  content_text TEXT NOT NULL,
+  tags_json TEXT NOT NULL,
+  importance REAL NOT NULL,
+  confidence REAL NOT NULL,
+  status TEXT NOT NULL CHECK (status IN ('active', 'forgotten')),
+  supersedes_memory_id TEXT,
+  created_from_message_id TEXT,
+  updated_from_message_id TEXT,
+  created_at_ms INTEGER NOT NULL,
+  updated_at_ms INTEGER NOT NULL
+);
+
+CREATE VIRTUAL TABLE memories_fts USING fts5(content_text, tags_text, memory_id UNINDEXED);
+
+CREATE TABLE memory_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  memory_id TEXT NOT NULL,
+  event_type TEXT NOT NULL CHECK (event_type IN ('created', 'updated', 'merged', 'rejected', 'forgotten')),
+  payload_json TEXT NOT NULL,
+  created_at_ms INTEGER NOT NULL
+);
+
+CREATE TABLE model_invocations (
+  id TEXT PRIMARY KEY,
+  thread_id TEXT NOT NULL,
+  user_message_id TEXT,
+  assistant_message_id TEXT,
+  model_ref TEXT NOT NULL,
+  kind TEXT NOT NULL CHECK (kind IN ('chat', 'compaction', 'memory')),
+  status TEXT NOT NULL CHECK (status IN ('running', 'succeeded', 'failed')),
+  error_json TEXT,
+  created_at_ms INTEGER NOT NULL,
   finished_at_ms INTEGER
 );
-CREATE INDEX idx_runs_agent_created ON runs(agent_id, created_at_ms DESC);
-CREATE INDEX idx_runs_status_created ON runs(status, created_at_ms DESC);
-CREATE UNIQUE INDEX idx_runs_idempotency ON runs(trigger_type, COALESCE(trigger_id, ''), idempotency_key) WHERE idempotency_key IS NOT NULL;
-CREATE TABLE run_events (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  run_id TEXT NOT NULL,
-  seq INTEGER NOT NULL,
-  type TEXT NOT NULL,
-  payload_json TEXT NOT NULL,
-  created_at_ms INTEGER NOT NULL,
-  UNIQUE(run_id, seq)
+
+CREATE TABLE model_invocation_memories (
+  invocation_id TEXT NOT NULL,
+  memory_id TEXT NOT NULL,
+  rank INTEGER NOT NULL,
+  score REAL,
+  PRIMARY KEY (invocation_id, memory_id)
 );
-CREATE INDEX idx_run_events_run_seq ON run_events(run_id, seq);
+
+CREATE TABLE background_jobs (
+  id TEXT PRIMARY KEY,
+  type TEXT NOT NULL,
+  status TEXT NOT NULL CHECK (status IN ('pending', 'running', 'succeeded', 'failed')),
+  payload_json TEXT NOT NULL,
+  error_json TEXT,
+  created_at_ms INTEGER NOT NULL,
+  updated_at_ms INTEGER NOT NULL
+);
+
+CREATE INDEX idx_threads_updated ON threads(updated_at_ms DESC);
+CREATE INDEX idx_messages_thread_created ON messages(thread_id, created_at_ms ASC);
+CREATE INDEX idx_summaries_thread_created ON thread_summaries(thread_id, created_at_ms DESC);
+CREATE INDEX idx_memories_scope_thread_status ON memories(scope, thread_id, status, updated_at_ms DESC);
+CREATE INDEX idx_invocations_thread_created ON model_invocations(thread_id, created_at_ms DESC);
 `,
   },
 ];
