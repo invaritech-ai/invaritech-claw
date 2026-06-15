@@ -167,6 +167,7 @@ CREATE INDEX idx_invocations_thread_created ON model_invocations(thread_id, crea
 ## Task 1: Storage Schema And Thread Repository
 
 **Files:**
+
 - Modify: `src/storage/migrations.ts`
 - Modify: `src/storage/schema.ts`
 - Create: `src/storage/threads.ts`
@@ -271,6 +272,7 @@ git commit -m "feat: add thread memory storage"
 ## Task 2: Thread Service, Memory Commands, And Context Reconstruction
 
 **Files:**
+
 - Create/Modify: `src/threads/service.ts`
 - Create: `src/threads/context.ts`
 - Create: `test/threads/context.test.ts`
@@ -338,21 +340,21 @@ Update config tests to assert defaults and strict rejection of unknown keys.
 Implement service methods:
 
 ```ts
-getOrCreateDefaultThread()
-createThread(input)
-listThreads(input)
-getThread(threadId)
-archiveThread(threadId)
-renameThread(threadId, title)
-setObjective(threadId, objective)
-setThreadModel(threadId, modelRef)
-appendUserMessage(threadId, text)
-appendAssistantMessage(threadId, input)
-remember(input)
-searchMemories(input)
-forgetMemory(prefixOrId)
-recordInvocation(input)
-finishInvocation(input)
+getOrCreateDefaultThread();
+createThread(input);
+listThreads(input);
+getThread(threadId);
+archiveThread(threadId);
+renameThread(threadId, title);
+setObjective(threadId, objective);
+setThreadModel(threadId, modelRef);
+appendUserMessage(threadId, text);
+appendAssistantMessage(threadId, input);
+remember(input);
+searchMemories(input);
+forgetMemory(prefixOrId);
+recordInvocation(input);
+finishInvocation(input);
 ```
 
 Memory prefix matching must error on no match and ambiguous match.
@@ -406,6 +408,7 @@ git commit -m "feat: add thread service and context reconstruction"
 ## Task 3: Provider Completion And Model Listing
 
 **Files:**
+
 - Modify: `src/agent/types.ts`
 - Modify: `src/providers/ollama/index.ts`
 - Modify: `src/providers/openrouter/index.ts`
@@ -492,6 +495,7 @@ git commit -m "feat: add provider completion and model listing"
 ## Task 4: Thread HTTP API
 
 **Files:**
+
 - Create: `src/server/routes/threads.ts`
 - Modify: `src/server/app.ts`
 - Delete: `src/server/routes/runs.ts`
@@ -574,6 +578,7 @@ git commit -m "feat: replace runs API with threads"
 ## Task 5: TUI Command Parser And Thread Shell
 
 **Files:**
+
 - Create: `src/tui/commands.ts`
 - Modify: `src/tui/operator-api.ts`
 - Modify: `src/tui/operator-console.ts`
@@ -643,6 +648,7 @@ git commit -m "feat: add thread TUI commands"
 ## Task 6: Manual Compaction
 
 **Files:**
+
 - Create: `src/threads/compact.ts`
 - Modify: `src/threads/service.ts`
 - Modify: `src/server/routes/threads.ts`
@@ -702,6 +708,7 @@ git commit -m "feat: add manual thread compaction"
 ## Task 7: Config Init And Local Security
 
 **Files:**
+
 - Modify: `src/cli/main.ts`
 - Create: `src/cli/init.ts`
 - Modify: `src/server/app.ts`
@@ -766,6 +773,7 @@ git commit -m "feat: add iclaw init and local API guard"
 ## Task 8: Cleanup, Docs, And Gates
 
 **Files:**
+
 - Modify: `README.md`
 - Modify: `AGENTS.md` if commands changed.
 - Modify: `src/index.ts`
@@ -863,4 +871,3 @@ Expected:
 git add -A
 git commit -m "docs: update thread memory usage"
 ```
-

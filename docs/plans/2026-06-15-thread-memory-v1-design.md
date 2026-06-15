@@ -112,10 +112,7 @@ Recommended local defaults:
     memory: "ollama/qwen3:4b",
     compaction: "ollama/gemma4:e4b",
     embedding: "ollama/mxbai-embed-large:latest",
-    favorites: [
-      "openrouter/anthropic/claude-sonnet-4.6",
-      "openrouter/openai/gpt-5.1",
-    ],
+    favorites: ["openrouter/anthropic/claude-sonnet-4.6", "openrouter/openai/gpt-5.1"],
   },
 }
 ```
@@ -325,4 +322,3 @@ TUI command:
 - Embedding generation with Ollama.
 - Hybrid FTS + embedding memory retrieval.
 - Global memory proposals with accept/reject flow.
-
