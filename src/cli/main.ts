@@ -14,12 +14,35 @@ import { ICLAW_VERSION } from "../version.js";
 
 const DEFAULT_CONFIG: IclawConfig = {
   agents: {},
+  compaction: {
+    keepRecentMessages: 12,
+  },
+  context: {
+    maxTokens: 32_000,
+    responseReservePercent: 15,
+    memoryPercent: 15,
+    summaryPercent: 20,
+    recentMessagesPercent: 50,
+  },
+  memory: {},
+  models: {
+    chat: "ollama/gemma4:e4b",
+    memory: "ollama/qwen3:4b",
+    compaction: "ollama/gemma4:e4b",
+    embedding: "ollama/mxbai-embed-large:latest",
+    favorites: [],
+    contextWindows: {},
+  },
   providers: {},
   server: {
     host: "127.0.0.1",
     port: 32768,
   },
   storage: {},
+  workers: {
+    enabled: true,
+    pollIntervalMs: 1000,
+  },
 };
 
 function printHelp(): void {

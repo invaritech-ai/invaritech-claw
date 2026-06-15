@@ -71,19 +71,6 @@ type MemoryEventRow = {
   created_at_ms: number;
 };
 
-type ModelInvocationRow = {
-  id: string;
-  thread_id: string;
-  user_message_id: string | null;
-  assistant_message_id: string | null;
-  model_ref: string;
-  kind: ModelInvocationKind;
-  status: ModelInvocationStatus;
-  error_json: string | null;
-  created_at_ms: number;
-  finished_at_ms: number | null;
-};
-
 type ModelInvocationMemoryRow = {
   invocation_id: string;
   memory_id: string;
@@ -119,6 +106,12 @@ export type MemoryPatch = {
 export type MemorySearchInput = {
   query: string;
   scope: "thread" | "global" | "thread_and_global";
+  threadId?: string;
+  limit?: number;
+};
+
+export type MemoryPrefixInput = {
+  prefix: string;
   threadId?: string;
   limit?: number;
 };
@@ -200,21 +193,6 @@ function mapMemoryEventRow(row: MemoryEventRow): MemoryEventRecord {
   };
 }
 
-function mapModelInvocationRow(row: ModelInvocationRow): ModelInvocationRecord {
-  return {
-    id: row.id,
-    threadId: row.thread_id,
-    userMessageId: row.user_message_id,
-    assistantMessageId: row.assistant_message_id,
-    modelRef: row.model_ref,
-    kind: row.kind,
-    status: row.status,
-    errorJson: row.error_json,
-    createdAtMs: row.created_at_ms,
-    finishedAtMs: row.finished_at_ms,
-  };
-}
-
 function mapModelInvocationMemoryRow(row: ModelInvocationMemoryRow): ModelInvocationMemoryRecord {
   return {
     invocationId: row.invocation_id,
@@ -243,9 +221,11 @@ function syncMemoryFts(db: DatabaseSync, memory: MemoryRecord): void {
     return;
   }
 
-  db.prepare(
-    "INSERT INTO memories_fts (content_text, tags_text, memory_id) VALUES (?, ?, ?)",
-  ).run(memory.contentText, tagsTextFromJson(memory.tagsJson), memory.id);
+  db.prepare("INSERT INTO memories_fts (content_text, tags_text, memory_id) VALUES (?, ?, ?)").run(
+    memory.contentText,
+    tagsTextFromJson(memory.tagsJson),
+    memory.id,
+  );
 }
 
 function sanitizeFtsQuery(query: string): string | undefined {
@@ -253,7 +233,7 @@ function sanitizeFtsQuery(query: string): string | undefined {
   if (!tokens || tokens.length === 0) {
     return undefined;
   }
-  return tokens.map((token) => `${token}*`).join(" ");
+  return tokens.map((token) => `${token}*`).join(" OR ");
 }
 
 export function insertThread(db: DatabaseSync, record: ThreadRecord): void {
@@ -305,7 +285,9 @@ export function getThreadById(db: DatabaseSync, threadId: string): ThreadRecord 
 
 export function listActiveThreads(db: DatabaseSync, limit = 100): ThreadRecord[] {
   const rows = db
-    .prepare("SELECT * FROM threads WHERE archived_at_ms IS NULL ORDER BY updated_at_ms DESC LIMIT ?")
+    .prepare(
+      "SELECT * FROM threads WHERE archived_at_ms IS NULL ORDER BY updated_at_ms DESC LIMIT ?",
+    )
     .all(limit) as ThreadRow[];
   return rows.map(mapThreadRow);
 }
@@ -447,6 +429,49 @@ export function getMemoryById(db: DatabaseSync, memoryId: string): MemoryRecord 
     | MemoryRow
     | undefined;
   return row ? mapMemoryRow(row) : undefined;
+}
+
+function escapeLike(value: string): string {
+  return value.replace(/[\\%_]/g, (character) => `\\${character}`);
+}
+
+export function listActiveMemoriesByIdPrefix(
+  db: DatabaseSync,
+  input: MemoryPrefixInput,
+): MemoryRecord[] {
+  const prefix = escapeLike(input.prefix);
+  const limit = input.limit ?? 20;
+
+  if (input.threadId) {
+    const rows = db
+      .prepare(
+        `SELECT *
+         FROM memories
+         WHERE id LIKE ? ESCAPE '\\'
+           AND status = 'active'
+           AND (
+             (scope = 'thread' AND thread_id = ?)
+             OR scope = 'global'
+           )
+         ORDER BY updated_at_ms DESC, id ASC
+         LIMIT ?`,
+      )
+      .all(`${prefix}%`, input.threadId, limit) as MemoryRow[];
+    return rows.map(mapMemoryRow);
+  }
+
+  const rows = db
+    .prepare(
+      `SELECT *
+       FROM memories
+       WHERE id LIKE ? ESCAPE '\\'
+         AND status = 'active'
+         AND scope = 'global'
+       ORDER BY updated_at_ms DESC, id ASC
+       LIMIT ?`,
+    )
+    .all(`${prefix}%`, limit) as MemoryRow[];
+  return rows.map(mapMemoryRow);
 }
 
 export function searchMemories(db: DatabaseSync, input: MemorySearchInput): MemoryRecord[] {

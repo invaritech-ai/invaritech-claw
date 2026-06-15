@@ -213,6 +213,9 @@ describe("runs API routes", () => {
 
     const provider: ModelProvider = {
       id: "ollama",
+      async complete() {
+        return { text: "hello there" };
+      },
       async *stream() {
         yield { type: "output_text_delta", text: "hello" };
         yield { type: "output_text_delta", text: " there" };

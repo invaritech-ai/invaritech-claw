@@ -44,6 +44,9 @@ describe("executeRun", () => {
 
       const fakeOpenRouterProvider: ModelProvider = {
         id: "openrouter",
+        async complete() {
+          return { text: "Hello world" };
+        },
         async *stream() {
           yield { type: "output_text_delta", text: "Hello" };
           yield { type: "output_text_delta", text: " world" };
