@@ -1,4 +1,10 @@
-import type { ModelProvider, ModelStreamEvent, ModelStreamInput } from "../../agent/types.js";
+import type {
+  ModelCompleteInput,
+  ModelCompleteResult,
+  ModelProvider,
+  ModelStreamEvent,
+  ModelStreamInput,
+} from "../../agent/types.js";
 
 type OllamaProviderInput = {
   baseUrl: string;
@@ -55,12 +61,74 @@ function readTextDelta(chunk: unknown): string | null {
   return typeof content === "string" && content.length > 0 ? content : null;
 }
 
+function readErrorMessage(payload: unknown): string | null {
+  if (!payload || typeof payload !== "object") {
+    return null;
+  }
+  const error = (payload as { error?: unknown }).error;
+  if (typeof error === "string" && error.trim().length > 0) {
+    return error;
+  }
+  if (error && typeof error === "object") {
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === "string" && message.trim().length > 0) {
+      return message;
+    }
+  }
+  return null;
+}
+
+function readCompleteContent(payload: unknown): string | null {
+  if (!payload || typeof payload !== "object") {
+    return null;
+  }
+  const message = (payload as { message?: unknown }).message;
+  if (!message || typeof message !== "object") {
+    return null;
+  }
+  const content = (message as { content?: unknown }).content;
+  return typeof content === "string" ? content : null;
+}
+
 export function createOllamaProvider(input: OllamaProviderInput): ModelProvider {
   const fetchFn = input.fetchFn ?? fetch;
   const baseUrl = normalizeBaseUrl(input.baseUrl);
 
   return {
     id: "ollama",
+    async complete(completeInput: ModelCompleteInput): Promise<ModelCompleteResult> {
+      const response = await fetchFn(`${baseUrl}/api/chat`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          model: completeInput.model,
+          messages: completeInput.messages,
+          stream: false,
+        }),
+        signal: completeInput.signal,
+      });
+
+      if (!response.ok) {
+        throw new Error(`ollama complete failed: ${response.status}`);
+      }
+      if (!response.body) {
+        throw new Error("ollama complete failed: missing response body");
+      }
+
+      const payload = (await response.json()) as unknown;
+      const errorMessage = readErrorMessage(payload);
+      if (errorMessage) {
+        throw new Error(`ollama complete failed: ${errorMessage}`);
+      }
+      const content = readCompleteContent(payload);
+      if (content === null) {
+        throw new Error("ollama complete failed: missing message content");
+      }
+      return { text: content };
+    },
+
     async *stream(streamInput: ModelStreamInput): AsyncIterable<ModelStreamEvent> {
       const response = await fetchFn(`${baseUrl}/api/chat`, {
         method: "POST",

@@ -52,6 +52,107 @@ describe("ollama provider", () => {
     expect(events).toEqual([{ type: "output_text_delta", text: "Hi" }, { type: "done" }]);
   });
 
+  it("ollama complete posts non-streaming chat and returns message content", async () => {
+    const fetchFn = vi.fn(async (url: Parameters<typeof fetch>[0], init?: RequestInit) => {
+      if (String(url).endsWith("/api/chat")) {
+        expect(JSON.parse(String(init?.body))).toEqual({
+          model: "llama3.2",
+          messages: [{ role: "user", content: "hello" }],
+          stream: false,
+        });
+        return new Response(JSON.stringify({ message: { content: "Hello back" }, done: true }), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        });
+      }
+      return new Response("not found", { status: 404 });
+    });
+
+    const provider = createOllamaProvider({
+      baseUrl: "http://127.0.0.1:11434",
+      fetchFn,
+    });
+
+    await expect(
+      provider.complete({
+        model: "llama3.2",
+        messages: [{ role: "user", content: "hello" }],
+      }),
+    ).resolves.toEqual({ text: "Hello back" });
+
+    expect(fetchFn).toHaveBeenCalledOnce();
+    const [url, init] = fetchFn.mock.calls[0] ?? [];
+    expect(url).toBe("http://127.0.0.1:11434/api/chat");
+    expect(init).toMatchObject({
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+  });
+
+  it("ollama complete fails clearly for provider errors and missing content", async () => {
+    const providerError = createOllamaProvider({
+      baseUrl: "http://127.0.0.1:11434",
+      fetchFn: vi.fn(async () => {
+        return new Response(JSON.stringify({ error: "model not found" }), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        });
+      }),
+    });
+
+    await expect(
+      providerError.complete({
+        model: "missing",
+        messages: [{ role: "user", content: "hello" }],
+      }),
+    ).rejects.toThrow("ollama complete failed: model not found");
+
+    const missingContent = createOllamaProvider({
+      baseUrl: "http://127.0.0.1:11434",
+      fetchFn: vi.fn(async () => {
+        return new Response(JSON.stringify({ message: {} }), {
+          status: 200,
+          headers: { "content-type": "application/json" },
+        });
+      }),
+    });
+
+    await expect(
+      missingContent.complete({
+        model: "llama3.2",
+        messages: [{ role: "user", content: "hello" }],
+      }),
+    ).rejects.toThrow("ollama complete failed: missing message content");
+  });
+
+  it("ollama complete fails clearly for non-2xx and missing response body", async () => {
+    const nonOk = createOllamaProvider({
+      baseUrl: "http://127.0.0.1:11434",
+      fetchFn: vi.fn(async () => new Response("unavailable", { status: 503 })),
+    });
+
+    await expect(
+      nonOk.complete({
+        model: "llama3.2",
+        messages: [{ role: "user", content: "hello" }],
+      }),
+    ).rejects.toThrow("ollama complete failed: 503");
+
+    const missingBody = createOllamaProvider({
+      baseUrl: "http://127.0.0.1:11434",
+      fetchFn: vi.fn(async () => new Response(null, { status: 200 })),
+    });
+
+    await expect(
+      missingBody.complete({
+        model: "llama3.2",
+        messages: [{ role: "user", content: "hello" }],
+      }),
+    ).rejects.toThrow("ollama complete failed: missing response body");
+  });
+
   it("lists models from /api/tags", async () => {
     const fetchFn = vi.fn(async (url: Parameters<typeof fetch>[0], init?: RequestInit) => {
       void init;

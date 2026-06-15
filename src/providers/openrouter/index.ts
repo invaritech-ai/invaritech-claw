@@ -1,4 +1,10 @@
-import type { ModelProvider, ModelStreamEvent, ModelStreamInput } from "../../agent/types.js";
+import type {
+  ModelCompleteInput,
+  ModelCompleteResult,
+  ModelProvider,
+  ModelStreamEvent,
+  ModelStreamInput,
+} from "../../agent/types.js";
 
 type OpenRouterProviderInput = {
   apiKey: string;
@@ -17,6 +23,9 @@ function readFinishReason(choice: unknown): string | null {
 }
 
 function readErrorMessage(value: unknown): string | null {
+  if (typeof value === "string" && value.trim().length > 0) {
+    return value;
+  }
   if (!value || typeof value !== "object") {
     return null;
   }
@@ -25,6 +34,26 @@ function readErrorMessage(value: unknown): string | null {
     return message;
   }
   return null;
+}
+
+function readCompleteContent(payload: unknown): string | null {
+  if (!payload || typeof payload !== "object") {
+    return null;
+  }
+  const choices = (payload as { choices?: unknown }).choices;
+  if (!Array.isArray(choices) || choices.length === 0) {
+    return null;
+  }
+  const firstChoice = choices[0] as unknown;
+  if (!firstChoice || typeof firstChoice !== "object") {
+    return null;
+  }
+  const message = (firstChoice as { message?: unknown }).message;
+  if (!message || typeof message !== "object") {
+    return null;
+  }
+  const content = (message as { content?: unknown }).content;
+  return typeof content === "string" ? content : null;
 }
 
 function findSseEventBoundary(buffer: string): { index: number; separatorLength: number } | null {
@@ -113,6 +142,40 @@ export function createOpenRouterProvider(input: OpenRouterProviderInput): ModelP
 
   return {
     id: "openrouter",
+    async complete(completeInput: ModelCompleteInput): Promise<ModelCompleteResult> {
+      const response = await fetchFn(`${baseUrl}/chat/completions`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${input.apiKey}`,
+        },
+        body: JSON.stringify({
+          model: completeInput.model,
+          messages: completeInput.messages,
+          stream: false,
+        }),
+        signal: completeInput.signal,
+      });
+
+      if (!response.ok) {
+        throw new Error(`openrouter complete failed: ${response.status}`);
+      }
+      if (!response.body) {
+        throw new Error("openrouter complete failed: missing response body");
+      }
+
+      const payload = (await response.json()) as { error?: unknown };
+      const errorMessage = readErrorMessage(payload.error);
+      if (errorMessage) {
+        throw new Error(`openrouter complete failed: ${errorMessage}`);
+      }
+      const content = readCompleteContent(payload);
+      if (content === null) {
+        throw new Error("openrouter complete failed: missing choice message content");
+      }
+      return { text: content };
+    },
+
     async *stream(streamInput: ModelStreamInput): AsyncIterable<ModelStreamEvent> {
       const response = await fetchFn(`${baseUrl}/chat/completions`, {
         method: "POST",
