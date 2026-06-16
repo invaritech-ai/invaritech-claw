@@ -1,6 +1,7 @@
 import { mkdtempSync, rmSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { DatabaseSync } from "node:sqlite";
 import { describe, expect, it } from "vitest";
 import { openIclawDatabase } from "../../src/storage/sqlite.js";
 
@@ -37,6 +38,33 @@ describe("openIclawDatabase", () => {
           "threads",
         ]),
       );
+      db.close();
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("recovers when schema_migrations exists without the v1 row", () => {
+    const tempDir = mkdtempSync(path.join(os.tmpdir(), "iclaw-storage-sqlite-test-"));
+    const dbPath = path.join(tempDir, "state.sqlite");
+
+    try {
+      const partialDb = new DatabaseSync(dbPath);
+      partialDb.exec(
+        "CREATE TABLE schema_migrations (id TEXT PRIMARY KEY, applied_at_ms INTEGER NOT NULL)",
+      );
+      partialDb.close();
+
+      const db = openIclawDatabase(dbPath);
+      const migration = db
+        .prepare("SELECT id FROM schema_migrations WHERE id = ?")
+        .get("2026-06-15-thread-memory-v1") as { id: string } | undefined;
+      const threadTable = db
+        .prepare("SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'threads'")
+        .get() as { name: string } | undefined;
+
+      expect(migration?.id).toBe("2026-06-15-thread-memory-v1");
+      expect(threadTable?.name).toBe("threads");
       db.close();
     } finally {
       rmSync(tempDir, { recursive: true, force: true });

@@ -11,8 +11,8 @@ const MIGRATIONS: MigrationDefinition[] = [
   {
     id: V1_MIGRATION_ID,
     sql: `
-CREATE TABLE schema_migrations (id TEXT PRIMARY KEY, applied_at_ms INTEGER NOT NULL);
-CREATE TABLE threads (
+CREATE TABLE IF NOT EXISTS schema_migrations (id TEXT PRIMARY KEY, applied_at_ms INTEGER NOT NULL);
+CREATE TABLE IF NOT EXISTS threads (
   id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
   objective TEXT,
@@ -22,7 +22,7 @@ CREATE TABLE threads (
   archived_at_ms INTEGER
 );
 
-CREATE TABLE messages (
+CREATE TABLE IF NOT EXISTS messages (
   id TEXT PRIMARY KEY,
   thread_id TEXT NOT NULL REFERENCES threads(id) ON DELETE CASCADE,
   role TEXT NOT NULL CHECK (role IN ('user', 'assistant', 'system')),
@@ -32,7 +32,7 @@ CREATE TABLE messages (
   created_at_ms INTEGER NOT NULL
 );
 
-CREATE TABLE thread_summaries (
+CREATE TABLE IF NOT EXISTS thread_summaries (
   id TEXT PRIMARY KEY,
   thread_id TEXT NOT NULL REFERENCES threads(id) ON DELETE CASCADE,
   summary_text TEXT NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE thread_summaries (
   created_at_ms INTEGER NOT NULL
 );
 
-CREATE TABLE memories (
+CREATE TABLE IF NOT EXISTS memories (
   id TEXT PRIMARY KEY,
   scope TEXT NOT NULL CHECK (scope IN ('thread', 'global')),
   thread_id TEXT,
@@ -58,9 +58,9 @@ CREATE TABLE memories (
   updated_at_ms INTEGER NOT NULL
 );
 
-CREATE VIRTUAL TABLE memories_fts USING fts5(content_text, tags_text, memory_id UNINDEXED);
+CREATE VIRTUAL TABLE IF NOT EXISTS memories_fts USING fts5(content_text, tags_text, memory_id UNINDEXED);
 
-CREATE TABLE memory_events (
+CREATE TABLE IF NOT EXISTS memory_events (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   memory_id TEXT NOT NULL,
   event_type TEXT NOT NULL CHECK (event_type IN ('created', 'updated', 'merged', 'rejected', 'forgotten')),
@@ -68,7 +68,7 @@ CREATE TABLE memory_events (
   created_at_ms INTEGER NOT NULL
 );
 
-CREATE TABLE model_invocations (
+CREATE TABLE IF NOT EXISTS model_invocations (
   id TEXT PRIMARY KEY,
   thread_id TEXT NOT NULL,
   user_message_id TEXT,
@@ -81,7 +81,7 @@ CREATE TABLE model_invocations (
   finished_at_ms INTEGER
 );
 
-CREATE TABLE model_invocation_memories (
+CREATE TABLE IF NOT EXISTS model_invocation_memories (
   invocation_id TEXT NOT NULL,
   memory_id TEXT NOT NULL,
   rank INTEGER NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE model_invocation_memories (
   PRIMARY KEY (invocation_id, memory_id)
 );
 
-CREATE TABLE background_jobs (
+CREATE TABLE IF NOT EXISTS background_jobs (
   id TEXT PRIMARY KEY,
   type TEXT NOT NULL,
   status TEXT NOT NULL CHECK (status IN ('pending', 'running', 'succeeded', 'failed')),
@@ -99,11 +99,11 @@ CREATE TABLE background_jobs (
   updated_at_ms INTEGER NOT NULL
 );
 
-CREATE INDEX idx_threads_updated ON threads(updated_at_ms DESC);
-CREATE INDEX idx_messages_thread_created ON messages(thread_id, created_at_ms ASC);
-CREATE INDEX idx_summaries_thread_created ON thread_summaries(thread_id, created_at_ms DESC);
-CREATE INDEX idx_memories_scope_thread_status ON memories(scope, thread_id, status, updated_at_ms DESC);
-CREATE INDEX idx_invocations_thread_created ON model_invocations(thread_id, created_at_ms DESC);
+CREATE INDEX IF NOT EXISTS idx_threads_updated ON threads(updated_at_ms DESC);
+CREATE INDEX IF NOT EXISTS idx_messages_thread_created ON messages(thread_id, created_at_ms ASC);
+CREATE INDEX IF NOT EXISTS idx_summaries_thread_created ON thread_summaries(thread_id, created_at_ms DESC);
+CREATE INDEX IF NOT EXISTS idx_memories_scope_thread_status ON memories(scope, thread_id, status, updated_at_ms DESC);
+CREATE INDEX IF NOT EXISTS idx_invocations_thread_created ON model_invocations(thread_id, created_at_ms DESC);
 `,
   },
 ];
