@@ -8,7 +8,7 @@ import express from "express";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { ModelCompleteInput, ModelProvider } from "../../src/agent/types.js";
 import type { IclawConfig } from "../../src/config/types.js";
-import { createIclawApp, createIclawServices } from "../../src/server/app.js";
+import { createIclawApp, createIclawServices, startIclawServer } from "../../src/server/app.js";
 import { attachThreadRoutes } from "../../src/server/routes/threads.js";
 import { openIclawDatabase } from "../../src/storage/sqlite.js";
 import { createThreadService, type ThreadService } from "../../src/threads/service.js";
@@ -733,6 +733,139 @@ describe("threads API routes", () => {
         const response = await fetch(`${baseUrl}/runs?agentId=main`);
         expect(response.status).toBe(404);
       });
+    } finally {
+      services.db.close();
+    }
+  });
+});
+
+describe("threads API local security", () => {
+  it("requires bearer authorization for API requests when server.apiToken is configured", async () => {
+    if (listenBlocked) {
+      return;
+    }
+
+    await new Promise<void>((resolve) => server?.close(() => resolve()));
+
+    const services = createIclawServices({
+      dbPath: path.join(tempDir, "secured.sqlite"),
+      config: {
+        ...TEST_CONFIG,
+        server: {
+          ...TEST_CONFIG.server,
+          apiToken: { value: "test-token" },
+        },
+      },
+    });
+    const app = createIclawApp({ services });
+
+    try {
+      await startApp(app);
+
+      await withLoopbackEnv(async () => {
+        const missing = await fetch(`${baseUrl}/health`);
+        expect(missing.status).toBe(401);
+
+        const wrong = await fetch(`${baseUrl}/threads`, {
+          headers: { authorization: "Bearer wrong-token" },
+        });
+        expect(wrong.status).toBe(401);
+
+        const authorized = await fetch(`${baseUrl}/threads`, {
+          headers: { authorization: "Bearer test-token" },
+        });
+        expect(authorized.status).toBe(200);
+      });
+    } finally {
+      services.db.close();
+    }
+  });
+
+  it("rejects missing authorization before parsing malformed JSON", async () => {
+    if (listenBlocked) {
+      return;
+    }
+
+    await new Promise<void>((resolve) => server?.close(() => resolve()));
+
+    const services = createIclawServices({
+      dbPath: path.join(tempDir, "secured-malformed.sqlite"),
+      config: {
+        ...TEST_CONFIG,
+        server: {
+          ...TEST_CONFIG.server,
+          apiToken: { value: "test-token" },
+        },
+      },
+    });
+    const app = createIclawApp({ services });
+
+    try {
+      await startApp(app);
+
+      await withLoopbackEnv(async () => {
+        const response = await fetch(`${baseUrl}/threads`, {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: "{",
+        });
+        expect(response.status).toBe(401);
+        const payload = (await response.json()) as JsonRecord;
+        expect(payload).toEqual({ error: "unauthorized" });
+      });
+    } finally {
+      services.db.close();
+    }
+  });
+
+  it("allows a loopback start host override when config host is non-loopback", async () => {
+    if (listenBlocked) {
+      return;
+    }
+
+    await new Promise<void>((resolve) => server?.close(() => resolve()));
+
+    let started: Awaited<ReturnType<typeof startIclawServer>> | undefined;
+    try {
+      started = await startIclawServer({
+        dbPath: path.join(tempDir, "override-host.sqlite"),
+        host: "127.0.0.1",
+        port: 0,
+        config: {
+          ...TEST_CONFIG,
+          server: {
+            ...TEST_CONFIG.server,
+            host: "0.0.0.0",
+            apiToken: undefined,
+          },
+        },
+      });
+      const address = started.server.address() as AddressInfo;
+      expect(address.address).toBe("127.0.0.1");
+    } catch (error) {
+      if (isListenPermissionError(error)) {
+        return;
+      }
+      throw error;
+    } finally {
+      await started?.close();
+    }
+  });
+
+  it("requires server.apiToken when creating an app for a non-loopback host", () => {
+    const services = createIclawServices({
+      dbPath: path.join(tempDir, "public-host.sqlite"),
+      config: {
+        ...TEST_CONFIG,
+        server: {
+          ...TEST_CONFIG.server,
+          host: "0.0.0.0",
+        },
+      },
+    });
+
+    try {
+      expect(() => createIclawApp({ services })).toThrow(/server\.apiToken/i);
     } finally {
       services.db.close();
     }

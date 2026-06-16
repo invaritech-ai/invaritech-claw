@@ -119,6 +119,7 @@ function routeParam(value: string): string {
 }
 
 export function createNativeOperatorApiClient(input: {
+  apiToken?: string;
   baseUrl: string;
   fetchImpl?: FetchLike;
 }): NativeOperatorApiClient {
@@ -136,6 +137,9 @@ export function createNativeOperatorApiClient(input: {
   ): Promise<T> {
     const url = appendQuery(new URL(path.replace(/^\//u, ""), baseUrl), options.query);
     const headers: Record<string, string> = { ...options.headers };
+    if (input.apiToken) {
+      headers.authorization = `Bearer ${input.apiToken}`;
+    }
     let body: string | undefined;
     if (options.body !== undefined) {
       headers["content-type"] = "application/json";

@@ -1,6 +1,6 @@
 import { loadIclawConfigIfExists } from "../config/load.js";
 import { resolveConfigPath, resolveSqlitePath } from "../config/paths.js";
-import type { IclawConfig } from "../config/types.js";
+import type { IclawConfig, SecretRef } from "../config/types.js";
 import { runInteractiveOperatorConsole } from "../tui/interactive.js";
 import { createNativeOperatorApiClient } from "../tui/operator-api.js";
 import {
@@ -10,46 +10,15 @@ import {
   switchOperatorView,
 } from "../tui/operator-console.js";
 import { ICLAW_VERSION } from "../version.js";
-
-const DEFAULT_CONFIG: IclawConfig = {
-  agents: {},
-  compaction: {
-    keepRecentMessages: 12,
-  },
-  context: {
-    maxTokens: 32_000,
-    responseReservePercent: 15,
-    memoryPercent: 15,
-    summaryPercent: 20,
-    recentMessagesPercent: 50,
-  },
-  memory: {},
-  models: {
-    chat: "ollama/gemma4:e4b",
-    memory: "ollama/qwen3:4b",
-    compaction: "ollama/gemma4:e4b",
-    embedding: "ollama/mxbai-embed-large:latest",
-    favorites: [],
-    contextWindows: {},
-  },
-  providers: {},
-  server: {
-    host: "127.0.0.1",
-    port: 32768,
-  },
-  storage: {},
-  workers: {
-    enabled: true,
-    pollIntervalMs: 1000,
-  },
-};
+import { DEFAULT_CONFIG, initIclawConfig } from "./init.js";
 
 function printHelp(): void {
   process.stdout.write(`iclaw ${ICLAW_VERSION}
 
 Usage:
+  iclaw init [--config <path>] [--force]
   iclaw server [--host <host>] [--port <port>] [--config <path>]
-  iclaw tui [--base-url <url>] [--agent <agent>] [--view <chat|status>]
+  iclaw tui [--base-url <url>] [--agent <agent>] [--view <chat|status>] [--config <path>] [--api-token <token>]
   iclaw --help
   iclaw --version
 `);
@@ -73,6 +42,34 @@ function parseOperatorView(view: string): "chat" | "status" {
     return view;
   }
   throw new Error(`unknown tui view: ${view}. Expected one of: chat, status`);
+}
+
+function resolveOptionalSecretRef(secret: SecretRef | undefined): string | undefined {
+  if (!secret) {
+    return undefined;
+  }
+  if ("value" in secret) {
+    return secret.value;
+  }
+  const value = process.env[secret.env]?.trim();
+  if (!value) {
+    throw new Error(`missing secret env var: ${secret.env}`);
+  }
+  return value;
+}
+
+async function runInit(args: string[]): Promise<void> {
+  const configPath = readFlag(args, "--config") ?? resolveConfigPath();
+  const result = await initIclawConfig({
+    configPath,
+    force: args.includes("--force"),
+  });
+  if (result.status === "exists") {
+    process.stdout.write(`config exists: ${result.configPath}\n`);
+    process.stdout.write("use --force to overwrite\n");
+    return;
+  }
+  process.stdout.write(`created config: ${result.configPath}\n`);
 }
 
 async function runServer(args: string[]): Promise<void> {
@@ -105,8 +102,12 @@ async function runServer(args: string[]): Promise<void> {
 }
 
 async function runTui(args: string[]): Promise<void> {
-  const baseUrl = readFlag(args, "--base-url") ?? "http://127.0.0.1:32768";
-  const client = createNativeOperatorApiClient({ baseUrl });
+  const { config } = readConfig(args);
+  const baseUrl =
+    readFlag(args, "--base-url") ?? `http://${config.server.host}:${config.server.port}`;
+  const apiToken =
+    readFlag(args, "--api-token") ?? resolveOptionalSecretRef(config.server.apiToken);
+  const client = createNativeOperatorApiClient({ baseUrl, apiToken });
   const view = readFlag(args, "--view");
   if (!view) {
     await runInteractiveOperatorConsole({
@@ -138,6 +139,10 @@ export async function runCli(argv = process.argv): Promise<void> {
   }
   if (command === "server") {
     await runServer(args.slice(1));
+    return;
+  }
+  if (command === "init") {
+    await runInit(args.slice(1));
     return;
   }
   if (command === "tui") {

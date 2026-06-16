@@ -1,10 +1,11 @@
+import { timingSafeEqual } from "node:crypto";
 import type { Server } from "node:http";
 import express, { type Express } from "express";
 import { parseIclawConfig } from "../config/schema.js";
 import type { IclawConfig } from "../config/types.js";
 import { openIclawDatabase } from "../storage/sqlite.js";
 import { createThreadService } from "../threads/service.js";
-import { createConfiguredProviders } from "./providers.js";
+import { createConfiguredProviders, resolveSecretRef } from "./providers.js";
 import { attachThreadRoutes } from "./routes/threads.js";
 
 export type IclawServices = ReturnType<typeof createIclawServices>;
@@ -22,8 +23,46 @@ export function createIclawServices(input: { dbPath: string; config?: IclawConfi
   };
 }
 
-export function createIclawApp(input: { services: IclawServices }): Express {
+function isLoopbackHost(host: string): boolean {
+  return (
+    host === "127.0.0.1" || host === "localhost" || host === "::1" || host === "0:0:0:0:0:0:0:1"
+  );
+}
+
+function assertServerSecurity(config: IclawConfig, host = config.server.host): void {
+  if (!isLoopbackHost(host) && !config.server.apiToken) {
+    throw new Error("server.apiToken is required when binding iclaw to a non-loopback host");
+  }
+}
+
+function isBearerTokenAuthorized(header: string | undefined, expectedToken: string): boolean {
+  const prefix = "Bearer ";
+  if (!header?.startsWith(prefix)) {
+    return false;
+  }
+  const token = header.slice(prefix.length);
+  const tokenBuffer = Buffer.from(token);
+  const expectedBuffer = Buffer.from(expectedToken);
+  return (
+    tokenBuffer.length === expectedBuffer.length && timingSafeEqual(tokenBuffer, expectedBuffer)
+  );
+}
+
+export function createIclawApp(input: { services: IclawServices; bindHost?: string }): Express {
+  assertServerSecurity(input.services.config, input.bindHost);
+  const apiToken = input.services.config.server.apiToken
+    ? resolveSecretRef(input.services.config.server.apiToken)
+    : undefined;
   const app = express();
+  if (apiToken) {
+    app.use((req, res, next) => {
+      if (isBearerTokenAuthorized(req.get("authorization"), apiToken)) {
+        next();
+        return;
+      }
+      res.status(401).json({ error: "unauthorized" });
+    });
+  }
   app.use(express.json({ limit: "1mb" }));
 
   app.get("/health", (_req, res) => {
@@ -61,8 +100,10 @@ export async function startIclawServer(input: {
   services: IclawServices;
   url: string;
 }> {
-  const services = createIclawServices({ dbPath: input.dbPath, config: input.config });
-  const app = createIclawApp({ services });
+  const config = input.config ?? parseIclawConfig({});
+  assertServerSecurity(config, input.host);
+  const services = createIclawServices({ dbPath: input.dbPath, config });
+  const app = createIclawApp({ services, bindHost: input.host });
   const server = await new Promise<Server>((resolve, reject) => {
     const listener = app
       .listen(input.port, input.host, () => resolve(listener))

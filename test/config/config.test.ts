@@ -71,4 +71,16 @@ describe("iclaw config", () => {
     expect(parsed.models.contextWindows["ollama/phi4:latest"]).toBe(64000);
     expect(parsed.workers.enabled).toBe(false);
   });
+
+  it("accepts an optional local server API token", () => {
+    const parsed = parseIclawConfig({
+      server: {
+        host: "0.0.0.0",
+        port: 32768,
+        apiToken: { env: "ICLAW_API_TOKEN" },
+      },
+    });
+
+    expect(parsed.server.apiToken).toEqual({ env: "ICLAW_API_TOKEN" });
+  });
 });

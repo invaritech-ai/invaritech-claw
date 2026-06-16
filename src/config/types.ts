@@ -20,6 +20,7 @@ export type ProviderConfig = {
 };
 
 export type ServerConfig = {
+  apiToken?: SecretRef;
   host: string;
   port: number;
 };
