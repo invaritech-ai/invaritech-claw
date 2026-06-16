@@ -1,21 +1,20 @@
 # iclaw
 
-iclaw is a minimal headless API automation agent with a terminal operator console.
+iclaw is a local terminal assistant with a headless HTTP API and an operator console.
 
 The v1 shape is intentionally small:
 
 - one pnpm-managed TypeScript package
 - Node 22+ runtime
 - SQLite state through `node:sqlite`
-- JSON5 config
-- local HTTP API
-- TUI/operator console entrypoint
+- JSON5 config at `~/.iclaw/iclaw.json` unless overridden
+- local HTTP API bound to loopback by default
+- TUI/operator console entrypoint for threads, messages, memory, and compaction
 - OpenRouter and Ollama providers
-- runs created by the API or TUI
 
 ## Status
 
-This is a hard-fork v1 foundation for the smallest usable loop: configure a provider, start the server, open the TUI, submit a prompt, and inspect persisted runs.
+This is a thread-first v1 foundation for the smallest useful loop: initialize config, start the local server, open the TUI, chat in a persisted thread, save memories, inspect context, and compact history.
 
 ## Install
 
@@ -28,29 +27,16 @@ Node 22.14.0 or newer is required. The repo is managed with pnpm and keeps depen
 
 ## Quick Start
 
-Create `~/.iclaw/iclaw.json`:
+Create `~/.iclaw/iclaw.json` if it does not exist:
 
-```json5
-{
-  agents: {
-    main: {
-      model: "ollama/llama3.2",
-      system: "You are a concise automation agent.",
-    },
-  },
-  providers: {
-    ollama: {
-      baseUrl: "http://127.0.0.1:11434",
-    },
-    openrouter: {
-      apiKey: { env: "OPENROUTER_API_KEY" },
-    },
-  },
-  server: {
-    host: "127.0.0.1",
-    port: 32768,
-  },
-}
+```bash
+pnpm iclaw init
+```
+
+To refresh an existing config, pass `--force`:
+
+```bash
+pnpm iclaw init --force
 ```
 
 Start the local server:
@@ -59,31 +45,58 @@ Start the local server:
 pnpm iclaw server
 ```
 
+Open the operator console:
+
+```bash
+pnpm iclaw tui
+```
+
+Common first commands:
+
+```text
+/help
+/new
+/thread list
+/model list
+/remember
+/memory
+/context
+/compact
+/summary
+```
+
+`iclaw init` prefers installed Ollama models when available. If no preferred local model is found and `OPENROUTER_API_KEY` is unset, the static fallback is:
+
+```json5
+{
+  models: {
+    chat: "ollama/gemma4:e4b",
+    memory: "ollama/qwen3:4b",
+    compaction: "ollama/gemma4:e4b",
+    embedding: "ollama/mxbai-embed-large:latest",
+  },
+  providers: { ollama: { baseUrl: "http://127.0.0.1:11434" } },
+  server: {
+    host: "127.0.0.1",
+    port: 32768,
+  },
+}
+```
+
+If `OPENROUTER_API_KEY` is present, `iclaw init` also includes `providers.openrouter.apiKey` as an environment secret reference.
+
 Check health:
 
 ```bash
 curl -sS http://127.0.0.1:32768/health
 ```
 
-Open an operator view:
+Create a thread through the API:
 
 ```bash
-pnpm iclaw tui --agent main
-```
-
-Or print a specific operator view as JSON:
-
-```bash
-pnpm iclaw tui --view status
-pnpm iclaw tui --view runs
-```
-
-Create a run:
-
-```bash
-curl -sS http://127.0.0.1:32768/runs \
+curl -sS http://127.0.0.1:32768/threads \
   -H 'content-type: application/json' \
-  -d '{"agentId":"main","triggerType":"api","execute":true,"input":{"text":"hello"}}'
+  -d '{"title":"main","objective":"Keep useful project context."}'
 ```
 
 ## Commands
@@ -91,9 +104,38 @@ curl -sS http://127.0.0.1:32768/runs \
 ```bash
 pnpm iclaw --help
 pnpm iclaw --version
+pnpm iclaw init [--config <path>] [--force]
 pnpm iclaw server [--host <host>] [--port <port>] [--config <path>]
-pnpm iclaw tui [--base-url <url>] [--view <chat|runs|status>]
+pnpm iclaw tui [--base-url <url>] [--agent <agent>] [--view <chat|status>] [--config <path>] [--api-token <token>]
 ```
+
+Operator console commands:
+
+```text
+/help
+/new [title]
+/thread list
+/thread switch <id>
+/thread rename <title>
+/thread archive [id]
+/objective [text]
+/model
+/model list
+/model set <provider/model>
+/remember [global|thread] <text>
+/memory [thread|global] [query]
+/memory-used
+/forget <memory-id-prefix>
+/context
+/context full
+/compact
+/summary
+/exit
+```
+
+## Security
+
+Servers bind to `127.0.0.1` by default. If `server.apiToken` is configured, HTTP clients must send `Authorization: Bearer <token>`. Binding to a non-loopback host requires `server.apiToken`.
 
 ## Development
 
@@ -102,6 +144,7 @@ pnpm build
 pnpm test
 pnpm check:changed
 pnpm check
+pnpm lint
 pnpm format:check
 ```
 

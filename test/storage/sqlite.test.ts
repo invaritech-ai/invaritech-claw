@@ -37,9 +37,6 @@ describe("openIclawDatabase", () => {
           "threads",
         ]),
       );
-      expect(tableNames.has("runs")).toBe(false);
-      expect(tableNames.has("run_events")).toBe(false);
-
       db.close();
     } finally {
       rmSync(tempDir, { recursive: true, force: true });

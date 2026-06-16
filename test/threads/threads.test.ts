@@ -30,13 +30,13 @@ import {
   updateThread,
 } from "../../src/storage/threads.js";
 
-function withDatabase(run: (db: DatabaseSync) => void): void {
+function withDatabase(callback: (db: DatabaseSync) => void): void {
   const tempDir = mkdtempSync(path.join(os.tmpdir(), "iclaw-threads-test-"));
   const dbPath = path.join(tempDir, "state.sqlite");
   const db = openIclawDatabase(dbPath);
 
   try {
-    run(db);
+    callback(db);
   } finally {
     db.close();
     rmSync(tempDir, { recursive: true, force: true });

@@ -35,7 +35,7 @@ const BASE_CONFIG: IclawConfig = {
 };
 
 function withService(
-  run: (input: { db: DatabaseSync; service: ReturnType<typeof createThreadService> }) => void,
+  callback: (input: { db: DatabaseSync; service: ReturnType<typeof createThreadService> }) => void,
 ): void {
   const tempDir = mkdtempSync(path.join(os.tmpdir(), "iclaw-context-test-"));
   const dbPath = path.join(tempDir, "state.sqlite");
@@ -43,7 +43,7 @@ function withService(
   const service = createThreadService({ db, config: BASE_CONFIG });
 
   try {
-    run({ db, service });
+    callback({ db, service });
   } finally {
     db.close();
     rmSync(tempDir, { recursive: true, force: true });
@@ -180,10 +180,10 @@ describe("thread service and context reconstruction", () => {
         scope: "thread",
         threadId: thread.id,
         type: "decision",
-        content: "Threads replace runs.",
+        content: "Threads preserve project context.",
         tags: ["architecture"],
       });
-      const current = service.appendUserMessage(thread.id, "What replaces runs?");
+      const current = service.appendUserMessage(thread.id, "What preserves project context?");
 
       const context = buildThreadContext({
         service,
@@ -195,9 +195,9 @@ describe("thread service and context reconstruction", () => {
       expect(context.messages.map((message) => message.role)).toEqual(["system", "user"]);
       expect(context.messages[0]?.content).toContain("Current objective: Ship Milestone A.");
       expect(context.messages[0]?.content).toContain("Relevant memories:");
-      expect(context.messages[0]?.content).toContain("Threads replace runs.");
+      expect(context.messages[0]?.content).toContain("Threads preserve project context.");
       expect(context.messages[0]?.content).toContain("Recent messages:");
-      expect(context.messages[1]?.content).toBe("What replaces runs?");
+      expect(context.messages[1]?.content).toBe("What preserves project context?");
       expect(context.sections.recentMessageCount).toBeGreaterThan(0);
     });
   });

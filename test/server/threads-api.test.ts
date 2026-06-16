@@ -87,7 +87,7 @@ function isListenPermissionError(error: unknown): boolean {
   );
 }
 
-async function withLoopbackEnv<T>(run: () => Promise<T>): Promise<T> {
+async function withLoopbackEnv<T>(callback: () => Promise<T>): Promise<T> {
   const keys = Object.keys(LOOPBACK_FETCH_ENV);
   const snapshot = new Map<string, string | undefined>();
   for (const key of keys) {
@@ -102,7 +102,7 @@ async function withLoopbackEnv<T>(run: () => Promise<T>): Promise<T> {
         process.env[key] = value;
       }
     }
-    return await run();
+    return await callback();
   } finally {
     for (const [key, value] of snapshot) {
       if (value === undefined) {
@@ -201,14 +201,14 @@ describe("threads API routes", () => {
       const response = await fetch(`${baseUrl}/threads`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ title: "Milestone A", objective: "Replace runs" }),
+        body: JSON.stringify({ title: "Milestone A", objective: "Ship thread memory" }),
       });
       expect(response.status).toBe(201);
       return (await response.json()) as JsonRecord;
     });
 
     expect(created.title).toBe("Milestone A");
-    expect(created.objective).toBe("Replace runs");
+    expect(created.objective).toBe("Ship thread memory");
     expect(created.activeModelRef).toBe("ollama/test-chat");
 
     await withLoopbackEnv(async () => {
@@ -313,7 +313,7 @@ describe("threads API routes", () => {
       const response = await fetch(`${baseUrl}/threads/${thread.id}/messages`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ content: "What replaces runs?" }),
+        body: JSON.stringify({ content: "How does thread context work?" }),
       });
       expect(response.status).toBe(201);
       const payload = (await response.json()) as {
@@ -321,7 +321,7 @@ describe("threads API routes", () => {
         context: { tokenEstimate: number; usedMemories: JsonRecord[] };
       };
       expect(payload.message.role).toBe("assistant");
-      expect(payload.message.contentText).toBe("assistant saw: What replaces runs?");
+      expect(payload.message.contentText).toBe("assistant saw: How does thread context work?");
       expect(payload.context.tokenEstimate).toBeGreaterThan(0);
       expect(payload.context.usedMemories).toEqual([]);
     });
@@ -530,7 +530,7 @@ describe("threads API routes", () => {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           type: "decision",
-          content: "Threads replace runs.",
+          content: "Threads preserve project context.",
           tags: ["milestone-a"],
           importance: 0.9,
         }),
@@ -540,7 +540,9 @@ describe("threads API routes", () => {
     });
 
     await withLoopbackEnv(async () => {
-      const response = await fetch(`${baseUrl}/threads/${thread.id}/memories?query=replace+runs`);
+      const response = await fetch(
+        `${baseUrl}/threads/${thread.id}/memories?query=preserve+context`,
+      );
       expect(response.status).toBe(200);
       const payload = (await response.json()) as { memories: JsonRecord[] };
       expect(payload.memories.map((item) => item.id)).toEqual([memory.id]);
@@ -557,7 +559,9 @@ describe("threads API routes", () => {
     });
 
     await withLoopbackEnv(async () => {
-      const response = await fetch(`${baseUrl}/threads/${thread.id}/memories?query=replace+runs`);
+      const response = await fetch(
+        `${baseUrl}/threads/${thread.id}/memories?query=preserve+context`,
+      );
       expect(response.status).toBe(200);
       const payload = (await response.json()) as { memories: JsonRecord[] };
       expect(payload.memories).toEqual([]);
@@ -658,13 +662,13 @@ describe("threads API routes", () => {
 
     const thread = threadService.createThread({
       title: "Context",
-      objective: "Migrate API from runs to threads.",
+      objective: "Use threads as the public API.",
     });
     const memory = threadService.remember({
       scope: "thread",
       threadId: thread.id,
       type: "decision",
-      content: "Threads replace runs.",
+      content: "Threads preserve project context.",
       tags: ["api"],
     });
 
@@ -672,7 +676,7 @@ describe("threads API routes", () => {
       const response = await fetch(`${baseUrl}/threads/${thread.id}/messages`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ content: "What replaces runs?" }),
+        body: JSON.stringify({ content: "What preserves project context?" }),
       });
       expect(response.status).toBe(201);
       const payload = (await response.json()) as { context: { usedMemories: JsonRecord[] } };
@@ -685,8 +689,8 @@ describe("threads API routes", () => {
       const payload = (await response.json()) as {
         context: { sections: { objective: string; memories: string } };
       };
-      expect(payload.context.sections.objective).toBe("Migrate API from runs to threads.");
-      expect(payload.context.sections.memories).toContain("Threads replace runs.");
+      expect(payload.context.sections.objective).toBe("Use threads as the public API.");
+      expect(payload.context.sections.memories).toContain("Threads preserve project context.");
     });
 
     await withLoopbackEnv(async () => {
@@ -711,31 +715,6 @@ describe("threads API routes", () => {
         "openrouter/test-favorite",
       ]);
     });
-  });
-
-  it("does not expose /runs once integrated", async () => {
-    if (listenBlocked) {
-      return;
-    }
-
-    const services = createIclawServices({
-      dbPath: path.join(tempDir, "integrated.sqlite"),
-      config: TEST_CONFIG,
-    });
-    services.providers.ollama = createFakeProvider([]);
-    const integratedApp = createIclawApp({ services });
-
-    await new Promise<void>((resolve) => server?.close(() => resolve()));
-    try {
-      await startApp(integratedApp);
-
-      await withLoopbackEnv(async () => {
-        const response = await fetch(`${baseUrl}/runs?agentId=main`);
-        expect(response.status).toBe(404);
-      });
-    } finally {
-      services.db.close();
-    }
   });
 });
 

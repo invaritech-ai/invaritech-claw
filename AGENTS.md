@@ -23,7 +23,7 @@ Telegraph style. Root rules only. Read scoped `AGENTS.md` before touching a subt
 - SQLite is canonical state.
 - Config is JSON5 at `~/.iclaw/iclaw.json` unless overridden.
 - Providers are OpenRouter and Ollama only.
-- Runs are the center of the runtime. API requests and TUI actions create or inspect runs.
+- Threads, messages, memory, and compaction are the center of product state.
 - Keep extension seams small and internal until a later feature earns a public contract.
 - No compatibility shims or migration helpers.
 

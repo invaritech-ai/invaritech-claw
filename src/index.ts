@@ -4,6 +4,7 @@ export * from "./config/load.js";
 export * from "./config/paths.js";
 export * from "./config/schema.js";
 export * from "./config/types.js";
+export * from "./cli/init.js";
 export * from "./providers/ollama/index.js";
 export * from "./providers/openrouter/index.js";
 export * from "./server/app.js";
