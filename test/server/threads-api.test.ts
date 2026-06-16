@@ -430,8 +430,9 @@ describe("threads API routes", () => {
       title: "Compact",
       objective: "Ship thread compaction.",
     });
-    threadService.appendUserMessage(thread.id, "Implement the compact endpoint.");
-    const latestMessage = threadService.appendUserMessage(thread.id, "Persist the summary.");
+    const messages = Array.from({ length: 13 }, (_item, index) =>
+      threadService.appendUserMessage(thread.id, `compact message ${index + 1}`),
+    );
 
     const compacted = await withLoopbackEnv(async () => {
       const response = await fetch(`${baseUrl}/threads/${thread.id}/compact`, {
@@ -443,14 +444,15 @@ describe("threads API routes", () => {
 
     expect(compacted.invocationId).toEqual(expect.any(String));
     expect(compacted.summary.summaryText).toBe("compact summary for test-compact");
-    expect(compacted.summary.coveredThroughMessageId).toBe(latestMessage.id);
+    expect(compacted.summary.coveredThroughMessageId).toBe(messages[0]?.id);
     expect(compacted.summary.sourceSummaryId).toBeNull();
 
     expect(providerCalls).toHaveLength(1);
     expect(providerCalls[0]?.model).toBe("test-compact");
     expect(providerCalls[0]?.messages.map((message) => message.role)).toEqual(["system", "user"]);
     expect(providerCalls[0]?.messages.at(-1)?.content).toContain("Ship thread compaction.");
-    expect(providerCalls[0]?.messages.at(-1)?.content).toContain("Persist the summary.");
+    expect(providerCalls[0]?.messages.at(-1)?.content).toContain("compact message 1");
+    expect(providerCalls[0]?.messages.at(-1)?.content).not.toContain("compact message 2");
 
     await withLoopbackEnv(async () => {
       const response = await fetch(`${baseUrl}/threads/${thread.id}/summary`);

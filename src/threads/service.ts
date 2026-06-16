@@ -25,6 +25,7 @@ import {
   insertThread,
   listActiveThreads,
   listActiveMemoriesByIdPrefix,
+  listAllMessagesByThread,
   listInvocationMemories,
   listLatestThreadInvocationMemories,
   listMessagesByThread,
@@ -203,6 +204,11 @@ export function createThreadService(input: { db: DatabaseSync; config: IclawConf
       return listMessagesByThread(db, threadId, limit);
     },
 
+    listAllMessages(threadId: string) {
+      requireThread(db, threadId);
+      return listAllMessagesByThread(db, threadId);
+    },
+
     getLatestSummary(threadId: string) {
       requireThread(db, threadId);
       return getLatestThreadSummary(db, threadId);
@@ -215,13 +221,14 @@ export function createThreadService(input: { db: DatabaseSync; config: IclawConf
       sourceSummaryId?: string | null;
     }): ThreadSummaryRecord {
       requireThread(db, summaryInput.threadId);
+      const latestSummary = getLatestThreadSummary(db, summaryInput.threadId);
       const summary: ThreadSummaryRecord = {
         id: crypto.randomUUID(),
         threadId: summaryInput.threadId,
         summaryText: summaryInput.summaryText,
         coveredThroughMessageId: summaryInput.coveredThroughMessageId ?? null,
         sourceSummaryId: summaryInput.sourceSummaryId ?? null,
-        createdAtMs: Date.now(),
+        createdAtMs: Math.max(Date.now(), (latestSummary?.createdAtMs ?? 0) + 1),
       };
       insertThreadSummary(db, summary);
       return summary;

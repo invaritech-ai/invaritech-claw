@@ -321,6 +321,13 @@ export function listMessagesByThread(
   return rows.map(mapMessageRow);
 }
 
+export function listAllMessagesByThread(db: DatabaseSync, threadId: string): MessageRecord[] {
+  const rows = db
+    .prepare("SELECT * FROM messages WHERE thread_id = ? ORDER BY created_at_ms ASC, rowid ASC")
+    .all(threadId) as MessageRow[];
+  return rows.map(mapMessageRow);
+}
+
 export function insertThreadSummary(db: DatabaseSync, record: ThreadSummaryRecord): void {
   db.prepare(
     `INSERT INTO thread_summaries (

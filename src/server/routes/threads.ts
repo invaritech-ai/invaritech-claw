@@ -2,6 +2,7 @@ import type { Express, NextFunction, Request, Response } from "express";
 import { resolveProviderForModel, type ProviderRegistry } from "../../agent/model.js";
 import type { IclawConfig } from "../../config/types.js";
 import type { MemoryScope, MemoryType } from "../../storage/schema.js";
+import { compactThread } from "../../threads/compact.js";
 import { buildThreadContext } from "../../threads/context.js";
 import {
   AmbiguousMemoryIdError,
@@ -120,21 +121,6 @@ function latestUserMessageId(service: ThreadService, threadId: string): string |
     }
   }
   return null;
-}
-
-function buildCompactionPrompt(input: {
-  objective: string | null;
-  previousSummary: string | null;
-  messages: Array<{ role: string; contentText: string }>;
-}): string {
-  const transcript = input.messages
-    .map((message) => `${message.role}: ${message.contentText}`)
-    .join("\n\n");
-  return [
-    `Objective:\n${input.objective ?? "none"}`,
-    `Previous summary:\n${input.previousSummary ?? "none"}`,
-    `Messages:\n${transcript || "none"}`,
-  ].join("\n\n");
 }
 
 function handleKnownError(error: unknown, res: Response): boolean {
@@ -511,59 +497,8 @@ export function attachThreadRoutes(app: Express, services: ThreadRouteServices):
     "/threads/:id/compact",
     asyncRoute(async (req, res) => {
       const threadId = asRouteParam(req.params.id);
-      const thread = threadService.getThread(threadId);
-      if (!thread) {
-        res.status(404).json({ error: "thread not found" });
-        return;
-      }
-
-      const modelRef = config.models.compaction;
-      const { provider, model } = resolveProviderForModel(modelRef, providers);
-      const previousSummary = threadService.getLatestSummary(thread.id);
-      const messages = threadService.listMessages(thread.id, 1000);
-      const prompt = buildCompactionPrompt({
-        objective: thread.objective,
-        previousSummary: previousSummary?.summaryText ?? null,
-        messages,
-      });
-      const invocation = threadService.recordInvocation({
-        threadId: thread.id,
-        modelRef,
-        kind: "compaction",
-      });
-
-      try {
-        const result = await provider.complete({
-          model,
-          messages: [
-            {
-              role: "system",
-              content:
-                "Summarize this thread for future context. Preserve goals, decisions, constraints, and unresolved work.",
-            },
-            { role: "user", content: prompt },
-          ],
-        });
-        const summary = threadService.storeSummary({
-          threadId: thread.id,
-          summaryText: result.text,
-          coveredThroughMessageId: messages.at(-1)?.id ?? null,
-          sourceSummaryId: previousSummary?.id ?? null,
-        });
-        threadService.finishInvocation({
-          invocationId: invocation.id,
-          status: "succeeded",
-          assistantMessageId: null,
-        });
-        res.status(201).json({ summary, invocationId: invocation.id });
-      } catch (error) {
-        threadService.finishInvocation({
-          invocationId: invocation.id,
-          status: "failed",
-          error: error instanceof Error ? { message: error.message } : { message: String(error) },
-        });
-        throw error;
-      }
+      const result = await compactThread({ threadId, config, providers, service: threadService });
+      res.status(201).json(result);
     }),
   );
 
