@@ -18,7 +18,8 @@ function printHelp(): void {
 Usage:
   iclaw init [--config <path>] [--force]
   iclaw server [--host <host>] [--port <port>] [--config <path>]
-  iclaw tui [--base-url <url>] [--agent <agent>] [--view <chat|status>] [--config <path>] [--api-token <token>]
+  iclaw tui [--agent <agent>] [--view <chat|status>] [--config <path>]
+  iclaw tui --base-url <url> [--agent <agent>] [--view <chat|status>] [--config <path>] [--api-token <token>]
   iclaw --help
   iclaw --version
 `);
@@ -103,27 +104,45 @@ async function runServer(args: string[]): Promise<void> {
 
 async function runTui(args: string[]): Promise<void> {
   const { config } = readConfig(args);
-  const baseUrl =
-    readFlag(args, "--base-url") ?? `http://${config.server.host}:${config.server.port}`;
   const apiToken =
     readFlag(args, "--api-token") ?? resolveOptionalSecretRef(config.server.apiToken);
+  const explicitBaseUrl = readFlag(args, "--base-url");
+  const embeddedServer = explicitBaseUrl
+    ? undefined
+    : await (async () => {
+        const { startIclawServer } = await import("../server/app.js");
+        return await startIclawServer({
+          config,
+          dbPath: resolveSqlitePath(config),
+          host: "127.0.0.1",
+          port: 0,
+        });
+      })();
+  const baseUrl = explicitBaseUrl ?? embeddedServer?.url;
+  if (!baseUrl) {
+    throw new Error("failed to start iclaw tui server");
+  }
   const client = createNativeOperatorApiClient({ baseUrl, apiToken });
   const view = readFlag(args, "--view");
-  if (!view) {
-    await runInteractiveOperatorConsole({
-      agentId: readFlag(args, "--agent") ?? "main",
+  try {
+    if (!view) {
+      await runInteractiveOperatorConsole({
+        agentId: readFlag(args, "--agent") ?? "main",
+        client,
+        input: process.stdin,
+        output: process.stdout,
+      });
+      return;
+    }
+    const activeView = parseOperatorView(view);
+    const state = await refreshOperatorView(
+      switchOperatorView(createOperatorConsoleState(), activeView),
       client,
-      input: process.stdin,
-      output: process.stdout,
-    });
-    return;
+    );
+    process.stdout.write(`${JSON.stringify(buildOperatorActiveView(state), null, 2)}\n`);
+  } finally {
+    await embeddedServer?.close();
   }
-  const activeView = parseOperatorView(view);
-  const state = await refreshOperatorView(
-    switchOperatorView(createOperatorConsoleState(), activeView),
-    client,
-  );
-  process.stdout.write(`${JSON.stringify(buildOperatorActiveView(state), null, 2)}\n`);
 }
 
 export async function runCli(argv = process.argv): Promise<void> {

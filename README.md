@@ -39,13 +39,7 @@ To refresh an existing config, pass `--force`:
 pnpm iclaw init --force
 ```
 
-Start the local server:
-
-```bash
-pnpm iclaw server
-```
-
-Open the operator console:
+Open the operator console. It starts a local embedded API server automatically:
 
 ```bash
 pnpm iclaw tui
@@ -106,8 +100,11 @@ pnpm iclaw --help
 pnpm iclaw --version
 pnpm iclaw init [--config <path>] [--force]
 pnpm iclaw server [--host <host>] [--port <port>] [--config <path>]
-pnpm iclaw tui [--base-url <url>] [--agent <agent>] [--view <chat|status>] [--config <path>] [--api-token <token>]
+pnpm iclaw tui [--agent <agent>] [--view <chat|status>] [--config <path>]
+pnpm iclaw tui --base-url <url> [--agent <agent>] [--view <chat|status>] [--config <path>] [--api-token <token>]
 ```
+
+Use `pnpm iclaw server` only when you want a separate long-running API process. For normal local use, `pnpm iclaw tui` starts and stops its own loopback server.
 
 Operator console commands:
 

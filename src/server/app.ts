@@ -48,6 +48,12 @@ function isBearerTokenAuthorized(header: string | undefined, expectedToken: stri
   );
 }
 
+function serverUrl(input: { host: string; port: number; server: Server }): string {
+  const address = input.server.address();
+  const port = typeof address === "object" && address ? address.port : input.port;
+  return `http://${input.host}:${port}`;
+}
+
 export function createIclawApp(input: { services: IclawServices; bindHost?: string }): Express {
   assertServerSecurity(input.services.config, input.bindHost);
   const apiToken = input.services.config.server.apiToken
@@ -120,6 +126,6 @@ export async function startIclawServer(input: {
     },
     server,
     services,
-    url: `http://${input.host}:${input.port}`,
+    url: serverUrl({ host: input.host, port: input.port, server }),
   };
 }
