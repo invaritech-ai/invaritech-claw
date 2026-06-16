@@ -8,7 +8,6 @@ import {
   createOperatorConsoleState,
   refreshOperatorView,
   switchOperatorView,
-  type OperatorView,
 } from "../tui/operator-console.js";
 import { ICLAW_VERSION } from "../version.js";
 
@@ -50,7 +49,7 @@ function printHelp(): void {
 
 Usage:
   iclaw server [--host <host>] [--port <port>] [--config <path>]
-  iclaw tui [--base-url <url>] [--agent <agent>] [--view <chat|runs|status>]
+  iclaw tui [--base-url <url>] [--agent <agent>] [--view <chat|status>]
   iclaw --help
   iclaw --version
 `);
@@ -67,6 +66,13 @@ function readConfig(args: string[]): { config: IclawConfig; configPath: string }
     config: loadIclawConfigIfExists(configPath) ?? DEFAULT_CONFIG,
     configPath,
   };
+}
+
+function parseOperatorView(view: string): "chat" | "status" {
+  if (view === "chat" || view === "status") {
+    return view;
+  }
+  throw new Error(`unknown tui view: ${view}. Expected one of: chat, status`);
 }
 
 async function runServer(args: string[]): Promise<void> {
@@ -111,7 +117,7 @@ async function runTui(args: string[]): Promise<void> {
     });
     return;
   }
-  const activeView = view as OperatorView;
+  const activeView = parseOperatorView(view);
   const state = await refreshOperatorView(
     switchOperatorView(createOperatorConsoleState(), activeView),
     client,

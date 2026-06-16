@@ -27,6 +27,10 @@ describe("parseOperatorCommand", () => {
       type: "thread.archive",
       target: "abc123",
     });
+    expect(parseOperatorCommand("/thread archive")).toEqual({
+      type: "thread.archive",
+      target: null,
+    });
   });
 
   it("parses objective and model commands", () => {

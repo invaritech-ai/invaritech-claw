@@ -8,7 +8,7 @@ export type OperatorCommand =
   | { type: "thread.list" }
   | { type: "thread.switch"; target: string }
   | { type: "thread.rename"; title: string }
-  | { type: "thread.archive"; target: string }
+  | { type: "thread.archive"; target: string | null }
   | { type: "objective.show" }
   | { type: "objective.set"; objective: string }
   | { type: "model.show" }
@@ -49,6 +49,9 @@ function parseThreadCommand(input: string): OperatorCommand {
   if (rest.startsWith("rename ")) {
     const title = restAfter(rest, "rename");
     return title ? { type: "thread.rename", title } : unknown(input, "thread title is required");
+  }
+  if (rest === "archive") {
+    return { type: "thread.archive", target: null };
   }
   if (rest.startsWith("archive ")) {
     const target = restAfter(rest, "archive");
