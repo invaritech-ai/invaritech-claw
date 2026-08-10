@@ -120,7 +120,13 @@ export async function startIclawServer(input: {
     app,
     async close() {
       await new Promise<void>((resolve, reject) => {
-        server.close((error) => (error ? reject(error) : resolve()));
+        server.close((error: NodeJS.ErrnoException | undefined) => {
+          if (!error || error.code === "ERR_SERVER_NOT_RUNNING") {
+            resolve();
+            return;
+          }
+          reject(error);
+        });
       });
       services.db.close();
     },

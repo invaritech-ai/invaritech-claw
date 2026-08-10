@@ -1,7 +1,7 @@
 import { loadIclawConfigIfExists } from "../config/load.js";
 import { resolveConfigPath, resolveSqlitePath } from "../config/paths.js";
 import type { IclawConfig, SecretRef } from "../config/types.js";
-import { runInteractiveOperatorConsole } from "../tui/interactive.js";
+import { runFullscreenOperatorConsole } from "../tui/fullscreen/run.js";
 import { createNativeOperatorApiClient } from "../tui/operator-api.js";
 import {
   buildOperatorActiveView,
@@ -18,8 +18,9 @@ function printHelp(): void {
 Usage:
   iclaw init [--config <path>] [--force]
   iclaw server [--host <host>] [--port <port>] [--config <path>]
-  iclaw tui [--agent <agent>] [--view <chat|status>] [--config <path>]
-  iclaw tui --base-url <url> [--agent <agent>] [--view <chat|status>] [--config <path>] [--api-token <token>]
+  iclaw tui [--agent <agent>] [--config <path>]
+  iclaw tui --view status [--config <path>]
+  iclaw tui --base-url <url> [--agent <agent>] [--config <path>] [--api-token <token>]
   iclaw --help
   iclaw --version
 `);
@@ -126,8 +127,9 @@ async function runTui(args: string[]): Promise<void> {
   const view = readFlag(args, "--view");
   try {
     if (!view) {
-      await runInteractiveOperatorConsole({
+      await runFullscreenOperatorConsole({
         agentId: readFlag(args, "--agent") ?? "main",
+        baseUrl,
         client,
         input: process.stdin,
         output: process.stdout,
